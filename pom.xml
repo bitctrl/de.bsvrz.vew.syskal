@@ -5,7 +5,7 @@
 
 		<groupId>de.bsvrz.vew</groupId>
 	<artifactId>de.bsvrz.vew.syskal</artifactId>
-	<version>1.2.8-SNAPSHOT</version>
+	<version>1.2.7</version>
 
 	<name>SWE Verwaltung Systemkalender</name>
 
