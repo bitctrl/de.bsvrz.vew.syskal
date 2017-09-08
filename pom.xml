@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-		<groupId>de.bsvrz.sys</groupId>
+		<groupId>de.bsvrz.vew</groupId>
 	<artifactId>de.bsvrz.vew.syskal</artifactId>
-	<version>1.2.8-SNAPSHOT</version>
+	<version>1.2.7</version>
 
 	<name>SWE Verwaltung Systemkalender</name>
 
