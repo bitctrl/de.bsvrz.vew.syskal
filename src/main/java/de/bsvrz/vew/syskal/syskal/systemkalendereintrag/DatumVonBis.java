@@ -58,7 +58,7 @@ import java.util.TreeMap;
  * @author Timo Pittner
  * 
  */
-public class DatumVonBis extends DatumJahr implements Cloneable
+public class DatumVonBis extends DatumJahr
 {
 
   /**
@@ -90,7 +90,7 @@ public class DatumVonBis extends DatumJahr implements Cloneable
   {
 
     super(pid, definition);
-    zeitVonBis = new ArrayList<String[]>();
+    zeitVonBis = new ArrayList<>();
     // _debug = Debug.getLogger();
 
   }
@@ -100,7 +100,8 @@ public class DatumVonBis extends DatumJahr implements Cloneable
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.DatumJahr#pruefeEintrag()
    */
-  public boolean pruefeEintrag()
+  @Override
+public boolean pruefeEintrag()
   {
 
     String sub;
@@ -249,7 +250,8 @@ public class DatumVonBis extends DatumJahr implements Cloneable
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.DatumJahr#berechneZustandsWechsel(int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr)
   {
     SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
     Date d1 = null;
@@ -413,13 +415,14 @@ public class DatumVonBis extends DatumJahr implements Cloneable
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.DatumJahr#berechneZustandsWechsel(java.lang.Long,
    *      java.lang.Long, int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr)
   {
 
     // Die Abfrage besitzt eine eigene Zustandsliste
     ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
 
-    Calendar calx = new GregorianCalendar().getInstance();
+    Calendar calx = Calendar.getInstance();
     int diff = jahr - calx.get(Calendar.YEAR);
     Integer temp = calx.get(Calendar.YEAR) + diff;
 
@@ -520,7 +523,7 @@ public class DatumVonBis extends DatumJahr implements Cloneable
 
     time = bis - von;
 
-    days = Math.round((double)time / (24. * 60. * 60. * 1000.));
+    days = Math.round(time / (24. * 60. * 60. * 1000.));
     
     // Der Ende-Tag zaehlt auch noch dazu
     if (definition.contains("<"))
@@ -541,25 +544,25 @@ public class DatumVonBis extends DatumJahr implements Cloneable
     s[0] = s1;
     s[1] = s2;
 
-    ArrayList<String[]> list = new ArrayList<String[]>();
+    ArrayList<String[]> list = new ArrayList<>();
     list.add(s);
 
-    Iterator it1 = list.iterator();
+    Iterator<String[]> it1 = list.iterator();
     while (it1.hasNext())
     {
 
-      String[] _jahr = (String[])it1.next();
+      String[] _jahr = it1.next();
 
       for (int i = 0; i < days; i++)
       {
-        Iterator it2 = zeitVonBis.iterator();
+        Iterator<String[]> it2 = zeitVonBis.iterator();
 
         int loc = 0;
         
         while (it2.hasNext())
         {
 
-          String[] _zeit = (String[])it2.next();
+          String[] _zeit = it2.next();
 
           try
           {
@@ -635,14 +638,15 @@ public class DatumVonBis extends DatumJahr implements Cloneable
   /* (non-Javadoc)
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.DatumJahr#berechneIntervall(java.lang.Long, java.lang.Long, int)
    */
-  public SortedMap<Long, Long> berechneIntervall(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Long> berechneIntervall(Long von, Long bis, int jahr)
   {
     
     // Die Abfrage besitzt eine eigene Zustandsliste
 //    ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
-    SortedMap<Long, Long> liste = new TreeMap<Long, Long>();
+    SortedMap<Long, Long> liste = new TreeMap<>();
     
-    Calendar calx = new GregorianCalendar().getInstance();
+    Calendar calx = Calendar.getInstance();
     int diff = jahr - calx.get(Calendar.YEAR);
     Integer temp = calx.get(Calendar.YEAR) + diff;
     
@@ -739,7 +743,7 @@ public class DatumVonBis extends DatumJahr implements Cloneable
     
     time = bis - von;
     
-    days = Math.round((double)time / (24. * 60. * 60. * 1000.));
+    days = Math.round(time / (24. * 60. * 60. * 1000.));
     
     // Der Ende-Tag zaehlt auch noch dazu
     if (definition.contains("<"))
@@ -760,25 +764,25 @@ public class DatumVonBis extends DatumJahr implements Cloneable
     s[0] = s1;
     s[1] = s2;
     
-    ArrayList<String[]> list = new ArrayList<String[]>();
+    ArrayList<String[]> list = new ArrayList<>();
     list.add(s);
     
-    Iterator it1 = list.iterator();
+    Iterator<String[]> it1 = list.iterator();
     while (it1.hasNext())
     {
       
-      String[] _jahr = (String[])it1.next();
+      String[] _jahr = it1.next();
       
       for (int i = 0; i < days; i++)
       {
-        Iterator it2 = zeitVonBis.iterator();
+        Iterator<String[]> it2 = zeitVonBis.iterator();
         
         int loc = 0;
         
         while (it2.hasNext())
         {
           
-          String[] _zeit = (String[])it2.next();
+          String[] _zeit = it2.next();
           
           try
           {
@@ -874,14 +878,15 @@ public class DatumVonBis extends DatumJahr implements Cloneable
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.DatumJahr#berechneZustandsWechsel(java.lang.Long,
    *      java.lang.Long, int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechselZustand(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechselZustand(Long von, Long bis, int jahr)
   {
 
     // Die Abfrage besitzt eine eigene Zustandsliste
     //ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
     listeZustandsWechsel = new ListeZustandsWechsel();
 
-    Calendar calx = new GregorianCalendar().getInstance();
+    Calendar calx = Calendar.getInstance();
     int diff = jahr - calx.get(Calendar.YEAR);
     Integer temp = calx.get(Calendar.YEAR) + diff;
 
@@ -978,7 +983,7 @@ public class DatumVonBis extends DatumJahr implements Cloneable
 
     time = bis - von;
 
-    days = Math.round((double)time / (24. * 60. * 60. * 1000.));
+    days = Math.round(time / (24. * 60. * 60. * 1000.));
     
     // Der Ende-Tag zaehlt auch noch dazu, aber nur bei einem Zeitbereich
     if (definition.contains("<"))
@@ -999,23 +1004,23 @@ public class DatumVonBis extends DatumJahr implements Cloneable
     s[0] = s1;
     s[1] = s2;
 
-    ArrayList<String[]> list = new ArrayList<String[]>();
+    ArrayList<String[]> list = new ArrayList<>();
     list.add(s);
 
-    Iterator it1 = list.iterator();
+    Iterator<String[]> it1 = list.iterator();
     while (it1.hasNext())
     {
 
-      String[] _jahr = (String[])it1.next();
+      String[] _jahr = it1.next();
 
       for (int i = 0; i < days; i++)
       {
-        Iterator it2 = zeitVonBis.iterator();
+        Iterator<String[]> it2 = zeitVonBis.iterator();
 
         while (it2.hasNext())
         {
 
-          String[] _zeit = (String[])it2.next();
+          String[] _zeit = it2.next();
 
           try
           {

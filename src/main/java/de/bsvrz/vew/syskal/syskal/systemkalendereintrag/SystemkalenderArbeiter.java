@@ -138,12 +138,12 @@ public class SystemkalenderArbeiter
 	/**
 	 * Liste mit den Pid's der SystemKalenderEintraege
 	 */
-	private Map<String, String[]> parseList = new HashMap<String, String[]>();
+	private Map<String, String[]> parseList = new HashMap<>();
 
 	/**
 	 * Die statische Liste der SystemKalenderEintraege
 	 */
-	private static Map<String, SystemkalenderEintrag> skeList = new HashMap<String, SystemkalenderEintrag>();
+	private static Map<String, SystemkalenderEintrag> skeList = new HashMap<>();
 
 	/**
 	 * Zaehler fuer SystemKalenderEintraege
@@ -223,7 +223,7 @@ public class SystemkalenderArbeiter
 				_configObj = (ConfigurationObject) _datenmodell.getObject(_kalender);
 
 				BenachrichtigeFunktion f = new BenachrichtigeFunktion();
-				f.getBenachrichtigeListenerVerwaltung().addBenachrichtigeListener(this);
+				BenachrichtigeFunktion.getBenachrichtigeListenerVerwaltung().addBenachrichtigeListener(this);
 
 				MutableSet ms = _configObj.getMutableSet("SystemKalenderEintrÃÂ¤ge");
 
@@ -234,7 +234,7 @@ public class SystemkalenderArbeiter
 				} else
 					_debug.error("Menge ist null");
 
-				List objSke = readSystemKalenderEintragMenge();
+				List<SystemObject> objSke = readSystemKalenderEintragMenge();
 
 				cntSke = 0;
 
@@ -261,18 +261,18 @@ public class SystemkalenderArbeiter
 
 	}
 
-	private List readSystemKalenderEintragMenge() throws Exception {
+	private List<SystemObject> readSystemKalenderEintragMenge() throws Exception {
 		ConfigurationObject kalender = (ConfigurationObject) _connection.getDataModel().getObject(_kalender);
 
 		ObjectSet objekte = kalender.getObjectSet("SystemKalenderEintrÃÂ¤ge");
 
-		List listSke = objekte.getElements();
+		List<SystemObject> listSke = objekte.getElements();
 
 		return listSke;
 	}
 
 	/** Anmeldung zum Senden von Daten */
-	private void subscribe(List objlist) {
+	private void subscribe(List<SystemObject> objlist) {
 		// Anmelden
 		try {
 			_connection.subscribeSender(this, objlist, _datenbeschreibung, _senderrolle);
@@ -283,19 +283,20 @@ public class SystemkalenderArbeiter
 	}
 
 	/** Abmeldung vom Senden der Daten */
-	private void unsubscribe(List objlist) {
+	private void unsubscribe(List<SystemObject> objlist) {
 		// Abmelden
 		_connection.unsubscribeSender(this, objlist, _datenbeschreibung);
 		// _debug.config("unsubscribe.");
 	}
 
 	/** Anmeldung zum Empfangen von Daten */
-	private void subscribeReceiver(List objlist) {
+	private void subscribeReceiver(List<SystemObject> objlist) {
 		// Anmelden
 		_connection.subscribeReceiver(this, objlist, _datenbeschreibung, _empfaengeroptionen, _empfaengerrolle);
 
 	}
 
+	@Override
 	public void update(ResultData[] results) {
 		// TODO Auto-generated method stub
 		for (ResultData data : results) {
@@ -353,13 +354,14 @@ public class SystemkalenderArbeiter
 
 	}
 
+	@Override
 	public void update(MutableSet set, SystemObject[] addedObjects, SystemObject[] removedObjects) {
 		// TODO Auto-generated method stub
 		try {
 			// _debug.config("update Menge: " + set.getName());
 
 			if (addedObjects != null) {
-				List<SystemObject> list = new ArrayList<SystemObject>();
+				List<SystemObject> list = new ArrayList<>();
 
 				for (int i = 0; i < addedObjects.length; i++) {
 
@@ -405,11 +407,13 @@ public class SystemkalenderArbeiter
 
 	}
 
+	@Override
 	public void dataRequest(SystemObject object, DataDescription dataDescription, byte state) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public boolean isRequestSupported(SystemObject object, DataDescription dataDescription) {
 		// TODO Auto-generated method stub
 		return false;
@@ -509,7 +513,7 @@ public class SystemkalenderArbeiter
 	// }
 	public SortedMap<String, Boolean> berechneGueltigJetzt(Long jetzt) {
 		// Eintragen der Ereignisse und Berechnen der Anzahl
-		SortedMap<String, Boolean> ergebnis = new TreeMap<String, Boolean>();
+		SortedMap<String, Boolean> ergebnis = new TreeMap<>();
 
 		Date d = new Date();
 		d.setTime(jetzt);
@@ -557,7 +561,7 @@ public class SystemkalenderArbeiter
 
 	public Map.Entry<String, Boolean> berechneGueltigJetzt(String pid, Long jetzt) {
 
-		SortedMap<String, Boolean> ergebnis = new TreeMap<String, Boolean>();
+		SortedMap<String, Boolean> ergebnis = new TreeMap<>();
 
 		Date d = new Date();
 		d.setTime(jetzt);
@@ -585,6 +589,7 @@ public class SystemkalenderArbeiter
 
 	}
 
+	@Override
 	public void update(BenachrichtigeEvent e) {
 		// TODO Auto-generated method stub
 		// _debug.config("update: " + e.getMeldung());
@@ -608,7 +613,7 @@ public class SystemkalenderArbeiter
 
 				// getDebug().config("Rekursionstiefe: " + cntRekursiv);
 
-				List<String> delList = new ArrayList<String>();
+				List<String> delList = new ArrayList<>();
 
 				Parser parser = new Parser();
 
@@ -749,7 +754,7 @@ public class SystemkalenderArbeiter
 
 	public SortedMap<String, Boolean> berechneGueltigVonBis(Long von, Long bis) {
 
-		SortedMap<String, Boolean> ergebnis = new TreeMap<String, Boolean>();
+		SortedMap<String, Boolean> ergebnis = new TreeMap<>();
 
 		for (Map.Entry<String, SystemkalenderEintrag> me : getSkeList().entrySet()) {
 			SystemkalenderEintrag ske = me.getValue();
@@ -769,7 +774,7 @@ public class SystemkalenderArbeiter
 
 	public SortedMap<String, Long> berechneIntervallVonBis(Long von, Long bis) {
 
-		SortedMap<String, Long> ergebnis = new TreeMap<String, Long>();
+		SortedMap<String, Long> ergebnis = new TreeMap<>();
 
 		for (Map.Entry<String, SystemkalenderEintrag> me : getSkeList().entrySet()) {
 			SystemkalenderEintrag ske = me.getValue();
@@ -882,7 +887,7 @@ public class SystemkalenderArbeiter
 	public SortedMap<String, Boolean> berechneGueltigVonBis(List<SystemObject> list, Long von, Long bis) {
 
 		// Sortierte Map mit den zu sendenden Daten wird erstellt
-		SortedMap<String, Boolean> ergebnis = new TreeMap<String, Boolean>();
+		SortedMap<String, Boolean> ergebnis = new TreeMap<>();
 
 		// Eintragen der Ereignisse und Berechnen der Anzahl
 		for (SystemObject so : list) {
@@ -911,7 +916,7 @@ public class SystemkalenderArbeiter
 	public SortedMap<String, Long> berechneIntervallVonBis(List<SystemObject> list, Long von, Long bis) {
 
 		// Sortierte Map mit den zu sendenden Daten wird erstellt
-		SortedMap<String, Long> ergebnis = new TreeMap<String, Long>();
+		SortedMap<String, Long> ergebnis = new TreeMap<>();
 
 		// Eintragen der Ereignisse und Berechnen der Anzahl
 		for (SystemObject so : list) {
@@ -1049,7 +1054,7 @@ public class SystemkalenderArbeiter
 		pid = pid.toLowerCase();
 
 		// Sortierte Map mit den zu sendenden Daten wird erstellt
-		SortedMap<String, Boolean> ergebnis = new TreeMap<String, Boolean>();
+		SortedMap<String, Boolean> ergebnis = new TreeMap<>();
 
 		if (getSkeList().containsKey(pid)) {
 
@@ -1076,7 +1081,7 @@ public class SystemkalenderArbeiter
 		pid = pid.toLowerCase();
 
 		// Sortierte Map mit den zu sendenden Daten wird erstellt
-		SortedMap<String, Long> ergebnis = new TreeMap<String, Long>();
+		SortedMap<String, Long> ergebnis = new TreeMap<>();
 
 		if (getSkeList().containsKey(pid)) {
 

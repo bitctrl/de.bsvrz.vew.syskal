@@ -3,26 +3,14 @@ package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dav.daf.main.config.ClientApplication;
-import de.bsvrz.dav.daf.main.config.ConfigurationObject;
-import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dav.daf.main.config.SystemObjectType;
 import de.bsvrz.sys.funclib.application.StandardApplication;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
-import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
-import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
-import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
-import de.bsvrz.sys.funclib.operatingMessage.MessageState;
-import de.bsvrz.sys.funclib.operatingMessage.MessageType;
-import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderArbeiter;
-import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag;
 
 /**
  * Kommentar
@@ -78,7 +66,8 @@ public class TestSyskalOnline2 implements StandardApplication
    * @param argumentList
    *          siehe sys.funclib.application.StandardApplication#parseArguments (sys.funclib.ArgumentList)
    */
-  public void parseArguments(ArgumentList argumentList) throws Exception
+  @Override
+public void parseArguments(ArgumentList argumentList) throws Exception
   {
     _debug = Debug.getLogger();
 
@@ -103,7 +92,8 @@ public class TestSyskalOnline2 implements StandardApplication
    * @param connection
    *          siehe sys.funclib.application.StandardApplication#initialize(stauma .dav.clientside.ClientDavInterface)
    */
-  public void initialize(ClientDavInterface connection) throws Exception
+  @Override
+public void initialize(ClientDavInterface connection) throws Exception
   {
     
 //    System.out.println("TestSyskalOnline2.initialize()");

@@ -80,7 +80,7 @@ public class LogischeVerknuepfung extends DatumJahr
   {
 
     super(pid, value);
-    ergebnisse = new ArrayList<String>();
+    ergebnisse = new ArrayList<>();
     this.skeList = skeList;
 
   }
@@ -90,7 +90,8 @@ public class LogischeVerknuepfung extends DatumJahr
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.DatumJahr#pruefeEintrag()
    */
-  public boolean pruefeEintrag()
+  @Override
+public boolean pruefeEintrag()
   {
 
     if (!(definition.contains("{") && definition.contains("}")))
@@ -410,8 +411,8 @@ public class LogischeVerknuepfung extends DatumJahr
 
     long time = 0;
     long days = 0;
-    SortedMap<Long, Boolean> timeStamps = new TreeMap<Long, Boolean>();
-    Calendar cal1 = new GregorianCalendar().getInstance();
+    SortedMap<Long, Boolean> timeStamps = new TreeMap<>();
+    Calendar cal1 = Calendar.getInstance();
     Calendar cal2 = new GregorianCalendar();
     Calendar tmp = new GregorianCalendar();
 
@@ -435,7 +436,7 @@ public class LogischeVerknuepfung extends DatumJahr
 
       // Wie viele Tage hat das Jahr?
       time = cal2.getTime().getTime() - cal1.getTime().getTime();
-      days = Math.round((double)time / (24. * 60. * 60. * 1000.));
+      days = Math.round(time / (24. * 60. * 60. * 1000.));
 
       // Der erste Tag des Jahres endet um...
       dt = df.parse("01.01." + cal1.get(Calendar.YEAR) + " 23:59:59,999");
@@ -487,7 +488,8 @@ public class LogischeVerknuepfung extends DatumJahr
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.DatumJahr#berechneZustandsWechsel(int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr)
   {
     SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
     Date d1 = null;
@@ -781,7 +783,8 @@ public class LogischeVerknuepfung extends DatumJahr
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.DatumJahr#berechneZustandsWechsel(java.lang.Long,
    *      java.lang.Long, int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr)
   {
     // Die Abfrage besitzt eine eigene Zustandsliste
     ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
@@ -794,10 +797,10 @@ public class LogischeVerknuepfung extends DatumJahr
 
       long start = 0;
       long ende = 0;
-      Calendar cal = new GregorianCalendar().getInstance();
+      Calendar cal = Calendar.getInstance();
 
-      Map<Long, Boolean> negativList = new HashMap<Long, Boolean>();
-      Map<Long, Boolean> tmpEntryList = new HashMap<Long, Boolean>();
+      Map<Long, Boolean> negativList = new HashMap<>();
+      Map<Long, Boolean> tmpEntryList = new HashMap<>();
 
       String s1 = null;
       String s2 = null;
@@ -884,7 +887,7 @@ public class LogischeVerknuepfung extends DatumJahr
 
       }
 
-      Set<Long> tmpSet = new TreeSet<Long>();
+      Set<Long> tmpSet = new TreeSet<>();
 
       boolean flag = false;
       for (String s : ergebnisse)
@@ -936,9 +939,9 @@ public class LogischeVerknuepfung extends DatumJahr
 
               Object[] b = skeSet.toArray();
 
-              Set<Long> tmp2Set = new TreeSet<Long>();
+              Set<Long> tmp2Set = new TreeSet<>();
 
-              tmpSet = new TreeSet<Long>();
+              tmpSet = new TreeSet<>();
                             
               for (int i = 0; i < a.length; i += 2)
               {
@@ -985,9 +988,9 @@ public class LogischeVerknuepfung extends DatumJahr
                     
                 Object[] b = skeSet.toArray();
   
-                Set<Long> tmp2Set = new TreeSet<Long>();
+                Set<Long> tmp2Set = new TreeSet<>();
   
-                tmpSet = new TreeSet<Long>();
+                tmpSet = new TreeSet<>();
                 
                 for (int i = 0; i < a.length - 1; i += 2)
                 {
@@ -1048,10 +1051,10 @@ public class LogischeVerknuepfung extends DatumJahr
 
       }
 
-      Iterator it = tmpSet.iterator();
+      Iterator<Long> it = tmpSet.iterator();
       while (it.hasNext())
       {
-        Long key = (Long)it.next();
+        Long key = it.next();
         listeZustandsWechselTmp2.getListeZustandsWechsel().put(key, tmpEntryList.get(key));
       }
 
@@ -1086,11 +1089,12 @@ public class LogischeVerknuepfung extends DatumJahr
   /* (non-Javadoc)
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.DatumJahr#berechneIntervall(java.lang.Long, java.lang.Long, int)
    */
-  public SortedMap<Long, Long> berechneIntervall(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Long> berechneIntervall(Long von, Long bis, int jahr)
   {
     // Die Abfrage besitzt eine eigene Zustandsliste
 //    ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
-    SortedMap<Long, Long> listeGruppen = new TreeMap<Long, Long>();
+    SortedMap<Long, Long> listeGruppen = new TreeMap<>();
     
     try
     {
@@ -1100,10 +1104,10 @@ public class LogischeVerknuepfung extends DatumJahr
       
       long start = 0;
       long ende = 0;
-      Calendar cal = new GregorianCalendar().getInstance();
+      Calendar cal = Calendar.getInstance();
       
-      Map<Long, Boolean> negativList = new HashMap<Long, Boolean>();
-      Map<Long, Boolean> tmpEntryList = new HashMap<Long, Boolean>();
+      Map<Long, Boolean> negativList = new HashMap<>();
+      Map<Long, Boolean> tmpEntryList = new HashMap<>();
       
       String s1 = null;
       String s2 = null;
@@ -1190,7 +1194,7 @@ public class LogischeVerknuepfung extends DatumJahr
         
       }
       
-      Set<Long> tmpSet = new TreeSet<Long>();
+      Set<Long> tmpSet = new TreeSet<>();
       
       boolean flag = false;
       for (String s : ergebnisse)
@@ -1242,9 +1246,9 @@ public class LogischeVerknuepfung extends DatumJahr
               
               Object[] b = skeSet.toArray();
               
-              Set<Long> tmp2Set = new TreeSet<Long>();
+              Set<Long> tmp2Set = new TreeSet<>();
               
-              tmpSet = new TreeSet<Long>();
+              tmpSet = new TreeSet<>();
                             
               for (int i = 0; i < a.length; i += 2)
               {
@@ -1291,9 +1295,9 @@ public class LogischeVerknuepfung extends DatumJahr
                 
                 Object[] b = skeSet.toArray();
                 
-                Set<Long> tmp2Set = new TreeSet<Long>();
+                Set<Long> tmp2Set = new TreeSet<>();
                 
-                tmpSet = new TreeSet<Long>();
+                tmpSet = new TreeSet<>();
                 
                 for (int i = 0; i < a.length; i += 2)
                 {
@@ -1353,10 +1357,10 @@ public class LogischeVerknuepfung extends DatumJahr
         
       }
       
-      Iterator it = tmpSet.iterator();
+      Iterator<Long> it = tmpSet.iterator();
       while (it.hasNext())
       {
-        Long key = (Long)it.next();
+        Long key = it.next();
         listeZustandsWechselTmp2.getListeZustandsWechsel().put(key, tmpEntryList.get(key));
       }
       
@@ -1413,7 +1417,8 @@ public class LogischeVerknuepfung extends DatumJahr
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.DatumJahr#berechneZustandsWechsel(java.lang.Long,
    *      java.lang.Long, int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechselZustand(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechselZustand(Long von, Long bis, int jahr)
   {
     // Die Abfrage besitzt eine eigene Zustandsliste
     //ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
@@ -1427,10 +1432,10 @@ public class LogischeVerknuepfung extends DatumJahr
 
       long start = 0;
       long ende = 0;
-      Calendar cal = new GregorianCalendar().getInstance();
+      Calendar cal = Calendar.getInstance();
 
-      Map<Long, Boolean> negativList = new HashMap<Long, Boolean>();
-      Map<Long, Boolean> tmpEntryList = new HashMap<Long, Boolean>();
+      Map<Long, Boolean> negativList = new HashMap<>();
+      Map<Long, Boolean> tmpEntryList = new HashMap<>();
 
       String s1 = null;
       String s2 = null;
@@ -1514,7 +1519,7 @@ public class LogischeVerknuepfung extends DatumJahr
 
       }
 
-      Set<Long> tmpSet = new TreeSet<Long>();
+      Set<Long> tmpSet = new TreeSet<>();
 
       boolean flag = false;
       for (String s : ergebnisse)
@@ -1566,9 +1571,9 @@ public class LogischeVerknuepfung extends DatumJahr
 
               Object[] b = skeSet.toArray();
 
-              Set<Long> tmp2Set = new TreeSet<Long>();
+              Set<Long> tmp2Set = new TreeSet<>();
 
-              tmpSet = new TreeSet<Long>();
+              tmpSet = new TreeSet<>();
 
               for (int i = 0; i < a.length; i += 2)
               {
@@ -1611,9 +1616,9 @@ public class LogischeVerknuepfung extends DatumJahr
   
                 Object[] b = skeSet.toArray();
   
-                Set<Long> tmp2Set = new TreeSet<Long>();
+                Set<Long> tmp2Set = new TreeSet<>();
   
-                tmpSet = new TreeSet<Long>();
+                tmpSet = new TreeSet<>();
   
                 for (int i = 0; i < a.length; i += 2)
                 {
@@ -1673,10 +1678,10 @@ public class LogischeVerknuepfung extends DatumJahr
 
       }
 
-      Iterator it = tmpSet.iterator();
+      Iterator<Long> it = tmpSet.iterator();
       while (it.hasNext())
       {
-        Long key = (Long)it.next();
+        Long key = it.next();
         listeZustandsWechselTmp2.getListeZustandsWechsel().put(key, tmpEntryList.get(key));
       }
 

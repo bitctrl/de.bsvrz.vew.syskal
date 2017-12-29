@@ -99,7 +99,8 @@ public class BenachrichtigeFunktion extends TimerTask
    * 
    * @see java.util.TimerTask#run()
    */
-  public void run()
+  @Override
+public void run()
   {
     Date d = new Date();
     d.setTime(time_now);

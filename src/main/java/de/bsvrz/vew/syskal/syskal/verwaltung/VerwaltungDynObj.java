@@ -193,7 +193,7 @@ public class VerwaltungDynObj implements Verwaltung, ClientSenderInterface
 
       DataAndATGUsageInformation daaui = null;
 
-      Collection<DataAndATGUsageInformation> col = new ArrayList<DataAndATGUsageInformation>();
+      Collection<DataAndATGUsageInformation> col = new ArrayList<>();
 
       if (data != null)
       {
@@ -233,7 +233,8 @@ public class VerwaltungDynObj implements Verwaltung, ClientSenderInterface
   /* (non-Javadoc)
    * @see de.bsvrz.dav.daf.main.ClientSenderInterface#dataRequest(de.bsvrz.dav.daf.main.config.SystemObject, de.bsvrz.dav.daf.main.DataDescription, byte)
    */
-  public void dataRequest(SystemObject arg0, DataDescription arg1, byte arg2)
+  @Override
+public void dataRequest(SystemObject arg0, DataDescription arg1, byte arg2)
   {
     if (arg2 == 0)
     {
@@ -249,7 +250,8 @@ public class VerwaltungDynObj implements Verwaltung, ClientSenderInterface
   /* (non-Javadoc)
    * @see de.bsvrz.dav.daf.main.ClientSenderInterface#isRequestSupported(de.bsvrz.dav.daf.main.config.SystemObject, de.bsvrz.dav.daf.main.DataDescription)
    */
-  public boolean isRequestSupported(SystemObject arg0, DataDescription arg1)
+  @Override
+public boolean isRequestSupported(SystemObject arg0, DataDescription arg1)
   {
     // TODO Auto-generated method stub
     return false;
@@ -418,7 +420,8 @@ public class VerwaltungDynObj implements Verwaltung, ClientSenderInterface
   /* (non-Javadoc)
    * @see de.bsvrz.vew.ereigniskal.ereigniskal.verwaltung.Verwaltung#erzeuge(java.lang.String, java.lang.String, java.lang.String)
    */
-  public void erzeuge(String pid, String name, String set)
+  @Override
+public void erzeuge(String pid, String name, String set)
   {
     
     
@@ -441,7 +444,8 @@ public class VerwaltungDynObj implements Verwaltung, ClientSenderInterface
   /* (non-Javadoc)
    * @see de.bsvrz.vew.ereigniskal.ereigniskal.verwaltung.Verwaltung#erzeuge(java.lang.String, java.lang.String, java.lang.String, de.bsvrz.dav.daf.main.Data[])
    */
-  public void erzeuge(String pid, String name, String set, Data[] data)
+  @Override
+public void erzeuge(String pid, String name, String set, Data[] data)
   {
     
     if (erzeuge(pid, name, data))
@@ -462,7 +466,8 @@ public class VerwaltungDynObj implements Verwaltung, ClientSenderInterface
   /* (non-Javadoc)
    * @see de.bsvrz.vew.ereigniskal.ereigniskal.verwaltung.Verwaltung#parametriere(java.lang.String, java.lang.String)
    */
-  public void parametriere(String attribut, String definition)
+  @Override
+public void parametriere(String attribut, String definition)
   {
 
     Data data = _con.createData(_atg);
@@ -491,7 +496,8 @@ public class VerwaltungDynObj implements Verwaltung, ClientSenderInterface
   /* (non-Javadoc)
    * @see de.bsvrz.vew.ereigniskal.ereigniskal.verwaltung.Verwaltung#parametriere(java.util.Map)
    */
-  public void parametriere(Map<String, String> map)
+  @Override
+public void parametriere(Map<String, String> map)
   {
 
     Data data = _con.createData(_atg);
@@ -523,7 +529,8 @@ public class VerwaltungDynObj implements Verwaltung, ClientSenderInterface
   /* (non-Javadoc)
    * @see de.bsvrz.vew.ereigniskal.ereigniskal.verwaltung.Verwaltung#parametriere(de.bsvrz.dav.daf.main.Data[])
    */
-  public void parametriere(Data[] data)
+  @Override
+public void parametriere(Data[] data)
   {
     DataDescription dd = new DataDescription(_atg, _asp);
     
@@ -543,7 +550,8 @@ public class VerwaltungDynObj implements Verwaltung, ClientSenderInterface
   /* (non-Javadoc)
    * @see de.bsvrz.vew.ereigniskal.ereigniskal.verwaltung.Verwaltung#loesche(java.lang.String, java.lang.String)
    */
-  public void loesche(String pid, String set)
+  @Override
+public void loesche(String pid, String set)
   {
 
     if (pid.length() > 0)

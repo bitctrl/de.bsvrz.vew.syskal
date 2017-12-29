@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -28,7 +27,6 @@ import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dav.daf.main.config.ConfigurationArea;
 import de.bsvrz.dav.daf.main.config.ConfigurationObject;
-import de.bsvrz.dav.daf.main.config.DynamicObject;
 import de.bsvrz.dav.daf.main.config.DynamicObjectType;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 //import de.bsvrz.sys.funclib.dambach.vewdynobj.VerwaltungDynObj;
@@ -86,7 +84,7 @@ public class SystemTest
     erzeugeSystemKalenderEintrag("ske.hauptverkehrszeit", "Hauptverkehrszeit",
         "Hauptverkehrszeit:=({07:15:00,000-08:59:59,999}{15:30:00,000-17:44:59,999})*,*");
     
-    Calendar cal = new GregorianCalendar().getInstance();
+    Calendar cal = Calendar.getInstance();
 
     int dow = cal.get(Calendar.DAY_OF_WEEK);
 
@@ -175,7 +173,7 @@ public class SystemTest
     Date d1 = sdf.parse("01.01.2004 00:00:00,000");
     Date d2 = sdf.parse("31.12.2004 23:59:59,999");
 
-    List<SystemObject> list = new ArrayList<SystemObject>();
+    List<SystemObject> list = new ArrayList<>();
 
     list.add(_connection.getDataModel().getObject("ske. "));
     list.add(_connection.getDataModel().getObject("ske.@"));
@@ -471,7 +469,7 @@ public class SystemTest
       fail("Test 86-102");
     
 
-    Calendar cal = new GregorianCalendar().getInstance();
+    Calendar cal = Calendar.getInstance();
 
     cal.setTime(new Date());
     cal.set(Calendar.HOUR_OF_DAY, 12);
@@ -542,7 +540,7 @@ public class SystemTest
     data = _connection.createData(atgParam);
     data.getTextValue("Definition").setText(definition);
     datas[0] = data;
-    vewParam.setDynamicObject((DynamicObject)_connection.getDataModel().getObject(pid));
+    vewParam.setDynamicObject(_connection.getDataModel().getObject(pid));
     vewParam.parametriere(datas);
   }
 

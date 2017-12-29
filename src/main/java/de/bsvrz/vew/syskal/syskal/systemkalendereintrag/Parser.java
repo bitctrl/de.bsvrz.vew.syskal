@@ -28,7 +28,6 @@ package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.SortedMap;
 
@@ -82,7 +81,7 @@ public class Parser
     definition = definition.toLowerCase();
 
     SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
-    Calendar cal = new GregorianCalendar().getInstance();    
+    Calendar cal = Calendar.getInstance();    
     
     Integer jahr = cal.get(Calendar.YEAR);
     

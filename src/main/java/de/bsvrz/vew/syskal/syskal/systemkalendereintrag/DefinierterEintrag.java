@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -90,14 +89,14 @@ public class DefinierterEintrag extends LogischeVerknuepfung
   
   
 //  protected Map<String, ListeZustandsWechsel> mapListeZustandsWechsel = new HashMap<String, ListeZustandsWechsel>();
-  protected List<ListeZustandsWechsel> listListeZustandsWechsel = new ArrayList<ListeZustandsWechsel>();
+  protected List<ListeZustandsWechsel> listListeZustandsWechsel = new ArrayList<>();
 
   public DefinierterEintrag(Map<String, SystemkalenderEintrag> skeList, String pid, String definition)
   {
     super(skeList, pid, definition);
     this.pid = pid;
     this.definition = definition;
-    ergebnis = new ArrayList<String>();
+    ergebnis = new ArrayList<>();
     // _debug = Debug.getLogger();
 
   }
@@ -107,7 +106,8 @@ public class DefinierterEintrag extends LogischeVerknuepfung
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.LogischeVerknuepfung#pruefeEintrag()
    */
-  public boolean pruefeEintrag()
+  @Override
+public boolean pruefeEintrag()
   {
 
     if (super.pruefeEintrag())
@@ -130,7 +130,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
       else
         symbol = "-";
 
-      Calendar cal = new GregorianCalendar().getInstance();
+      Calendar cal = Calendar.getInstance();
 
       if (eintragAufloesen(ergebnis.get(0), cal.get(Calendar.YEAR)))
         return true;
@@ -161,7 +161,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
 
         if (pid.contains(s))
         {
-          Calendar cal = new GregorianCalendar().getInstance();
+          Calendar cal = Calendar.getInstance();
           
             ListeZustandsWechsel listeZustandsWechsel = new ListeZustandsWechsel();
             listeZustandsWechsel.setListeZustandsWechsel(ske.getListeZustandsWechsel());
@@ -335,7 +335,8 @@ public class DefinierterEintrag extends LogischeVerknuepfung
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.LogischeVerknuepfung#berechneZustandsWechsel(int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr)
   {
     SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
     Date d1 = null;
@@ -522,16 +523,17 @@ public class DefinierterEintrag extends LogischeVerknuepfung
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.LogischeVerknuepfung#berechneZustandsWechsel(java.lang.Long,
    * java.lang.Long, int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr)
   {
     // Die Abfrage besitzt eine eigene Zustandsliste
     ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
 
-    Calendar calx = new GregorianCalendar().getInstance();
+    Calendar calx = Calendar.getInstance();
     int diff = jahr - calx.get(Calendar.YEAR);
     Integer temp = calx.get(Calendar.YEAR) + diff;
 
-    Calendar cal1 = new GregorianCalendar().getInstance();
+    Calendar cal1 = Calendar.getInstance();
     Calendar cal2 = new GregorianCalendar();
     Calendar tmp = new GregorianCalendar();
 
@@ -602,7 +604,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
           date.setTime(l);
           
           Ostern ostern = new Ostern();
-          Calendar oStart = ostern.Ostersonntag(jahr);
+          Calendar oStart = Ostern.Ostersonntag(jahr);
           
           Object o = oStart.clone();
           Calendar oEnde = (Calendar)o;
@@ -625,7 +627,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
             {
               
               // _debug.config("hier11");
-              Calendar x1 = ostern.Ostersonntag(jahr);
+              Calendar x1 = Ostern.Ostersonntag(jahr);
               oa[i] = x1.getTime().getTime();
               
             }
@@ -633,7 +635,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
             {
               
               // _debug.config("hier12");
-              Calendar x2 = ostern.Ostersonntag(jahr);
+              Calendar x2 = Ostern.Ostersonntag(jahr);
               x2.set(Calendar.HOUR_OF_DAY, 23);
               x2.set(Calendar.MINUTE, 59);
               x2.set(Calendar.SECOND, 59);
@@ -645,7 +647,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
             {
               
               // _debug.config("hier13");
-              Calendar x = new GregorianCalendar().getInstance();
+              Calendar x = Calendar.getInstance();
               x.setTimeInMillis((Long)oa[i]);
               x.set(Calendar.YEAR, jahr);
               oa[i] = x.getTime().getTime();
@@ -666,8 +668,8 @@ public class DefinierterEintrag extends LogischeVerknuepfung
             for (int j = 0; j < cs.length; j++)
             {
               char c = cs[j];
-              Character ch = (Character)c;
-              if (ch.isDigit(ch))
+              Character ch = c;
+              if (Character.isDigit(ch))
                 strBuff.append(ch);
               
             }
@@ -716,17 +718,18 @@ public class DefinierterEintrag extends LogischeVerknuepfung
   /* (non-Javadoc)
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.LogischeVerknuepfung#berechneIntervall(java.lang.Long, java.lang.Long, int)
    */
-  public SortedMap<Long, Long> berechneIntervall(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Long> berechneIntervall(Long von, Long bis, int jahr)
   {
     // Die Abfrage besitzt eine eigene Zustandsliste
 //    ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
-    SortedMap<Long, Long> liste = new TreeMap<Long, Long>();
+    SortedMap<Long, Long> liste = new TreeMap<>();
     
-    Calendar calx = new GregorianCalendar().getInstance();
+    Calendar calx = Calendar.getInstance();
     int diff = jahr - calx.get(Calendar.YEAR);
     Integer temp = calx.get(Calendar.YEAR) + diff;
     
-    Calendar cal1 = new GregorianCalendar().getInstance();
+    Calendar cal1 = Calendar.getInstance();
     Calendar cal2 = new GregorianCalendar();
     Calendar tmp = new GregorianCalendar();
     
@@ -769,7 +772,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
       date.setTime(l);
             
       Ostern ostern = new Ostern();
-      Calendar oStart = ostern.Ostersonntag(jahr);
+      Calendar oStart = Ostern.Ostersonntag(jahr);
       
       Object o = oStart.clone();
       Calendar oEnde = (Calendar)o;
@@ -792,7 +795,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
         {
           
           // _debug.config("hier11");
-          Calendar x1 = ostern.Ostersonntag(jahr);
+          Calendar x1 = Ostern.Ostersonntag(jahr);
           oa[i] = x1.getTime().getTime();
           
         }
@@ -800,7 +803,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
         {
           
           // _debug.config("hier12");
-          Calendar x2 = ostern.Ostersonntag(jahr);
+          Calendar x2 = Ostern.Ostersonntag(jahr);
           x2.set(Calendar.HOUR_OF_DAY, 23);
           x2.set(Calendar.MINUTE, 59);
           x2.set(Calendar.SECOND, 59);
@@ -812,7 +815,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
         {
           
           // _debug.config("hier13");
-          Calendar x = new GregorianCalendar().getInstance();
+          Calendar x = Calendar.getInstance();
           x.setTimeInMillis((Long)oa[i]);
           x.set(Calendar.YEAR, jahr);
           oa[i] = x.getTime().getTime();
@@ -849,8 +852,8 @@ public class DefinierterEintrag extends LogischeVerknuepfung
         for (int j = 0; j < cs.length; j++)
         {
           char c = cs[j];
-          Character ch = (Character)c;
-          if (ch.isDigit(ch))
+          Character ch = c;
+          if (Character.isDigit(ch))
             strBuff.append(ch);
           
         }
@@ -1020,8 +1023,8 @@ public class DefinierterEintrag extends LogischeVerknuepfung
     for (int i = 0; i < cs.length; i++)
     {
       char c = cs[i];
-      Character ch = (Character)c;
-      if (ch.isDigit(ch))
+      Character ch = c;
+      if (Character.isDigit(ch))
         strBuff.append(ch);
 
     }
@@ -1059,17 +1062,18 @@ public class DefinierterEintrag extends LogischeVerknuepfung
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.LogischeVerknuepfung#berechneZustandsWechsel(java.lang.Long,
    * java.lang.Long, int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechselZustand(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechselZustand(Long von, Long bis, int jahr)
   {
     // Die Abfrage besitzt eine eigene Zustandsliste
     // ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
     listeZustandsWechsel = new ListeZustandsWechsel();
 
-    Calendar calx = new GregorianCalendar().getInstance();
+    Calendar calx = Calendar.getInstance();
     int diff = jahr - calx.get(Calendar.YEAR);
     Integer temp = calx.get(Calendar.YEAR) + diff;
 
-    Calendar cal1 = new GregorianCalendar().getInstance();
+    Calendar cal1 = Calendar.getInstance();
     Calendar cal2 = new GregorianCalendar();
     Calendar tmp = new GregorianCalendar();
 
@@ -1121,7 +1125,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
         Ostern ostern = new Ostern();
         // Calendar oStart = ostern.Ostersonntag(new GregorianCalendar().getInstance().get(Calendar.YEAR));
         // int j = new GregorianCalendar().getInstance().get(jahr);
-        Calendar oStart = ostern.Ostersonntag(jahr);
+        Calendar oStart = Ostern.Ostersonntag(jahr);
         
         Object o = oStart.clone();
         Calendar oEnde = (Calendar)o;
@@ -1146,7 +1150,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
           {
             
             // _debug.config("hier11");
-            Calendar x1 = ostern.Ostersonntag(jahr);
+            Calendar x1 = Ostern.Ostersonntag(jahr);
             oa[i] = x1.getTime().getTime();
             
           }
@@ -1154,7 +1158,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
           {
             
             // _debug.config("hier12");
-            Calendar x2 = ostern.Ostersonntag(jahr);
+            Calendar x2 = Ostern.Ostersonntag(jahr);
             x2.set(Calendar.HOUR_OF_DAY, 23);
             x2.set(Calendar.MINUTE, 59);
             x2.set(Calendar.SECOND, 59);
@@ -1166,7 +1170,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung
           {
             
             // _debug.config("hier13");
-            Calendar x = new GregorianCalendar().getInstance();
+            Calendar x = Calendar.getInstance();
             x.setTimeInMillis((Long)oa[i]);
             x.set(Calendar.YEAR, jahr);
             oa[i] = x.getTime().getTime();
@@ -1215,8 +1219,8 @@ public class DefinierterEintrag extends LogischeVerknuepfung
       for (int i = 0; i < cs.length; i++)
       {
         char c = cs[i];
-        Character ch = (Character)c;
-        if (ch.isDigit(ch))
+        Character ch = c;
+        if (Character.isDigit(ch))
           strBuff.append(ch);
         
       }

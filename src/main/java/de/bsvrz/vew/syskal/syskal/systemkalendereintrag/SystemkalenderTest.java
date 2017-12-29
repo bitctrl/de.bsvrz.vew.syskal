@@ -134,7 +134,8 @@ public class SystemkalenderTest implements StandardApplication,
    * @param argumentList
    *          siehe sys.funclib.application.StandardApplication#parseArguments(sys.funclib.ArgumentList)
    */
-  public void parseArguments(ArgumentList argumentList) throws Exception
+  @Override
+public void parseArguments(ArgumentList argumentList) throws Exception
   {
     _debug = Debug.getLogger();
 
@@ -159,7 +160,8 @@ public class SystemkalenderTest implements StandardApplication,
    * @param connection
    *          siehe sys.funclib.application.StandardApplication#initialize(stauma.dav.clientside.ClientDavInterface)
    */
-  public void initialize(ClientDavInterface connection) throws Exception
+  @Override
+public void initialize(ClientDavInterface connection) throws Exception
   {
 
     _connection = connection;
@@ -173,7 +175,7 @@ public class SystemkalenderTest implements StandardApplication,
     
     SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
-    List<SystemObject> list = new ArrayList<SystemObject>();
+    List<SystemObject> list = new ArrayList<>();
     
     list.add(_connection.getDataModel().getObject("ske.ostersonntag"));
     list.add(_connection.getDataModel().getObject("ske.leerzeichen"));
@@ -242,7 +244,8 @@ public class SystemkalenderTest implements StandardApplication,
 
   }
 
-  public void update(BenachrichtigeEvent e)
+  @Override
+public void update(BenachrichtigeEvent e)
   {
     // TODO Auto-generated method stub
     _debug.error("update: " + e.getMeldung());

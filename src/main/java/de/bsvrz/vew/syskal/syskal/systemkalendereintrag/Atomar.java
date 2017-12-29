@@ -29,17 +29,13 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.Map.Entry;
-
-import org.omg.CORBA._PolicyStub;
 
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.syskal.erinnerungsfunktion.ErinnerungsFunktion;
@@ -98,7 +94,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag#berechneZustandsWechsel(int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr)
   {
 
     SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
@@ -247,7 +244,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag#berechneZustandsWechsel(java.lang.Long,
    * java.lang.Long, int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr)
   {
     // Die Abfrage besitzt eine eigene Zustandsliste
     ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
@@ -289,7 +287,7 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
 
       // Wie viele Tage hat das Jahr?
       time = cal2.getTime().getTime() - cal1.getTime().getTime();
-      days = Math.round((double)time / (24. * 60. * 60. * 1000.));
+      days = Math.round(time / (24. * 60. * 60. * 1000.));
 
       // Der erste Tag der Abfrage endet um...
       cal2.setTimeInMillis(von);
@@ -304,7 +302,7 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
 
         Ostern ostersonntag = new Ostern();
 
-        cal1 = (GregorianCalendar)ostersonntag.Ostersonntag(temp);
+        cal1 = (GregorianCalendar)Ostern.Ostersonntag(temp);
 
         // Der Ostersonntag beginnt um...
         dt = df.parse(cal1.get(Calendar.DATE) + "." + (cal1.get(Calendar.MONTH) + 1) + "." + temp + " 00:00:00,000");
@@ -387,7 +385,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag#berechneZustandsWechsel(java.lang.Long,
    * java.lang.Long, int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechselZustand(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechselZustand(Long von, Long bis, int jahr)
   {
     // Die Abfrage besitzt eine eigene Zustandsliste
     // ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
@@ -395,7 +394,7 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
 
     long time = 0;
     long days = 0;
-    Calendar cal1 = new GregorianCalendar().getInstance();
+    Calendar cal1 = Calendar.getInstance();
     Calendar cal2 = new GregorianCalendar();
     Calendar tmp = new GregorianCalendar();
 
@@ -428,7 +427,7 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
 
       // Wie viele Tage hat das Jahr?
       time = cal2.getTime().getTime() - cal1.getTime().getTime();
-      days = Math.round((double)time / (24. * 60. * 60. * 1000.));
+      days = Math.round(time / (24. * 60. * 60. * 1000.));
 
       // Der erste Tag der Abfrage endet um...
       cal2.setTimeInMillis(von);
@@ -442,7 +441,7 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
       {
 
         Ostern ostersonntag = new Ostern();
-        cal1 = ostersonntag.Ostersonntag(temp);
+        cal1 = Ostern.Ostersonntag(temp);
 
         // Der Ostersonntag beginnt um...
         dt = df.parse(cal1.get(Calendar.DATE) + "." + (cal1.get(Calendar.MONTH) + 1) + "." + temp + " 00:00:00,000");
@@ -536,7 +535,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag#getListeZustandsWechsel()
    */
-  public SortedMap<Long, Boolean> getListeZustandsWechsel()
+  @Override
+public SortedMap<Long, Boolean> getListeZustandsWechsel()
   {
 
     return listeZustandsWechsel.getListeZustandsWechsel();
@@ -548,7 +548,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag#getObjektListeZustandsWechsel()
    */
-  public ListeZustandsWechsel getObjektListeZustandsWechsel()
+  @Override
+public ListeZustandsWechsel getObjektListeZustandsWechsel()
   {
 
     return listeZustandsWechsel;
@@ -563,7 +564,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    * 
    * @return Boolean true, wenn der letzte Zustandwechsel von false nach true war
    */
-  public boolean isGueltig(long jetzt)
+  @Override
+public boolean isGueltig(long jetzt)
   {
     Map.Entry<Long, Boolean> me = listeZustandsWechsel.berechneLetztenZustandsWechsel(jetzt);
 
@@ -586,7 +588,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    *          Endezeitpunkt der Berechnung
    * @return Boolean true, wenn es einen Zustandwechsel von false nach true im angegebenen Zeitraum gab
    */
-  public boolean isGueltigVonBis(long von, long bis)
+  @Override
+public boolean isGueltigVonBis(long von, long bis)
   {
 
     Map<Long, Boolean> map = listeZustandsWechsel.berechneVonBis(von, bis);
@@ -632,7 +635,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag#getPid()
    */
-  public String getPid()
+  @Override
+public String getPid()
   {
 
     return pid;
@@ -644,7 +648,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag#getDefinition()
    */
-  public String getDefinition()
+  @Override
+public String getDefinition()
   {
 
     return definition;
@@ -656,7 +661,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag#getName()
    */
-  public String getName()
+  @Override
+public String getName()
   {
     return name;
   }
@@ -665,7 +671,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    * @param name
    *          setzt den Namen des Eintrags
    */
-  public void setName(String name)
+  @Override
+public void setName(String name)
   {
     this.name = name;
   }
@@ -676,7 +683,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    * @param f
    *          wenn true, wird ein Wecker gestellt wenn false geht der Wecker gleich los
    */
-  public void setErinnerungsFunktion(Boolean f)
+  @Override
+public void setErinnerungsFunktion(Boolean f)
   {
 
     if (f)
@@ -691,7 +699,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    * 
    * @return ReminderService das Wecker-Objekt
    */
-  public ErinnerungsFunktion getErinnerungsFunktion()
+  @Override
+public ErinnerungsFunktion getErinnerungsFunktion()
   {
 
     return rs;
@@ -713,7 +722,7 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
   private SortedMap<Long, Long> korrigiereErgebnis(Long von, Long bis, SortedMap<Long, Long> tmp)
   {
     
-    SortedMap<Long, Long> listeGruppe = new TreeMap<Long, Long>();
+    SortedMap<Long, Long> listeGruppe = new TreeMap<>();
     
     if (tmp.size() > 0)
     {
@@ -794,7 +803,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    * de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag#berecheneZustandsWechselVonBis(java.lang
    * .Long, java.lang.Long)
    */
-  public SortedMap<Long, Boolean> berecheneZustandsWechselVonBis(Long von, Long bis)
+  @Override
+public SortedMap<Long, Boolean> berecheneZustandsWechselVonBis(Long von, Long bis)
   {
     // TODO Auto-generated method stub
     Calendar cal1 = new GregorianCalendar();
@@ -804,8 +814,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
 
     SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
-    SortedMap<Long, Boolean> tmp = new TreeMap<Long, Boolean>();
-    SortedMap<Long, Boolean> map = new TreeMap<Long, Boolean>();
+    SortedMap<Long, Boolean> tmp = new TreeMap<>();
+    SortedMap<Long, Boolean> map = new TreeMap<>();
 
     for (int i = cal1.get(Calendar.YEAR); i < cal2.get(Calendar.YEAR) + 1; i++)
     {
@@ -876,32 +886,37 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
     return tmp;
   }
 
-  public void setDefinition(String definition)
+  @Override
+public void setDefinition(String definition)
   {
     // TODO Auto-generated method stub
     this.definition = definition;
   }
 
-  public void setListeZustandsWechsel(SortedMap<Long, Boolean> liste)
+  @Override
+public void setListeZustandsWechsel(SortedMap<Long, Boolean> liste)
   {
     // TODO Auto-generated method stub
     this.listeZustandsWechsel.setListeZustandsWechsel(liste);
   }
 
-  public void setObjektListeZustandsWechsel(ListeZustandsWechsel liste)
+  @Override
+public void setObjektListeZustandsWechsel(ListeZustandsWechsel liste)
   {
     // TODO Auto-generated method stub
     this.listeZustandsWechsel = liste;
   }
 
-  public void setPid(String pid)
+  @Override
+public void setPid(String pid)
   {
     // TODO Auto-generated method stub
     this.pid = pid;
 
   }
 
-  public boolean pruefeEintrag()
+  @Override
+public boolean pruefeEintrag()
   {
     // TODO Auto-generated method stub
     return false;
@@ -935,8 +950,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
 
     SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
-    SortedMap<Long, Long> tmp = new TreeMap<Long, Long>();
-    SortedMap<Long, Long> map = new TreeMap<Long, Long>();
+    SortedMap<Long, Long> tmp = new TreeMap<>();
+    SortedMap<Long, Long> map = new TreeMap<>();
 
     for (int i = cal1.get(Calendar.YEAR); i < cal2.get(Calendar.YEAR) + 1; i++)
     {
@@ -1023,7 +1038,7 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
     // TODO Auto-generated method stub
     // Die Abfrage besitzt eine eigene Zustandsliste
     // ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
-    SortedMap<Long, Long> liste = new TreeMap<Long, Long>();
+    SortedMap<Long, Long> liste = new TreeMap<>();
 
     long time = 0;
     long days = 0;
@@ -1062,7 +1077,7 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
 
       // Wie viele Tage hat das Jahr?
       time = cal2.getTime().getTime() - cal1.getTime().getTime();
-      days = Math.round((double)time / (24. * 60. * 60. * 1000.));
+      days = Math.round(time / (24. * 60. * 60. * 1000.));
 
       // Der erste Tag der Abfrage endet um...
       cal2.setTimeInMillis(von);
@@ -1077,7 +1092,7 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
 
         Ostern ostersonntag = new Ostern();
 
-        cal1 = (GregorianCalendar)ostersonntag.Ostersonntag(temp);
+        cal1 = (GregorianCalendar)Ostern.Ostersonntag(temp);
 
         // Der Ostersonntag beginnt um...
         dt = df.parse(cal1.get(Calendar.DATE) + "." + (cal1.get(Calendar.MONTH) + 1) + "." + temp + " 00:00:00,000");
