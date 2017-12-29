@@ -3,3 +3,4 @@
 -sources: true
 
 Bundle-Name: NERZ SWE Vew Systemkalender
+Import-Package: de.bsvrz.*; version=!
