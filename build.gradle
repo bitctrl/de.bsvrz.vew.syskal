@@ -1,0 +1,22 @@
+plugins {
+  id "de.bsvrz.gradle.nerzswe" version "0.4.0"
+  id "biz.aQute.bnd.builder" version "3.3.0"
+}
+
+group = 'de.bsvrz.vew'
+version = '1.2.8-SNAPSHOT'
+description = 'SWE Verwaltung Systemkalender'
+
+
+nerzswe {
+   	sweStatus = 'BETA'
+	sweDatum = '2017-12-28'
+}
+
+dependencies {
+    compile group: 'de.bsvrz.dav', name: 'de.bsvrz.dav.daf', version:'3.9.2'
+    compile group: 'de.bsvrz.dav', name: 'de.bsvrz.dav.dav', version:'3.9.2'
+    compile group: 'de.bsvrz.sys', name: 'de.bsvrz.sys.funclib.application', version:'3.9.2'
+    compile group: 'de.bsvrz.sys', name: 'de.bsvrz.sys.funclib.dambach', version:'1.2.0'
+    compile group: 'junit', name: 'junit', version:'4.12'
+}

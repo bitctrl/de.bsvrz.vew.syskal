@@ -86,15 +86,6 @@ public class VerwaltungDynObj implements Verwaltung, ClientSenderInterface
     _debug = Debug.getLogger();
   }
 
-  /**
-   * @param con
-   * @param dm
-   * @param ca
-   * @param dot
-   * @param cal
-   * @param atg
-   * @param asp
-   */
   public VerwaltungDynObj(ClientDavInterface con, DataModel dm, ConfigurationArea ca, DynamicObjectType dot,
       ConfigurationObject cal, AttributeGroup atg, Aspect asp)
   {
@@ -274,7 +265,6 @@ public class VerwaltungDynObj implements Verwaltung, ClientSenderInterface
    * @return
    *        true, wenns funktioniert hat
    *        
-   * @throws IllegalArgumentException
    */
   private boolean parametriere(DataDescription dd, ResultData resultData) throws IllegalArgumentException
   {
@@ -405,21 +395,11 @@ public class VerwaltungDynObj implements Verwaltung, ClientSenderInterface
   }
 
  
-  /**
-   * Setzt das dynamischeObjekt der Verwaltungsinstanz
-   * 
-   * @param dynamicObject
-   */
   public void setDynamicObject(DynamicObject dynamicObject)
   {
     _dynamicObject = dynamicObject;
   }
 
-  /**
-   * Holt die Datenverteilerverbindung
-   * 
-   * @return
-   */
   public ClientDavInterface getConnection()
   {
     return _con;
@@ -428,7 +408,7 @@ public class VerwaltungDynObj implements Verwaltung, ClientSenderInterface
   /**
    * Setzt die Datenverteilerverbindung
    * 
-   * @param connection
+   * @param connection die Verbindung
    */
   public void setConnection(ClientDavInterface connection)
   {

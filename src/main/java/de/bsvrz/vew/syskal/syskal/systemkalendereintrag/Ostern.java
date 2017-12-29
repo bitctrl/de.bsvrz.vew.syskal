@@ -29,57 +29,55 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
- * Die Klasse fÃÂ¼r die Berechnung eines Ostersonntags *
+ * Die Klasse für die Berechnung eines Ostersonntags *
  * 
- * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner $)
+ * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner
+ *          $)
  * 
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  * 
  */
-public class Ostern
-{
-  /**
-   * Berechnet Ostersonntag fÃÂ¼r den gregorianischen Kalender, also fÃÂ¼r Jahre > 1583. Die RÃÂ¼ckgabe enthÃÂ¤lt das gleiche
-   * Jahr und als Monat, entweder MÃÂ¤rz oder April, sowie den korrekten Tag.
-   * 
-   * @param year >
-   *          1583
-   * @return Calendar, Ostersonntag.
-   */
-  public static Calendar Ostersonntag(int jahr)
-  {
-    int i = jahr % 19;
-    int j = jahr / 100;
-    int k = jahr % 100;
+public class Ostern {
+	/**
+	 * Berechnet Ostersonntag für den gregorianischen Kalender, also für Jahre
+	 * &gt; 1583. Die Rückgabe enthält das gleiche Jahr und als Monat, entweder
+	 * März oder April, sowie den korrekten Tag.
+	 * 
+	 * @param jahr
+	 *            year &gt; 1583
+	 * @return Ostersonntag.
+	 */
+	public static Calendar Ostersonntag(int jahr) {
+		int i = jahr % 19;
+		int j = jahr / 100;
+		int k = jahr % 100;
 
-    int l = (19 * i + j - (j / 4) - ((j - ((j + 8) / 25) + 1) / 3) + 15) % 30;
-    int m = (32 + 2 * (j % 4) + 2 * (k / 4) - l - (k % 4)) % 7;
-    int n = l + m - 7 * ((i + 11 * l + 22 * m) / 451) + 114;
+		int l = (19 * i + j - (j / 4) - ((j - ((j + 8) / 25) + 1) / 3) + 15) % 30;
+		int m = (32 + 2 * (j % 4) + 2 * (k / 4) - l - (k % 4)) % 7;
+		int n = l + m - 7 * ((i + 11 * l + 22 * m) / 451) + 114;
 
-    int month = n / 31;
-    int day = (n % 31) + 1;
+		int month = n / 31;
+		int day = (n % 31) + 1;
 
-    return new GregorianCalendar(jahr, month - 1, day);
-  }
+		return new GregorianCalendar(jahr, month - 1, day);
+	}
 
-  public boolean isOstersonntag(Calendar cal)
-  {
+	public boolean isOstersonntag(Calendar cal) {
 
-    int jahr = cal.get(Calendar.YEAR);
+		int jahr = cal.get(Calendar.YEAR);
 
-    Calendar calendar = Ostersonntag(jahr);
+		Calendar calendar = Ostersonntag(jahr);
 
-    if (cal.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
-        && cal.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)
-        && cal.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH))
-    {
+		if (cal.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
+				&& cal.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)
+				&& cal.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH)) {
 
-      return true;
+			return true;
 
-    }
+		}
 
-    return false;
-  }
+		return false;
+	}
 
 }

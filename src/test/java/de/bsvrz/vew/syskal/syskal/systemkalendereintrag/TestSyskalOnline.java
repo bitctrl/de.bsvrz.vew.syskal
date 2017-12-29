@@ -255,10 +255,8 @@ public class TestSyskalOnline implements StandardApplication
    * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}>
    * @param ske
    *            der Systemkalendereintrag
-   * @param von
+   * @param jahr
    *          Anfangsdatum
-   * @param bis
-   *          Enddatum
    */
   private static void erstelleAbfrageUndAusgabeErgebnisTyp3(SystemkalenderEintrag ske, int jahr)
   {

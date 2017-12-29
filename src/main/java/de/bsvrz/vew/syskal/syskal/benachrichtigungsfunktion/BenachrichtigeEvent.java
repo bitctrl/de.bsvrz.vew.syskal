@@ -41,11 +41,6 @@ public class BenachrichtigeEvent extends EventObject
 
   protected String _meldung;
 
-  /**
-   * Konstruktor
-   * 
-   * @param source
-   */
   public BenachrichtigeEvent(Object source, String meldung)
   {
     super(source);
@@ -53,11 +48,6 @@ public class BenachrichtigeEvent extends EventObject
     // TODO Auto-generated constructor stub
   }
 
-  /**
-   * Holt die Meldung aus dem Objekt
-   * 
-   * @return
-   */
   public String getMeldung()
   {
     return _meldung;

@@ -92,11 +92,6 @@ public class DefinierterEintrag extends LogischeVerknuepfung
 //  protected Map<String, ListeZustandsWechsel> mapListeZustandsWechsel = new HashMap<String, ListeZustandsWechsel>();
   protected List<ListeZustandsWechsel> listListeZustandsWechsel = new ArrayList<ListeZustandsWechsel>();
 
-  /**
-   * @param skeList
-   * @param pid
-   * @param definition
-   */
   public DefinierterEintrag(Map<String, SystemkalenderEintrag> skeList, String pid, String definition)
   {
     super(skeList, pid, definition);
@@ -197,11 +192,6 @@ public class DefinierterEintrag extends LogischeVerknuepfung
 
   }
 
-  /**
-   * @param s
-   * @param jahr
-   * @return
-   */
   public boolean eintragAufloesen(String s, int jahr)
   {
 

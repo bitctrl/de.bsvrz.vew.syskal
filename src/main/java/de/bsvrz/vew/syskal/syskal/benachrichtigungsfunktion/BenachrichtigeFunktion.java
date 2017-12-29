@@ -79,7 +79,7 @@ public class BenachrichtigeFunktion extends TimerTask
   /**
    * Konstruktor der Klasse, mit Zeitangabe des Zustandswechsels
    * 
-   * @param e
+   * @param ske
    *          das Ereignis, welches den Zustand meldet
    * @param now
    *          Die Zeit bis die Daten versendet werden sollen

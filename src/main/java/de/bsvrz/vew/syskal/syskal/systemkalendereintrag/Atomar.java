@@ -84,12 +84,6 @@ public class Atomar implements SystemkalenderEintrag, Cloneable
    */
   protected Debug _debug;
 
-  /**
-   * Konstruktor der Klasse
-   * 
-   * @param pid
-   *          Die Pid des Ske
-   */
   public Atomar(String pid, String definition)
   {
 

@@ -35,7 +35,7 @@ import java.util.SortedMap;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Die Klasse parst SystemKalenderEintraege aller mÃÂ¶glichen Typen
+ * Die Klasse parst SystemKalenderEintraege aller möglichen Typen
  * 
  * @version $Revision: 1.4 $ / $Date: 2015/06/08 15:13:12 $ / ($Author: Pittner $)
  * 
@@ -47,7 +47,7 @@ public class Parser
 {
 
   /**
-   * Der Debugger, stellt verschiedene Protokollierungsfunktionen zur VerfÃÂ¼gung
+   * Der Debugger, stellt verschiedene Protokollierungsfunktionen zur Verfügung
    */
   private Debug _debug;
 
@@ -66,8 +66,8 @@ public class Parser
    *          Die Pid
    * @param definition
    *          Die definition des Ske
-   * @return Boolean true, wenn ein gÃÂ¼ltiger Ske einem der definierten Typen entspricht
-   * @throws IllegalArgumentException
+   * @return Boolean true, wenn ein gültiger Ske einem der definierten Typen entspricht
+   * @throws Exception
    *           Wenn einer der uebergebenen Argumente einen null-Wert enthaelt.
    */
   public Boolean parseSystemkalenderEintrag(String pid, String name, String definition) throws Exception

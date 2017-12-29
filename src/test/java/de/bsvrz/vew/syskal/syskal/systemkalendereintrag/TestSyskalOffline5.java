@@ -14,9 +14,6 @@ public class TestSyskalOffline5
    */
   private static DateFormat _sdf;
 
-  /**
-   * @param args
-   */
   public static void main(String[] args)
   {   
     try
@@ -122,10 +119,8 @@ public class TestSyskalOffline5
    * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}>
    * @param ske
    *            der Systemkalendereintrag
-   * @param von
-   *          Anfangsdatum
-   * @param bis
-   *          Enddatum
+   * @param jahr
+   *          das Jahr
    */
   private static void erstelleAbfrageUndAusgabeErgebnisTyp3(SystemkalenderEintrag ske, int jahr)
   {
@@ -153,10 +148,8 @@ public class TestSyskalOffline5
    * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}>
    * @param ske
    *            der Systemkalendereintrag
-   * @param von
+   * @param jetzt
    *          Anfangsdatum
-   * @param bis
-   *          Enddatum
    */
   private static void erstelleAbfrageUndAusgabeErgebnisTyp4(SystemkalenderEintrag ske,  Date jetzt)
   {   

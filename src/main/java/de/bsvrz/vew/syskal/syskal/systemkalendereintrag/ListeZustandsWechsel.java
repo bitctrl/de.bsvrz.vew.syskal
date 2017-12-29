@@ -58,9 +58,6 @@ public class ListeZustandsWechsel
    */
   private SortedMap<Long, Boolean> listeZustandsWechsel = new TreeMap<Long, Boolean>();
 
-  /**
-   * @param list
-   */
   public void setListeZustandsWechsel(SortedMap<Long, Boolean> list)
   {
 
@@ -68,9 +65,6 @@ public class ListeZustandsWechsel
 
   }
 
-  /**
-   * @return
-   */
   public SortedMap<Long, Boolean> getListeZustandsWechsel()
   {
 
@@ -86,7 +80,7 @@ public class ListeZustandsWechsel
    * 
    * @param start
    *          Startzeitpunkt der Berechnung
-   * @return Map.Entry<Long, Boolean> Zeitpunkt mit Zustand
+   * @return Zeitpunkt mit Zustand
    */
   protected Map.Entry<Long, Boolean> berechneNaechstenZustandsWechsel(long start)
   {
@@ -115,7 +109,7 @@ public class ListeZustandsWechsel
    * 
    * @param ende
    *          Startzeitpunkt der Berechnung
-   * @return Map.Entry<Long, Boolean> Zeitpunkt mit Zustand
+   * @return Zeitpunkt mit Zustand
    */
   protected Map.Entry<Long, Boolean> berechneLetztenZustandsWechsel(long ende)
   {
@@ -168,7 +162,7 @@ public class ListeZustandsWechsel
    * @param bis
    *          Endezeitpunkt der Berechnung
    * 
-   * @return SortedMap<Long, Boolean> zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel und dem Zustand
+   * @return zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel und dem Zustand
    * 
    */
   public SortedMap<Long, Boolean> berechneVonBis(long von, long bis)
@@ -223,7 +217,7 @@ public class ListeZustandsWechsel
    *          Startzeitpunkt der Berechnung
    * @param bis
    *          Endezeitpunkt der Berechnung
-   * @return SortedMap<Long, Boolean> zeitlich sortierte Liste mit dem Zeitpunkten der ZustandswechselÃÂ´der zeitlichen
+   * @return zeitlich sortierte Liste mit dem Zeitpunkten der ZustandswechselÃÂ´der zeitlichen
    *         Gueltigkeit und dem Zustand
    */
   public SortedMap<Long, Boolean> setGueltigkeitZeit(long von, long bis)
@@ -267,7 +261,7 @@ public class ListeZustandsWechsel
    * @param bezNach
    *          Beziehung des Offsets zum Endezeitpunkt
    * 
-   * @return SortedMap<Long, Boolean> zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel der
+   * @return zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel der
    *         verkehrlichen Gueltigkeit und dem Zustand
    */
   public SortedMap<Long, Boolean> setGueltigkeitVerkehr(SortedMap<Long, Boolean> listZeitl, long vor, int bezVor,

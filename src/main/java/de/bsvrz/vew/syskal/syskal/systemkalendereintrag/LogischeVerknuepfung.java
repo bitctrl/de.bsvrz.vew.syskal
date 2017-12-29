@@ -44,7 +44,7 @@ import java.util.TreeSet;
 /**
  * Die Klasse erzeugt SystemKalenderEintraege vom Typ: "ODER{Samstag, Sonntag}*,*" oder "UND{MoBisSa, NICHT
  * Feiertag}*,*". Die Berechnung der Zeitpunkte mit Wildcards bezieht sich noch auf das aktuelle Kalenderjahr. Die
- * Vorgehensweise kÃÂ¶nnte dahingehend sein, dass beim Jahrewechsel die Zustandswechsel neu berechnet werden. Muss also
+ * Vorgehensweise könnte dahingehend sein, dass beim Jahrewechsel die Zustandswechsel neu berechnet werden. Muss also
  * noch geklÃÂ¤rt werden *
  * 
  * @version $Revision: 1.7 $ / $Date: 2015/06/08 15:13:12 $ / ($Author: Pittner $)
@@ -76,11 +76,6 @@ public class LogischeVerknuepfung extends DatumJahr
    */
   private Map<String, SystemkalenderEintrag> skeList;
 
-  /**
-   * @param skeList
-   * @param pid
-   * @param value
-   */
   public LogischeVerknuepfung(Map<String, SystemkalenderEintrag> skeList, String pid, String value)
   {
 
@@ -408,7 +403,7 @@ public class LogischeVerknuepfung extends DatumJahr
    *          Startzeitpunkt der Berechnung
    * @param bis
    *          Endezeitpunkt der Berechnung
-   * @return SortedMap<Long, Boolean> zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel und dem Zustand
+   * @return zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel und dem Zustand
    */
   public static SortedMap<Long, Boolean> berechneNegativZustandsWechsel(String von, String bis)
   {
@@ -482,9 +477,6 @@ public class LogischeVerknuepfung extends DatumJahr
     return skeList;
   }
 
-  /**
-   * @param skeList
-   */
   public void setSkeList(Map<String, SystemkalenderEintrag> skeList)
   {
     this.skeList = skeList;

@@ -37,89 +37,83 @@ import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag;
 /**
  * Kommentar
  * 
- * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner $)
+ * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner
+ *          $)
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  */
-public class ErinnerungsFunktion
-{
+public class ErinnerungsFunktion {
 
-  /**
-   * Das Timer Objekt
-   */
-  private Timer timer = new Timer();
+	/**
+	 * Das Timer Objekt
+	 */
+	private Timer timer = new Timer();
 
-  /**
-   * Das Ereignis, wird dem Sender-Instanz ÃÂ¼bergeben
-   */
-  private SystemkalenderEintrag ske;
+	/**
+	 * Das Ereignis, wird dem Sender-Instanz ÃÂ¼bergeben
+	 */
+	private SystemkalenderEintrag ske;
 
-  /**
-   * Der Debugger, stellt verschiedene Protokollierungsfunktionen zur VerfÃÂ¼gung
-   */
-  private Debug _debug;
+	/**
+	 * Der Debugger, stellt verschiedene Protokollierungsfunktionen zur VerfÃÂ¼gung
+	 */
+	private Debug _debug;
 
-  /**
-   * Konstruktor der Klasse
-   * 
-   * @param e
-   *          das Ereignis, welches den Zustand meldet
-   * @param b
-   *          Schalter, der den Wecker sofort(false) oder zum definerten Zeitpunkt(true) losgehen laesst
-   */
-  public ErinnerungsFunktion(SystemkalenderEintrag ske, Boolean b)
-  {
-    this.ske = ske;
+	/**
+	 * Konstruktor der Klasse
+	 * 
+	 * @param ske
+	 *            das Ereignis, welches den Zustand meldet
+	 * @param b
+	 *            Schalter, der den Wecker sofort(false) oder zum definerten
+	 *            Zeitpunkt(true) losgehen laesst
+	 */
+	public ErinnerungsFunktion(SystemkalenderEintrag ske, Boolean b) {
+		this.ske = ske;
 
-    _debug = SystemkalenderArbeiter.getDebug();
+		_debug = SystemkalenderArbeiter.getDebug();
 
-    Long now = new Date().getTime();
+		Long now = new Date().getTime();
 
-    if (b)
-    {
+		if (b) {
 
-      for (Map.Entry<Long, Boolean> me : ske.getListeZustandsWechsel().entrySet())
-      {
-        if (me.getKey() > now)
-        {
+			for (Map.Entry<Long, Boolean> me : ske.getListeZustandsWechsel().entrySet()) {
+				if (me.getKey() > now) {
 
-          Long l = me.getKey();
-          load(l);
+					Long l = me.getKey();
+					load(l);
 
-        }
-      }
+				}
+			}
 
-    }
-    else
-    {
+		} else {
 
-      load(now);
+			load(now);
 
-    }
+		}
 
-  }
+	}
 
-  /**
-   * stellt den Timer
-   * 
-   * @param l
-   */
-  public void load(Long l)
-  {
-    Date date = new Date();
-    date.setTime(l);
+	/**
+	 * stellt den Timer
+	 * 
+	 * @param l
+	 *            der Zeitstempel
+	 */
+	public void load(Long l) {
+		Date date = new Date();
+		date.setTime(l);
 
-    timer.schedule(new BenachrichtigeFunktion(ske, l), date);
+		timer.schedule(new BenachrichtigeFunktion(ske, l), date);
 
-  }
+	}
 
-  /**
-   * loescht den Timer
-   */
-  public void unload()
-  {
+	/**
+	 * loescht den Timer
+	 */
+	public void unload() {
 
-    timer.cancel();
+		timer.cancel();
 
-  }
+	}
 }
