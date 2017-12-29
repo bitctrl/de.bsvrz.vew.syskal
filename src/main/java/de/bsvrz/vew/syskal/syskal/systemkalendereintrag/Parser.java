@@ -36,352 +36,308 @@ import de.bsvrz.sys.funclib.debug.Debug;
 /**
  * Die Klasse parst SystemKalenderEintraege aller möglichen Typen
  * 
- * @version $Revision: 1.4 $ / $Date: 2015/06/08 15:13:12 $ / ($Author: Pittner $)
+ * @version $Revision: 1.4 $ / $Date: 2015/06/08 15:13:12 $ / ($Author: Pittner
+ *          $)
  * 
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  * 
  */
-public class Parser
-{
+public class Parser {
 
-  /**
-   * Der Debugger, stellt verschiedene Protokollierungsfunktionen zur Verfügung
-   */
-  private Debug _debug;
+	/**
+	 * Der Debugger, stellt verschiedene Protokollierungsfunktionen zur Verfügung
+	 */
+	private Debug _debug;
 
-  /**
-   * Konstruktor der Klasse
-   */
-  public Parser()
-  {
-    _debug = Debug.getLogger();
-  }
+	/**
+	 * Konstruktor der Klasse
+	 */
+	public Parser() {
+		_debug = Debug.getLogger();
+	}
 
-  /**
-   * Parst die verschieden Typen von SystemKalenderEintraegen
-   * 
-   * @param pid
-   *          Die Pid
-   * @param definition
-   *          Die definition des Ske
-   * @return Boolean true, wenn ein gültiger Ske einem der definierten Typen entspricht
-   * @throws Exception
-   *           Wenn einer der uebergebenen Argumente einen null-Wert enthaelt.
-   */
-  public Boolean parseSystemkalenderEintrag(String pid, String name, String definition) throws Exception
-  {
+	/**
+	 * Parst die verschieden Typen von SystemKalenderEintraegen
+	 * 
+	 * @param pid
+	 *            Die Pid
+	 * @param name
+	 *            der Name des Eintrags
+	 * @param definition
+	 *            die Definition des Ske
+	 * @return Boolean true, wenn ein gültiger Ske einem der definierten Typen
+	 *         entspricht
+	 * @throws Exception
+	 *             Wenn einer der uebergebenen Argumente einen null-Wert enthaelt.
+	 */
+	public Boolean parseSystemkalenderEintrag(String pid, String name, String definition) throws Exception {
 
-    if (pid == null || definition == null)
-      throw new IllegalArgumentException("null value");
+		if (pid == null || definition == null)
+			throw new IllegalArgumentException("null value");
 
-    pid = pid.toLowerCase();
-    name = name.toLowerCase();
-    
-    definition = definition.toLowerCase();
+		pid = pid.toLowerCase();
+		name = name.toLowerCase();
 
-    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
-    Calendar cal = Calendar.getInstance();    
-    
-    Integer jahr = cal.get(Calendar.YEAR);
-    
-    String s1 = "01.01." + jahr + " 00:00:00,000";   
-   
-    jahr += 1;
-    
-    String s2 = "01.01." + jahr + " 00:00:00,000";
-    
-    Date d1 = format.parse(s1);
-    Date d2 = format.parse(s2);
+		definition = definition.toLowerCase();
 
+		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
+		Calendar cal = Calendar.getInstance();
 
-    if (definition.contains("<") || definition.contains("({"))
-    {
+		Integer jahr = cal.get(Calendar.YEAR);
 
-      // Eintrag erzeugen und zur Liste der Systemkalendereintraege
-      // hinzufuegen
-      DatumVonBis dvb = new DatumVonBis(pid, definition);
-      dvb.setName(name);
+		String s1 = "01.01." + jahr + " 00:00:00,000";
 
-      // Es wird geprueft ob ein neuer SystemKalenderEintrag gesendet wurde
-      if (!SystemkalenderArbeiter.getSkeList().containsKey(dvb.getPid()))
-      {
+		jahr += 1;
 
-        if (dvb.pruefeEintrag())
-        {
-          
-          SortedMap<Long, Boolean> sm = dvb.berechneZustandsWechsel(d1.getTime(), d2.getTime(), cal.get(Calendar.YEAR));
-          if (sm!= null)
-            dvb.getListeZustandsWechsel().putAll(sm);
-          
-          SystemkalenderArbeiter.getSkeList().put(pid, dvb);
+		String s2 = "01.01." + jahr + " 00:00:00,000";
 
-          return true;
-        }
+		Date d1 = format.parse(s1);
+		Date d2 = format.parse(s2);
 
-      }
-      else
-      {
-        // SystemKalenderEintrag schon vorhanden
-        DatumVonBis tmp = (DatumVonBis)SystemkalenderArbeiter.getSkeList().get(dvb.getPid());
-        String alt = tmp.getDefinition();
-        String neu = dvb.getDefinition();
+		if (definition.contains("<") || definition.contains("({")) {
 
-        // Es wird geprueft ob eine neue Definition gesendet wurde
-        if (alt.equals(neu))
-        {
-          _debug.fine("Definition ist noch die Alte");
-          return true;
-        }
-        else
-        {
-          if (dvb.pruefeEintrag())
-          {
+			// Eintrag erzeugen und zur Liste der Systemkalendereintraege
+			// hinzufuegen
+			DatumVonBis dvb = new DatumVonBis(pid, definition);
+			dvb.setName(name);
 
-            SortedMap<Long, Boolean> sm = dvb.berechneZustandsWechsel(d1.getTime(), d2.getTime(), cal.get(Calendar.YEAR));
-            if (sm!= null)
-              dvb.getListeZustandsWechsel().putAll(sm);
+			// Es wird geprueft ob ein neuer SystemKalenderEintrag gesendet wurde
+			if (!SystemkalenderArbeiter.getSkeList().containsKey(dvb.getPid())) {
 
-            SystemkalenderArbeiter.getSkeList().put(dvb.getPid(), dvb);
+				if (dvb.pruefeEintrag()) {
 
-            return true;
-          }
-        }
-      }
-    }
-    else if (definition.contains(".") && definition.contains(","))
-    {       
-      DatumJahr dtj = new DatumJahr(pid, definition);
-      dtj.setName(name);
+					SortedMap<Long, Boolean> sm = dvb.berechneZustandsWechsel(d1.getTime(), d2.getTime(),
+							cal.get(Calendar.YEAR));
+					if (sm != null)
+						dvb.getListeZustandsWechsel().putAll(sm);
 
-      // Es wird geprueft ob ein neuer SystemKalenderEintrag gesendet wurde
-      if (!SystemkalenderArbeiter.getSkeList().containsKey(dtj.getPid()))
-      {
-        if (dtj.pruefeEintrag())
-        {
+					SystemkalenderArbeiter.getSkeList().put(pid, dvb);
 
-          
-          SortedMap<Long, Boolean> sm = dtj.berechneZustandsWechsel(d1.getTime(), d2.getTime(), cal.get(Calendar.YEAR));
- 
-          if (sm!= null)
-            dtj.getListeZustandsWechsel().putAll(sm);
- 
-          SystemkalenderArbeiter.getSkeList().put(pid, dtj);
+					return true;
+				}
 
-          return true;
-        }
+			} else {
+				// SystemKalenderEintrag schon vorhanden
+				DatumVonBis tmp = (DatumVonBis) SystemkalenderArbeiter.getSkeList().get(dvb.getPid());
+				String alt = tmp.getDefinition();
+				String neu = dvb.getDefinition();
 
-      }
-      else
-      {    
-        // SystemKalenderEintrag schon vorhanden
-        DatumJahr tmp = (DatumJahr)SystemkalenderArbeiter.getSkeList().get(dtj.getPid());
-        String alt = tmp.getDefinition();
-        String neu = dtj.getDefinition();
+				// Es wird geprueft ob eine neue Definition gesendet wurde
+				if (alt.equals(neu)) {
+					_debug.fine("Definition ist noch die Alte");
+					return true;
+				}
+				if (dvb.pruefeEintrag()) {
 
-        // Es wird geprueft ob eine neue Definition gesendet wurde
-        if (alt.equals(neu))
-        {
-          _debug.fine("Definition ist noch die Alte");
-          return true;
+					SortedMap<Long, Boolean> sm = dvb.berechneZustandsWechsel(d1.getTime(), d2.getTime(),
+							cal.get(Calendar.YEAR));
+					if (sm != null)
+						dvb.getListeZustandsWechsel().putAll(sm);
 
-        }
-        else
-        {
-          if (dtj.pruefeEintrag())
-          {
+					SystemkalenderArbeiter.getSkeList().put(dvb.getPid(), dvb);
 
-            SystemkalenderArbeiter.getSkeList().remove(dtj.getPid());
+					return true;
+				}
+			}
+		} else if (definition.contains(".") && definition.contains(",")) {
+			DatumJahr dtj = new DatumJahr(pid, definition);
+			dtj.setName(name);
 
-            SortedMap<Long, Boolean> sm = dtj.berechneZustandsWechsel(d1.getTime(), d2.getTime(), cal.get(Calendar.YEAR));
-            if (sm!= null)
-              dtj.getListeZustandsWechsel().putAll(sm);
+			// Es wird geprueft ob ein neuer SystemKalenderEintrag gesendet wurde
+			if (!SystemkalenderArbeiter.getSkeList().containsKey(dtj.getPid())) {
+				if (dtj.pruefeEintrag()) {
 
-            SystemkalenderArbeiter.getSkeList().put(dtj.getPid(), dtj);
-            
-            return true;
-          }
-        }
-      }
+					SortedMap<Long, Boolean> sm = dtj.berechneZustandsWechsel(d1.getTime(), d2.getTime(),
+							cal.get(Calendar.YEAR));
 
-    }
-    else if (definition.equalsIgnoreCase("montag") || definition.equalsIgnoreCase("dienstag")
-        || definition.equalsIgnoreCase("mittwoch") || definition.equalsIgnoreCase("donnerstag")
-        || definition.equalsIgnoreCase("freitag") || definition.equalsIgnoreCase("samstag")
-        || definition.equalsIgnoreCase("sonntag") || definition.equalsIgnoreCase("ostersonntag")
-        || definition.equalsIgnoreCase("tag"))
-    {
+					if (sm != null)
+						dtj.getListeZustandsWechsel().putAll(sm);
 
-      // Eintrag erzeugen und zur Liste der Systemkalendereintraege
-      // hinzufuegen
-      Atomar atm = new Atomar(pid, definition);
-      atm.setName(name);
+					SystemkalenderArbeiter.getSkeList().put(pid, dtj);
 
-      //SortedMap<Long, Boolean> sm = atm.berechneZustandsWechsel(d1.getTime(), d2.getTime(), cal.get(Calendar.YEAR));
-      SortedMap<Long, Boolean> sm = atm.berechneZustandsWechsel(cal.get(Calendar.YEAR));
-      if (sm!= null)
-        atm.getListeZustandsWechsel().putAll(sm);
-      
-      SystemkalenderArbeiter.getSkeList().put(pid, atm);
+					return true;
+				}
 
-      return true;
+			} else {
+				// SystemKalenderEintrag schon vorhanden
+				DatumJahr tmp = (DatumJahr) SystemkalenderArbeiter.getSkeList().get(dtj.getPid());
+				String alt = tmp.getDefinition();
+				String neu = dtj.getDefinition();
 
-    }
-    else if ((definition.contains("und") || definition.contains("oder") || definition.contains("nicht")))
-    {
+				// Es wird geprueft ob eine neue Definition gesendet wurde
+				if (alt.equals(neu)) {
+					_debug.fine("Definition ist noch die Alte");
+					return true;
 
-      // Eintrag erzeugen und zur Liste der Systemkalendereintraege
-      // hinzufuegen
-      LogischeVerknuepfung lvk = new LogischeVerknuepfung(SystemkalenderArbeiter.getSkeList(), pid, definition);
-      lvk.setName(name);
+				}
+				if (dtj.pruefeEintrag()) {
 
-      // Es wird geprueft ob ein neuer SystemKalenderEintrag gesendet wurde
-      if (!SystemkalenderArbeiter.getSkeList().containsKey(lvk.getPid()))
-      {
+					SystemkalenderArbeiter.getSkeList().remove(dtj.getPid());
 
-        if (lvk.pruefeEintrag())
-        {
+					SortedMap<Long, Boolean> sm = dtj.berechneZustandsWechsel(d1.getTime(), d2.getTime(),
+							cal.get(Calendar.YEAR));
+					if (sm != null)
+						dtj.getListeZustandsWechsel().putAll(sm);
 
-          SortedMap<Long, Boolean> sm = lvk.berechneZustandsWechsel(d1.getTime(), d2.getTime(), cal.get(Calendar.YEAR));
-          if (sm!= null)
-            lvk.getListeZustandsWechsel().putAll(sm);
-          else
-            _debug.fine("Liste Zustandswechsel ist null: " + lvk.getPid());
-          
-          SystemkalenderArbeiter.getSkeList().put(pid, lvk);
+					SystemkalenderArbeiter.getSkeList().put(dtj.getPid(), dtj);
 
-          return true;
-        }
+					return true;
+				}
+			}
 
-      }
-      else
-      {
-        // SystemKalenderEintrag schon vorhanden
-        LogischeVerknuepfung tmp = (LogischeVerknuepfung)SystemkalenderArbeiter.getSkeList().get(lvk.getPid());
-        String alt = tmp.getDefinition();
-        String neu = lvk.getDefinition();
+		} else if (definition.equalsIgnoreCase("montag") || definition.equalsIgnoreCase("dienstag")
+				|| definition.equalsIgnoreCase("mittwoch") || definition.equalsIgnoreCase("donnerstag")
+				|| definition.equalsIgnoreCase("freitag") || definition.equalsIgnoreCase("samstag")
+				|| definition.equalsIgnoreCase("sonntag") || definition.equalsIgnoreCase("ostersonntag")
+				|| definition.equalsIgnoreCase("tag")) {
 
-        // Es wird geprueft ob eine neue Definition gesendet wurde
-        if (alt.equals(neu))
-        {
-          _debug.fine("Definition ist noch die Alte");
-          return true;
-        }
-        else
-        {
-          if (lvk.pruefeEintrag())
-          {
+			// Eintrag erzeugen und zur Liste der Systemkalendereintraege
+			// hinzufuegen
+			Atomar atm = new Atomar(pid, definition);
+			atm.setName(name);
 
-            SortedMap<Long, Boolean> sm = lvk.berechneZustandsWechsel(d1.getTime(), d2.getTime(), cal.get(Calendar.YEAR));
-            if (sm!= null)
-              lvk.getListeZustandsWechsel().putAll(sm);
-            else
-              _debug.fine("Liste Zustandswechsel ist null: " + lvk.getPid());
-            
-            SystemkalenderArbeiter.getSkeList().put(lvk.getPid(), lvk);
+			// SortedMap<Long, Boolean> sm = atm.berechneZustandsWechsel(d1.getTime(),
+			// d2.getTime(), cal.get(Calendar.YEAR));
+			SortedMap<Long, Boolean> sm = atm.berechneZustandsWechsel(cal.get(Calendar.YEAR));
+			if (sm != null)
+				atm.getListeZustandsWechsel().putAll(sm);
 
-            return true;
-          }
-        }
-      }
+			SystemkalenderArbeiter.getSkeList().put(pid, atm);
 
-    }
-    else if ((definition.contains("+") || definition.contains("-")))
-    {
-      DefinierterEintrag def = new DefinierterEintrag(SystemkalenderArbeiter.getSkeList(), pid, definition);
-      def.setName(name);
+			return true;
 
-      // Es wird geprueft ob ein neuer SystemKalenderEintrag gesendet wurde
-      if (!SystemkalenderArbeiter.getSkeList().containsKey(def.getPid()))
-      {
-        if (def.pruefeEintrag())
-        {
-          
-          SortedMap<Long, Boolean> sm = def.berechneZustandsWechsel(d1.getTime(), d2.getTime(), cal.get(Calendar.YEAR));
+		} else if ((definition.contains("und") || definition.contains("oder") || definition.contains("nicht"))) {
 
-          if (sm!= null)
-            def.getListeZustandsWechsel().putAll(sm);
+			// Eintrag erzeugen und zur Liste der Systemkalendereintraege
+			// hinzufuegen
+			LogischeVerknuepfung lvk = new LogischeVerknuepfung(SystemkalenderArbeiter.getSkeList(), pid, definition);
+			lvk.setName(name);
 
-          SystemkalenderArbeiter.getSkeList().put(pid, def);
+			// Es wird geprueft ob ein neuer SystemKalenderEintrag gesendet wurde
+			if (!SystemkalenderArbeiter.getSkeList().containsKey(lvk.getPid())) {
 
-          return true;
+				if (lvk.pruefeEintrag()) {
 
-        }
+					SortedMap<Long, Boolean> sm = lvk.berechneZustandsWechsel(d1.getTime(), d2.getTime(),
+							cal.get(Calendar.YEAR));
+					if (sm != null)
+						lvk.getListeZustandsWechsel().putAll(sm);
+					else
+						_debug.fine("Liste Zustandswechsel ist null: " + lvk.getPid());
 
-      }
-      else
-      {
-        // SystemKalenderEintrag schon vorhanden
-        DefinierterEintrag tmp = (DefinierterEintrag)SystemkalenderArbeiter.getSkeList().get(def.getPid());
-        String alt = tmp.getDefinition();
-        String neu = def.getDefinition();
+					SystemkalenderArbeiter.getSkeList().put(pid, lvk);
 
-        // Es wird geprueft ob eine neue Definition gesendet wurde
-        if (alt.equals(neu))
-        {
-          if (def.pruefeEintrag())
-            return true;
-        }
-        else
-        {
-          if (def.pruefeEintrag())
-          {
+					return true;
+				}
 
-            SortedMap<Long, Boolean> sm = def.berechneZustandsWechsel(d1.getTime(), d2.getTime(), cal.get(Calendar.YEAR));
-            if (sm!= null)
-              def.getListeZustandsWechsel().putAll(sm);
+			} else {
+				// SystemKalenderEintrag schon vorhanden
+				LogischeVerknuepfung tmp = (LogischeVerknuepfung) SystemkalenderArbeiter.getSkeList().get(lvk.getPid());
+				String alt = tmp.getDefinition();
+				String neu = lvk.getDefinition();
 
-            SystemkalenderArbeiter.getSkeList().put(def.getPid(), def);
+				// Es wird geprueft ob eine neue Definition gesendet wurde
+				if (alt.equals(neu)) {
+					_debug.fine("Definition ist noch die Alte");
+					return true;
+				}
+				if (lvk.pruefeEintrag()) {
 
-            return true;
-          }
-        }
-      }
+					SortedMap<Long, Boolean> sm = lvk.berechneZustandsWechsel(d1.getTime(), d2.getTime(),
+							cal.get(Calendar.YEAR));
+					if (sm != null)
+						lvk.getListeZustandsWechsel().putAll(sm);
+					else
+						_debug.fine("Liste Zustandswechsel ist null: " + lvk.getPid());
 
-    }else{
-           
-      Map<String, SystemkalenderEintrag> skeList = SystemkalenderArbeiter.getSkeList();
-      
-      if (skeList.containsKey("ske." + definition)){
-        
-        
-        SystemkalenderEintrag ske = skeList.get("ske." + definition);
-        
-        if (ske instanceof DatumJahr)
-        {
-          DatumJahr dtj = (DatumJahr)ske;                    
-          SystemkalenderArbeiter.getSkeList().put(pid, dtj);
-          return true;
-        }
-        else if (ske instanceof DatumVonBis)
-        {
-          DatumVonBis dvb = (DatumVonBis)ske;
-          SystemkalenderArbeiter.getSkeList().put(pid, dvb);
-          return true;
-        }
-        else if (ske instanceof LogischeVerknuepfung)
-        {
-          LogischeVerknuepfung lvk = (LogischeVerknuepfung)ske;
-          SystemkalenderArbeiter.getSkeList().put(pid, lvk);
-          return true;
-        }
-        else if (ske instanceof DefinierterEintrag)
-        {
-          DefinierterEintrag def = (DefinierterEintrag)ske;
-          SystemkalenderArbeiter.getSkeList().put(pid, def);
-          return true;
+					SystemkalenderArbeiter.getSkeList().put(lvk.getPid(), lvk);
 
-        }else{          
-          //return false;
-          _debug.error("Eintrag konnte nicht verarbeitet werden" + pid);
-          
-        }
-      }
-    }
+					return true;
+				}
+			}
 
-    // Systemkalendereintrag konnte nicht geparst werden!
-    return false;
+		} else if ((definition.contains("+") || definition.contains("-"))) {
+			DefinierterEintrag def = new DefinierterEintrag(SystemkalenderArbeiter.getSkeList(), pid, definition);
+			def.setName(name);
 
-  }
+			// Es wird geprueft ob ein neuer SystemKalenderEintrag gesendet wurde
+			if (!SystemkalenderArbeiter.getSkeList().containsKey(def.getPid())) {
+				if (def.pruefeEintrag()) {
+
+					SortedMap<Long, Boolean> sm = def.berechneZustandsWechsel(d1.getTime(), d2.getTime(),
+							cal.get(Calendar.YEAR));
+
+					if (sm != null)
+						def.getListeZustandsWechsel().putAll(sm);
+
+					SystemkalenderArbeiter.getSkeList().put(pid, def);
+
+					return true;
+
+				}
+
+			} else {
+				// SystemKalenderEintrag schon vorhanden
+				DefinierterEintrag tmp = (DefinierterEintrag) SystemkalenderArbeiter.getSkeList().get(def.getPid());
+				String alt = tmp.getDefinition();
+				String neu = def.getDefinition();
+
+				// Es wird geprueft ob eine neue Definition gesendet wurde
+				if (alt.equals(neu)) {
+					if (def.pruefeEintrag())
+						return true;
+				} else {
+					if (def.pruefeEintrag()) {
+
+						SortedMap<Long, Boolean> sm = def.berechneZustandsWechsel(d1.getTime(), d2.getTime(),
+								cal.get(Calendar.YEAR));
+						if (sm != null)
+							def.getListeZustandsWechsel().putAll(sm);
+
+						SystemkalenderArbeiter.getSkeList().put(def.getPid(), def);
+
+						return true;
+					}
+				}
+			}
+
+		} else {
+
+			Map<String, SystemkalenderEintrag> skeList = SystemkalenderArbeiter.getSkeList();
+
+			if (skeList.containsKey("ske." + definition)) {
+
+				SystemkalenderEintrag ske = skeList.get("ske." + definition);
+
+				if (ske instanceof DatumJahr) {
+					DatumJahr dtj = (DatumJahr) ske;
+					SystemkalenderArbeiter.getSkeList().put(pid, dtj);
+					return true;
+				} else if (ske instanceof DatumVonBis) {
+					DatumVonBis dvb = (DatumVonBis) ske;
+					SystemkalenderArbeiter.getSkeList().put(pid, dvb);
+					return true;
+				} else if (ske instanceof LogischeVerknuepfung) {
+					LogischeVerknuepfung lvk = (LogischeVerknuepfung) ske;
+					SystemkalenderArbeiter.getSkeList().put(pid, lvk);
+					return true;
+				} else if (ske instanceof DefinierterEintrag) {
+					DefinierterEintrag def = (DefinierterEintrag) ske;
+					SystemkalenderArbeiter.getSkeList().put(pid, def);
+					return true;
+
+				} else {
+					// return false;
+					_debug.error("Eintrag konnte nicht verarbeitet werden" + pid);
+
+				}
+			}
+		}
+
+		// Systemkalendereintrag konnte nicht geparst werden!
+		return false;
+
+	}
 
 }

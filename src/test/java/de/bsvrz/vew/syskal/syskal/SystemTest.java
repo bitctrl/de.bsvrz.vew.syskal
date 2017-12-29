@@ -12,9 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,6 +21,7 @@ import de.bsvrz.dav.daf.main.ClientDavConnection;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientDavParameters;
 import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.authentication.ClientCredentials;
 import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dav.daf.main.config.ConfigurationArea;
@@ -63,11 +62,10 @@ public class SystemTest
     parameters.setDavCommunicationAddress("localhost");
     parameters.setDavCommunicationSubAddress(8083);
     parameters.setUserName("Tester");
-    parameters.setUserPassword("geheim");
 
     _connection = new ClientDavConnection(parameters);
     _connection.connect();
-    _connection.login();
+    _connection.login("Tester", ClientCredentials.ofPassword("geheim".toCharArray()));
 
     SystemkalenderArbeiter.getSkeList().clear();  
     
@@ -153,17 +151,7 @@ public class SystemTest
     loescheSystemKalenderEintrag("ske.ungueltig");
 
   }
-
-  @Before
-  public void setUp() throws Exception
-  {
-  }
-
-  @After
-  public void tearDown() throws Exception
-  {
-  }
-
+ 
   @Test
   public void systemTest1() throws Exception
   {

@@ -263,19 +263,17 @@ public boolean isRequestSupported(SystemObject arg0, DataDescription arg1)
    * @param dd
    *        die Datenbeschreibung
    * @param resultData
-   *        die parametrirenden DatensÃÂ¤tze, verpackt in einem ResultData
+   *        die parametrirenden Datensätze, verpackt in einem ResultData
    * @return
    *        true, wenns funktioniert hat
    *        
    */
-  private boolean parametriere(DataDescription dd, ResultData resultData) throws IllegalArgumentException
+  private boolean parametriere(DataDescription dd, ResultData resultData) 
   {
 
     if (dd == null || resultData == null)
       throw new IllegalArgumentException();
 
-    // TODO Auto-generated method stub
-    // TODO Auto-generated method stub
     try
     {
 

@@ -38,11 +38,9 @@ import de.bsvrz.dav.daf.main.ClientReceiverInterface;
 import de.bsvrz.dav.daf.main.ClientSenderInterface;
 import de.bsvrz.dav.daf.main.DataDescription;
 import de.bsvrz.dav.daf.main.DataState;
-import de.bsvrz.dav.daf.main.OneSubscriptionPerSendData;
 import de.bsvrz.dav.daf.main.ReceiveOptions;
 import de.bsvrz.dav.daf.main.ReceiverRole;
 import de.bsvrz.dav.daf.main.ResultData;
-import de.bsvrz.dav.daf.main.SenderRole;
 import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dav.daf.main.config.ConfigurationObject;
@@ -114,11 +112,6 @@ public class SystemkalenderArbeiter
 	 * Simulationsvariante
 	 */
 	private short _simulationsvariante;
-
-	/**
-	 * Senderrolle
-	 */
-	private SenderRole _senderrolle;
 
 	/**
 	 * Empfaengeroption
@@ -205,8 +198,6 @@ public class SystemkalenderArbeiter
 
 				_datenmodell = _connection.getDataModel();
 
-				_senderrolle = SenderRole.source(); // Rolle der Applikation
-
 				_empfaengeroptionen = ReceiveOptions.normal();
 
 				_empfaengerrolle = ReceiverRole.receiver();
@@ -271,25 +262,12 @@ public class SystemkalenderArbeiter
 		return listSke;
 	}
 
-	/** Anmeldung zum Senden von Daten */
-	private void subscribe(List<SystemObject> objlist) {
-		// Anmelden
-		try {
-			_connection.subscribeSender(this, objlist, _datenbeschreibung, _senderrolle);
-			// _debug.config("subscribe.");
-		} catch (OneSubscriptionPerSendData e) {
-			// _debug.config("Datenidentifikation ist bereits angemeldet.");
-		}
-	}
-
-	/** Abmeldung vom Senden der Daten */
-	private void unsubscribe(List<SystemObject> objlist) {
-		// Abmelden
-		_connection.unsubscribeSender(this, objlist, _datenbeschreibung);
-		// _debug.config("unsubscribe.");
-	}
-
-	/** Anmeldung zum Empfangen von Daten */
+	/**
+	 * Anmeldung zum Empfangen von Daten
+	 * 
+	 * @param objlist
+	 *            die Liste der anzumeldenden Objekte
+	 */
 	private void subscribeReceiver(List<SystemObject> objlist) {
 		// Anmelden
 		_connection.subscribeReceiver(this, objlist, _datenbeschreibung, _empfaengeroptionen, _empfaengerrolle);
@@ -423,10 +401,6 @@ public class SystemkalenderArbeiter
 		return _debug;
 	}
 
-	private static void setDebug(Debug debug) {
-		_debug = debug;
-	}
-
 	/**
 	 * Holt die liste der Systemkalender EintrÃÂ¤ge
 	 * 
@@ -434,10 +408,6 @@ public class SystemkalenderArbeiter
 	 */
 	public static Map<String, SystemkalenderEintrag> getSkeList() {
 		return skeList;
-	}
-
-	private static void setSkeList(Map<String, SystemkalenderEintrag> skeList) {
-		SystemkalenderArbeiter.skeList = skeList;
 	}
 
 	/**
