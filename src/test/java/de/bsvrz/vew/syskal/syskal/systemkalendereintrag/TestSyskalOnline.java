@@ -33,7 +33,7 @@ import de.bsvrz.sys.funclib.operatingMessage.MessageType;
 public class TestSyskalOnline implements StandardApplication
 {
   /**
-   * DebugLogger für Debug-Ausgaben
+   * DebugLogger fÃ¼r Debug-Ausgaben
    */
   private static Debug _debug;
 
@@ -68,8 +68,8 @@ public class TestSyskalOnline implements StandardApplication
    * @see sys.funclib.application.StandardApplication#parseArguments(sys.funclib .ArgumentList)
    */
   /**
-   * Überschriebene Methode von StandardApplication, die die speziellen Startparameter auswertet.<br>
-   * Die Liste der Konfigurationsbereiche wird durch Aufspaltung des übergebenen Strings erstellt und die speziellen
+   * Ãœberschriebene Methode von StandardApplication, die die speziellen Startparameter auswertet.<br>
+   * Die Liste der Konfigurationsbereiche wird durch Aufspaltung des Ã¼bergebenen Strings erstellt und die speziellen
    * Startparameter werden in die Log-Datei eingetragen.
    * 
    * @param argumentList
@@ -94,7 +94,7 @@ public class TestSyskalOnline implements StandardApplication
    * @see sys.funclib.application.StandardApplication#initialize(stauma.dav.clientside .ClientDavInterface)
    */
   /**
-   * Überschriebene Methode von StandardApplication, die die Initialisierung durchführt.<br>
+   * Ãœberschriebene Methode von StandardApplication, die die Initialisierung durchfÃ¼hrt.<br>
    * Entsprechend dem Argument -layer wird die entsprechende Methode aufgerufen und danach die Log-Datei geschlossen.<br>
    * 
    * @param connection
@@ -147,7 +147,7 @@ public class TestSyskalOnline implements StandardApplication
     erstelleAbfrageUndAusgabeErgebnisTyp1(ske2, d1, d2);
     erstelleAbfrageUndAusgabeErgebnisTyp2(ske2, d1, d2);
 
-    SystemkalenderEintrag ske3 = map.get("ske.dienstagalsverknüpfung");
+    SystemkalenderEintrag ske3 = map.get("ske.dienstagalsverknÃ¼pfung");
 
     d1 = _sdf.parse("01.01.2009 15:15:37,000");
     d2 = _sdf.parse("21.12.2009 15:15:37,000");
@@ -248,7 +248,7 @@ public class TestSyskalOnline implements StandardApplication
   }
   
   /**
-   * Erstellt eine Abfrage der Zeitbereiche für das Jahr des Anfangszeitpunktes <br>
+   * Erstellt eine Abfrage der Zeitbereiche fÃ¼r das Jahr des Anfangszeitpunktes <br>
    * durch Benutzung der vom Systemkalender bereitgestellten Methode <br>
    * {@link SystemkalenderEintrag#berechneZustandsWechsel(int)} <br> 
    * Diese Methode liefert das Ergebnis in der Form: <br>

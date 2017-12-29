@@ -220,7 +220,7 @@ public class TestSyskalOffline4
   }
   
   /**
-   * Erstellt eine Abfrage der Zeitbereiche für das Jahr des Anfangszeitpunktes <br>
+   * Erstellt eine Abfrage der Zeitbereiche fÃ¼r das Jahr des Anfangszeitpunktes <br>
    * durch Benutzung der vom Systemkalender bereitgestellten Methode <br>
    * {@link SystemkalenderEintrag#berechneZustandsWechsel(int)} <br> 
    * Diese Methode liefert das Ergebnis in der Form: <br>

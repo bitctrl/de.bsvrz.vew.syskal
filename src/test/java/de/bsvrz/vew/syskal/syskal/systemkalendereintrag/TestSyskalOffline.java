@@ -30,8 +30,8 @@ public class TestSyskalOffline
           "GeburtstagHCK:=27.11.1963,*");
       SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.dienstag", "Dienstag", "Dienstag");
       SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.superdienstag", "SuperDienstag", "SuperDienstag:=UND{Dienstag,Berufsverkehr}*,*");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.dienstagalsverknüpfung", "DienstagAlsVerknüpfung",
-          "DienstagAlsVerknüpfung:=UND{Dienstag}*,*");
+      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.dienstagalsverknÃ¼pfung", "DienstagAlsVerknÃ¼pfung",
+          "DienstagAlsVerknÃ¼pfung:=UND{Dienstag}*,*");
       SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.geburtstag_hck_kopie", "GeburtstagHCKFeierKopie",
           "GeburtstagHCKFeierKopie:=GeburtstagHCK-3Tage");
       SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.supermittwoch", "SuperMittwoch",
@@ -69,7 +69,7 @@ public class TestSyskalOffline
       erstelleAbfrageUndAusgabeErgebnisTyp1(ske2, d1, d2);
       erstelleAbfrageUndAusgabeErgebnisTyp2(ske2, d1, d2);
 
-      SystemkalenderEintrag ske3 = SystemkalenderArbeiter.getSkeList().get("ske.dienstagalsverknüpfung");
+      SystemkalenderEintrag ske3 = SystemkalenderArbeiter.getSkeList().get("ske.dienstagalsverknÃ¼pfung");
 
       d1 = _sdf.parse("01.01.2009 15:15:37,000");
       d2 = _sdf.parse("21.12.2009 15:15:37,000");
@@ -164,7 +164,7 @@ public class TestSyskalOffline
   }
   
   /**
-   * Erstellt eine Abfrage der Zeitbereiche für das Jahr des Anfangszeitpunktes <br>
+   * Erstellt eine Abfrage der Zeitbereiche fÃ¼r das Jahr des Anfangszeitpunktes <br>
    * durch Benutzung der vom Systemkalender bereitgestellten Methode <br>
    * {@link SystemkalenderEintrag#berechneZustandsWechsel(int)} <br> 
    * Diese Methode liefert das Ergebnis in der Form: <br>

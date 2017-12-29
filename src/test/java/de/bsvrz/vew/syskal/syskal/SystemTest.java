@@ -17,6 +17,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.bsvrz.dav.daf.main.ClientDavConnection;
@@ -34,6 +35,7 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.dambach.vewdynobj.VerwaltungDynObj;
 import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderArbeiter;
 
+@Ignore
 public class SystemTest
 {
 
@@ -78,7 +80,7 @@ public class SystemTest
     erzeugeSystemKalenderEintrag("ske._", "_", "_:=18.05.*,*");
     erzeugeSystemKalenderEintrag("ske.#", "#", "#:=17.05.2007,*");
     erzeugeSystemKalenderEintrag("ske.^", "^", "^:=17.05.*,1989");
-    erzeugeSystemKalenderEintrag("ske.º", "º", "º:=17.05.2004,2004");
+    erzeugeSystemKalenderEintrag("ske.Âº", "Âº", "Âº:=17.05.2004,2004");
     erzeugeSystemKalenderEintrag("ske.\\", "\\", "\\:=<25.05.2004-30.05.2004>");
     erzeugeSystemKalenderEintrag("ske./", "/", "/:=ODER{1,_,#}*,*");
     erzeugeSystemKalenderEintrag("ske.hauptverkehrszeit", "Hauptverkehrszeit",
@@ -145,7 +147,7 @@ public class SystemTest
     loescheSystemKalenderEintrag("ske._");
     loescheSystemKalenderEintrag("ske.#");
     loescheSystemKalenderEintrag("ske.^");
-    loescheSystemKalenderEintrag("ske.º");
+    loescheSystemKalenderEintrag("ske.Âº");
     // loescheSystemKalenderEintrag("ske.\\");
     loescheSystemKalenderEintrag("ske./");
     loescheSystemKalenderEintrag("ske.hauptverkehrszeit");
@@ -181,7 +183,7 @@ public class SystemTest
     list.add(_connection.getDataModel().getObject("ske._"));
     list.add(_connection.getDataModel().getObject("ske.#"));
     list.add(_connection.getDataModel().getObject("ske.^"));
-    list.add(_connection.getDataModel().getObject("ske.º"));
+    list.add(_connection.getDataModel().getObject("ske.Âº"));
     list.add(_connection.getDataModel().getObject("ske.\\"));
     list.add(_connection.getDataModel().getObject("ske./"));
 
@@ -213,8 +215,8 @@ public class SystemTest
       assertEquals("Test 5", "ske.1 : 10.04.2004 23:59:59,999 false", strings[3]);
       assertEquals("Test 6", "ske.  : 11.04.2004 00:00:00,000 true", strings[4]);
       assertEquals("Test 7", "ske.  : 11.04.2004 23:59:59,999 false", strings[5]);
-      assertEquals("Test 8", "ske.º : 17.05.2004 00:00:00,000 true", strings[6]);
-      assertEquals("Test 9", "ske.º : 17.05.2004 23:59:59,999 false", strings[7]);
+      assertEquals("Test 8", "ske.Âº : 17.05.2004 00:00:00,000 true", strings[6]);
+      assertEquals("Test 9", "ske.Âº : 17.05.2004 23:59:59,999 false", strings[7]);
       assertEquals("Test 10", "ske./ : 18.05.2004 00:00:00,000 true", strings[8]);
       assertEquals("Test 11", "ske. : 18.05.2004 00:00:00,000 true", strings[9]);
       assertEquals("Test 12", "ske./ : 18.05.2004 23:59:59,999 false", strings[10]);
@@ -271,7 +273,7 @@ public class SystemTest
       assertEquals("Test 27", "ske./ : 10.04.2004 00:00:00,000 10.04.2004 23:59:59,999", strings[loc++]);
       assertEquals("Test 28", "ske.1 : 10.04.2004 00:00:00,000 10.04.2004 23:59:59,999", strings[loc++]);
       assertEquals("Test 29", "ske.  : 11.04.2004 00:00:00,000 11.04.2004 23:59:59,999", strings[loc++]);
-      assertEquals("Test 30", "ske.º : 17.05.2004 00:00:00,000 17.05.2004 23:59:59,999", strings[loc++]);
+      assertEquals("Test 30", "ske.Âº : 17.05.2004 00:00:00,000 17.05.2004 23:59:59,999", strings[loc++]);
       assertEquals("Test 31", "ske./ : 18.05.2004 00:00:00,000 18.05.2004 23:59:59,999", strings[loc++]);
       assertEquals("Test 32", "ske. : 18.05.2004 00:00:00,000 18.05.2004 23:59:59,999", strings[loc++]);
       assertEquals("Test 33", "ske.\\ : 25.05.2004 00:00:00,000 25.05.2004 23:59:59,999", strings[loc++]);
@@ -530,7 +532,7 @@ public class SystemTest
     Data data = _connection.createData(atgKonfig);
     Data[] datas = new Data[1];
     datas[0] = data;
-    vewKonfig.erzeuge(pid, name, "SystemKalenderEinträge", null);
+    vewKonfig.erzeuge(pid, name, "SystemKalenderEintrÃ¤ge", null);
 
     // Erzeuge Parameter
     AttributeGroup atgParam = _connection.getDataModel().getAttributeGroup("atg.systemKalenderEintrag");
@@ -556,7 +558,7 @@ public class SystemTest
         aspKonfig);
 
     vewKonfig.setDynamicObject(_connection.getDataModel().getObject(pid));
-    vewKonfig.loesche(pid, "SystemKalenderEinträge");
+    vewKonfig.loesche(pid, "SystemKalenderEintrÃ¤ge");
   }
 
 }

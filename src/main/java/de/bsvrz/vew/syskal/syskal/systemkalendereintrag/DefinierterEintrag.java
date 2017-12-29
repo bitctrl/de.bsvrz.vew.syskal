@@ -77,12 +77,12 @@ public class DefinierterEintrag extends LogischeVerknuepfung
   String pid;
 
   /**
-   * Die vollst�ndige Definition
+   * Die vollstÃÂ¤ndige Definition
    */
   String definition;
 
   /**
-   * Die vollst�ndige Definition
+   * Die vollstÃÂ¤ndige Definition
    */
   Object _syncObject = new Object();
 
