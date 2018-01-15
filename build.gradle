@@ -1,5 +1,5 @@
 plugins {
-  id "de.bsvrz.gradle.nerzswe" version "0.4.0"
+  id "de.bsvrz.gradle.nerzswe" version "0.7.0"
   id "biz.aQute.bnd.builder" version "3.3.0"
 }
 
@@ -10,7 +10,7 @@ description = 'SWE Verwaltung Systemkalender'
 
 nerzswe {
    	sweStatus = 'BETA'
-	sweDatum = '2017-12-28'
+	sweDatum = ''
 }
 
 dependencies {
