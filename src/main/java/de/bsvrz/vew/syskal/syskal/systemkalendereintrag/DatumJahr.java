@@ -39,14 +39,14 @@ import java.util.TreeMap;
 
 /**
  * Die Klasse erzeugt SystemKalenderEintraege vom Typ: "01.01.*,*" oder "17.06.1963,1989 03.10.1990,*". Die Berechnung
- * der Zeitpunkte mit Wildcards bezieht sich noch auf das aktuelle Kalenderjahr. Die Vorgehensweise k�nnte dahingehend
- * sein, dass beim Jahrewechsel die Zustandswechsel neu berechnet werden. Muss also noch gekl�rt werden *
+ * der Zeitpunkte mit Wildcards bezieht sich noch auf das aktuelle Kalenderjahr. Die Vorgehensweise könnte dahingehend
+ * sein, dass beim Jahrewechsel die Zustandswechsel neu berechnet werden. Muss also noch geklÃÂ¤rt werden *
  * 
  * @version $Revision: 1.6 $ / $Date: 2010/08/03 07:44:21 $ / ($Author: Pittner $)
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  */
-public class DatumJahr extends Atomar implements Cloneable
+public class DatumJahr extends Atomar
 {
 
   /**
@@ -74,7 +74,7 @@ public class DatumJahr extends Atomar implements Cloneable
 
     super(pid, definition);
     this.definition = definition;
-    jahrVonBis = new ArrayList<String[]>();
+    jahrVonBis = new ArrayList<>();
     // _debug = Debug.getLogger();
 
   }
@@ -84,7 +84,8 @@ public class DatumJahr extends Atomar implements Cloneable
    * 
    * @return true, wenn die Pruefung erfolgreich war
    */
-  public boolean pruefeEintrag()
+  @Override
+public boolean pruefeEintrag()
   {
 
     String[] ergebnisse = new String[12];
@@ -122,7 +123,8 @@ public class DatumJahr extends Atomar implements Cloneable
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.Atomar#berechneZustandsWechsel(int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr)
   {
     SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
     Date d1 = null;
@@ -147,7 +149,8 @@ public class DatumJahr extends Atomar implements Cloneable
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.Atomar#berechneZustandsWechsel(java.lang.Long,
    *      java.lang.Long, int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr)
   {
     
     // Die Abfrage besitzt eine eigene Zustandsliste
@@ -155,13 +158,13 @@ public class DatumJahr extends Atomar implements Cloneable
 
     Integer temp = jahr;
 
-    Iterator it1 = jahrVonBis.iterator();
+    Iterator<String[]> it1 = jahrVonBis.iterator();
     while (it1.hasNext())
     {
       String s1 = null;
       String s2 = null;
 
-      String[] _jahr = (String[])it1.next();
+      String[] _jahr = it1.next();
 
       long jahre = 0;
 
@@ -304,22 +307,23 @@ public class DatumJahr extends Atomar implements Cloneable
   /* (non-Javadoc)
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.Atomar#berechneIntervall(java.lang.Long, java.lang.Long, int)
    */
-  public SortedMap<Long, Long> berechneIntervall(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Long> berechneIntervall(Long von, Long bis, int jahr)
   {
     
     // Die Abfrage besitzt eine eigene Zustandsliste
 //    ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
-    SortedMap<Long, Long> liste = new TreeMap<Long, Long>();
+    SortedMap<Long, Long> liste = new TreeMap<>();
     
     Integer temp = jahr;
     
-    Iterator it1 = jahrVonBis.iterator();
+    Iterator<String[]> it1 = jahrVonBis.iterator();
     while (it1.hasNext())
     {
       String s1 = null;
       String s2 = null;
       
-      String[] _jahr = (String[])it1.next();
+      String[] _jahr = it1.next();
       
       long jahre = 0;
       
@@ -477,7 +481,8 @@ public class DatumJahr extends Atomar implements Cloneable
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.Atomar#berechneZustandsWechsel(java.lang.Long,
    *      java.lang.Long, int)
    */
-  public SortedMap<Long, Boolean> berechneZustandsWechselZustand(Long von, Long bis, int jahr)
+  @Override
+public SortedMap<Long, Boolean> berechneZustandsWechselZustand(Long von, Long bis, int jahr)
   {
     // Die Abfrage besitzt eine eigene Zustandsliste
     //ListeZustandsWechsel listeZustandsWechselAbfrage = new ListeZustandsWechsel();
@@ -485,13 +490,13 @@ public class DatumJahr extends Atomar implements Cloneable
 
     Integer temp = jahr;
 
-    Iterator it1 = jahrVonBis.iterator();
+    Iterator<String[]> it1 = jahrVonBis.iterator();
     while (it1.hasNext())
     {
       String s1 = null;
       String s2 = null;
 
-      String[] _jahr = (String[])it1.next();
+      String[] _jahr = it1.next();
 
       long jahre = 0;
 
@@ -625,7 +630,8 @@ public class DatumJahr extends Atomar implements Cloneable
    * 
    * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.Atomar#getDefinition()
    */
-  public String getDefinition()
+  @Override
+public String getDefinition()
   {
 
     return definition;

@@ -1,0 +1,33 @@
+//--------------------------------------------------------------------
+// NERZ-SWE-Plugin
+//--------------------------------------------------------------------
+plugins {
+  id "de.bsvrz.gradle.nerzswe" version "0.7.1"
+  id "biz.aQute.bnd.builder" version "3.3.0"
+}
+
+//--------------------------------------------------------------------
+// SWE-Eigenschaften
+//--------------------------------------------------------------------
+group = 'de.bsvrz.vew'
+version = '1.2.8-SNAPSHOT'
+description = 'SWE Verwaltung Systemkalender'
+
+// Properties des NERZ-SWE-Plugins:
+nerzswe {
+   	sweStatus = 'BETA'
+	sweDatum = ''
+}
+
+//--------------------------------------------------------------------
+// Abhängigkeiten
+//--------------------------------------------------------------------
+String kernsoftware_version = '3.9.7'
+dependencies {
+    compile group: 'de.bsvrz.dav', name: 'de.bsvrz.dav.daf', version: kernsoftware_version
+  compile group: 'de.bsvrz.dav', name: 'de.bsvrz.dav.dav', version: kernsoftware_version
+    compile group: 'de.bsvrz.sys', name: 'de.bsvrz.sys.funclib.application', version: kernsoftware_version
+    compile group: 'de.bsvrz.sys', name: 'de.bsvrz.sys.funclib.dambach', version:'1.2.0'
+  
+    compile group: 'junit', name: 'junit', version:'4.12'
+}

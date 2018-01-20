@@ -38,7 +38,7 @@ public interface Verwaltung
    * @param set
    *        die Pid der Menge der das dynamische Objekt hinzugefuegt wird
    * @param data
-   *        ein Feld von konfigurierenden Datens�tzen
+   *        ein Feld von konfigurierenden DatensÃÂ¤tzen
    */
   public void erzeuge(String pid, String name, String set, Data[] data);
 
