@@ -8,32 +8,31 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.bsvrz.dav.daf.main.ClientDavConnection;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientDavParameters;
 import de.bsvrz.dav.daf.main.Data;
+import de.bsvrz.dav.daf.main.authentication.ClientCredentials;
 import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dav.daf.main.config.ConfigurationArea;
 import de.bsvrz.dav.daf.main.config.ConfigurationObject;
-import de.bsvrz.dav.daf.main.config.DynamicObject;
 import de.bsvrz.dav.daf.main.config.DynamicObjectType;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 //import de.bsvrz.sys.funclib.dambach.vewdynobj.VerwaltungDynObj;
 import de.bsvrz.sys.funclib.dambach.vewdynobj.VerwaltungDynObj;
 import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderArbeiter;
 
+@Ignore
 public class SystemTest
 {
 
@@ -63,11 +62,10 @@ public class SystemTest
     parameters.setDavCommunicationAddress("localhost");
     parameters.setDavCommunicationSubAddress(8083);
     parameters.setUserName("Tester");
-    parameters.setUserPassword("geheim");
 
     _connection = new ClientDavConnection(parameters);
     _connection.connect();
-    _connection.login();
+    _connection.login("Tester", ClientCredentials.ofPassword("geheim".toCharArray()));
 
     SystemkalenderArbeiter.getSkeList().clear();  
     
@@ -78,13 +76,13 @@ public class SystemTest
     erzeugeSystemKalenderEintrag("ske._", "_", "_:=18.05.*,*");
     erzeugeSystemKalenderEintrag("ske.#", "#", "#:=17.05.2007,*");
     erzeugeSystemKalenderEintrag("ske.^", "^", "^:=17.05.*,1989");
-    erzeugeSystemKalenderEintrag("ske.º", "º", "º:=17.05.2004,2004");
+    erzeugeSystemKalenderEintrag("ske.Âº", "Âº", "Âº:=17.05.2004,2004");
     erzeugeSystemKalenderEintrag("ske.\\", "\\", "\\:=<25.05.2004-30.05.2004>");
     erzeugeSystemKalenderEintrag("ske./", "/", "/:=ODER{1,_,#}*,*");
     erzeugeSystemKalenderEintrag("ske.hauptverkehrszeit", "Hauptverkehrszeit",
         "Hauptverkehrszeit:=({07:15:00,000-08:59:59,999}{15:30:00,000-17:44:59,999})*,*");
     
-    Calendar cal = new GregorianCalendar().getInstance();
+    Calendar cal = Calendar.getInstance();
 
     int dow = cal.get(Calendar.DAY_OF_WEEK);
 
@@ -145,7 +143,7 @@ public class SystemTest
     loescheSystemKalenderEintrag("ske._");
     loescheSystemKalenderEintrag("ske.#");
     loescheSystemKalenderEintrag("ske.^");
-    loescheSystemKalenderEintrag("ske.º");
+    loescheSystemKalenderEintrag("ske.Âº");
     // loescheSystemKalenderEintrag("ske.\\");
     loescheSystemKalenderEintrag("ske./");
     loescheSystemKalenderEintrag("ske.hauptverkehrszeit");
@@ -153,17 +151,7 @@ public class SystemTest
     loescheSystemKalenderEintrag("ske.ungueltig");
 
   }
-
-  @Before
-  public void setUp() throws Exception
-  {
-  }
-
-  @After
-  public void tearDown() throws Exception
-  {
-  }
-
+ 
   @Test
   public void systemTest1() throws Exception
   {
@@ -173,7 +161,7 @@ public class SystemTest
     Date d1 = sdf.parse("01.01.2004 00:00:00,000");
     Date d2 = sdf.parse("31.12.2004 23:59:59,999");
 
-    List<SystemObject> list = new ArrayList<SystemObject>();
+    List<SystemObject> list = new ArrayList<>();
 
     list.add(_connection.getDataModel().getObject("ske. "));
     list.add(_connection.getDataModel().getObject("ske.@"));
@@ -181,7 +169,7 @@ public class SystemTest
     list.add(_connection.getDataModel().getObject("ske._"));
     list.add(_connection.getDataModel().getObject("ske.#"));
     list.add(_connection.getDataModel().getObject("ske.^"));
-    list.add(_connection.getDataModel().getObject("ske.º"));
+    list.add(_connection.getDataModel().getObject("ske.Âº"));
     list.add(_connection.getDataModel().getObject("ske.\\"));
     list.add(_connection.getDataModel().getObject("ske./"));
 
@@ -213,8 +201,8 @@ public class SystemTest
       assertEquals("Test 5", "ske.1 : 10.04.2004 23:59:59,999 false", strings[3]);
       assertEquals("Test 6", "ske.  : 11.04.2004 00:00:00,000 true", strings[4]);
       assertEquals("Test 7", "ske.  : 11.04.2004 23:59:59,999 false", strings[5]);
-      assertEquals("Test 8", "ske.º : 17.05.2004 00:00:00,000 true", strings[6]);
-      assertEquals("Test 9", "ske.º : 17.05.2004 23:59:59,999 false", strings[7]);
+      assertEquals("Test 8", "ske.Âº : 17.05.2004 00:00:00,000 true", strings[6]);
+      assertEquals("Test 9", "ske.Âº : 17.05.2004 23:59:59,999 false", strings[7]);
       assertEquals("Test 10", "ske./ : 18.05.2004 00:00:00,000 true", strings[8]);
       assertEquals("Test 11", "ske. : 18.05.2004 00:00:00,000 true", strings[9]);
       assertEquals("Test 12", "ske./ : 18.05.2004 23:59:59,999 false", strings[10]);
@@ -271,7 +259,7 @@ public class SystemTest
       assertEquals("Test 27", "ske./ : 10.04.2004 00:00:00,000 10.04.2004 23:59:59,999", strings[loc++]);
       assertEquals("Test 28", "ske.1 : 10.04.2004 00:00:00,000 10.04.2004 23:59:59,999", strings[loc++]);
       assertEquals("Test 29", "ske.  : 11.04.2004 00:00:00,000 11.04.2004 23:59:59,999", strings[loc++]);
-      assertEquals("Test 30", "ske.º : 17.05.2004 00:00:00,000 17.05.2004 23:59:59,999", strings[loc++]);
+      assertEquals("Test 30", "ske.Âº : 17.05.2004 00:00:00,000 17.05.2004 23:59:59,999", strings[loc++]);
       assertEquals("Test 31", "ske./ : 18.05.2004 00:00:00,000 18.05.2004 23:59:59,999", strings[loc++]);
       assertEquals("Test 32", "ske. : 18.05.2004 00:00:00,000 18.05.2004 23:59:59,999", strings[loc++]);
       assertEquals("Test 33", "ske.\\ : 25.05.2004 00:00:00,000 25.05.2004 23:59:59,999", strings[loc++]);
@@ -469,7 +457,7 @@ public class SystemTest
       fail("Test 86-102");
     
 
-    Calendar cal = new GregorianCalendar().getInstance();
+    Calendar cal = Calendar.getInstance();
 
     cal.setTime(new Date());
     cal.set(Calendar.HOUR_OF_DAY, 12);
@@ -530,7 +518,7 @@ public class SystemTest
     Data data = _connection.createData(atgKonfig);
     Data[] datas = new Data[1];
     datas[0] = data;
-    vewKonfig.erzeuge(pid, name, "SystemKalenderEinträge", null);
+    vewKonfig.erzeuge(pid, name, "SystemKalenderEintrÃ¤ge", null);
 
     // Erzeuge Parameter
     AttributeGroup atgParam = _connection.getDataModel().getAttributeGroup("atg.systemKalenderEintrag");
@@ -540,7 +528,7 @@ public class SystemTest
     data = _connection.createData(atgParam);
     data.getTextValue("Definition").setText(definition);
     datas[0] = data;
-    vewParam.setDynamicObject((DynamicObject)_connection.getDataModel().getObject(pid));
+    vewParam.setDynamicObject(_connection.getDataModel().getObject(pid));
     vewParam.parametriere(datas);
   }
 
@@ -556,7 +544,7 @@ public class SystemTest
         aspKonfig);
 
     vewKonfig.setDynamicObject(_connection.getDataModel().getObject(pid));
-    vewKonfig.loesche(pid, "SystemKalenderEinträge");
+    vewKonfig.loesche(pid, "SystemKalenderEintrÃ¤ge");
   }
 
 }

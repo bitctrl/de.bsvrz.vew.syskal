@@ -1,0 +1,7 @@
+vew-syskal-build:
+    image:
+        openjdk:8-jdk-alpine
+        
+    script:
+      - ./gradlew build  -x test
+

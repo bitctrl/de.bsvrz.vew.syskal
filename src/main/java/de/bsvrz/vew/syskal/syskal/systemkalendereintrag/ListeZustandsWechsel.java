@@ -27,13 +27,13 @@ package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -56,11 +56,8 @@ public class ListeZustandsWechsel
   /**
    * 
    */
-  private SortedMap<Long, Boolean> listeZustandsWechsel = new TreeMap<Long, Boolean>();
+  private SortedMap<Long, Boolean> listeZustandsWechsel = new TreeMap<>();
 
-  /**
-   * @param list
-   */
   public void setListeZustandsWechsel(SortedMap<Long, Boolean> list)
   {
 
@@ -68,9 +65,6 @@ public class ListeZustandsWechsel
 
   }
 
-  /**
-   * @return
-   */
   public SortedMap<Long, Boolean> getListeZustandsWechsel()
   {
 
@@ -86,7 +80,7 @@ public class ListeZustandsWechsel
    * 
    * @param start
    *          Startzeitpunkt der Berechnung
-   * @return Map.Entry<Long, Boolean> Zeitpunkt mit Zustand
+   * @return Zeitpunkt mit Zustand
    */
   protected Map.Entry<Long, Boolean> berechneNaechstenZustandsWechsel(long start)
   {
@@ -115,7 +109,7 @@ public class ListeZustandsWechsel
    * 
    * @param ende
    *          Startzeitpunkt der Berechnung
-   * @return Map.Entry<Long, Boolean> Zeitpunkt mit Zustand
+   * @return Zeitpunkt mit Zustand
    */
   protected Map.Entry<Long, Boolean> berechneLetztenZustandsWechsel(long ende)
   {
@@ -126,16 +120,16 @@ public class ListeZustandsWechsel
     d.setTime(ende);
     cal1.setTime(d);
 
-    Collection col = (Collection)listeZustandsWechsel.keySet();
+    Set<Long> col = listeZustandsWechsel.keySet();
 
-    List list = new ArrayList();
+    List<Long> list = new ArrayList<>();
 
     list.addAll(col);
 
-    for (ListIterator i = list.listIterator(list.size()); i.hasPrevious();)
+    for (ListIterator<Long> i = list.listIterator(list.size()); i.hasPrevious();)
     {
 
-      Long l = (Long)i.previous();
+      Long l = i.previous();
       cal2.setTimeInMillis(l);
 
       if (cal2.before(cal1) || cal2.equals(cal1))
@@ -143,7 +137,7 @@ public class ListeZustandsWechsel
         Boolean v = listeZustandsWechsel.get(l);
 
         // Dummy-Liste mit nur einem Eintrag wird erstellt, um ein Map.Entry zu bekommen
-        HashMap<Long, Boolean> map = new HashMap<Long, Boolean>();
+        HashMap<Long, Boolean> map = new HashMap<>();
         map.put(l, v);
 
         for (Map.Entry<Long, Boolean> e : map.entrySet())
@@ -168,7 +162,7 @@ public class ListeZustandsWechsel
    * @param bis
    *          Endezeitpunkt der Berechnung
    * 
-   * @return SortedMap<Long, Boolean> zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel und dem Zustand
+   * @return zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel und dem Zustand
    * 
    */
   public SortedMap<Long, Boolean> berechneVonBis(long von, long bis)
@@ -189,7 +183,7 @@ public class ListeZustandsWechsel
     // vorgegebenen Zeitbereichs
     if (start.getKey() >= von && start.getKey() <= bis && ende.getKey() >= von && ende.getKey() <= bis)
     {
-
+    	// nur else-Zweig wird bewertet, der Rest später
     }
     else
     {
@@ -223,7 +217,7 @@ public class ListeZustandsWechsel
    *          Startzeitpunkt der Berechnung
    * @param bis
    *          Endezeitpunkt der Berechnung
-   * @return SortedMap<Long, Boolean> zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel�der zeitlichen
+   * @return zeitlich sortierte Liste mit dem Zeitpunkten der ZustandswechselÃÂ´der zeitlichen
    *         Gueltigkeit und dem Zustand
    */
   public SortedMap<Long, Boolean> setGueltigkeitZeit(long von, long bis)
@@ -267,7 +261,7 @@ public class ListeZustandsWechsel
    * @param bezNach
    *          Beziehung des Offsets zum Endezeitpunkt
    * 
-   * @return SortedMap<Long, Boolean> zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel der
+   * @return zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel der
    *         verkehrlichen Gueltigkeit und dem Zustand
    */
   public SortedMap<Long, Boolean> setGueltigkeitVerkehr(SortedMap<Long, Boolean> listZeitl, long vor, int bezVor,

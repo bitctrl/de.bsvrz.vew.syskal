@@ -28,7 +28,7 @@ package de.bsvrz.vew.syskal.syskal.benachrichtigungsfunktion;
 import javax.swing.event.EventListenerList;
 
 /**
- * Verwaltungsklasse, welche die benötigten Listenerfunktionalitäten bereitstellt
+ * Verwaltungsklasse, welche die benÃ¶tigten ListenerfunktionalitÃƒÂƒÃ‚Â¤ten bereitstellt
  * 
  * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner $)
  * 
@@ -49,43 +49,22 @@ public class BenachrichtigeListenerVerwaltung
     return listeners.getListenerCount();
   }
 
-  /**
-   * Fügt Listerner zur Liste hinzu
-   * 
-   * @param listener
-   */
   public void addBenachrichtigeListener(BenachrichtigeListener listener)
   {
     listeners.add(BenachrichtigeListener.class, listener);
   }
 
-  /**
-   * Holt einen Listener aus der Liste
-   * 
-   * @param count
-   * @return
-   */
   public BenachrichtigeListener getBenachrichtigeListener(int count)
   {
     BenachrichtigeListener[] list = listeners.getListeners(BenachrichtigeListener.class);
     return list[count];
   }
 
-  /**
-   * Entfernt den übergebenen Listener
-   * 
-   * @param listener
-   */
   public void removeBenachrichtigeListener(BenachrichtigeListener listener)
   {
     listeners.remove(BenachrichtigeListener.class, listener);
   }
 
-  /**
-   * Multicast-Methode
-   * 
-   * @param e
-   */
   public synchronized void meldeAnAlle(BenachrichtigeEvent e)
   {
     for (BenachrichtigeListener l : listeners.getListeners(BenachrichtigeListener.class))

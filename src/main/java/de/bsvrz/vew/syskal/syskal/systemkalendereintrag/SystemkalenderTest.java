@@ -61,7 +61,7 @@ public class SystemkalenderTest implements StandardApplication,
     BenachrichtigeListener
 {
   /**
-   * DebugLogger f�r Debug-Ausgaben
+   * DebugLogger fÃÂ¼r Debug-Ausgaben
    */
   private static Debug _debug;
 
@@ -107,7 +107,7 @@ public class SystemkalenderTest implements StandardApplication,
 
   /**
    * Konstruktor.<br>
-   * �ffnen der Log-Datei.
+   * ÃÂffnen der Log-Datei.
    */
   public SystemkalenderTest()
   {
@@ -127,14 +127,15 @@ public class SystemkalenderTest implements StandardApplication,
    * @see sys.funclib.application.StandardApplication#parseArguments(sys.funclib.ArgumentList)
    */
   /**
-   * �berschriebene Methode von StandardApplication, die die speziellen Startparameter auswertet.<br>
-   * Die Liste der Konfigurationsbereiche wird durch Aufspaltung des �bergebenen Strings erstellt und die speziellen
+   * ÃÂberschriebene Methode von StandardApplication, die die speziellen Startparameter auswertet.<br>
+   * Die Liste der Konfigurationsbereiche wird durch Aufspaltung des ÃÂ¼bergebenen Strings erstellt und die speziellen
    * Startparameter werden in die Log-Datei eingetragen.
    * 
    * @param argumentList
    *          siehe sys.funclib.application.StandardApplication#parseArguments(sys.funclib.ArgumentList)
    */
-  public void parseArguments(ArgumentList argumentList) throws Exception
+  @Override
+public void parseArguments(ArgumentList argumentList) throws Exception
   {
     _debug = Debug.getLogger();
 
@@ -153,13 +154,14 @@ public class SystemkalenderTest implements StandardApplication,
    * @see sys.funclib.application.StandardApplication#initialize(stauma.dav.clientside.ClientDavInterface)
    */
   /**
-   * �berschriebene Methode von StandardApplication, die die Initialisierung durchf�hrt.<br>
+   * ÃÂberschriebene Methode von StandardApplication, die die Initialisierung durchfÃÂ¼hrt.<br>
    * Entsprechend dem Argument -layer wird die entsprechende Methode aufgerufen und danach die Log-Datei geschlossen.<br>
    * 
    * @param connection
    *          siehe sys.funclib.application.StandardApplication#initialize(stauma.dav.clientside.ClientDavInterface)
    */
-  public void initialize(ClientDavInterface connection) throws Exception
+  @Override
+public void initialize(ClientDavInterface connection) throws Exception
   {
 
     _connection = connection;
@@ -173,7 +175,7 @@ public class SystemkalenderTest implements StandardApplication,
     
     SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
-    List<SystemObject> list = new ArrayList<SystemObject>();
+    List<SystemObject> list = new ArrayList<>();
     
     list.add(_connection.getDataModel().getObject("ske.ostersonntag"));
     list.add(_connection.getDataModel().getObject("ske.leerzeichen"));
@@ -181,7 +183,7 @@ public class SystemkalenderTest implements StandardApplication,
     list.add(_connection.getDataModel().getObject("ske._"));
     list.add(_connection.getDataModel().getObject("ske.#"));
     list.add(_connection.getDataModel().getObject("ske.^"));
-    list.add(_connection.getDataModel().getObject("ske.�"));
+    list.add(_connection.getDataModel().getObject("ske.ÃÂº"));
     list.add(_connection.getDataModel().getObject("ske.\\"));
     list.add(_connection.getDataModel().getObject("ske./"));
     
@@ -242,7 +244,8 @@ public class SystemkalenderTest implements StandardApplication,
 
   }
 
-  public void update(BenachrichtigeEvent e)
+  @Override
+public void update(BenachrichtigeEvent e)
   {
     // TODO Auto-generated method stub
     _debug.error("update: " + e.getMeldung());

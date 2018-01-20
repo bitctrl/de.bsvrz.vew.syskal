@@ -8,7 +8,6 @@ import static org.junit.Assert.fail;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.SortedMap;
 
@@ -103,7 +102,7 @@ public class SystemkalenderEintragTest
   @Test
   public void isGueltigTest() throws Exception
   {
-    Calendar cal = new GregorianCalendar().getInstance();
+    Calendar cal = Calendar.getInstance();
 
     int dow = cal.get(Calendar.DAY_OF_WEEK);
 
@@ -193,7 +192,7 @@ public class SystemkalenderEintragTest
   @Test
   public void isGueltigVonBisTest() throws Exception
   {
-    Calendar cal = new GregorianCalendar().getInstance();
+    Calendar cal = Calendar.getInstance();
 
     int dow = cal.get(Calendar.DAY_OF_WEEK);
 

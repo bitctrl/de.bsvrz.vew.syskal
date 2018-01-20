@@ -2,7 +2,6 @@ package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
@@ -14,9 +13,6 @@ public class TestSyskalOffline
    */
   private static DateFormat _sdf;
 
-  /**
-   * @param args
-   */
   public static void main(String[] args)
   {   
     try
@@ -30,8 +26,8 @@ public class TestSyskalOffline
           "GeburtstagHCK:=27.11.1963,*");
       SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.dienstag", "Dienstag", "Dienstag");
       SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.superdienstag", "SuperDienstag", "SuperDienstag:=UND{Dienstag,Berufsverkehr}*,*");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.dienstagalsverknüpfung", "DienstagAlsVerknüpfung",
-          "DienstagAlsVerknüpfung:=UND{Dienstag}*,*");
+      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.dienstagalsverknÃ¼pfung", "DienstagAlsVerknÃ¼pfung",
+          "DienstagAlsVerknÃ¼pfung:=UND{Dienstag}*,*");
       SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.geburtstag_hck_kopie", "GeburtstagHCKFeierKopie",
           "GeburtstagHCKFeierKopie:=GeburtstagHCK-3Tage");
       SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.supermittwoch", "SuperMittwoch",
@@ -69,7 +65,7 @@ public class TestSyskalOffline
       erstelleAbfrageUndAusgabeErgebnisTyp1(ske2, d1, d2);
       erstelleAbfrageUndAusgabeErgebnisTyp2(ske2, d1, d2);
 
-      SystemkalenderEintrag ske3 = SystemkalenderArbeiter.getSkeList().get("ske.dienstagalsverknüpfung");
+      SystemkalenderEintrag ske3 = SystemkalenderArbeiter.getSkeList().get("ske.dienstagalsverknÃ¼pfung");
 
       d1 = _sdf.parse("01.01.2009 15:15:37,000");
       d2 = _sdf.parse("21.12.2009 15:15:37,000");
@@ -164,17 +160,15 @@ public class TestSyskalOffline
   }
   
   /**
-   * Erstellt eine Abfrage der Zeitbereiche für das Jahr des Anfangszeitpunktes <br>
+   * Erstellt eine Abfrage der Zeitbereiche fÃ¼r das Jahr des Anfangszeitpunktes <br>
    * durch Benutzung der vom Systemkalender bereitgestellten Methode <br>
    * {@link SystemkalenderEintrag#berechneZustandsWechsel(int)} <br> 
    * Diese Methode liefert das Ergebnis in der Form: <br>
    * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}>
    * @param ske
    *            der Systemkalendereintrag
-   * @param von
-   *          Anfangsdatum
-   * @param bis
-   *          Enddatum
+   * @param jahr
+   *          das Jahr
    */
   private static void erstelleAbfrageUndAusgabeErgebnisTyp3(SystemkalenderEintrag ske, int jahr)
   {

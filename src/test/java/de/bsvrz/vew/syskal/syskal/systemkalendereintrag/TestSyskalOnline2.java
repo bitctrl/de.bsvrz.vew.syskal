@@ -3,26 +3,14 @@ package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.dav.daf.main.config.ClientApplication;
-import de.bsvrz.dav.daf.main.config.ConfigurationObject;
-import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.dav.daf.main.config.SystemObjectType;
 import de.bsvrz.sys.funclib.application.StandardApplication;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
-import de.bsvrz.sys.funclib.operatingMessage.MessageCauser;
-import de.bsvrz.sys.funclib.operatingMessage.MessageGrade;
-import de.bsvrz.sys.funclib.operatingMessage.MessageSender;
-import de.bsvrz.sys.funclib.operatingMessage.MessageState;
-import de.bsvrz.sys.funclib.operatingMessage.MessageType;
-import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderArbeiter;
-import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag;
 
 /**
  * Kommentar
@@ -36,7 +24,7 @@ import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag;
 public class TestSyskalOnline2 implements StandardApplication
 {
   /**
-   * DebugLogger für Debug-Ausgaben
+   * DebugLogger fÃ¼r Debug-Ausgaben
    */
   private static Debug _debug;
 
@@ -71,14 +59,15 @@ public class TestSyskalOnline2 implements StandardApplication
    * @see sys.funclib.application.StandardApplication#parseArguments(sys.funclib .ArgumentList)
    */
   /**
-   * Überschriebene Methode von StandardApplication, die die speziellen Startparameter auswertet.<br>
-   * Die Liste der Konfigurationsbereiche wird durch Aufspaltung des übergebenen Strings erstellt und die speziellen
+   * Ãœberschriebene Methode von StandardApplication, die die speziellen Startparameter auswertet.<br>
+   * Die Liste der Konfigurationsbereiche wird durch Aufspaltung des Ã¼bergebenen Strings erstellt und die speziellen
    * Startparameter werden in die Log-Datei eingetragen.
    * 
    * @param argumentList
    *          siehe sys.funclib.application.StandardApplication#parseArguments (sys.funclib.ArgumentList)
    */
-  public void parseArguments(ArgumentList argumentList) throws Exception
+  @Override
+public void parseArguments(ArgumentList argumentList) throws Exception
   {
     _debug = Debug.getLogger();
 
@@ -97,13 +86,14 @@ public class TestSyskalOnline2 implements StandardApplication
    * @see sys.funclib.application.StandardApplication#initialize(stauma.dav.clientside .ClientDavInterface)
    */
   /**
-   * Überschriebene Methode von StandardApplication, die die Initialisierung durchführt.<br>
+   * Ãœberschriebene Methode von StandardApplication, die die Initialisierung durchfÃ¼hrt.<br>
    * Entsprechend dem Argument -layer wird die entsprechende Methode aufgerufen und danach die Log-Datei geschlossen.<br>
    * 
    * @param connection
    *          siehe sys.funclib.application.StandardApplication#initialize(stauma .dav.clientside.ClientDavInterface)
    */
-  public void initialize(ClientDavInterface connection) throws Exception
+  @Override
+public void initialize(ClientDavInterface connection) throws Exception
   {
     
 //    System.out.println("TestSyskalOnline2.initialize()");
@@ -194,7 +184,7 @@ public class TestSyskalOnline2 implements StandardApplication
 //    erstelleAbfrageUndAusgabeErgebnisTyp1(ske2, d1, d2);
 //    erstelleAbfrageUndAusgabeErgebnisTyp2(ske2, d1, d2);
 //
-//    SystemkalenderEintrag ske3 = map.get("ske.dienstagalsverknüpfung");
+//    SystemkalenderEintrag ske3 = map.get("ske.dienstagalsverknÃ¼pfung");
 //
 //    d1 = _sdf.parse("01.01.2009 15:15:37,000");
 //    d2 = _sdf.parse("21.12.2009 15:15:37,000");
@@ -313,17 +303,15 @@ public class TestSyskalOnline2 implements StandardApplication
   }
   
   /**
-   * Erstellt eine Abfrage der Zeitbereiche für das Jahr des Anfangszeitpunktes <br>
+   * Erstellt eine Abfrage der Zeitbereiche fÃ¼r das Jahr des Anfangszeitpunktes <br>
    * durch Benutzung der vom Systemkalender bereitgestellten Methode <br>
    * {@link SystemkalenderEintrag#berechneZustandsWechsel(int)} <br> 
    * Diese Methode liefert das Ergebnis in der Form: <br>
    * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}>
    * @param ske
    *            der Systemkalendereintrag
-   * @param von
-   *          Anfangsdatum
-   * @param bis
-   *          Enddatum
+   * @param jahr
+   *          das jahr
    */
   private static void erstelleAbfrageUndAusgabeErgebnisTyp3(SystemkalenderEintrag ske, int jahr)
   {

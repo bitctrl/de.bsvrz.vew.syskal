@@ -2,7 +2,6 @@ package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
@@ -14,9 +13,6 @@ public class TestSyskalOffline8
    */
   private static DateFormat _sdf;
 
-  /**
-   * @param args
-   */
   public static void main(String[] args)
   {   
     try
@@ -134,17 +130,15 @@ public class TestSyskalOffline8
   }
   
   /**
-   * Erstellt eine Abfrage der Zeitbereiche für das Jahr des Anfangszeitpunktes <br>
+   * Erstellt eine Abfrage der Zeitbereiche fÃ¼r das Jahr des Anfangszeitpunktes <br>
    * durch Benutzung der vom Systemkalender bereitgestellten Methode <br>
    * {@link SystemkalenderEintrag#berechneZustandsWechsel(int)} <br> 
    * Diese Methode liefert das Ergebnis in der Form: <br>
    * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}>
    * @param ske
    *            der Systemkalendereintrag
-   * @param von
-   *          Anfangsdatum
-   * @param bis
-   *          Enddatum
+   * @param jahr
+   *          das Jahr
    */
   private static void erstelleAbfrageUndAusgabeErgebnisTyp3(SystemkalenderEintrag ske, int jahr)
   {

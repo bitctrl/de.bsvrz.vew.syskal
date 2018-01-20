@@ -22,35 +22,3 @@
  * Fax: +49-7222-402-200
  * mailto: info@els.dambach.de
  */
-
-package de.bsvrz.vew.syskal.syskal.benachrichtigungsfunktion;
-
-import java.util.EventObject;
-
-/**
- * Klasse die ein Benachrichtigungsereignis darstellt
- * 
- * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner $)
- * 
- * @author Dambach-Werke GmbH
- * @author Timo Pittner
- * 
- */
-public class BenachrichtigeEvent extends EventObject
-{
-
-  protected String _meldung;
-
-  public BenachrichtigeEvent(Object source, String meldung)
-  {
-    super(source);
-    _meldung = meldung;
-    // TODO Auto-generated constructor stub
-  }
-
-  public String getMeldung()
-  {
-    return _meldung;
-  }
-
-}

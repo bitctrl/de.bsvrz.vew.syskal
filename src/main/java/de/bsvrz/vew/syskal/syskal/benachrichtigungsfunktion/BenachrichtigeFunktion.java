@@ -35,7 +35,7 @@ import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag;
 
 /**
  * Die Klasse zum Versenden der Ereigniszustaende. Erweitert die Klasse TimerTask. Die run() Methode wird ausgefuehrt
- * wenn die im ReminderService eingestellte Zeit abgelaufen ist. Sie implentiert zus�tzlich das ClientSenderInterface
+ * wenn die im ReminderService eingestellte Zeit abgelaufen ist. Sie implentiert zusÃÂ¤tzlich das ClientSenderInterface
  * welches die Methoden zum Versenden der Daten bereitstellt.
  * 
  * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner $)
@@ -60,7 +60,7 @@ public class BenachrichtigeFunktion extends TimerTask
   private String pid;
 
   /**
-   * Der Debugger, stellt verschiedene Protokollierungsfunktionen zur Verf�gung
+   * Der Debugger, stellt verschiedene Protokollierungsfunktionen zur VerfÃÂ¼gung
    */
   private Debug _debug;
 
@@ -79,7 +79,7 @@ public class BenachrichtigeFunktion extends TimerTask
   /**
    * Konstruktor der Klasse, mit Zeitangabe des Zustandswechsels
    * 
-   * @param e
+   * @param ske
    *          das Ereignis, welches den Zustand meldet
    * @param now
    *          Die Zeit bis die Daten versendet werden sollen
@@ -99,7 +99,8 @@ public class BenachrichtigeFunktion extends TimerTask
    * 
    * @see java.util.TimerTask#run()
    */
-  public void run()
+  @Override
+public void run()
   {
     Date d = new Date();
     d.setTime(time_now);
@@ -111,11 +112,11 @@ public class BenachrichtigeFunktion extends TimerTask
     String meldung;
     if (ske.isGueltig(time_now))
     {
-      meldung = datum + " " + ske.getPid() + "(" + ske.getName() + ")" + " : g�ltig";
+      meldung = datum + " " + ske.getPid() + "(" + ske.getName() + ")" + " : gÃÂ¼ltig";
     }
     else
     {
-      meldung = datum + " " + ske.getPid() + "(" + ske.getName() + ")" + " : nicht g�ltig";
+      meldung = datum + " " + ske.getPid() + "(" + ske.getName() + ")" + " : nicht gÃÂ¼ltig";
     }
 
     BenachrichtigeEvent event = new BenachrichtigeEvent(this, meldung);
