@@ -58,9 +58,6 @@ import de.bsvrz.vew.syskal.syskal.benachrichtigungsfunktion.BenachrichtigeListen
  * Klasse die Methoden bereitstellt, welche die Systemkalender-Bibliothek
  * benutzt. Es kann damit ein Systemkalender aufgebaut werden!
  * 
- * @version $Revision: 1.6 $ / $Date: 2015/06/08 15:40:17 $ / ($Author: Pittner
- *          $)
- * 
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  * 
@@ -69,64 +66,64 @@ public class SystemkalenderArbeiter
 		implements ClientReceiverInterface, ClientSenderInterface, MutableSetChangeListener, BenachrichtigeListener {
 
 	/**
-	 * DebugLogger fÃÂ¼r Debug-Ausgaben
+	 * DebugLogger für Debug-Ausgaben
 	 */
-	private static Debug _debug;
+	private static final Debug LOGGER = Debug.getLogger();
 
 	/**
 	 * Verbindung zum Datenverteiler
 	 */
-	private static ClientDavInterface _connection;
+	private ClientDavInterface connection;
 
 	/**
 	 * String fuer eine Attributgruppe
 	 */
-	private String OBJECT_ATG;
+	private String objectAtg;
 
 	/**
 	 * String einen Aspekt
 	 */
-	private String OBJECT_ASP;
+	private String objectAsp;
 
 	/**
 	 * Attributgruppe
 	 */
-	private AttributeGroup _attributgruppe;
+	private AttributeGroup attributgruppe;
 
 	/**
 	 * Aspekt
 	 */
-	private Aspect _aspekt;
+	private Aspect aspekt;
 
 	/**
 	 * Datenbeschreibung
 	 */
-	private DataDescription _datenbeschreibung;
+	private DataDescription datenbeschreibung;
 
 	/**
 	 * Datenmodell
 	 */
-	private DataModel _datenmodell;
+	private DataModel datenmodell;
 
 	/**
 	 * Simulationsvariante
 	 */
-	private short _simulationsvariante;
+	private short simulationsvariante;
 
 	/**
 	 * Empfaengeroption
 	 */
-	private ReceiveOptions _empfaengeroptionen;
+	private ReceiveOptions empfaengeroptionen;
 
 	/**
 	 * Empfaengerrrolle
 	 */
-	private ReceiverRole _empfaengerrolle;
+	private ReceiverRole empfaengerrolle;
 
 	/**
 	 * Konfigurationsobjekt
 	 */
-	private ConfigurationObject _configObj;
+	private ConfigurationObject configObj;
 
 	/**
 	 * Liste mit den Pid's der SystemKalenderEintraege
@@ -151,25 +148,24 @@ public class SystemkalenderArbeiter
 	/**
 	 * String fuer den Kalender
 	 */
-	private String _kalender;
+	private String kalender;
 
 	/**
 	 * String fuer den Kalender
 	 */
-	private Boolean _inInit;
+	private Boolean inInit;
 
 	/**
 	 * Instanz des Singletons
 	 */
 	private static SystemkalenderArbeiter instance = null;
 
-	private static boolean _used = false;
+	private boolean used = false;
 
 	private SystemkalenderArbeiter(ClientDavInterface connection, String kalender) {
-		_connection = connection;
-		_debug = Debug.getLogger();
-		_kalender = kalender;
-		_used = true;
+		this.connection = connection;
+		this.kalender = kalender;
+		this.used = true;
 
 	}
 
@@ -190,40 +186,39 @@ public class SystemkalenderArbeiter
 	 * @return Liste der Einträge als HashMap
 	 */
 	public Map<String, SystemkalenderEintrag> starteSystemKalenderArbeiter() {
-		if (_used) {
-			_used = false;
+		if (used) {
+			used = false;
 
 			try {
-				_inInit = true;
+				inInit = true;
 
-				_datenmodell = _connection.getDataModel();
+				datenmodell = connection.getDataModel();
 
-				_empfaengeroptionen = ReceiveOptions.normal();
+				empfaengeroptionen = ReceiveOptions.normal();
 
-				_empfaengerrolle = ReceiverRole.receiver();
+				empfaengerrolle = ReceiverRole.receiver();
 
 				// Hole SystemKalenderEintraege
-				OBJECT_ATG = "atg.systemKalenderEintrag";
-				OBJECT_ASP = "asp.parameterSoll";
+				objectAtg = "atg.systemKalenderEintrag";
+				objectAsp = "asp.parameterSoll";
 
-				_attributgruppe = _connection.getDataModel().getAttributeGroup(OBJECT_ATG);
-				_aspekt = _connection.getDataModel().getAspect(OBJECT_ASP);
-				_simulationsvariante = 0;
-				_datenbeschreibung = new DataDescription(_attributgruppe, _aspekt, _simulationsvariante);
+				attributgruppe = connection.getDataModel().getAttributeGroup(objectAtg);
+				aspekt = connection.getDataModel().getAspect(objectAsp);
+				simulationsvariante = 0;
+				datenbeschreibung = new DataDescription(attributgruppe, aspekt, simulationsvariante);
 
-				_configObj = (ConfigurationObject) _datenmodell.getObject(_kalender);
+				configObj = (ConfigurationObject) datenmodell.getObject(kalender);
 
-				BenachrichtigeFunktion f = new BenachrichtigeFunktion();
 				BenachrichtigeFunktion.getBenachrichtigeListenerVerwaltung().addBenachrichtigeListener(this);
 
-				MutableSet ms = _configObj.getMutableSet("SystemKalenderEintrÃÂ¤ge");
+				MutableSet ms = configObj.getMutableSet("SystemKalenderEinträge");
 
 				if (ms != null) {
-					_debug.fine("Listener Menge SystemKalenderEintrÃÂ¤ge angemeldet");
+					LOGGER.fine("Listener Menge SystemKalenderEinträge angemeldet");
 
 					ms.addChangeListener(this);
 				} else
-					_debug.error("Menge ist null");
+					LOGGER.error("Menge ist null");
 
 				List<SystemObject> objSke = readSystemKalenderEintragMenge();
 
@@ -240,7 +235,7 @@ public class SystemkalenderArbeiter
 
 				parseArbeiter();
 
-				_inInit = false;
+				inInit = false;
 
 			} catch (Exception e) {
 				e.getStackTrace();
@@ -253,9 +248,9 @@ public class SystemkalenderArbeiter
 	}
 
 	private List<SystemObject> readSystemKalenderEintragMenge() throws Exception {
-		ConfigurationObject kalender = (ConfigurationObject) _connection.getDataModel().getObject(_kalender);
+		ConfigurationObject kalender = (ConfigurationObject) connection.getDataModel().getObject(this.kalender);
 
-		ObjectSet objekte = kalender.getObjectSet("SystemKalenderEintrÃÂ¤ge");
+		ObjectSet objekte = kalender.getObjectSet("SystemKalenderEinträge");
 
 		List<SystemObject> listSke = objekte.getElements();
 
@@ -270,7 +265,7 @@ public class SystemkalenderArbeiter
 	 */
 	private void subscribeReceiver(List<SystemObject> objlist) {
 		// Anmelden
-		_connection.subscribeReceiver(this, objlist, _datenbeschreibung, _empfaengeroptionen, _empfaengerrolle);
+		connection.subscribeReceiver(this, objlist, datenbeschreibung, empfaengeroptionen, empfaengerrolle);
 
 	}
 
@@ -311,7 +306,7 @@ public class SystemkalenderArbeiter
 
 					cntSke++;
 
-					if (!_inInit) {
+					if (!inInit) {
 
 						parseArbeiter();
 
@@ -327,7 +322,7 @@ public class SystemkalenderArbeiter
 				}
 
 			} else
-				_debug.fine(data.getObject().getType().toString() + " ist nicht versorgt!");
+				LOGGER.fine(data.getObject().getType().toString() + " ist nicht versorgt!");
 		}
 
 	}
@@ -347,7 +342,7 @@ public class SystemkalenderArbeiter
 
 					// _debug.config(so.getPid());
 
-					_debug.fine("added - " + addedObjects[i]);
+					LOGGER.fine("added - " + addedObjects[i]);
 
 					list.add(so);
 
@@ -373,7 +368,7 @@ public class SystemkalenderArbeiter
 
 					}
 
-					_debug.fine("removed - " + removedObjects[i]);
+					LOGGER.fine("removed - " + removedObjects[i]);
 
 				}
 
@@ -398,13 +393,13 @@ public class SystemkalenderArbeiter
 	}
 
 	public static Debug getDebug() {
-		return _debug;
+		return LOGGER;
 	}
 
 	/**
-	 * Holt die liste der Systemkalender EintrÃÂ¤ge
+	 * Holt die liste der Systemkalender Einträge
 	 * 
-	 * @return Liste der EintrÃÂ¤ge
+	 * @return Liste der Einträge
 	 */
 	public static Map<String, SystemkalenderEintrag> getSkeList() {
 		return skeList;
@@ -452,35 +447,6 @@ public class SystemkalenderArbeiter
 		return gueltig;
 	}
 
-	// public void berechneGueltigJetzt(Long jetzt)
-	// {
-	// // Eintragen der Ereignisse und Berechnen der Anzahl
-	//
-	// Date d = new Date();
-	// d.setTime(jetzt);
-	//
-	// SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
-	//
-	// for (Map.Entry<String, SystemkalenderEintrag> me : getSkeList().entrySet())
-	// {
-	// SystemkalenderEintrag ske = me.getValue();
-	//
-	// String datum;
-	//
-	// datum = format.format(d);
-	//
-	// if (ske.isGueltig(jetzt))
-	// {
-	//
-	//
-	// }
-	// else
-	// {
-	//
-	// }
-	// }
-	//
-	// }
 	public SortedMap<String, Boolean> berechneGueltigJetzt(Long jetzt) {
 		// Eintragen der Ereignisse und Berechnen der Anzahl
 		SortedMap<String, Boolean> ergebnis = new TreeMap<>();
@@ -501,33 +467,6 @@ public class SystemkalenderArbeiter
 		return ergebnis;
 
 	}
-
-	// public void berechneGueltigJetzt(String pid, Long jetzt)
-	// {
-	// Date d = new Date();
-	// d.setTime(jetzt);
-	//
-	// SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
-	//
-	// if (getSkeList().containsKey(pid))
-	// {
-	//
-	// SystemkalenderEintrag ske = getSkeList().get(pid);
-	//
-	// String datum;
-	//
-	// datum = format.format(d);
-	//
-	// if (ske.isGueltig(jetzt))
-	// {
-	// }
-	// else
-	// {
-	// }
-	// }else
-	// _debug.fine(pid + " nicht vorhanden!");
-	//
-	// }
 
 	public Map.Entry<String, Boolean> berechneGueltigJetzt(String pid, Long jetzt) {
 
@@ -561,9 +500,6 @@ public class SystemkalenderArbeiter
 
 	@Override
 	public void update(BenachrichtigeEvent e) {
-		// TODO Auto-generated method stub
-		// _debug.config("update: " + e.getMeldung());
-
 	}
 
 	private void parseArbeiter() {
@@ -580,8 +516,6 @@ public class SystemkalenderArbeiter
 					getDebug().fine("Maximale Rekursionstiefe erreicht -> Abbruch des Parsens!!!");
 					break;
 				}
-
-				// getDebug().config("Rekursionstiefe: " + cntRekursiv);
 
 				List<String> delList = new ArrayList<>();
 
@@ -612,7 +546,7 @@ public class SystemkalenderArbeiter
 
 			}
 
-			if (_inInit) {
+			if (inInit) {
 
 				synchronized (this) {
 
@@ -620,9 +554,9 @@ public class SystemkalenderArbeiter
 						this.wait();
 					}
 				}
-				_debug.fine("Alle SystemKalenderEintraege geparst!");
+				LOGGER.fine("Alle SystemKalenderEintraege geparst!");
 			} else
-				_debug.fine("SystemKalenderEintrag geparst!");
+				LOGGER.fine("SystemKalenderEintrag geparst!");
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -632,95 +566,6 @@ public class SystemkalenderArbeiter
 		}
 
 	}
-
-	// public void berechneGueltigVonBis(Long von, Long bis)
-	// {
-	//
-	// // Sortierte Map mit den zu sendenden Daten wird erstellt
-	// SortedMap<String, String[]> sendMap = new TreeMap<String, String[]>();
-	//
-	// int len = 0;
-	//
-	// // Eintragen der Ereignisse und Berechnen der Anzahl
-	// for (Map.Entry<String, SystemkalenderEintrag> me : getSkeList().entrySet())
-	// {
-	//
-	// SystemkalenderEintrag ske = me.getValue();
-	//
-	// ListeZustandsWechsel olzw = ske.getObjektListeZustandsWechsel();
-	//
-	// {
-	//
-	// SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBis(von, bis);
-	//
-	// // Es wurde kein Ereigniswechsel im definierten Zeitraum festgestellt
-	// if (sm == null)
-	// {
-	// //_debug.config(me.getKey() + " : kein Wechsel im definierten Zeitraum");
-	// return;
-	// }
-	//
-	// for (Map.Entry<Long, Boolean> meAend : sm.entrySet())
-	// {
-	//
-	// Long time = meAend.getKey();
-	//
-	// Boolean gueltig = meAend.getValue();
-	//
-	// String[] sf = new String[2];
-	//
-	// sf[0] = me.getKey();
-	//
-	// if (gueltig)
-	// sf[1] = "gÃÂ¼ltig";
-	// else
-	// sf[1] = "noch gÃÂ¼ltig";
-	//
-	// /******************************************************************/
-	// // Calendar cal = new GregorianCalendar();
-	// // cal.setTimeInMillis(time);
-	// // if ((cal.get(Calendar.MILLISECOND) == 999) && !meAend.getValue())
-	// // {
-	// // time += 1;
-	// // }
-	// /******************************************************************/
-	//
-	// // Es wird ein eindeutiger Schluessel erzeugt
-	// String uniqueKey = time + "_" + me.getKey();
-	//
-	// if(time >= von && time <= bis){
-	// sendMap.put(uniqueKey, sf);
-	// len++;
-	// }
-	//
-	// }
-	//
-	// }
-	//
-	// }
-	//
-	// for (Map.Entry<String, String[]> entry : sendMap.entrySet())
-	// {
-	//
-	// String tmp = entry.getKey();
-	//
-	// // Zeitinfo wird aus dem Schluessel extrahiert
-	// String millis = tmp.substring(0, tmp.indexOf("_"));
-	//
-	// Long l = Long.decode(millis);
-	//
-	// Date d = new Date();
-	//
-	// d.setTime(l);
-	//
-	// SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
-	//
-	// String datum = format.format(d);
-	//
-	//
-	// }
-	//
-	// }
 
 	public SortedMap<String, Boolean> berechneGueltigVonBis(Long von, Long bis) {
 
@@ -762,98 +607,6 @@ public class SystemkalenderArbeiter
 
 	}
 
-	// public void berechneGueltigVonBis(List<SystemObject> list, Long von, Long
-	// bis)
-	// {
-	//
-	// // Sortierte Map mit den zu sendenden Daten wird erstellt
-	// SortedMap<String, String[]> sendMap = new TreeMap<String, String[]>();
-	//
-	// int len = 0;
-	//
-	// // Eintragen der Ereignisse und Berechnen der Anzahl
-	// for (SystemObject so : list)
-	// {
-	//
-	// SystemkalenderEintrag ske = getSkeList().get(so.getPid());
-	//
-	// if (ske == null)
-	// _debug.fine("Ske: " + so.getPid() + "nicht vorhanden");
-	//
-	// ListeZustandsWechsel olzw = ske.getObjektListeZustandsWechsel();
-	//
-	// // if (olzw.getListeZustandsWechsel() != null)
-	// {
-	//
-	// SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBis(von, bis);
-	//
-	// // Es wurde kein Ereigniswechsel im definierten Zeitraum festgestellt
-	// if (sm == null)
-	// {
-	// _debug.fine(ske.getPid() + " : kein Wechsel im definierten Zeitraum");
-	// return;
-	// }
-	//
-	// for (Map.Entry<Long, Boolean> meAend : sm.entrySet())
-	// {
-	//
-	// Long time = meAend.getKey();
-	//
-	// Boolean gueltig = meAend.getValue();
-	//
-	// String[] sf = new String[2];
-	//
-	// sf[0] = ske.getPid();
-	//
-	// if (gueltig)
-	// sf[1] = "gÃÂ¼ltig";
-	// else
-	// sf[1] = "noch gÃÂ¼ltig";
-	//
-	// /******************************************************************/
-	// // Calendar cal = new GregorianCalendar();
-	// // cal.setTimeInMillis(time);
-	// // if ((cal.get(Calendar.MILLISECOND) == 999) && !meAend.getValue())
-	// // {
-	// // time += 1;
-	// // }
-	// /******************************************************************/
-	//
-	// // Es wird ein eindeutiger Schluessel erzeugt
-	// String uniqueKey = time + "_" + ske.getPid();
-	//
-	// if(time >= von && time <= bis){
-	// sendMap.put(uniqueKey, sf);
-	// len++;
-	// }
-	// }
-	//
-	// }
-	// }
-	//
-	// for (Map.Entry<String, String[]> entry : sendMap.entrySet())
-	// {
-	//
-	// String tmp = entry.getKey();
-	//
-	// // Zeitinfo wird aus dem Schluessel extrahiert
-	// String millis = tmp.substring(0, tmp.indexOf("_"));
-	//
-	// Long l = Long.decode(millis);
-	//
-	// Date d = new Date();
-	//
-	// d.setTime(l);
-	//
-	// SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
-	//
-	// String datum = format.format(d);
-	//
-	//
-	// }
-	//
-	// }
-
 	public SortedMap<String, Boolean> berechneGueltigVonBis(List<SystemObject> list, Long von, Long bis) {
 
 		// Sortierte Map mit den zu sendenden Daten wird erstellt
@@ -876,7 +629,7 @@ public class SystemkalenderArbeiter
 				}
 
 			} else {
-				_debug.error(so.getPid() + " ist nicht der Liste der SystemkalendereintrÃÂ¤ge");
+				LOGGER.error(so.getPid() + " ist nicht der Liste der Systemkalendereinträge");
 			}
 		}
 
@@ -905,120 +658,13 @@ public class SystemkalenderArbeiter
 				}
 
 			} else {
-				_debug.error(so.getPid() + " ist nicht der Liste der SystemkalendereintrÃÂ¤ge");
+				LOGGER.error(so.getPid() + " ist nicht der Liste der Systemkalendereinträge");
 			}
 		}
 
 		return ergebnis;
 
 	}
-
-	// public void berechneGueltigVonBis(String pid, Long von, Long bis)
-	// {
-	// pid = pid.toLowerCase();
-	//
-	// // Sortierte Map mit den zu sendenden Daten wird erstellt
-	// SortedMap<String, String[]> sendMap = new TreeMap<String, String[]>();
-	//
-	// int len = 0;
-	//
-	// if (getSkeList().containsKey(pid))
-	// {
-	//
-	// Calendar cal1 = new GregorianCalendar();
-	// Calendar cal2 = new GregorianCalendar();
-	// cal1.setTimeInMillis(von);
-	// cal2.setTimeInMillis(bis);
-	//
-	// SystemkalenderEintrag ske = getSkeList().get(pid);
-	//
-	// ListeZustandsWechsel olzw = ske.getObjektListeZustandsWechsel();
-	//
-	// // Besitzt das Ereignis auch eine Aenderungs-Liste?
-	// // if (olzw.getListeZustandsWechsel() != null)
-	// {
-	//
-	// SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBis(von, bis);
-	//
-	// // Es wurde kein Ereigniswechsel im definierten Zeitraum festgestellt
-	// if (sm == null)
-	// {
-	// _debug.fine(ske.getPid() + " : kein Wechsel im definierten Zeitraum");
-	// return;
-	// }
-	//
-	// for (Map.Entry<Long, Boolean> meAend : sm.entrySet())
-	// {
-	//
-	// Long time = meAend.getKey();
-	//
-	// Boolean gueltig = meAend.getValue();
-	//
-	// String[] sf = new String[2];
-	//
-	// //sf[0] = ske.getPid();
-	// sf[0] = pid;
-	//
-	// if (gueltig)
-	// sf[1] = "gÃÂ¼ltig";
-	// else
-	// sf[1] = "noch gÃÂ¼ltig";
-	//
-	// /******************************************************************/
-	// // Calendar cal = new GregorianCalendar();
-	// // cal.setTimeInMillis(time);
-	// // if ((cal.get(Calendar.MILLISECOND) == 999) && !meAend.getValue())
-	// // {
-	// // time += 1;
-	// // }
-	// /******************************************************************/
-	//
-	//
-	// // Es wird ein eindeutiger Schluessel erzeugt
-	// String uniqueKey = time + "_" + ske.getPid();
-	//
-	// if(time >= von && time <= bis){
-	// sendMap.put(uniqueKey, sf);
-	// len++;
-	// }
-	//
-	// }
-	//
-	// }
-	// // else
-	// {
-	// // Ereignis hat keine Aenderungs-Liste
-	// // _debug.config(ske.getPid() + " hat keine zeitl. ÃÂnderungsliste");
-	// }
-	//
-	// }
-	// else
-	// {
-	//
-	// _debug.error(pid + "nicht in SkeListe");
-	//
-	// }
-	//
-	// for (Map.Entry<String, String[]> entry : sendMap.entrySet())
-	// {
-	//
-	// String tmp = entry.getKey();
-	//
-	// // Zeitinfo wird aus dem Schluessel extrahiert
-	// String millis = tmp.substring(0, tmp.indexOf("_"));
-	//
-	// Long l = Long.decode(millis);
-	//
-	// Date d = new Date();
-	//
-	// d.setTime(l);
-	//
-	// SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
-	//
-	// String datum = format.format(d);
-	//
-	//
-	// }
 
 	public SortedMap<String, Boolean> berechneGueltigVonBis(String pid, Long von, Long bis) {
 		pid = pid.toLowerCase();
@@ -1041,7 +687,7 @@ public class SystemkalenderArbeiter
 			}
 
 		} else {
-			_debug.error(pid + " ist nicht der Liste der SystemkalendereintrÃÂ¤ge");
+			LOGGER.error(pid + " ist nicht der Liste der Systemkalendereinträge");
 		}
 
 		return ergebnis;
@@ -1068,7 +714,7 @@ public class SystemkalenderArbeiter
 			}
 
 		} else {
-			_debug.error(pid + " ist nicht der Liste der SystemkalendereintrÃÂ¤ge");
+			LOGGER.error(pid + " ist nicht der Liste der Systemkalendereinträge");
 		}
 
 		return ergebnis;

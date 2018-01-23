@@ -30,27 +30,24 @@ import java.util.EventObject;
 /**
  * Klasse die ein Benachrichtigungsereignis darstellt
  * 
- * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner $)
+ * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner
+ *          $)
  * 
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  * 
  */
-public class BenachrichtigeEvent extends EventObject
-{
+public class BenachrichtigeEvent extends EventObject {
 
-  protected String _meldung;
+	protected String meldung;
 
-  public BenachrichtigeEvent(Object source, String meldung)
-  {
-    super(source);
-    _meldung = meldung;
-    // TODO Auto-generated constructor stub
-  }
+	public BenachrichtigeEvent(Object source, String meldung) {
+		super(source);
+		this.meldung = meldung;
+	}
 
-  public String getMeldung()
-  {
-    return _meldung;
-  }
+	public String getMeldung() {
+		return meldung;
+	}
 
 }

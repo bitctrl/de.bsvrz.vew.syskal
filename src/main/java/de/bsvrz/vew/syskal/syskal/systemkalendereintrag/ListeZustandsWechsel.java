@@ -42,299 +42,278 @@ import de.bsvrz.sys.funclib.debug.Debug;
 /**
  * Kommentar
  * 
- * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner $)
- * 
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  * 
  */
-public class ListeZustandsWechsel
-{
+public class ListeZustandsWechsel {
 
-  private Debug _debug = Debug.getLogger();
+	private static final Debug LOGGER = Debug.getLogger();
 
-  /**
-   * 
-   */
-  private SortedMap<Long, Boolean> listeZustandsWechsel = new TreeMap<>();
+	/**
+	 * 
+	 */
+	private SortedMap<Long, Boolean> listeZustandsWechsel = new TreeMap<>();
 
-  public void setListeZustandsWechsel(SortedMap<Long, Boolean> list)
-  {
+	public void setListeZustandsWechsel(SortedMap<Long, Boolean> list) {
 
-    listeZustandsWechsel = list;
+		listeZustandsWechsel = list;
 
-  }
+	}
 
-  public SortedMap<Long, Boolean> getListeZustandsWechsel()
-  {
+	public SortedMap<Long, Boolean> getListeZustandsWechsel() {
 
-    if (listeZustandsWechsel != null)
-      return listeZustandsWechsel;
+		if (listeZustandsWechsel != null)
+			return listeZustandsWechsel;
 
-    return null;
+		return null;
 
-  }
+	}
 
-  /**
-   * Berechnet den naechsten zeitlichen Zustandswechsel ausgehend von einem Startzeitpunkt
-   * 
-   * @param start
-   *          Startzeitpunkt der Berechnung
-   * @return Zeitpunkt mit Zustand
-   */
-  protected Map.Entry<Long, Boolean> berechneNaechstenZustandsWechsel(long start)
-  {
+	/**
+	 * Berechnet den naechsten zeitlichen Zustandswechsel ausgehend von einem
+	 * Startzeitpunkt
+	 * 
+	 * @param start
+	 *            Startzeitpunkt der Berechnung
+	 * @return Zeitpunkt mit Zustand
+	 */
+	protected Map.Entry<Long, Boolean> berechneNaechstenZustandsWechsel(long start) {
 
-    Calendar cal1 = new GregorianCalendar();
-    Calendar cal2 = new GregorianCalendar();
-    Date d = new Date();
-    d.setTime(start);
-    cal1.setTime(d);
+		Calendar cal1 = new GregorianCalendar();
+		Calendar cal2 = new GregorianCalendar();
+		Date d = new Date();
+		d.setTime(start);
+		cal1.setTime(d);
 
-    for (Map.Entry<Long, Boolean> e : listeZustandsWechsel.entrySet())
-    {
+		for (Map.Entry<Long, Boolean> e : listeZustandsWechsel.entrySet()) {
 
-      cal2.setTimeInMillis(e.getKey());
+			cal2.setTimeInMillis(e.getKey());
 
-      if (cal2.after(cal1) || cal2.equals(cal1))
-        return e;
+			if (cal2.after(cal1) || cal2.equals(cal1))
+				return e;
 
-    }
+		}
 
-    return null;
-  }
+		return null;
+	}
 
-  /**
-   * Berechnet den letzten zeitlichen Zustandswechsel ausgehend von eine Startzeitpunkt
-   * 
-   * @param ende
-   *          Startzeitpunkt der Berechnung
-   * @return Zeitpunkt mit Zustand
-   */
-  protected Map.Entry<Long, Boolean> berechneLetztenZustandsWechsel(long ende)
-  {
+	/**
+	 * Berechnet den letzten zeitlichen Zustandswechsel ausgehend von eine
+	 * Startzeitpunkt
+	 * 
+	 * @param ende
+	 *            Startzeitpunkt der Berechnung
+	 * @return Zeitpunkt mit Zustand
+	 */
+	protected Map.Entry<Long, Boolean> berechneLetztenZustandsWechsel(long ende) {
 
-    Calendar cal1 = new GregorianCalendar();
-    Calendar cal2 = new GregorianCalendar();
-    Date d = new Date();
-    d.setTime(ende);
-    cal1.setTime(d);
+		Calendar cal1 = new GregorianCalendar();
+		Calendar cal2 = new GregorianCalendar();
+		Date d = new Date();
+		d.setTime(ende);
+		cal1.setTime(d);
 
-    Set<Long> col = listeZustandsWechsel.keySet();
-
-    List<Long> list = new ArrayList<>();
+		Set<Long> col = listeZustandsWechsel.keySet();
 
-    list.addAll(col);
-
-    for (ListIterator<Long> i = list.listIterator(list.size()); i.hasPrevious();)
-    {
+		List<Long> list = new ArrayList<>();
 
-      Long l = i.previous();
-      cal2.setTimeInMillis(l);
+		list.addAll(col);
 
-      if (cal2.before(cal1) || cal2.equals(cal1))
-      {
-        Boolean v = listeZustandsWechsel.get(l);
+		for (ListIterator<Long> i = list.listIterator(list.size()); i.hasPrevious();) {
 
-        // Dummy-Liste mit nur einem Eintrag wird erstellt, um ein Map.Entry zu bekommen
-        HashMap<Long, Boolean> map = new HashMap<>();
-        map.put(l, v);
+			Long l = i.previous();
+			cal2.setTimeInMillis(l);
 
-        for (Map.Entry<Long, Boolean> e : map.entrySet())
-        {
-          if (l == e.getKey())
-            return e;
+			if (cal2.before(cal1) || cal2.equals(cal1)) {
+				Boolean v = listeZustandsWechsel.get(l);
 
-        }
+				// Dummy-Liste mit nur einem Eintrag wird erstellt, um ein Map.Entry zu bekommen
+				HashMap<Long, Boolean> map = new HashMap<>();
+				map.put(l, v);
 
-      }
+				for (Map.Entry<Long, Boolean> e : map.entrySet()) {
+					if (l.equals(e.getKey())) {
+						return e;
+					}
+				}
+			}
+		}
 
-    }
-
-    return null;
-  }
-
-  /**
-   * Berechnet alle zeitlichen Zustandswechsel in einen definierten Zeitraum
-   * 
-   * @param von
-   *          Startzeitpunkt der Berechnung
-   * @param bis
-   *          Endezeitpunkt der Berechnung
-   * 
-   * @return zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel und dem Zustand
-   * 
-   */
-  public SortedMap<Long, Boolean> berechneVonBis(long von, long bis)
-  {
-
-    Map.Entry<Long, Boolean> start = berechneNaechstenZustandsWechsel(von);
-    Map.Entry<Long, Boolean> ende = berechneLetztenZustandsWechsel(bis);
-
-    if (start == null || ende == null)
-    {
-      return null;
-    }
-
-    Date d = new Date();
-    d.setTime(start.getKey());
-
-    // Liegt der naechste und der letzte Wechsel innerhalb des
-    // vorgegebenen Zeitbereichs
-    if (start.getKey() >= von && start.getKey() <= bis && ende.getKey() >= von && ende.getKey() <= bis)
-    {
-    	// nur else-Zweig wird bewertet, der Rest später
-    }
-    else
-    {
-
-      return null;
-
-    }
-
-    Date d1 = new Date();
-    Date d2 = new Date();
-
-    d1.setTime(start.getKey());
-    d2.setTime(ende.getKey());
-
-    // Da subMap nur einen halboffenes Intervall (a,b] liefert,
-    // muss ein Wert ueber die obere Grenze hinaus angegeben werden
-    SortedMap<Long, Boolean> liste = listeZustandsWechsel.subMap(start.getKey(), ende.getKey() + 1);
-
-    if (liste != null)
-    {
-      return liste;
-    }
-
-    return null;
-  }
-
-  /**
-   * Setzt die zeitliche Gueltigkeit, bei einer Definition ueber Beginn und Ende der zeitl. Gueltigkeit
-   * 
-   * @param von
-   *          Startzeitpunkt der Berechnung
-   * @param bis
-   *          Endezeitpunkt der Berechnung
-   * @return zeitlich sortierte Liste mit dem Zeitpunkten der ZustandswechselÃÂ´der zeitlichen
-   *         Gueltigkeit und dem Zustand
-   */
-  public SortedMap<Long, Boolean> setGueltigkeitZeit(long von, long bis)
-  {
-
-    if (bis <= von)
-      return null;
-
-    Calendar cal = new GregorianCalendar();
-
-    Date dtVon = new Date();
-    Date dtBis = new Date();
-
-    dtVon.setTime(von);
-    dtBis.setTime(bis);
-
-    cal.setTime(dtVon);
-
-    listeZustandsWechsel.put(cal.getTimeInMillis(), true);
-
-    cal.setTime(dtBis);
-
-    listeZustandsWechsel.put(cal.getTimeInMillis(), false);
-
-    return listeZustandsWechsel;
-  }
-
-  /**
-   * Setzt die verkehrliche Gueltigkeit, bei einer Definition ueber Beginn und Ende der zeitl. Gueltigkeit
-   * 
-   * @param listZeitl
-   *          Liste der zeitlichen Zustandsaenderungen auf welche sich bezogen wird
-   * 
-   * @param vor
-   *          Offset zum Startzeitpunkt
-   * @param bezVor
-   *          Beziehung des Offsets zum Startzeitpunkt
-   * 
-   * @param nach
-   *          Offset zum Endezeitpunkt
-   * @param bezNach
-   *          Beziehung des Offsets zum Endezeitpunkt
-   * 
-   * @return zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel der
-   *         verkehrlichen Gueltigkeit und dem Zustand
-   */
-  public SortedMap<Long, Boolean> setGueltigkeitVerkehr(SortedMap<Long, Boolean> listZeitl, long vor, int bezVor,
-      long nach, int bezNach)
-  {
-
-    Date dtVor = new Date();
-    Date dtNach = new Date();
-
-    dtVor.setTime(vor);
-    dtNach.setTime(nach);
-
-    for (Map.Entry<Long, Boolean> me : listZeitl.entrySet())
-    {
-
-      Long tmp = 0L;
-      Long l = me.getKey();
-      Boolean gueltig = me.getValue();
-
-      if (gueltig)
-      {
-
-        switch (bezVor)
-        {
-          case 0:
-            tmp = l - vor;
-            break;
-          case 1:
-            tmp = l + vor;
-            break;
-          case 2:
-            tmp = l - nach;
-            break;
-          case 3:
-            tmp = l + nach;
-            break;
-
-          default:
-            _debug.fine("Fehler bezVor");
-            // return null;
-        }
-
-        listeZustandsWechsel.put(tmp, true);
-
-      }
-      else
-      {
-
-        switch (bezNach)
-        {
-          case 0:
-            tmp = l - vor;
-            break;
-          case 1:
-            tmp = l + vor;
-            break;
-          case 2:
-            tmp = l - nach;
-            break;
-          case 3:
-            tmp = l + nach;
-            break;
-
-          default:
-            _debug.fine("Fehler bezNach");
-        }
-
-        listeZustandsWechsel.put(tmp, false);
-      }
-
-    }
-
-    return listeZustandsWechsel;
-  }
+		return null;
+	}
+
+	/**
+	 * Berechnet alle zeitlichen Zustandswechsel in einen definierten Zeitraum
+	 * 
+	 * @param von
+	 *            Startzeitpunkt der Berechnung
+	 * @param bis
+	 *            Endezeitpunkt der Berechnung
+	 * 
+	 * @return zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel und
+	 *         dem Zustand
+	 * 
+	 */
+	public SortedMap<Long, Boolean> berechneVonBis(long von, long bis) {
+
+		Map.Entry<Long, Boolean> start = berechneNaechstenZustandsWechsel(von);
+		Map.Entry<Long, Boolean> ende = berechneLetztenZustandsWechsel(bis);
+
+		if (start == null || ende == null) {
+			return null;
+		}
+
+		Date d = new Date();
+		d.setTime(start.getKey());
+
+		// Liegt der naechste und der letzte Wechsel innerhalb des
+		// vorgegebenen Zeitbereichs
+		if (start.getKey() >= von && start.getKey() <= bis && ende.getKey() >= von && ende.getKey() <= bis) {
+			// nur else-Zweig wird bewertet, der Rest später
+		} else {
+
+			return null;
+
+		}
+
+		Date d1 = new Date();
+		Date d2 = new Date();
+
+		d1.setTime(start.getKey());
+		d2.setTime(ende.getKey());
+
+		// Da subMap nur einen halboffenes Intervall (a,b] liefert,
+		// muss ein Wert ueber die obere Grenze hinaus angegeben werden
+		SortedMap<Long, Boolean> liste = listeZustandsWechsel.subMap(start.getKey(), ende.getKey() + 1);
+
+		if (liste != null) {
+			return liste;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Setzt die zeitliche Gueltigkeit, bei einer Definition ueber Beginn und Ende
+	 * der zeitl. Gueltigkeit
+	 * 
+	 * @param von
+	 *            Startzeitpunkt der Berechnung
+	 * @param bis
+	 *            Endezeitpunkt der Berechnung
+	 * @return zeitlich sortierte Liste mit dem Zeitpunkten der
+	 *         ZustandswechselÃÂ´der zeitlichen Gueltigkeit und dem Zustand
+	 */
+	public SortedMap<Long, Boolean> setGueltigkeitZeit(long von, long bis) {
+
+		if (bis <= von)
+			return null;
+
+		Calendar cal = new GregorianCalendar();
+
+		Date dtVon = new Date();
+		Date dtBis = new Date();
+
+		dtVon.setTime(von);
+		dtBis.setTime(bis);
+
+		cal.setTime(dtVon);
+
+		listeZustandsWechsel.put(cal.getTimeInMillis(), true);
+
+		cal.setTime(dtBis);
+
+		listeZustandsWechsel.put(cal.getTimeInMillis(), false);
+
+		return listeZustandsWechsel;
+	}
+
+	/**
+	 * Setzt die verkehrliche Gueltigkeit, bei einer Definition ueber Beginn und
+	 * Ende der zeitl. Gueltigkeit
+	 * 
+	 * @param listZeitl
+	 *            Liste der zeitlichen Zustandsaenderungen auf welche sich bezogen
+	 *            wird
+	 * 
+	 * @param vor
+	 *            Offset zum Startzeitpunkt
+	 * @param bezVor
+	 *            Beziehung des Offsets zum Startzeitpunkt
+	 * 
+	 * @param nach
+	 *            Offset zum Endezeitpunkt
+	 * @param bezNach
+	 *            Beziehung des Offsets zum Endezeitpunkt
+	 * 
+	 * @return zeitlich sortierte Liste mit dem Zeitpunkten der Zustandswechsel der
+	 *         verkehrlichen Gueltigkeit und dem Zustand
+	 */
+	public SortedMap<Long, Boolean> setGueltigkeitVerkehr(SortedMap<Long, Boolean> listZeitl, long vor, int bezVor,
+			long nach, int bezNach) {
+
+		Date dtVor = new Date();
+		Date dtNach = new Date();
+
+		dtVor.setTime(vor);
+		dtNach.setTime(nach);
+
+		for (Map.Entry<Long, Boolean> me : listZeitl.entrySet()) {
+
+			Long tmp = 0L;
+			Long l = me.getKey();
+			Boolean gueltig = me.getValue();
+
+			if (gueltig) {
+
+				switch (bezVor) {
+				case 0:
+					tmp = l - vor;
+					break;
+				case 1:
+					tmp = l + vor;
+					break;
+				case 2:
+					tmp = l - nach;
+					break;
+				case 3:
+					tmp = l + nach;
+					break;
+
+				default:
+					LOGGER.fine("Fehler bezVor");
+					// return null;
+				}
+
+				listeZustandsWechsel.put(tmp, true);
+
+			} else {
+
+				switch (bezNach) {
+				case 0:
+					tmp = l - vor;
+					break;
+				case 1:
+					tmp = l + vor;
+					break;
+				case 2:
+					tmp = l - nach;
+					break;
+				case 3:
+					tmp = l + nach;
+					break;
+
+				default:
+					LOGGER.fine("Fehler bezNach");
+				}
+
+				listeZustandsWechsel.put(tmp, false);
+			}
+
+		}
+
+		return listeZustandsWechsel;
+	}
 
 }

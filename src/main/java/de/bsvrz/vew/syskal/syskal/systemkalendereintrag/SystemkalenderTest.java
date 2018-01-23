@@ -37,7 +37,6 @@ import de.bsvrz.dav.daf.main.config.Aspect;
 import de.bsvrz.dav.daf.main.config.AttributeGroup;
 import de.bsvrz.dav.daf.main.config.ConfigurationArea;
 import de.bsvrz.dav.daf.main.config.ConfigurationObject;
-import de.bsvrz.dav.daf.main.config.DataModel;
 import de.bsvrz.dav.daf.main.config.DynamicObjectType;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.application.StandardApplication;
@@ -51,205 +50,166 @@ import de.bsvrz.vew.syskal.syskal.benachrichtigungsfunktion.BenachrichtigeListen
 /**
  * Kommentar
  * 
- * @version $Revision: 1.2 $ / $Date: 2015/06/08 15:13:12 $ / ($Author: Pittner $)
- * 
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  * 
  */
-public class SystemkalenderTest implements StandardApplication,
-    BenachrichtigeListener
-{
-  /**
-   * DebugLogger fÃÂ¼r Debug-Ausgaben
-   */
-  private static Debug _debug;
+public class SystemkalenderTest implements StandardApplication, BenachrichtigeListener {
+	/**
+	 * DebugLogger für Debug-Ausgaben
+	 */
+	private static Debug logger;
 
-  /**
-   * -datenverteiler von Kommandozeile
-   */
-  private String _dav;
+	/**
+	 * -datenverteiler von Kommandozeile
+	 */
+	private String kalender;
 
-  /**
-   * -datenverteiler von Kommandozeile
-   */
-  private String _kalender;
+	protected SystemObject systemobjekt;
 
-  /**
-   * Verbindung zum Datenverteiler
-   */
-  public ClientDavInterface _connection;
+	protected AttributeGroup attributgruppe;
 
-  /**
-   * Verbindung zum Datenverteiler
-   */
-  private DataModel _datenmodell;
+	protected Aspect aspekt;
 
-  protected SystemObject systemobjekt;
+	protected DataDescription datenbeschreibung;
 
-  protected AttributeGroup _attributgruppe;
+	protected short simulationsvariante;
 
-  protected Aspect _aspekt;
+	protected SenderRole senderrolle;
 
-  protected DataDescription _datenbeschreibung;
+	protected ConfigurationArea konfigBereich;
 
-  protected short _simulationsvariante;
+	protected DynamicObjectType dynObjTyp;
 
-  protected SenderRole _senderrolle;
+	protected ConfigurationObject configObj;
 
-  protected ConfigurationArea _konfigBereich;
+	protected VerwaltungDynObj verwaltung;
 
-  protected DynamicObjectType _dynObjTyp;
+	/**
+	 * Konstruktor.<br>
+	 * Öffnen der Log-Datei.
+	 */
+	public SystemkalenderTest() {
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 
-  protected ConfigurationObject _configObj;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see sys.funclib.application.StandardApplication#parseArguments(sys.funclib.
+	 * ArgumentList)
+	 */
+	/**
+	 * Überschriebene Methode von StandardApplication, die die speziellen
+	 * Startparameter auswertet.<br>
+	 * Die Liste der Konfigurationsbereiche wird durch Aufspaltung des übergebenen
+	 * Strings erstellt und die speziellen Startparameter werden in die Log-Datei
+	 * eingetragen.
+	 * 
+	 * @param argumentList
+	 *            siehe
+	 *            sys.funclib.application.StandardApplication#parseArguments(sys.funclib.ArgumentList)
+	 */
+	@Override
+	public void parseArguments(ArgumentList argumentList) throws Exception {
+		logger = Debug.getLogger();
 
-  protected VerwaltungDynObj _verwaltung;
+		logger.config("argumentList = " + argumentList);
 
-  /**
-   * Konstruktor.<br>
-   * ÃÂffnen der Log-Datei.
-   */
-  public SystemkalenderTest()
-  {
-    try
-    {
-      Thread.sleep(100);
-    }
-    catch (InterruptedException e)
-    {
-      e.printStackTrace();
-    }
-  }
+		kalender = argumentList.fetchArgument("-kalender=").asNonEmptyString();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see sys.funclib.application.StandardApplication#parseArguments(sys.funclib.ArgumentList)
-   */
-  /**
-   * ÃÂberschriebene Methode von StandardApplication, die die speziellen Startparameter auswertet.<br>
-   * Die Liste der Konfigurationsbereiche wird durch Aufspaltung des ÃÂ¼bergebenen Strings erstellt und die speziellen
-   * Startparameter werden in die Log-Datei eingetragen.
-   * 
-   * @param argumentList
-   *          siehe sys.funclib.application.StandardApplication#parseArguments(sys.funclib.ArgumentList)
-   */
-  @Override
-public void parseArguments(ArgumentList argumentList) throws Exception
-  {
-    _debug = Debug.getLogger();
+		argumentList.fetchUnusedArguments();
+	}
 
-    _debug.config("argumentList = " + argumentList);
+	/**
+	 * überschriebene Methode von StandardApplication, die die Initialisierung
+	 * durchführt.<br>
+	 * Entsprechend dem Argument -layer wird die entsprechende Methode aufgerufen
+	 * und danach die Log-Datei geschlossen.<br>
+	 * 
+	 * @param connection
+	 *            siehe
+	 *            sys.funclib.application.StandardApplication#initialize(stauma.dav.clientside.ClientDavInterface)
+	 */
+	@Override
+	public void initialize(ClientDavInterface connection) throws Exception {
 
-    _dav = argumentList.fetchArgument("-datenverteiler=").asNonEmptyString();
-    
-    _kalender = argumentList.fetchArgument("-kalender=").asNonEmptyString();
+		SystemkalenderArbeiter arbeiter = SystemkalenderArbeiter.getInstance(connection, kalender);
 
-    argumentList.fetchUnusedArguments();
-  }
+		arbeiter.starteSystemKalenderArbeiter();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see sys.funclib.application.StandardApplication#initialize(stauma.dav.clientside.ClientDavInterface)
-   */
-  /**
-   * ÃÂberschriebene Methode von StandardApplication, die die Initialisierung durchfÃÂ¼hrt.<br>
-   * Entsprechend dem Argument -layer wird die entsprechende Methode aufgerufen und danach die Log-Datei geschlossen.<br>
-   * 
-   * @param connection
-   *          siehe sys.funclib.application.StandardApplication#initialize(stauma.dav.clientside.ClientDavInterface)
-   */
-  @Override
-public void initialize(ClientDavInterface connection) throws Exception
-  {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
-    _connection = connection;
+		List<SystemObject> list = new ArrayList<>();
 
-//    BenachrichtigeFunktion f = new BenachrichtigeFunktion();
-//    f.getBenachrichtigeListenerVerwaltung().addBenachrichtigeListener(this);
+		list.add(connection.getDataModel().getObject("ske.ostersonntag"));
+		list.add(connection.getDataModel().getObject("ske.leerzeichen"));
+		list.add(connection.getDataModel().getObject("ske.1"));
+		list.add(connection.getDataModel().getObject("ske._"));
+		list.add(connection.getDataModel().getObject("ske.#"));
+		list.add(connection.getDataModel().getObject("ske.^"));
+		list.add(connection.getDataModel().getObject("ske.ÃÂº"));
+		list.add(connection.getDataModel().getObject("ske.\\"));
+		list.add(connection.getDataModel().getObject("ske./"));
 
-    SystemkalenderArbeiter arbeiter = SystemkalenderArbeiter.getInstance(_connection, _kalender);
+		logger.error("------------------->Test1");
 
-    arbeiter.starteSystemKalenderArbeiter();
-    
-    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
+		Date start = formatter.parse("01.01.2004 00:00:00,000");
+		Date end = formatter.parse("31.12.2004 23:59:59,999");
+		arbeiter.berechneGueltigVonBis(list, start.getTime(), end.getTime());
 
-    List<SystemObject> list = new ArrayList<>();
-    
-    list.add(_connection.getDataModel().getObject("ske.ostersonntag"));
-    list.add(_connection.getDataModel().getObject("ske.leerzeichen"));
-    list.add(_connection.getDataModel().getObject("ske.1"));
-    list.add(_connection.getDataModel().getObject("ske._"));
-    list.add(_connection.getDataModel().getObject("ske.#"));
-    list.add(_connection.getDataModel().getObject("ske.^"));
-    list.add(_connection.getDataModel().getObject("ske.ÃÂº"));
-    list.add(_connection.getDataModel().getObject("ske.\\"));
-    list.add(_connection.getDataModel().getObject("ske./"));
-    
-    
-    _debug.error("------------------->Test1");
-    
-    Date start = formatter.parse("01.01.2004 00:00:00,000");
-    Date end = formatter.parse("31.12.2004 23:59:59,999");
-    arbeiter.berechneGueltigVonBis(list, start.getTime(), end.getTime());
-    
-    
-    _debug.error("------------------->Test2");
-    
-    start = formatter.parse("01.01.2003 00:00:00,000");
-    end = formatter.parse("31.12.2004 23:59:59,999");
-    //arbeiter.berechneGueltigVonBis("ske./", start.getTime(), end.getTime());
-    
-    _debug.error("------------------->Test2");
+		logger.error("------------------->Test2");
 
-    start = formatter.parse("01.01.2004 00:00:00,000");
-    end = formatter.parse("31.12.2004 23:59:59,999");
-    //arbeiter.berechneGueltigVonBis("ske.ostermontag", start.getTime(), end.getTime());
+		start = formatter.parse("01.01.2003 00:00:00,000");
+		end = formatter.parse("31.12.2004 23:59:59,999");
+		// arbeiter.berechneGueltigVonBis("ske./", start.getTime(), end.getTime());
 
-    _debug.error("------------------->Test4");
-    
-    start = formatter.parse("01.01.2008 00:00:00,000");
-    end = formatter.parse("31.12.2008 23:59:59,999");
-    //arbeiter.berechneGueltigVonBis("ske.osterdienstag", start.getTime(), end.getTime());
-    
-    _debug.error("------------------->Test5");        
-    Date now = new Date();
-    //arbeiter.berechneGueltigJetzt("ske.donnerstag", now.getTime());
-    
-    _debug.error("------------------->Test6");        
+		logger.error("------------------->Test2");
 
-    //arbeiter.berechneGueltigJetzt("ske.freitag", now.getTime());
-    
-    _debug.error("------------------->Test Ende");
-    
-    start = formatter.parse("01.01.2008 00:00:00,000");
-    end = formatter.parse("31.12.2009 23:59:59,999");
-    //arbeiter.berechneGueltigVonBis("ske.falsch", start.getTime(), end.getTime());
-    
-    _debug.error("------------------->Test Ende");
-        
-  
-  }// public void initialize(ClientDavInterface connection)
+		start = formatter.parse("01.01.2004 00:00:00,000");
+		end = formatter.parse("31.12.2004 23:59:59,999");
+		// arbeiter.berechneGueltigVonBis("ske.ostermontag", start.getTime(),
+		// end.getTime());
 
-  /**
-   * Programmeinstieg.<br>
-   * 
-   * @param arguments
-   *          Kommandozeilenargumente
-   */
-  public static void main(String[] arguments)
-  {
-    StandardApplicationRunner.run(new SystemkalenderTest(), arguments);
+		logger.error("------------------->Test4");
 
-  }
+		start = formatter.parse("01.01.2008 00:00:00,000");
+		end = formatter.parse("31.12.2008 23:59:59,999");
 
-  @Override
-public void update(BenachrichtigeEvent e)
-  {
-    // TODO Auto-generated method stub
-    _debug.error("update: " + e.getMeldung());
+		logger.error("------------------->Test5");
 
-  }
+		logger.error("------------------->Test6");
+
+
+		logger.error("------------------->Test Ende");
+
+		start = formatter.parse("01.01.2008 00:00:00,000");
+		end = formatter.parse("31.12.2009 23:59:59,999");
+
+		logger.error("------------------->Test Ende");
+
+	}
+
+	/**
+	 * Programmeinstieg.<br>
+	 * 
+	 * @param arguments
+	 *            Kommandozeilenargumente
+	 */
+	public static void main(String[] arguments) {
+		StandardApplicationRunner.run(new SystemkalenderTest(), arguments);
+
+	}
+
+	@Override
+	public void update(BenachrichtigeEvent e) {
+		// TODO Auto-generated method stub
+		logger.error("update: " + e.getMeldung());
+
+	}
 
 }

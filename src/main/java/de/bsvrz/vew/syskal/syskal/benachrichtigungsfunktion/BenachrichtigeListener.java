@@ -30,14 +30,10 @@ import java.util.EventListener;
 /**
  * Interface des Listeners
  * 
- * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner $)
- * 
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  * 
  */
-public interface BenachrichtigeListener extends EventListener
-{
-  public void update(BenachrichtigeEvent e);
-
+public interface BenachrichtigeListener extends EventListener {
+	void update(BenachrichtigeEvent e);
 }

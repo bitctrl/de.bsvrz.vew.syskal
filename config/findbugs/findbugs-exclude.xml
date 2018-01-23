@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FindBugsFilter>
+<!-- 
     <Match>
         <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
     </Match>
@@ -15,4 +16,5 @@
     <Match>
         <Bug pattern="DM_BOXED_PRIMITIVE_FOR_PARSING"/>
     </Match>
+     -->
 </FindBugsFilter>

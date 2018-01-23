@@ -43,14 +43,14 @@ public interface SystemkalenderEintrag {
 	 * @param name
 	 *            setzt den Namen des Eintrags
 	 */
-	public void setName(String name);
+	void setName(String name);
 
 	/**
 	 * Prueft den Eintrag auf Gueltikeit
 	 * 
 	 * @return true, wenn die Pruefung erfolgreich war
 	 */
-	public boolean pruefeEintrag();
+	boolean pruefeEintrag();
 
 	/**
 	 * Berechnet die Zeitstempel der Zustandswechsel
@@ -59,7 +59,7 @@ public interface SystemkalenderEintrag {
 	 *            das Jahr für welches die Wechsel berechnet werden
 	 * @return zeitl. sortierte Liste der Zustandswechsel
 	 */
-	public SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr);
+	SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr);
 
 	/**
 	 * Berechnet die Zeitstempel der Zustandswechsel
@@ -72,7 +72,7 @@ public interface SystemkalenderEintrag {
 	 *            das Jahr für welches die Wechsel berechnet werden
 	 * @return zeitl. sortierte Liste der Zustandswechsel
 	 */
-	public SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr);
+	SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr);
 
 	/**
 	 * Berechnet die Zeitstempel der Zustandswechsel
@@ -85,7 +85,7 @@ public interface SystemkalenderEintrag {
 	 *            das Jahr für welches die Wechsel berechnet werden
 	 * @return zeitl. sortierte Liste der Gültigkeiten
 	 */
-	public SortedMap<Long, Long> berechneIntervall(Long von, Long bis, int jahr);
+	SortedMap<Long, Long> berechneIntervall(Long von, Long bis, int jahr);
 
 	/**
 	 * Berechnet die Zeitstempel der Zustandswechsel für das Versenden des
@@ -99,50 +99,50 @@ public interface SystemkalenderEintrag {
 	 *            das Jahr für welches die Wechsel berechnet werden
 	 * @return zeitl. sortierte Liste der Zustandswechsel
 	 */
-	public SortedMap<Long, Boolean> berechneZustandsWechselZustand(Long von, Long bis, int jahr);
+	SortedMap<Long, Boolean> berechneZustandsWechselZustand(Long von, Long bis, int jahr);
 
 	/**
 	 * Getter fuer die Liste der Zeitstempel
 	 * 
 	 * @return Sortierte Liste der Zustandswechsel
 	 */
-	public SortedMap<Long, Boolean> getListeZustandsWechsel();
+	SortedMap<Long, Boolean> getListeZustandsWechsel();
 
-	public void setListeZustandsWechsel(SortedMap<Long, Boolean> liste);
+	void setListeZustandsWechsel(SortedMap<Long, Boolean> liste);
 
 	/**
 	 * Getter fuer das Listeobjekt mit den Zeitstempeln
 	 * 
 	 * @return ListeZustandsWechsel Objekt der Liste mit den Zustandswechsel
 	 */
-	public ListeZustandsWechsel getObjektListeZustandsWechsel();
+	ListeZustandsWechsel getObjektListeZustandsWechsel();
 
-	public void setObjektListeZustandsWechsel(ListeZustandsWechsel liste);
-
-	/**
-	 * Getter fuer die Pid des SystemKalenderEintrags
-	 * 
-	 * @return Pid des SystemKalenderEintrags
-	 */
-	public String getPid();
-
-	public void setPid(String pid);
-
-	public void setDefinition(String definition);
+	void setObjektListeZustandsWechsel(ListeZustandsWechsel liste);
 
 	/**
 	 * Getter fuer die Pid des SystemKalenderEintrags
 	 * 
 	 * @return Pid des SystemKalenderEintrags
 	 */
-	public String getDefinition();
+	String getPid();
+
+	void setPid(String pid);
+
+	void setDefinition(String definition);
+
+	/**
+	 * Getter fuer die Pid des SystemKalenderEintrags
+	 * 
+	 * @return Pid des SystemKalenderEintrags
+	 */
+	String getDefinition();
 
 	/**
 	 * Getter fuer die Definition des SystemKalenderEintrags
 	 * 
 	 * @return String Definition des SystemKalenderEintrags
 	 */
-	public String getName();
+	String getName();
 
 	/**
 	 * Berechnet ob eine Gueltigkeit vorliegt
@@ -152,7 +152,7 @@ public interface SystemkalenderEintrag {
 	 * 
 	 * @return true, wenn der letzte Zustandwechsel von false nach true war
 	 */
-	public boolean isGueltig(long jetzt);
+	boolean isGueltig(long jetzt);
 
 	/**
 	 * Berechnet ob eine Gueltigkeit in dem angegeben Intervall vorliegt
@@ -164,7 +164,7 @@ public interface SystemkalenderEintrag {
 	 * @return true, wenn es einen Zustandwechsel von false nach true im angegebenen
 	 *         Zeitraum gab
 	 */
-	public boolean isGueltigVonBis(long von, long bis);
+	boolean isGueltigVonBis(long von, long bis);
 
 	/**
 	 * Berechnet ob eine Gueltigkeit in dem angegeben Intervall vorliegt
@@ -176,7 +176,7 @@ public interface SystemkalenderEintrag {
 	 * @return Boolean true, wenn es einen Zustandwechsel von false nach true im
 	 *         angegebenen Zeitraum gab
 	 */
-	public SortedMap<Long, Boolean> berecheneZustandsWechselVonBis(Long von, Long bis);
+	SortedMap<Long, Boolean> berecheneZustandsWechselVonBis(Long von, Long bis);
 
 	/**
 	 * Berechnet die Gueltigkeiten, welche in dem angegeben Intervall vorliegen
@@ -187,7 +187,7 @@ public interface SystemkalenderEintrag {
 	 *            Endezeitpunkt der Berechnung
 	 * @return Liste der Gültigkeiten
 	 */
-	public SortedMap<Long, Long> berecheneIntervallVonBis(Long von, Long bis);
+	SortedMap<Long, Long> berecheneIntervallVonBis(Long von, Long bis);
 
 	/**
 	 * setter fuer ein Wecker-Objekt
@@ -196,8 +196,8 @@ public interface SystemkalenderEintrag {
 	 *            wenn true, wird ein Wecker gestellt wenn false geht der Wecker
 	 *            gleich los
 	 */
-	public void setErinnerungsFunktion(Boolean f);
+	void setErinnerungsFunktion(Boolean f);
 
-	public ErinnerungsFunktion getErinnerungsFunktion();
+	ErinnerungsFunktion getErinnerungsFunktion();
 
 }

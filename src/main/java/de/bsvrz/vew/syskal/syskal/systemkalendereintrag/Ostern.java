@@ -31,9 +31,6 @@ import java.util.GregorianCalendar;
 /**
  * Die Klasse für die Berechnung eines Ostersonntags *
  * 
- * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner
- *          $)
- * 
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  * 

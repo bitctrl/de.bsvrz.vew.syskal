@@ -29,9 +29,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Timer;
 
-import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.syskal.benachrichtigungsfunktion.BenachrichtigeFunktion;
-import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderArbeiter;
 import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag;
 
 /**
@@ -55,11 +53,6 @@ public class ErinnerungsFunktion {
 	private SystemkalenderEintrag ske;
 
 	/**
-	 * Der Debugger, stellt verschiedene Protokollierungsfunktionen zur VerfÃÂ¼gung
-	 */
-	private Debug _debug;
-
-	/**
 	 * Konstruktor der Klasse
 	 * 
 	 * @param ske
@@ -70,8 +63,6 @@ public class ErinnerungsFunktion {
 	 */
 	public ErinnerungsFunktion(SystemkalenderEintrag ske, Boolean b) {
 		this.ske = ske;
-
-		_debug = SystemkalenderArbeiter.getDebug();
 
 		Long now = new Date().getTime();
 

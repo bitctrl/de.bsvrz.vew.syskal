@@ -26,17 +26,17 @@ public class TestSyskalOnline2 implements StandardApplication
   /**
    * DebugLogger für Debug-Ausgaben
    */
-  private static Debug _debug;
+  private static Debug logger;
 
   /**
-   * Konfigurationsibjekt, hier das Systemalenderobjekt
+   * Konfigurationsobjekt, hier das Systemkalenderobjekt
    */
-  private String _strKonfigObjekt;
+  private String strKonfigObjekt;
 
   /**
    * Das Format der Ergebnisausgabe
    */
-  private static SimpleDateFormat _sdf;
+  private static SimpleDateFormat sdf;
 
   /**
    * Konstruktor.<br>
@@ -53,11 +53,6 @@ public class TestSyskalOnline2 implements StandardApplication
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see sys.funclib.application.StandardApplication#parseArguments(sys.funclib .ArgumentList)
-   */
   /**
    * Überschriebene Methode von StandardApplication, die die speziellen Startparameter auswertet.<br>
    * Die Liste der Konfigurationsbereiche wird durch Aufspaltung des übergebenen Strings erstellt und die speziellen
@@ -69,13 +64,13 @@ public class TestSyskalOnline2 implements StandardApplication
   @Override
 public void parseArguments(ArgumentList argumentList) throws Exception
   {
-    _debug = Debug.getLogger();
+    logger = Debug.getLogger();
 
-    _debug.config("argumentList = " + argumentList);
+    logger.config("argumentList = " + argumentList);
 
-    _strKonfigObjekt = argumentList.fetchArgument("-konfigurationsobjekt=").asNonEmptyString();
+    strKonfigObjekt = argumentList.fetchArgument("-konfigurationsobjekt=").asNonEmptyString();
 
-    _debug.config("KonfigurationsObjekt = '" + _strKonfigObjekt + "'");
+    logger.config("KonfigurationsObjekt = '" + strKonfigObjekt + "'");
 
     argumentList.fetchUnusedArguments();
   }
@@ -98,7 +93,7 @@ public void initialize(ClientDavInterface connection) throws Exception
     
 //    System.out.println("TestSyskalOnline2.initialize()");
     
-    Map<String, SystemkalenderEintrag> map = SystemkalenderArbeiter.getInstance(connection, _strKonfigObjekt).starteSystemKalenderArbeiter();
+    Map<String, SystemkalenderEintrag> map = SystemkalenderArbeiter.getInstance(connection, strKonfigObjekt).starteSystemKalenderArbeiter();
     
     
     System.out.println("TestSyskalOnline2.initialize(MAP) " + map.size());
@@ -109,7 +104,7 @@ public void initialize(ClientDavInterface connection) throws Exception
     }
     
     
-    _sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
+    sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
 //    SystemkalenderEintrag ske1 = map.get("ske.nw.vrz-nrw.es.sts.letzterschulfreiertagdersommerferien");
 //    SystemkalenderEintrag ske1 = map.get("ske.nw.vrz-nrw.es.sts.letzterschulfreiertagderweihnachtsferien");
@@ -132,17 +127,17 @@ public void initialize(ClientDavInterface connection) throws Exception
 
     System.out.println("TestSyskalOnline2.initialize(SKE) " + ske1);
     
-    Date d1 = _sdf.parse("01.01.2016 00:00:00,000");
-    Date d2 = _sdf.parse("31.12.2016 00:00:00,000");
+    Date d1 = sdf.parse("01.01.2016 00:00:00,000");
+    Date d2 = sdf.parse("31.12.2016 00:00:00,000");
 //    Date d1 = _sdf.parse("01.05.2016 00:00:00,000");
 //    Date d2 = _sdf.parse("01.06.2016 00:00:00,000");
 //    
-    System.out.println("Abfrage1: " + ske1.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
+    System.out.println("Abfrage1: " + ske1.getPid() + " " + sdf.format(d1) + " - " + sdf.format(d2));
 //
 //    erstelleAbfrageUndAusgabeErgebnisTyp1(ske1, d1, d2);
     erstelleAbfrageUndAusgabeErgebnisTyp1(ske1, d1, d2);
     
-    System.out.println("Abfrage2: " + ske1.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
+    System.out.println("Abfrage2: " + ske1.getPid() + " " + sdf.format(d1) + " - " + sdf.format(d2));
     
     erstelleAbfrageUndAusgabeErgebnisTyp1(ske2, d1, d2);
 //    System.out.println("Abfrage4: " + ske2.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
@@ -243,92 +238,11 @@ public void initialize(ClientDavInterface connection) throws Exception
       for (Map.Entry<Long, Boolean> me : sm.entrySet())
       {
         d.setTime(me.getKey());
-        System.out.println("Ergebnistyp 1: " + _sdf.format(d) + " " + me.getValue());
+        System.out.println("Ergebnistyp 1: " + sdf.format(d) + " " + me.getValue());
 
       }
     }
     else
       System.out.println("Abfrage liefert kein Ergebnis!");
   }
-  
-//  private static void erstelleAbfrageUndAusgabeErgebnisTyp11(SystemkalenderEintrag ske, Date von, Date bis)
-//  {
-//    SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBisNeu(von.getTime(), bis.getTime());
-//    
-//    if (sm != null)
-//    {
-//      Date d = new Date();
-//      for (Map.Entry<Long, Boolean> me : sm.entrySet())
-//      {
-//        d.setTime(me.getKey());
-//        System.out.println("Ergebnistyp 11: " + _sdf.format(d) + " " + me.getValue());
-//        
-//      }
-//    }
-//    else
-//      System.out.println("Abfrage liefert kein Ergebnis!");
-//  }
-
-  /**
-   * Erstellt eine Abfrage der manuellen Zeitbereiche durch Benutzung der <br>
-   * vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berecheneIntervallVonBis(Long, Long)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Long}>
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param von
-   *          Anfangsdatum
-   * @param bis
-   *          Enddatum
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp2(SystemkalenderEintrag ske, Date von, Date bis)
-  {
-    SortedMap<Long, Long> sm = ske.berecheneIntervallVonBis(von.getTime(), bis.getTime());
-
-    if (sm != null)
-    {
-      Date d1 = new Date();
-      Date d2 = new Date();
-      for (Map.Entry<Long, Long> me : sm.entrySet())
-      {
-        d1.setTime(me.getKey());
-        d2.setTime(me.getValue());
-        System.out.println("Ergebnistyp 2: " + _sdf.format(d1) + " " + _sdf.format(d2));
-
-      }
-    }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
-  
-  /**
-   * Erstellt eine Abfrage der Zeitbereiche für das Jahr des Anfangszeitpunktes <br>
-   * durch Benutzung der vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berechneZustandsWechsel(int)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}>
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param jahr
-   *          das jahr
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp3(SystemkalenderEintrag ske, int jahr)
-  {
-    SortedMap<Long, Boolean> sm = ske.berechneZustandsWechsel(jahr);
-
-    if (sm != null)
-    {
-      Date d = new Date();
-      for (Map.Entry<Long, Boolean> me : sm.entrySet())
-      {
-        d.setTime(me.getKey());
-        System.out.println("Ergebnistyp 3: " + _sdf.format(d) + " " + me.getValue());
-
-      }
-    }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
-
 }

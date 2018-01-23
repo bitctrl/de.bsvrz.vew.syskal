@@ -29,105 +29,78 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimerTask;
 
-import de.bsvrz.sys.funclib.debug.Debug;
-import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderArbeiter;
 import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag;
 
 /**
- * Die Klasse zum Versenden der Ereigniszustaende. Erweitert die Klasse TimerTask. Die run() Methode wird ausgefuehrt
- * wenn die im ReminderService eingestellte Zeit abgelaufen ist. Sie implentiert zusÃÂ¤tzlich das ClientSenderInterface
- * welches die Methoden zum Versenden der Daten bereitstellt.
+ * Die Klasse zum Versenden der Ereigniszustaende. Erweitert die Klasse
+ * TimerTask. Die run() Methode wird ausgefuehrt wenn die im ReminderService
+ * eingestellte Zeit abgelaufen ist. Sie implentiert zusÃÂ¤tzlich das
+ * ClientSenderInterface welches die Methoden zum Versenden der Daten
+ * bereitstellt.
  * 
- * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner $)
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  */
-public class BenachrichtigeFunktion extends TimerTask
-{
-  /**
-   * Die Zeit bis die Daten versendet werden sollen
-   */
-  private SystemkalenderEintrag ske;
+public class BenachrichtigeFunktion extends TimerTask {
+	/**
+	 * Die Zeit bis die Daten versendet werden sollen
+	 */
+	private SystemkalenderEintrag ske;
 
-  /**
-   * Die Zeit bis die Daten versendet werden sollen
-   */
-  private Long time_now;
+	/**
+	 * Die Zeit bis die Daten versendet werden sollen
+	 */
+	private Long timeNow;
 
-  /**
-   * Die Pid des Ereignisses
-   */
-  private String pid;
+	private static final BenachrichtigeListenerVerwaltung MULTI = new BenachrichtigeListenerVerwaltung();
 
-  /**
-   * Der Debugger, stellt verschiedene Protokollierungsfunktionen zur VerfÃÂ¼gung
-   */
-  private Debug _debug;
+	/**
+	 * Konstruktor der Klasse
+	 * 
+	 */
 
-  private static final BenachrichtigeListenerVerwaltung _multi = new BenachrichtigeListenerVerwaltung();
+	public BenachrichtigeFunktion() {
 
-  /**
-   * Konstruktor der Klasse
-   * 
-   */
+	}
 
-  public BenachrichtigeFunktion()
-  {
+	/**
+	 * Konstruktor der Klasse, mit Zeitangabe des Zustandswechsels
+	 * 
+	 * @param ske
+	 *            das Ereignis, welches den Zustand meldet
+	 * @param now
+	 *            Die Zeit bis die Daten versendet werden sollen
+	 * 
+	 */
+	public BenachrichtigeFunktion(SystemkalenderEintrag ske, Long now) {
+		this.ske = ske;
+		this.timeNow = now;
+	}
 
-  }
+	@Override
+	public void run() {
+		Date d = new Date();
+		d.setTime(timeNow);
 
-  /**
-   * Konstruktor der Klasse, mit Zeitangabe des Zustandswechsels
-   * 
-   * @param ske
-   *          das Ereignis, welches den Zustand meldet
-   * @param now
-   *          Die Zeit bis die Daten versendet werden sollen
-   * 
-   */
-  public BenachrichtigeFunktion(SystemkalenderEintrag ske, Long now)
-  {
-    this.ske = ske;
-    pid = ske.getPid();
-    this.time_now = now;
-    _debug = SystemkalenderArbeiter.getDebug();
+		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
-  }
+		String datum = format.format(d);
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.util.TimerTask#run()
-   */
-  @Override
-public void run()
-  {
-    Date d = new Date();
-    d.setTime(time_now);
+		String meldung;
+		if (ske.isGueltig(timeNow)) {
+			meldung = datum + " " + ske.getPid() + "(" + ske.getName() + ")" + " : gültig";
+		} else {
+			meldung = datum + " " + ske.getPid() + "(" + ske.getName() + ")" + " : nicht gültig";
+		}
 
-    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
+		BenachrichtigeEvent event = new BenachrichtigeEvent(this, meldung);
 
-    String datum = format.format(d);
+		MULTI.meldeAnAlle(event);
 
-    String meldung;
-    if (ske.isGueltig(time_now))
-    {
-      meldung = datum + " " + ske.getPid() + "(" + ske.getName() + ")" + " : gÃÂ¼ltig";
-    }
-    else
-    {
-      meldung = datum + " " + ske.getPid() + "(" + ske.getName() + ")" + " : nicht gÃÂ¼ltig";
-    }
+	}
 
-    BenachrichtigeEvent event = new BenachrichtigeEvent(this, meldung);
-
-    _multi.meldeAnAlle(event);
-
-  }
-
-  public static BenachrichtigeListenerVerwaltung getBenachrichtigeListenerVerwaltung()
-  {
-    return _multi;
-  }
+	public static BenachrichtigeListenerVerwaltung getBenachrichtigeListenerVerwaltung() {
+		return MULTI;
+	}
 
 }
