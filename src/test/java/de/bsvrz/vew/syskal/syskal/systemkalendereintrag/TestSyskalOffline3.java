@@ -44,37 +44,6 @@ public class TestSyskalOffline3
   /**
    * Erstellt eine Abfrage der manuellen Zeitbereiche durch Benutzung der <br>
    * vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berecheneZustandsWechselVonBis(Long, Long)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}> 
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param von
-   *          Anfangsdatum
-   * @param bis
-   *          Enddatum
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp1(SystemkalenderEintrag ske, Date von, Date bis)
-  {
-    SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBis(von.getTime(), bis.getTime());
-
-    if (sm != null)
-    {
-      Date d = new Date();
-      for (Map.Entry<Long, Boolean> me : sm.entrySet())
-      {
-        d.setTime(me.getKey());
-        System.out.println("Ergebnistyp 1: " + _sdf.format(d) + " " + me.getValue());
-
-      }
-    }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
-  
-  /**
-   * Erstellt eine Abfrage der manuellen Zeitbereiche durch Benutzung der <br>
-   * vom Systemkalender bereitgestellten Methode <br>
    * {@link SystemkalenderEintrag#berecheneIntervallVonBis(Long, Long)} <br> 
    * Diese Methode liefert das Ergebnis in der Form: <br>
    * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Long}>
@@ -99,35 +68,6 @@ public class TestSyskalOffline3
         d2.setTime(me.getValue());
         System.out.println("Ergebnistyp 2: " + _sdf.format(d1) + " " + _sdf.format(d2));
         
-      }
-    }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
-  
-  /**
-   * Erstellt eine Abfrage der Zeitbereiche für das Jahr des Anfangszeitpunktes <br>
-   * durch Benutzung der vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berechneZustandsWechsel(int)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}>
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param jahr
-   *          Anfangsdatum
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp3(SystemkalenderEintrag ske, int jahr)
-  {
-    SortedMap<Long, Boolean> sm = ske.berechneZustandsWechsel(jahr);
-
-    if (sm != null)
-    {
-      Date d = new Date();
-      for (Map.Entry<Long, Boolean> me : sm.entrySet())
-      {
-        d.setTime(me.getKey());
-        System.out.println("Ergebnistyp 3: " + _sdf.format(d) + " " + me.getValue());
-
       }
     }
     else

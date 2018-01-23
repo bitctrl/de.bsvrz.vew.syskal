@@ -32,8 +32,7 @@ import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.dambach.vewdynobj.VerwaltungDynObj;
 import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderArbeiter;
 
-@Ignore
-public class SystemTest
+public class SystemTestIT
 {
 
   /**
@@ -188,7 +187,7 @@ public class SystemTest
         String[] split = key.split("_");
 
         Date d = new Date();
-        d.setTime(new Long(split[0]));
+        d.setTime(Long.parseLong(split[0]));
         strings[cnt] = split[1] + " : " + sdf.format(d) + " " + me.getValue();
 
         cnt++;
@@ -241,7 +240,7 @@ public class SystemTest
         String[] split = key.split("_");
         
         Date d11 = new Date();
-        d11.setTime(new Long(split[0]));
+        d11.setTime(Long.parseLong(split[0]));
         Date d21 = new Date();
         d21.setTime( me.getValue());
                        
@@ -294,7 +293,7 @@ public class SystemTest
         String[] split = key.split("_");
 
         Date d = new Date();
-        d.setTime(new Long(split[0]));
+        d.setTime(Long.parseLong(split[0]));
         strings[cnt] = split[1] + " : " + sdf.format(d) + " " + me.getValue();
 
         cnt++;
@@ -329,9 +328,9 @@ public class SystemTest
         String[] split = key.split("_");
         
         Date d11 = new Date();
-        d11.setTime(new Long(split[0]));
+        d11.setTime(Long.parseLong(split[0]));
         Date d21 = new Date();
-        d21.setTime(new Long(me.getValue()));
+        d21.setTime(me.getValue());
         strings[cnt] = split[1] + " : " + sdf.format(d11) + " " + sdf.format(d21);
 
         cnt++;
@@ -366,7 +365,7 @@ public class SystemTest
         String[] split = key.split("_");
 
         Date d = new Date();
-        d.setTime(new Long(split[0]));
+        d.setTime(Long.parseLong(split[0]));
         strings[cnt] = split[1] + " : " + sdf.format(d) + " " + me.getValue();
 
         cnt++;
@@ -425,7 +424,7 @@ public class SystemTest
         String[] split = key.split("_");
         
         Date d11 = new Date();
-        d11.setTime(new Long(split[0]));
+        d11.setTime(Long.parseLong(split[0]));
         Date d21 = new Date();
         d21.setTime(me.getValue());
         strings[cnt] = split[1] + " : " + sdf.format(d11) + " " + sdf.format(d21);
@@ -478,7 +477,7 @@ public class SystemTest
 
       Date d = new Date();
 
-      d.setTime(new Long(split[0]));
+      d.setTime(Long.parseLong(split[0]));
       String s = split[1] + " : " + sdf.format(d) + " " + entry.getValue();
 
       assertEquals("Test 103", "ske.gueltig : " + jetzt + " true", s);
@@ -494,7 +493,7 @@ public class SystemTest
       String[] split = key.split("_");
 
       Date d = new Date();
-      d.setTime(new Long(split[0]));
+      d.setTime(Long.parseLong(split[0]));
       String s = split[1] + " : " + sdf.format(d) + " " + entry.getValue();
 
       assertEquals("Test 104", "ske.ungueltig : " + jetzt + " false", s);

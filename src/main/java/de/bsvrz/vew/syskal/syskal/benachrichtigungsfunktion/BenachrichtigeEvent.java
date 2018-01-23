@@ -30,9 +30,6 @@ import java.util.EventObject;
 /**
  * Klasse die ein Benachrichtigungsereignis darstellt
  * 
- * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner
- *          $)
- * 
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  * 

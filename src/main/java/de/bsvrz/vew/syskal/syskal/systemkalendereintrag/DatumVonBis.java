@@ -87,8 +87,6 @@ public class DatumVonBis extends DatumJahr {
 
 		String sub;
 		String[] split, sub2;
-		int cnt = 0;
-		int pos = 0;
 
 		if (!definition.contains("<")) {
 
@@ -132,7 +130,7 @@ public class DatumVonBis extends DatumJahr {
 
 				// _debug.config(dat[0] + " " + dat[1] + " : "+ uhr[0] + " " + uhr[1]);
 			} catch (ParseException e1) {
-				if (split[0].contains("*") | split[1].contains("*")) {
+				if (split[0].contains("*") || split[1].contains("*")) {
 
 					jahrVonBis.add(split);
 
@@ -390,10 +388,7 @@ public class DatumVonBis extends DatumJahr {
 		String s1 = null;
 		String s2 = null;
 
-		Calendar cal1 = new GregorianCalendar();
-		Calendar cal2 = new GregorianCalendar();
 		SimpleDateFormat df1 = new SimpleDateFormat("dd.MM.yyyy");
-		// SimpleDateFormat df1 = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
 		s1 = jahrVonBis.get(0)[0];
 		s2 = jahrVonBis.get(0)[1];
@@ -587,10 +582,7 @@ public class DatumVonBis extends DatumJahr {
 		String s1 = null;
 		String s2 = null;
 
-		Calendar cal1 = new GregorianCalendar();
-		Calendar cal2 = new GregorianCalendar();
 		SimpleDateFormat df1 = new SimpleDateFormat("dd.MM.yyyy");
-		// SimpleDateFormat df1 = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
 		s1 = jahrVonBis.get(0)[0];
 		s2 = jahrVonBis.get(0)[1];
@@ -800,10 +792,7 @@ public class DatumVonBis extends DatumJahr {
 		String s1 = null;
 		String s2 = null;
 
-		Calendar cal1 = new GregorianCalendar();
-		Calendar cal2 = new GregorianCalendar();
 		SimpleDateFormat df1 = new SimpleDateFormat("dd.MM.yyyy");
-		// SimpleDateFormat df1 = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
 		s1 = jahrVonBis.get(0)[0];
 		s2 = jahrVonBis.get(0)[1];

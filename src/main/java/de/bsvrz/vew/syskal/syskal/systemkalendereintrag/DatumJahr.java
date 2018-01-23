@@ -171,8 +171,6 @@ public class DatumJahr extends Atomar {
 
 				SimpleDateFormat df_jahr = new SimpleDateFormat("dd.MM.yyyy");
 
-				Date dt_jahr = new Date();
-
 				s1 = _jahr[0];
 				s2 = _jahr[1];
 
@@ -195,9 +193,6 @@ public class DatumJahr extends Atomar {
 				cal1.setTimeInMillis(def1);
 				cal2.setTimeInMillis(def2);
 
-				String s11 = df_jahr.format(cal1.getTime());
-				String s21 = df_jahr.format(cal2.getTime());
-
 				int vonDef = cal1.get(Calendar.YEAR);
 				int bisDef = cal2.get(Calendar.YEAR);
 
@@ -215,8 +210,6 @@ public class DatumJahr extends Atomar {
 					return listeZustandsWechselAbfrage.getListeZustandsWechsel();
 
 				}
-
-				SimpleDateFormat df_zeit = new SimpleDateFormat("HH:mm:ss,SSS");
 
 				cal1.setTimeInMillis(def1);
 				cal2.setTimeInMillis(def2);
@@ -320,8 +313,6 @@ public class DatumJahr extends Atomar {
 
 				SimpleDateFormat df_jahr = new SimpleDateFormat("dd.MM.yyyy");
 
-				Date dt_jahr = new Date();
-
 				s1 = _jahr[0];
 				s2 = _jahr[1];
 
@@ -344,9 +335,6 @@ public class DatumJahr extends Atomar {
 				cal1.setTimeInMillis(def1);
 				cal2.setTimeInMillis(def2);
 
-				String s11 = df_jahr.format(cal1.getTime());
-				String s21 = df_jahr.format(cal2.getTime());
-
 				int vonDef = cal1.get(Calendar.YEAR);
 				int bisDef = cal2.get(Calendar.YEAR);
 
@@ -364,8 +352,6 @@ public class DatumJahr extends Atomar {
 					return liste;
 
 				}
-
-				SimpleDateFormat df_zeit = new SimpleDateFormat("HH:mm:ss,SSS");
 
 				cal1.setTimeInMillis(def1);
 				cal2.setTimeInMillis(def2);
@@ -475,8 +461,6 @@ public class DatumJahr extends Atomar {
 
 				SimpleDateFormat df_jahr = new SimpleDateFormat("dd.MM.yyyy");
 
-				Date dt_jahr = new Date();
-
 				s1 = _jahr[0];
 				s2 = _jahr[1];
 
@@ -518,8 +502,6 @@ public class DatumJahr extends Atomar {
 					// return listeZustandsWechselAbfrage.getListeZustandsWechsel();
 
 				}
-
-				SimpleDateFormat df_zeit = new SimpleDateFormat("HH:mm:ss,SSS");
 
 				cal1.setTimeInMillis(def1);
 				cal2.setTimeInMillis(def2);

@@ -214,33 +214,4 @@ public class TestSyskalOffline4
     else
       System.out.println("Abfrage liefert kein Ergebnis!");
   }
-  
-  /**
-   * Erstellt eine Abfrage der Zeitbereiche für das Jahr des Anfangszeitpunktes <br>
-   * durch Benutzung der vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berechneZustandsWechsel(int)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}>
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param jahr
-   *          das Jahr
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp3(SystemkalenderEintrag ske, int jahr)
-  {
-    SortedMap<Long, Boolean> sm = ske.berechneZustandsWechsel(jahr);
-
-    if (sm != null)
-    {
-      Date d = new Date();
-      for (Map.Entry<Long, Boolean> me : sm.entrySet())
-      {
-        d.setTime(me.getKey());
-        System.out.println("Ergebnistyp 3: " + _sdf.format(d) + " " + me.getValue());
-
-      }
-    }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
 }

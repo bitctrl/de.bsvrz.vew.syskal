@@ -164,7 +164,6 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 		for (Map.Entry<String, SystemkalenderEintrag> me : getSkeList().entrySet()) {
 
 			SystemkalenderEintrag ske = me.getValue();
-			String pid = ske.getPid();
 			String val = ske.getDefinition();
 
 			if (val != null) {
@@ -187,7 +186,6 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 					{
 						Long old = null;
 						Long oldDiffDays = list.firstKey();
-						boolean intervall = false;
 						for (Map.Entry<Long, Boolean> meTmp : list.entrySet()) {
 							d1.setTime(meTmp.getKey());
 							if (meTmp.getValue()) {
@@ -206,7 +204,6 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 										listListeZustandsWechsel.add(listeZustandsWechsel);
 
 										oldDiffDays = meTmp.getKey();
-										intervall = true;
 									}
 
 								}
