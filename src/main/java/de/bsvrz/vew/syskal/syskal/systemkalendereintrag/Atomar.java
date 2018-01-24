@@ -43,12 +43,10 @@ import de.bsvrz.vew.syskal.syskal.erinnerungsfunktion.ErinnerungsFunktion;
  * Die Klasse erzeugt die atomaren SystemKalenderEintraege: Montag, Dienstag,
  * Mittwoch, Donnerstag, Freitag, Samstag Sonntag, Ostersonntag und Tag *
  * 
- * @version $Revision: 1.8 $ / $Date: 2015/06/08 15:13:12 $ / ($Author: Pittner
- *          $)
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  */
-public class Atomar implements SystemkalenderEintrag, Cloneable {
+public class Atomar implements SystemkalenderEintrag {
 	/**
 	 * Die Liste der Zeiten der Zustandswechsel fuer die zeitliche Gueltigkeit
 	 */
@@ -95,153 +93,8 @@ public class Atomar implements SystemkalenderEintrag, Cloneable {
 		}
 
 		return berecheneZustandsWechselVonBis(d1.getTime(), d2.getTime());
-
-		// listeZustandsWechsel = new ListeZustandsWechsel();
-		//
-		// long time = 0;
-		// long days = 0;
-		// Calendar cal1 = new GregorianCalendar().getInstance();
-		// Calendar cal2 = new GregorianCalendar();
-		// Calendar tmp = new GregorianCalendar();
-		//
-		// SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
-		// Date dt = new Date();
-		//
-		// int diff = jahr - cal1.get(Calendar.YEAR);
-		// int temp = cal1.get(Calendar.YEAR) + diff;
-		//
-		// try
-		// {
-		//
-		// // Ein Jahr beginnt um...
-		// dt = df.parse("01.01." + temp + " 00:00:00,000");
-		// cal1.setTime(dt);
-		// // Ein Jahr endet um...
-		// dt = df.parse("31.12." + temp + " 23:59:59,999");
-		// cal2.setTime(dt);
-		//
-		// // Wie viele Tage hat das Jahr?
-		// time = cal2.getTime().getTime() - cal1.getTime().getTime();
-		// days = Math.round((double)time / (24. * 60. * 60. * 1000.));
-		//
-		// // Der erste Tag des Jahres endet um...
-		// dt = df.parse("01.01." + temp + " 23:59:59,999");
-		// cal2.setTime(dt);
-		//
-		// if (definition.equalsIgnoreCase("ostersonntag"))
-		// {
-		//
-		// Ostern ostersonntag = new Ostern();
-		//
-		// cal1 = ostersonntag.Ostersonntag(temp);
-		//
-		// // Der Ostersonntag beginnt um...
-		// dt = df.parse(cal1.get(Calendar.DATE) + "." + (cal1.get(Calendar.MONTH) + 1)
-		// + "." + temp + " 00:00:00,000");
-		// cal1.setTime(dt);
-		// // ...und endet um...
-		// dt = df.parse(cal1.get(Calendar.DATE) + "." + (cal1.get(Calendar.MONTH) + 1)
-		// + "." + temp + " 23:59:59,999");
-		// cal2.setTime(dt);
-		//
-		// // ...er dauert natuerlich auch nur...
-		// days = 1;
-		//
-		// }
-		//
-		// }
-		// catch (ParseException e)
-		// {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		//
-		// // DateFormat df_ger = DateFormat.getDateInstance(DateFormat.FULL,
-		// Locale.GERMANY);
-		// DateFormat df_ger = DateFormat.getDateInstance(DateFormat.FULL,
-		// Locale.GERMANY);
-		//
-		// for (int i = 0; i < days; i++)
-		// {
-		//
-		// // Man spricht Deutsch!
-		// String datum = df_ger.format(cal1.getTime()).toLowerCase();
-		//
-		// // Wochentag ist hier...
-		// String woTag = definition;
-		//
-		// if (definition.equals("tag"))
-		// {
-		//
-		// listeZustandsWechsel.getListeZustandsWechsel().put(cal1.getTimeInMillis(),
-		// true);
-		//
-		// }
-		// else if (definition.equals("ostersonntag"))
-		// {
-		//
-		// listeZustandsWechsel.getListeZustandsWechsel().put(cal1.getTimeInMillis(),
-		// true);
-		//
-		// }
-		// else if (datum.contains(woTag))
-		// {
-		//
-		// listeZustandsWechsel.getListeZustandsWechsel().put(cal1.getTimeInMillis(),
-		// true);
-		//
-		// }
-		//
-		// tmp = cal1;
-		// tmp.add(Calendar.DATE, 1);
-		// cal1 = tmp;
-		//
-		// if (definition.equals("tag"))
-		// {
-		//
-		// listeZustandsWechsel.getListeZustandsWechsel().put(cal2.getTimeInMillis(),
-		// false);
-		// //
-		// listeZustandsWechsel.getListeZustandsWechsel().put(cal2.getTimeInMillis()+1,
-		// false);
-		//
-		// }
-		// else if (definition.equals("ostersonntag"))
-		// {
-		//
-		// listeZustandsWechsel.getListeZustandsWechsel().put(cal2.getTimeInMillis(),
-		// false);
-		// //
-		// listeZustandsWechsel.getListeZustandsWechsel().put(cal2.getTimeInMillis()+1,
-		// false);
-		//
-		// }
-		// else if (datum.contains(woTag))
-		// {
-		//
-		// listeZustandsWechsel.getListeZustandsWechsel().put(cal2.getTimeInMillis(),
-		// false);
-		// //
-		// listeZustandsWechsel.getListeZustandsWechsel().put(cal2.getTimeInMillis()+1,
-		// false);
-		//
-		// }
-		//
-		// tmp = cal2;
-		// tmp.add(Calendar.DATE, 1);
-		// cal2 = tmp;
-		//
-		// }
-		//
-		// return listeZustandsWechsel.getListeZustandsWechsel();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag#
-	 * berechneZustandsWechsel(java.lang.Long, java.lang.Long, int)
-	 */
 	@Override
 	public SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr) {
 		// Die Abfrage besitzt eine eigene Zustandsliste
@@ -249,7 +102,6 @@ public class Atomar implements SystemkalenderEintrag, Cloneable {
 
 		long time = 0;
 		long days = 0;
-		// Calendar cal1 = new GregorianCalendar().getInstance();
 		GregorianCalendar cal1 = new GregorianCalendar();
 		GregorianCalendar cal2 = new GregorianCalendar();
 		GregorianCalendar tmp = new GregorianCalendar();
@@ -294,7 +146,7 @@ public class Atomar implements SystemkalenderEintrag, Cloneable {
 			cal2.set(Calendar.MILLISECOND, 999);
 
 			if (definition.equalsIgnoreCase("ostersonntag")) {
-				cal1 = (GregorianCalendar) Ostern.Ostersonntag(temp);
+				cal1 = (GregorianCalendar) Ostern.getOstersonntag(temp);
 
 				// Der Ostersonntag beginnt um...
 				dt = df.parse(
@@ -422,7 +274,7 @@ public class Atomar implements SystemkalenderEintrag, Cloneable {
 
 			if (definition.equalsIgnoreCase("ostersonntag")) {
 
-				cal1 = Ostern.Ostersonntag(temp);
+				cal1 = Ostern.getOstersonntag(temp);
 
 				// Der Ostersonntag beginnt um...
 				dt = df.parse(
@@ -836,19 +688,6 @@ public class Atomar implements SystemkalenderEintrag, Cloneable {
 	}
 
 	@Override
-	protected Atomar clone() {
-		// TODO Auto-generated method stub
-		Atomar eintrag = null;
-
-		eintrag = new Atomar(pid, definition);
-
-		eintrag.setObjektListeZustandsWechsel(listeZustandsWechsel);
-
-		return eintrag;
-
-	}
-
-	@Override
 	public SortedMap<Long, Long> berecheneIntervallVonBis(Long von, Long bis) {
 		// TODO Auto-generated method stub
 		Calendar cal1 = new GregorianCalendar();
@@ -921,23 +760,14 @@ public class Atomar implements SystemkalenderEintrag, Cloneable {
 		return tmp;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag#
-	 * berechneIntervall(java.lang.Long, java.lang.Long, int)
-	 */
 	@Override
 	public SortedMap<Long, Long> berechneIntervall(Long von, Long bis, int jahr) {
-		// TODO Auto-generated method stub
 		// Die Abfrage besitzt eine eigene Zustandsliste
-		// ListeZustandsWechsel listeZustandsWechselAbfrage = new
-		// ListeZustandsWechsel();
 		SortedMap<Long, Long> liste = new TreeMap<>();
 
 		long time = 0;
 		long days = 0;
-		// Calendar cal1 = new GregorianCalendar().getInstance();
+
 		GregorianCalendar cal1 = new GregorianCalendar();
 		GregorianCalendar cal2 = new GregorianCalendar();
 		GregorianCalendar tmp = new GregorianCalendar();
@@ -983,7 +813,7 @@ public class Atomar implements SystemkalenderEintrag, Cloneable {
 
 			if (definition.equalsIgnoreCase("ostersonntag")) {
 
-				cal1 = (GregorianCalendar) Ostern.Ostersonntag(temp);
+				cal1 = (GregorianCalendar) Ostern.getOstersonntag(temp);
 
 				// Der Ostersonntag beginnt um...
 				dt = df.parse(
@@ -997,11 +827,9 @@ public class Atomar implements SystemkalenderEintrag, Cloneable {
 
 				// ...er dauert natuerlich auch nur...
 				days = 1;
-
 			}
 
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -1021,25 +849,6 @@ public class Atomar implements SystemkalenderEintrag, Cloneable {
 				l1 = cal1.getTimeInMillis();
 			}
 
-			// if (definition.equals("tag"))
-			// {
-			//
-			// listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal1.getTimeInMillis(),
-			// true);
-			//
-			// }
-			// else if (definition.equals("ostersonntag"))
-			// {
-			//
-			// listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal1.getTimeInMillis(),
-			// true);
-			//
-			// }
-			// else if (datum.contains(woTag))
-			// {
-			// listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal1.getTimeInMillis(),
-			// true);
-			// }
 
 			tmp = cal1;
 			tmp.add(Calendar.DATE, 1);
@@ -1048,35 +857,6 @@ public class Atomar implements SystemkalenderEintrag, Cloneable {
 			if (definition.equals("tag") || definition.equals("ostersonntag") || datum.contains(woTag)) {
 				l2 = cal2.getTimeInMillis();
 			}
-
-			// if (definition.equals("tag"))
-			// {
-			//
-			// listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal2.getTimeInMillis(),
-			// false);
-			// //
-			// listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal2.getTimeInMillis()+1,
-			// false);
-			//
-			// }
-			// else if (definition.equals("ostersonntag"))
-			// {
-			//
-			// listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal2.getTimeInMillis(),
-			// false);
-			// //
-			// listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal2.getTimeInMillis()+1,
-			// false);
-			//
-			// }
-			// else if (datum.contains(woTag))
-			// {
-			// listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal2.getTimeInMillis(),
-			// false);
-			// //
-			// listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal2.getTimeInMillis()+1,
-			// false);
-			// }
 
 			tmp = cal2;
 			tmp.add(Calendar.DATE, 1);

@@ -205,12 +205,6 @@ public class DatumVonBis extends DatumJahr {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.DatumJahr#
-	 * berechneZustandsWechsel(int)
-	 */
 	@Override
 	public SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr) {
 		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
@@ -227,149 +221,6 @@ public class DatumVonBis extends DatumJahr {
 		berecheneZustandsWechselVonBis(d1.getTime(), d2.getTime());
 
 		return berecheneZustandsWechselVonBis(d1.getTime(), d2.getTime());
-
-		// listeZustandsWechsel = new ListeZustandsWechsel();
-		//
-		// Calendar calx = new GregorianCalendar().getInstance();
-		// int diff = jahr - calx.get(Calendar.YEAR);
-		// Integer temp = calx.get(Calendar.YEAR) + diff;
-		//
-		// long time = 0;
-		// long days = 0;
-		//
-		// String s1 = null;
-		// String s2 = null;
-		//
-		// try
-		// {
-		//
-		// Calendar cal1 = new GregorianCalendar();
-		// Calendar cal2 = new GregorianCalendar();
-		// SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-		// Date dt = new Date();
-		//
-		// s1 = jahrVonBis.get(0)[0];
-		// s2 = jahrVonBis.get(0)[1];
-		//
-		// if (jahrVonBis.get(0)[0].contains("*"))
-		// s1 = jahrVonBis.get(0)[0].replace("*", temp.toString());
-		//
-		// if (jahrVonBis.get(0)[1].contains("*"))
-		// s2 = jahrVonBis.get(0)[1].replace("*", temp.toString());
-		//
-		// dt = df.parse(s1);
-		// cal1.setTime(dt);
-		//
-		// dt = df.parse(s2);
-		// cal2.setTime(dt);
-		//
-		// time = cal2.getTime().getTime() - cal1.getTime().getTime();
-		// }
-		// catch (ParseException e)
-		// {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		//
-		// days = Math.round((double)time / (24. * 60. * 60. * 1000.));
-		//
-		// // Der Ende-Tag zaehlt auch noch dazu
-		// if (definition.contains("<"))
-		// days += 1;
-		//
-		// SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
-		// Date dt = new Date();
-		// Calendar cal = new GregorianCalendar();
-		// Calendar tmp = new GregorianCalendar();
-		//
-		// Iterator it1 = jahrVonBis.iterator();
-		// while (it1.hasNext())
-		// {
-		//
-		// String[] _jahr = (String[])it1.next();
-		//
-		// for (int i = 0; i < days; i++)
-		// {
-		//
-		// Iterator it2 = zeitVonBis.iterator();
-		// while (it2.hasNext())
-		// {
-		//
-		// String[] _zeit = (String[])it2.next();
-		//
-		// try
-		// {
-		//
-		// if (_jahr[0].contains("*"))
-		//
-		// s1 = _jahr[0].replace("*", temp.toString());
-		//
-		// if (_jahr[1].contains("*"))
-		//
-		// s2 = _jahr[1].replace("*", temp.toString());
-		//
-		// Long von = df.parse(s1 + " " + _zeit[0]).getTime();
-		// Long bis = df.parse(s2 + " " + _zeit[1]).getTime();
-		//
-		// Date d1 = new Date();
-		// Date d2 = new Date();
-		// d1.setTime(von);
-		//
-		// Calendar x1 = new GregorianCalendar();
-		// x1.setTime(d1);
-		// x1.set(Calendar.YEAR, jahr);
-		//
-		// Calendar x2 = new GregorianCalendar();
-		// d2.setTime(bis);
-		// x2.setTime(d2);
-		// x2.set(Calendar.YEAR, jahr);
-		//
-		// dt = df.parse(s1 + " " + _zeit[0]);
-		// cal.setTime(dt);
-		// tmp = cal;
-		// tmp.add(Calendar.DATE, i);
-		// cal = tmp;
-		//
-		// if (cal.getTimeInMillis() >= x1.getTimeInMillis() && cal.getTimeInMillis() <=
-		// x2.getTimeInMillis())
-		// {
-		//
-		// listeZustandsWechsel.getListeZustandsWechsel().put(cal.getTimeInMillis(),
-		// true);
-		//
-		// }
-		//
-		// dt = df.parse(s2 + " " + _zeit[1]);
-		// cal.setTime(dt);
-		// tmp = cal;
-		// tmp.add(Calendar.DATE, i);
-		// cal = tmp;
-		//
-		// if (cal.getTimeInMillis() >= x1.getTimeInMillis() && cal.getTimeInMillis() <=
-		// x2.getTimeInMillis())
-		// {
-		//
-		// listeZustandsWechsel.getListeZustandsWechsel().put(cal.getTimeInMillis(),
-		// false);
-		// //
-		// listeZustandsWechsel.getListeZustandsWechsel().put(cal.getTimeInMillis()+1,
-		// false);
-		//
-		// }
-		//
-		// }
-		// catch (ParseException e)
-		// {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		//
-		// }
-		//
-		// }
-		// }
-		//
-		// return listeZustandsWechsel.getListeZustandsWechsel();
 	}
 
 	@Override
@@ -404,11 +255,8 @@ public class DatumVonBis extends DatumJahr {
 		try {
 			def1 = df1.parse(s1 + " " + zeitVonBis.get(0)[0]).getTime();
 			def2 = df1.parse(s2 + " " + zeitVonBis.get(0)[1]).getTime();
-			// def1 = df1.parse(s1).getTime();
-			// def2 = df1.parse(s2).getTime();
 
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -418,34 +266,23 @@ public class DatumVonBis extends DatumJahr {
 		date1.setTime(def1);
 		date2.setTime(def2);
 
-		// _debug.config("HierX!!!" + pid + " : " + bis + " : " + von);
-		// _debug.config("HierX!!!" + pid + " : " + def2 + " : " + def1);
-
 		if (von < def1 && bis < def1) {
-
-			// _debug.config("raus1" + " : " + pid);
 			return null;
 
 		} else if (von > def2 && bis > def2) {
-
-			// _debug.config("raus2" + " : " + pid);
 			return null;
 
 		} else if (von < def1 && bis > def2) {
 
 			von = def1;
 			bis = def2;
-			// _debug.config("raus3" + " : " + pid);
 		} else if (von < def1 && bis >= def1) {
 
 			von = def1;
-			// _debug.config("raus4" + " : " + pid);
 
 		} else if (von >= def1 && bis > def2) {
 
 			bis = def2;
-			// _debug.config("raus5" + " : " + pid);
-
 		} else if (von >= def1 && bis <= def2) {
 
 		}
@@ -466,10 +303,9 @@ public class DatumVonBis extends DatumJahr {
 
 		Long sec = time / 1000;
 
-		if (sec >= 0L && sec < 86399L) // 86399 = (24 * 60 * 60) - 1
+		if (sec >= 0L && sec < 86399L)
 			days = 1;
 
-		// SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 		Date dt = new Date();
 		Calendar cal = new GregorianCalendar();
@@ -485,7 +321,7 @@ public class DatumVonBis extends DatumJahr {
 		Iterator<String[]> it1 = list.iterator();
 		while (it1.hasNext()) {
 
-			String[] _jahr = it1.next();
+			String[] localJahr = it1.next();
 
 			for (int i = 0; i < days; i++) {
 				Iterator<String[]> it2 = zeitVonBis.iterator();
@@ -494,17 +330,17 @@ public class DatumVonBis extends DatumJahr {
 
 				while (it2.hasNext()) {
 
-					String[] _zeit = it2.next();
+					String[] localZeit = it2.next();
 
 					try {
 
-						if (_jahr[0].contains("*"))
-							s1 = _jahr[0].replace("*", temp.toString());
+						if (localJahr[0].contains("*"))
+							s1 = localJahr[0].replace("*", temp.toString());
 
-						if (_jahr[1].contains("*"))
-							s2 = _jahr[1].replace("*", temp.toString());
+						if (localJahr[1].contains("*"))
+							s2 = localJahr[1].replace("*", temp.toString());
 
-						dt = df.parse(s1 + " " + _zeit[0]);
+						dt = df.parse(s1 + " " + localZeit[0]);
 
 						cal.setTime(dt);
 						tmp = cal;
@@ -525,16 +361,11 @@ public class DatumVonBis extends DatumJahr {
 
 						date1.setTime(aa);
 
-						// _debug.config(date1 + " -:- " + cal.getTime());
-
 						if (aa <= cal.getTimeInMillis() && bb >= cal.getTimeInMillis())
 							listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal.getTimeInMillis(), true);
 
-						// _debug.config(s1 + " " + _zeit[1]);
+						dt = df.parse(s1 + " " + localZeit[1]);
 
-						dt = df.parse(s1 + " " + _zeit[1]);
-
-						// dt = df.parse(s2);
 						cal.setTime(dt);
 						tmp = cal;
 						tmp.add(Calendar.DATE, i);
@@ -542,12 +373,8 @@ public class DatumVonBis extends DatumJahr {
 
 						date1.setTime(bb);
 
-						// _debug.config(date1 + " -:- " + cal.getTime());
-
 						if (aa <= cal.getTimeInMillis() && bb >= cal.getTimeInMillis())
 							listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal.getTimeInMillis(), false);
-						// listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal.getTimeInMillis()+1,
-						// false);
 
 						loc++;
 
@@ -557,7 +384,6 @@ public class DatumVonBis extends DatumJahr {
 					}
 
 				}
-
 			}
 		}
 
@@ -568,8 +394,6 @@ public class DatumVonBis extends DatumJahr {
 	public SortedMap<Long, Long> berechneIntervall(Long von, Long bis, int jahr) {
 
 		// Die Abfrage besitzt eine eigene Zustandsliste
-		// ListeZustandsWechsel listeZustandsWechselAbfrage = new
-		// ListeZustandsWechsel();
 		SortedMap<Long, Long> liste = new TreeMap<>();
 
 		Calendar calx = Calendar.getInstance();
@@ -598,11 +422,8 @@ public class DatumVonBis extends DatumJahr {
 		try {
 			def1 = df1.parse(s1 + " " + zeitVonBis.get(0)[0]).getTime();
 			def2 = df1.parse(s2 + " " + zeitVonBis.get(0)[1]).getTime();
-			// def1 = df1.parse(s1).getTime();
-			// def2 = df1.parse(s2).getTime();
 
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -612,33 +433,23 @@ public class DatumVonBis extends DatumJahr {
 		date1.setTime(def1);
 		date2.setTime(def2);
 
-		// _debug.config("HierX!!!" + pid + " : " + bis + " : " + von);
-		// _debug.config("HierX!!!" + pid + " : " + def2 + " : " + def1);
-
 		if (von < def1 && bis < def1) {
 
-			// _debug.config("raus1" + " : " + pid);
 			return null;
 
 		} else if (von > def2 && bis > def2) {
 
-			// _debug.config("raus2" + " : " + pid);
 			return null;
 
 		} else if (von < def1 && bis > def2) {
 
 			von = def1;
 			bis = def2;
-			// _debug.config("raus3" + " : " + pid);
 		} else if (von < def1 && bis >= def1) {
 
 			von = def1;
-			// _debug.config("raus4" + " : " + pid);
 
 		} else if (von >= def1 && bis > def2) {
-
-			// bis = def2;
-			// _debug.config("raus5" + " : " + pid);
 
 		} else if (von >= def1 && bis <= def2) {
 
@@ -660,10 +471,9 @@ public class DatumVonBis extends DatumJahr {
 
 		Long sec = time / 1000;
 
-		if (sec >= 0L && sec < 86399L) // 86399 = (24 * 60 * 60) - 1
+		if (sec >= 0L && sec < 86399L)
 			days = 1;
 
-		// SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 		Date dt = new Date();
 		Calendar cal = new GregorianCalendar();
@@ -679,7 +489,7 @@ public class DatumVonBis extends DatumJahr {
 		Iterator<String[]> it1 = list.iterator();
 		while (it1.hasNext()) {
 
-			String[] _jahr = it1.next();
+			String[] localJahr = it1.next();
 
 			for (int i = 0; i < days; i++) {
 				Iterator<String[]> it2 = zeitVonBis.iterator();
@@ -688,17 +498,17 @@ public class DatumVonBis extends DatumJahr {
 
 				while (it2.hasNext()) {
 
-					String[] _zeit = it2.next();
+					String[] localZeit = it2.next();
 
 					try {
 
-						if (_jahr[0].contains("*"))
-							s1 = _jahr[0].replace("*", temp.toString());
+						if (localJahr[0].contains("*"))
+							s1 = localJahr[0].replace("*", temp.toString());
 
-						if (_jahr[1].contains("*"))
-							s2 = _jahr[1].replace("*", temp.toString());
+						if (localJahr[1].contains("*"))
+							s2 = localJahr[1].replace("*", temp.toString());
 
-						dt = df.parse(s1 + " " + _zeit[0]);
+						dt = df.parse(s1 + " " + localZeit[0]);
 
 						cal.setTime(dt);
 						tmp = cal;
@@ -731,7 +541,7 @@ public class DatumVonBis extends DatumJahr {
 							l1 = cal.getTimeInMillis();
 						}
 
-						dt = df.parse(s1 + " " + _zeit[1]);
+						dt = df.parse(s1 + " " + localZeit[1]);
 
 						// dt = df.parse(s2);
 						cal.setTime(dt);
@@ -889,24 +699,24 @@ public class DatumVonBis extends DatumJahr {
 		Iterator<String[]> it1 = list.iterator();
 		while (it1.hasNext()) {
 
-			String[] _jahr = it1.next();
+			String[] localJahr = it1.next();
 
 			for (int i = 0; i < days; i++) {
 				Iterator<String[]> it2 = zeitVonBis.iterator();
 
 				while (it2.hasNext()) {
 
-					String[] _zeit = it2.next();
+					String[] localZeit = it2.next();
 
 					try {
 
-						if (_jahr[0].contains("*"))
-							s1 = _jahr[0].replace("*", temp.toString());
+						if (localJahr[0].contains("*"))
+							s1 = localJahr[0].replace("*", temp.toString());
 
-						if (_jahr[1].contains("*"))
-							s2 = _jahr[1].replace("*", temp.toString());
+						if (localJahr[1].contains("*"))
+							s2 = localJahr[1].replace("*", temp.toString());
 
-						dt = df.parse(s1 + " " + _zeit[0]);
+						dt = df.parse(s1 + " " + localZeit[0]);
 
 						cal.setTime(dt);
 						tmp = cal;
@@ -936,7 +746,7 @@ public class DatumVonBis extends DatumJahr {
 
 						// _debug.config(s1 + " " + _zeit[1]);
 
-						dt = df.parse(s1 + " " + _zeit[1]);
+						dt = df.parse(s1 + " " + localZeit[1]);
 
 						// dt = df.parse(s2);
 						cal.setTime(dt);
@@ -966,17 +776,4 @@ public class DatumVonBis extends DatumJahr {
 		return listeZustandsWechsel.getListeZustandsWechsel();
 		// return listeZustandsWechselAbfrage.getListeZustandsWechsel();
 	}
-
-	@Override
-	protected DatumVonBis clone() {
-		// TODO Auto-generated method stub
-		DatumVonBis eintrag = null;
-
-		eintrag = new DatumVonBis(pid, definition);
-		eintrag.setObjektListeZustandsWechsel(listeZustandsWechsel);
-
-		return eintrag;
-
-	}
-
 }

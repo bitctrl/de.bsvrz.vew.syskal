@@ -45,7 +45,7 @@ public class Ostern {
 	 *            year &gt; 1583
 	 * @return Ostersonntag.
 	 */
-	public static Calendar Ostersonntag(int jahr) {
+	public static Calendar getOstersonntag(int jahr) {
 		int i = jahr % 19;
 		int j = jahr / 100;
 		int k = jahr % 100;
@@ -64,7 +64,7 @@ public class Ostern {
 
 		int jahr = cal.get(Calendar.YEAR);
 
-		Calendar calendar = Ostersonntag(jahr);
+		Calendar calendar = getOstersonntag(jahr);
 
 		if (cal.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
 				&& cal.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)

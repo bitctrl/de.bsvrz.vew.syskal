@@ -802,8 +802,7 @@ public class LogischeVerknuepfung extends DatumJahr {
 	@Override
 	public SortedMap<Long, Boolean> berechneZustandsWechselZustand(Long von, Long bis, int jahr) {
 		// Die Abfrage besitzt eine eigene Zustandsliste
-		// ListeZustandsWechsel listeZustandsWechselAbfrage = new
-		// ListeZustandsWechsel();
+
 		listeZustandsWechsel = new ListeZustandsWechsel();
 
 		try {
@@ -880,9 +879,7 @@ public class LogischeVerknuepfung extends DatumJahr {
 
 					if (map != null)
 						tmpEntryList.putAll(map);
-
 				}
-
 			}
 
 			Set<Long> tmpSet = new TreeSet<>();
@@ -1046,16 +1043,5 @@ public class LogischeVerknuepfung extends DatumJahr {
 		}
 
 		return listeZustandsWechsel.getListeZustandsWechsel();
-	}
-
-	@Override
-	protected LogischeVerknuepfung clone() {
-		// TODO Auto-generated method stub
-		LogischeVerknuepfung eintrag = null;
-
-		eintrag = new LogischeVerknuepfung(SystemkalenderArbeiter.getSkeList(), pid, definition);
-		eintrag.setObjektListeZustandsWechsel(listeZustandsWechsel);
-
-		return eintrag;
 	}
 }

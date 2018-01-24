@@ -30,7 +30,9 @@ public class SystemkalenderEintragTest
   // */
   // private static String _strKalender = "kv.testKonfiguration";
 
-  /**
+  private static SystemkalenderArbeiter systemKalenderArbeiter;
+
+/**
    * Aufbau der Datenverteilerverbindung.
    * 
    * @throws Exception
@@ -50,29 +52,31 @@ public class SystemkalenderEintragTest
     // _connection.connect();
     // _connection.login();
 
-    SystemkalenderArbeiter.getSkeList().clear();
+	systemKalenderArbeiter = new SystemkalenderArbeiter(null, null);
+	  
+    systemKalenderArbeiter.getSkeList().clear();
 
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.montag", "Montag", "Montag");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.dienstag", "Dienstag", "Dienstag");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.mittwoch", "Mittwoch", "Mittwoch");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.donnerstag", "Donnerstag", "Donnerstag");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.freitag", "Freitag", "Freitag");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.samstag", "Samstag", "Samstag");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.sonntag", "Sonntag", "Sonntag");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.tag", "Tag", "Tag");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ostersonntag", "Ostersonntag", "Ostersonntag");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.bereich1", "Bereich1",
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.montag", "Montag", "Montag");
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.dienstag", "Dienstag", "Dienstag");
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.mittwoch", "Mittwoch", "Mittwoch");
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.donnerstag", "Donnerstag", "Donnerstag");
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.freitag", "Freitag", "Freitag");
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.samstag", "Samstag", "Samstag");
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.sonntag", "Sonntag", "Sonntag");
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.tag", "Tag", "Tag");
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.ostersonntag", "Ostersonntag", "Ostersonntag");
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.bereich1", "Bereich1",
         "Bereich1:=<01.01.2008 00:00:00,000-31.01.2008 23:59:59,999>");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.bereich2", "Bereich2",
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.bereich2", "Bereich2",
         "Bereich2:=<15.01.2008 00:00:00,000-15.02.2008 23:59:59,999>");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.bereich3", "Bereich3", "Bereich3:=<15.01.2008-15.02.2008>");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.bereich4", "Bereich4",
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.bereich3", "Bereich3", "Bereich3:=<15.01.2008-15.02.2008>");
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.bereich4", "Bereich4",
         "Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.tddeAlt", "TDDEalt", "17.06.1963,1989");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.tddeNeu", "TDDEneu", "03.10.1990,*");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.tdde", "Tag der deutschen Einheit",
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.tddeAlt", "TDDEalt", "17.06.1963,1989");
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.tddeNeu", "TDDEneu", "03.10.1990,*");
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.tdde", "Tag der deutschen Einheit",
         "ODER{TDDEalt,TDDEneu}*,*");
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.bereich5", "Bereich5",
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske.bereich5", "Bereich5",
     "Bereich5:=<01.09.2009-30.09.2009>({08:00:00,000-16:00:00,000})");
   }
 
@@ -85,7 +89,7 @@ public class SystemkalenderEintragTest
   @AfterClass
   public static void tearDownAfterClass() throws Exception
   {
-    // _skeArbeiter.stoppeSystemKalenderArbeiter();
+    // _skeArbeiter.stoppesystemKalenderArbeiter();
     // _connection.disconnect(false, "");
   }
 
@@ -106,7 +110,7 @@ public class SystemkalenderEintragTest
 
     int dow = cal.get(Calendar.DAY_OF_WEEK);
 
-    Map<String, SystemkalenderEintrag> skeList = SystemkalenderArbeiter.getSkeList();
+    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
 
     SystemkalenderEintrag skeMo = skeList.get("ske.montag");
     SystemkalenderEintrag skeDi = skeList.get("ske.dienstag");
@@ -196,7 +200,7 @@ public class SystemkalenderEintragTest
 
     int dow = cal.get(Calendar.DAY_OF_WEEK);
 
-    Map<String, SystemkalenderEintrag> skeList = SystemkalenderArbeiter.getSkeList();
+    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
 
     SystemkalenderEintrag ske = null;
 
@@ -257,7 +261,7 @@ public class SystemkalenderEintragTest
   @Test
   public void berechneZustandsWechselVonBisTest() throws Exception
   {
-    Map<String, SystemkalenderEintrag> skeList = SystemkalenderArbeiter.getSkeList();
+    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
 
     SystemkalenderEintrag ske = skeList.get("ske.bereich4");
 
@@ -432,7 +436,7 @@ public class SystemkalenderEintragTest
   @Test
   public void berechneIntervallVonBisTest() throws Exception
   {
-    Map<String, SystemkalenderEintrag> skeList = SystemkalenderArbeiter.getSkeList();
+    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
 
     SystemkalenderEintrag ske = skeList.get("ske.bereich4");
 
@@ -541,7 +545,7 @@ public class SystemkalenderEintragTest
   @Test
   public void berechneIntervallVonBisTest2() throws Exception
   {
-    Map<String, SystemkalenderEintrag> skeList = SystemkalenderArbeiter.getSkeList();
+    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
 
     SystemkalenderEintrag ske = skeList.get("ske.bereich5");
 
@@ -564,7 +568,7 @@ public class SystemkalenderEintragTest
   @Test
   public void berechneIntervallVonBisTest3() throws Exception
   {
-    Map<String, SystemkalenderEintrag> skeList = SystemkalenderArbeiter.getSkeList();
+    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
     
     SystemkalenderEintrag ske = skeList.get("ske.bereich5");
     
@@ -608,7 +612,7 @@ public class SystemkalenderEintragTest
   public void berechneIntervallVonBisTest4() throws Exception
   {
     
-    Map<String, SystemkalenderEintrag> skeList = SystemkalenderArbeiter.getSkeList();
+    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
     
     SystemkalenderEintrag ske = skeList.get("ske.bereich5");
     
@@ -651,7 +655,7 @@ public class SystemkalenderEintragTest
   @Test
   public void berechneIntervallVonBisTest5() throws Exception
   {
-    Map<String, SystemkalenderEintrag> skeList = SystemkalenderArbeiter.getSkeList();
+    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
     
     SystemkalenderEintrag ske = skeList.get("ske.bereich5");
     
@@ -694,7 +698,7 @@ public class SystemkalenderEintragTest
   @Test
   public void berechneIntervallVonBisTest6() throws Exception
   {
-    Map<String, SystemkalenderEintrag> skeList = SystemkalenderArbeiter.getSkeList();
+    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
 
     SystemkalenderEintrag ske = skeList.get("ske.bereich5");
 
@@ -718,7 +722,7 @@ public class SystemkalenderEintragTest
   public void berechneIntervallVonBisTest7() throws Exception
   {
     
-    Map<String, SystemkalenderEintrag> skeList = SystemkalenderArbeiter.getSkeList();
+    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
     
     SystemkalenderEintrag ske = skeList.get("ske.bereich4");
     

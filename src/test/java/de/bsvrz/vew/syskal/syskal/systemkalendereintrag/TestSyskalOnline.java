@@ -28,17 +28,17 @@ public class TestSyskalOnline implements StandardApplication
   /**
    * DebugLogger für Debug-Ausgaben
    */
-  private static Debug _debug;
+  private static Debug logger;
 
   /**
    * Konfigurationsibjekt, hier das Systemalenderobjekt
    */
-  private String _strKonfigObjekt;
+  private String pidKonfigObjekt;
 
   /**
    * Das Format der Ergebnisausgabe
    */
-  private static SimpleDateFormat _sdf;
+  private static SimpleDateFormat sdf;
 
   /**
    * Konstruktor.<br>
@@ -71,13 +71,13 @@ public class TestSyskalOnline implements StandardApplication
   @Override
 public void parseArguments(ArgumentList argumentList) throws Exception
   {
-    _debug = Debug.getLogger();
+    logger = Debug.getLogger();
 
-    _debug.config("argumentList = " + argumentList);
+    logger.config("argumentList = " + argumentList);
 
-    _strKonfigObjekt = argumentList.fetchArgument("-konfigurationsobjekt=").asNonEmptyString();
+    pidKonfigObjekt = argumentList.fetchArgument("-konfigurationsobjekt=").asNonEmptyString();
 
-    _debug.config("KonfigurationsObjekt = '" + _strKonfigObjekt + "'");
+    logger.config("KonfigurationsObjekt = '" + pidKonfigObjekt + "'");
 
     argumentList.fetchUnusedArguments();
   }
@@ -108,16 +108,16 @@ public void initialize(ClientDavInterface connection) throws Exception
       System.out.println("type ist null!");
     
     
-    Map<String, SystemkalenderEintrag> map = SystemkalenderArbeiter.getInstance(connection, _strKonfigObjekt).starteSystemKalenderArbeiter();
+    Map<String, SystemkalenderEintrag> map = SystemkalenderArbeiter.getInstance(connection, pidKonfigObjekt).starteSystemKalenderArbeiter();
     
-    _sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
+    sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
     SystemkalenderEintrag ske1 = map.get("ske.montag_berufsverkehr");
 
-    Date d1 = _sdf.parse("01.08.2009 10:40:35,000");
-    Date d2 = _sdf.parse("18.09.2009 10:40:35,000");
+    Date d1 = sdf.parse("01.08.2009 10:40:35,000");
+    Date d2 = sdf.parse("18.09.2009 10:40:35,000");
 
-    System.out.println("Abfrage1: " + ske1.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
+    System.out.println("Abfrage1: " + ske1.getPid() + " " + sdf.format(d1) + " - " + sdf.format(d2));
 
     erstelleAbfrageUndAusgabeErgebnisTyp1(ske1, d1, d2);
     erstelleAbfrageUndAusgabeErgebnisTyp2(ske1, d1, d2);
@@ -125,29 +125,29 @@ public void initialize(ClientDavInterface connection) throws Exception
 
     SystemkalenderEintrag ske2 = map.get("ske.geburtstag_hck");
 
-    d1 = _sdf.parse("25.09.1970 14:59:09,000");
-    d2 = _sdf.parse("25.09.1975 14:59:09,000");
+    d1 = sdf.parse("25.09.1970 14:59:09,000");
+    d2 = sdf.parse("25.09.1975 14:59:09,000");
 
-    System.out.println("Abfrage2: " + ske2.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
+    System.out.println("Abfrage2: " + ske2.getPid() + " " + sdf.format(d1) + " - " + sdf.format(d2));
 
     erstelleAbfrageUndAusgabeErgebnisTyp1(ske2, d1, d2);
     erstelleAbfrageUndAusgabeErgebnisTyp2(ske2, d1, d2);
     erstelleAbfrageUndAusgabeErgebnisTyp3(ske2, 1970);
 
-    d1 = _sdf.parse("01.01.1970 00:00:00,000");
-    d2 = _sdf.parse("31.12.1970 23:59:59,000");
+    d1 = sdf.parse("01.01.1970 00:00:00,000");
+    d2 = sdf.parse("31.12.1970 23:59:59,000");
 
-    System.out.println("Abfrage3: " + ske2.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
+    System.out.println("Abfrage3: " + ske2.getPid() + " " + sdf.format(d1) + " - " + sdf.format(d2));
 
     erstelleAbfrageUndAusgabeErgebnisTyp1(ske2, d1, d2);
     erstelleAbfrageUndAusgabeErgebnisTyp2(ske2, d1, d2);
 
     SystemkalenderEintrag ske3 = map.get("ske.dienstagalsverknüpfung");
 
-    d1 = _sdf.parse("01.01.2009 15:15:37,000");
-    d2 = _sdf.parse("21.12.2009 15:15:37,000");
+    d1 = sdf.parse("01.01.2009 15:15:37,000");
+    d2 = sdf.parse("21.12.2009 15:15:37,000");
 
-    System.out.println("Abfrage4: " + ske3.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
+    System.out.println("Abfrage4: " + ske3.getPid() + " " + sdf.format(d1) + " - " + sdf.format(d2));
 
     erstelleAbfrageUndAusgabeErgebnisTyp1(ske3, d1, d2);
     erstelleAbfrageUndAusgabeErgebnisTyp2(ske3, d1, d2);
@@ -155,10 +155,10 @@ public void initialize(ClientDavInterface connection) throws Exception
 
     SystemkalenderEintrag ske4 = map.get("ske.geburtstag_hck_kopie");
 
-    d1 = _sdf.parse("01.01.2009 15:15:37,000");
-    d2 = _sdf.parse("21.12.2009 15:15:37,000");
+    d1 = sdf.parse("01.01.2009 15:15:37,000");
+    d2 = sdf.parse("21.12.2009 15:15:37,000");
 
-    System.out.println("Abfrage5: " + ske4.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
+    System.out.println("Abfrage5: " + ske4.getPid() + " " + sdf.format(d1) + " - " + sdf.format(d2));
 
     erstelleAbfrageUndAusgabeErgebnisTyp1(ske4, d1, d2);
     erstelleAbfrageUndAusgabeErgebnisTyp2(ske4, d1, d2);
@@ -201,7 +201,7 @@ public void initialize(ClientDavInterface connection) throws Exception
       for (Map.Entry<Long, Boolean> me : sm.entrySet())
       {
         d.setTime(me.getKey());
-        System.out.println("Ergebnistyp 1: " + _sdf.format(d) + " " + me.getValue());
+        System.out.println("Ergebnistyp 1: " + sdf.format(d) + " " + me.getValue());
 
       }
     }
@@ -234,7 +234,7 @@ public void initialize(ClientDavInterface connection) throws Exception
       {
         d1.setTime(me.getKey());
         d2.setTime(me.getValue());
-        System.out.println("Ergebnistyp 2: " + _sdf.format(d1) + " " + _sdf.format(d2));
+        System.out.println("Ergebnistyp 2: " + sdf.format(d1) + " " + sdf.format(d2));
 
       }
     }
@@ -263,7 +263,7 @@ public void initialize(ClientDavInterface connection) throws Exception
       for (Map.Entry<Long, Boolean> me : sm.entrySet())
       {
         d.setTime(me.getKey());
-        System.out.println("Ergebnistyp 3: " + _sdf.format(d) + " " + me.getValue());
+        System.out.println("Ergebnistyp 3: " + sdf.format(d) + " " + me.getValue());
 
       }
     }

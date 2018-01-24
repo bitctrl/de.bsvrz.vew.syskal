@@ -158,9 +158,6 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 
 		listListeZustandsWechsel.clear();
 
-		// System.out.println(s + " : " + jahr);
-
-		// for (SystemkalenderEintrag ske : getSkeList().values())
 		for (Map.Entry<String, SystemkalenderEintrag> me : getSkeList().entrySet()) {
 
 			SystemkalenderEintrag ske = me.getValue();
@@ -229,20 +226,17 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 
 	@Override
 	public SortedMap<Long, Boolean> berechneZustandsWechsel(int jahr) {
-		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
-		Date d1 = null;
-		Date d2 = null;
-		try {
-			d1 = df.parse("01.01." + jahr + " 00:00:00,000");
-			d2 = df.parse("31.12." + jahr + " 23:59:59,999");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(cal.get(Calendar.YEAR), Calendar.JANUARY, 1, 0, 0, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		long d1 = cal.getTimeInMillis();
+		
+		cal.add(Calendar.YEAR, 1);
+		long d2 = cal.getTimeInMillis() - 1;
 
-		berecheneZustandsWechselVonBis(d1.getTime(), d2.getTime());
-
-		return berecheneZustandsWechselVonBis(d1.getTime(), d2.getTime());
+		berecheneZustandsWechselVonBis(d1, d2);
+		return berecheneZustandsWechselVonBis(d1, d2);
 	}
 
 	@Override
@@ -298,10 +292,8 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 					date.setTime(l);
 
 					Ostern ostern = new Ostern();
-					Calendar oStart = Ostern.Ostersonntag(jahr);
-
-					Object o = oStart.clone();
-					Calendar oEnde = (Calendar) o;
+					Calendar oStart = Ostern.getOstersonntag(jahr);
+					Calendar oEnde = (Calendar) oStart.clone();
 					oEnde.set(Calendar.HOUR_OF_DAY, 23);
 					oEnde.set(Calendar.MINUTE, 59);
 					oEnde.set(Calendar.SECOND, 59);
@@ -319,13 +311,13 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 						if (zeit.equals("00:00:00,000")) {
 
 							// _debug.config("hier11");
-							Calendar x1 = Ostern.Ostersonntag(jahr);
+							Calendar x1 = Ostern.getOstersonntag(jahr);
 							oa[i] = x1.getTime().getTime();
 
 						} else if (zeit.equals("23:59:59,999")) {
 
 							// _debug.config("hier12");
-							Calendar x2 = Ostern.Ostersonntag(jahr);
+							Calendar x2 = Ostern.getOstersonntag(jahr);
 							x2.set(Calendar.HOUR_OF_DAY, 23);
 							x2.set(Calendar.MINUTE, 59);
 							x2.set(Calendar.SECOND, 59);
@@ -428,10 +420,8 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 			date.setTime(l);
 
 			Ostern ostern = new Ostern();
-			Calendar oStart = Ostern.Ostersonntag(jahr);
-
-			Object o = oStart.clone();
-			Calendar oEnde = (Calendar) o;
+			Calendar oStart = Ostern.getOstersonntag(jahr);
+			Calendar oEnde = (Calendar) oStart.clone();
 			oEnde.set(Calendar.HOUR_OF_DAY, 23);
 			oEnde.set(Calendar.MINUTE, 59);
 			oEnde.set(Calendar.SECOND, 59);
@@ -449,13 +439,13 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 				if (zeit.equals("00:00:00,000")) {
 
 					// _debug.config("hier11");
-					Calendar x1 = Ostern.Ostersonntag(jahr);
+					Calendar x1 = Ostern.getOstersonntag(jahr);
 					oa[i] = x1.getTime().getTime();
 
 				} else if (zeit.equals("23:59:59,999")) {
 
 					// _debug.config("hier12");
-					Calendar x2 = Ostern.Ostersonntag(jahr);
+					Calendar x2 = Ostern.getOstersonntag(jahr);
 					x2.set(Calendar.HOUR_OF_DAY, 23);
 					x2.set(Calendar.MINUTE, 59);
 					x2.set(Calendar.SECOND, 59);
@@ -583,10 +573,9 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 				d.setTime((Long) oa[i]);
 
 				Ostern ostern = new Ostern();
-				Calendar oStart = Ostern.Ostersonntag(jahr);
+				Calendar oStart = Ostern.getOstersonntag(jahr);
 
-				Object o = oStart.clone();
-				Calendar oEnde = (Calendar) o;
+				Calendar oEnde = (Calendar) oStart.clone();
 				oEnde.set(Calendar.HOUR_OF_DAY, 23);
 				oEnde.set(Calendar.MINUTE, 59);
 				oEnde.set(Calendar.SECOND, 59);
@@ -602,11 +591,11 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 
 					if (zeit.equals("00:00:00,000")) {
 
-						Calendar x1 = Ostern.Ostersonntag(jahr);
+						Calendar x1 = Ostern.getOstersonntag(jahr);
 						oa[i] = x1.getTime().getTime();
 
 					} else if (zeit.equals("23:59:59,999")) {
-						Calendar x2 = Ostern.Ostersonntag(jahr);
+						Calendar x2 = Ostern.getOstersonntag(jahr);
 						x2.set(Calendar.HOUR_OF_DAY, 23);
 						x2.set(Calendar.MINUTE, 59);
 						x2.set(Calendar.SECOND, 59);
@@ -682,16 +671,5 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 		}
 
 		return listeZustandsWechsel.getListeZustandsWechsel();
-	}
-
-	@Override
-	protected DefinierterEintrag clone() {
-
-		DefinierterEintrag eintrag = null;
-
-		eintrag = new DefinierterEintrag(SystemkalenderArbeiter.getSkeList(), pid, definition);
-		eintrag.setObjektListeZustandsWechsel(listeZustandsWechsel);
-
-		return eintrag;
 	}
 }

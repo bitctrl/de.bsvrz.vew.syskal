@@ -65,40 +65,8 @@ import de.bsvrz.vew.syskal.syskal.benachrichtigungsfunktion.BenachrichtigeListen
 public class SystemkalenderArbeiter
 		implements ClientReceiverInterface, ClientSenderInterface, MutableSetChangeListener, BenachrichtigeListener {
 
-	/**
-	 * DebugLogger für Debug-Ausgaben
-	 */
 	private static final Debug LOGGER = Debug.getLogger();
-
-	/**
-	 * Verbindung zum Datenverteiler
-	 */
 	private ClientDavInterface connection;
-
-	/**
-	 * String fuer eine Attributgruppe
-	 */
-	private String objectAtg;
-
-	/**
-	 * String einen Aspekt
-	 */
-	private String objectAsp;
-
-	/**
-	 * Attributgruppe
-	 */
-	private AttributeGroup attributgruppe;
-
-	/**
-	 * Aspekt
-	 */
-	private Aspect aspekt;
-
-	/**
-	 * Datenbeschreibung
-	 */
-	private DataDescription datenbeschreibung;
 
 	/**
 	 * Datenmodell
@@ -133,7 +101,7 @@ public class SystemkalenderArbeiter
 	/**
 	 * Die statische Liste der SystemKalenderEintraege
 	 */
-	private static Map<String, SystemkalenderEintrag> skeList = new HashMap<>();
+	private Map<String, SystemkalenderEintrag> skeList = new HashMap<>();
 
 	/**
 	 * Zaehler fuer SystemKalenderEintraege
@@ -162,7 +130,9 @@ public class SystemkalenderArbeiter
 
 	private boolean used = false;
 
-	private SystemkalenderArbeiter(ClientDavInterface connection, String kalender) {
+	private DataDescription datenbeschreibung;
+
+	public SystemkalenderArbeiter(ClientDavInterface connection, String kalender) {
 		this.connection = connection;
 		this.kalender = kalender;
 		this.used = true;
@@ -199,11 +169,11 @@ public class SystemkalenderArbeiter
 				empfaengerrolle = ReceiverRole.receiver();
 
 				// Hole SystemKalenderEintraege
-				objectAtg = "atg.systemKalenderEintrag";
-				objectAsp = "asp.parameterSoll";
+				String objectAtg = "atg.systemKalenderEintrag";
+				String objectAsp = "asp.parameterSoll";
 
-				attributgruppe = connection.getDataModel().getAttributeGroup(objectAtg);
-				aspekt = connection.getDataModel().getAspect(objectAsp);
+				AttributeGroup attributgruppe = connection.getDataModel().getAttributeGroup(objectAtg);
+				Aspect aspekt = connection.getDataModel().getAspect(objectAsp);
 				simulationsvariante = 0;
 				datenbeschreibung = new DataDescription(attributgruppe, aspekt, simulationsvariante);
 
@@ -224,7 +194,7 @@ public class SystemkalenderArbeiter
 
 				cntSke = 0;
 
-				subscribeReceiver(objSke);
+				connection.subscribeReceiver(this, objSke, datenbeschreibung, empfaengeroptionen, empfaengerrolle);
 
 				synchronized (this) {
 
@@ -257,17 +227,6 @@ public class SystemkalenderArbeiter
 		return listSke;
 	}
 
-	/**
-	 * Anmeldung zum Empfangen von Daten
-	 * 
-	 * @param objlist
-	 *            die Liste der anzumeldenden Objekte
-	 */
-	private void subscribeReceiver(List<SystemObject> objlist) {
-		// Anmelden
-		connection.subscribeReceiver(this, objlist, datenbeschreibung, empfaengeroptionen, empfaengerrolle);
-
-	}
 
 	@Override
 	public void update(ResultData[] results) {
@@ -347,8 +306,7 @@ public class SystemkalenderArbeiter
 					list.add(so);
 
 				}
-
-				subscribeReceiver(list);
+				connection.subscribeReceiver(this, list, datenbeschreibung, empfaengeroptionen, empfaengerrolle);
 			}
 
 			if (removedObjects != null) {
@@ -401,7 +359,7 @@ public class SystemkalenderArbeiter
 	 * 
 	 * @return Liste der Einträge
 	 */
-	public static Map<String, SystemkalenderEintrag> getSkeList() {
+	public Map<String, SystemkalenderEintrag> getSkeList() {
 		return skeList;
 	}
 
@@ -418,11 +376,11 @@ public class SystemkalenderArbeiter
 	 * 
 	 * @return true, wenn der Eintrag geparst werden konnten
 	 */
-	public static Boolean parseSystemkalenderEintrag(String pid, String name, String definiton) {
+	public Boolean parseSystemkalenderEintrag(String pid, String name, String definiton) {
 
 		Boolean gueltig = null;
 
-		Parser parser = new Parser();
+		Parser parser = new Parser(this);
 
 		try {
 			String s = null;
@@ -519,7 +477,7 @@ public class SystemkalenderArbeiter
 
 				List<String> delList = new ArrayList<>();
 
-				Parser parser = new Parser();
+				Parser parser = new Parser(this);
 
 				for (Map.Entry<String, String[]> me : parseList.entrySet()) {
 					if (parser.parseSystemkalenderEintrag(me.getKey(), me.getValue()[0], me.getValue()[1])) {

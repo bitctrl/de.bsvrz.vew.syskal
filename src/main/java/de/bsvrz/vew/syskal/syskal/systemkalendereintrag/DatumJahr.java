@@ -142,12 +142,6 @@ public class DatumJahr extends Atomar {
 		return berecheneZustandsWechselVonBis(d1.getTime(), d2.getTime());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.bsvrz.vew.syskal.syskal.systemkalendereintrag.Atomar#
-	 * berechneZustandsWechsel(java.lang.Long, java.lang.Long, int)
-	 */
 	@Override
 	public SortedMap<Long, Boolean> berechneZustandsWechsel(Long von, Long bis, int jahr) {
 
@@ -161,7 +155,7 @@ public class DatumJahr extends Atomar {
 			String s1 = null;
 			String s2 = null;
 
-			String[] _jahr = it1.next();
+			String[] localJahr = it1.next();
 
 			long jahre = 0;
 
@@ -169,25 +163,25 @@ public class DatumJahr extends Atomar {
 				Calendar cal1 = new GregorianCalendar();
 				Calendar cal2 = new GregorianCalendar();
 
-				SimpleDateFormat df_jahr = new SimpleDateFormat("dd.MM.yyyy");
+				SimpleDateFormat dfJahr = new SimpleDateFormat("dd.MM.yyyy");
 
-				s1 = _jahr[0];
-				s2 = _jahr[1];
+				s1 = localJahr[0];
+				s2 = localJahr[1];
 
-				if (_jahr[0].contains("*")) {
+				if (localJahr[0].contains("*")) {
 
-					s1 = _jahr[0].replace("*", temp.toString());
-
-				}
-
-				if (_jahr[1].contains("*")) {
-
-					s2 = _jahr[1].replace("*", temp.toString());
+					s1 = localJahr[0].replace("*", temp.toString());
 
 				}
 
-				Long def1 = df_jahr.parse(s1).getTime();
-				Long def2 = df_jahr.parse(s2).getTime();
+				if (localJahr[1].contains("*")) {
+
+					s2 = localJahr[1].replace("*", temp.toString());
+
+				}
+
+				Long def1 = dfJahr.parse(s1).getTime();
+				Long def2 = dfJahr.parse(s2).getTime();
 
 				// Definition von-bis
 				cal1.setTimeInMillis(def1);
@@ -225,8 +219,8 @@ public class DatumJahr extends Atomar {
 					s2 = split1[0] + "." + split1[1] + "." + temp;
 
 				} else {
-					s1 = df_jahr.format(cal1.getTime());
-					s2 = df_jahr.format(cal2.getTime());
+					s1 = dfJahr.format(cal1.getTime());
+					s2 = dfJahr.format(cal2.getTime());
 				}
 
 				jahre = cal2.get(Calendar.YEAR) - cal1.get(Calendar.YEAR);
@@ -239,7 +233,7 @@ public class DatumJahr extends Atomar {
 			// Anzahl der Jahre wird durchlaufen, aber immer eins mehr wie errechnet wurde
 			for (int i = 0; i < jahre + 1; i++) {
 
-				String[] _zeit = { "00:00:00,000", " 23:59:59,999" };
+				String[] zeitArray = { "00:00:00,000", " 23:59:59,999" };
 
 				try {
 					Date dt = new Date();
@@ -250,7 +244,7 @@ public class DatumJahr extends Atomar {
 					SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 					df.setLenient(false);
 
-					dt = df.parse(s1 + " " + _zeit[0]);
+					dt = df.parse(s1 + " " + zeitArray[0]);
 					cal.setTime(dt);
 					tmp = cal;
 					tmp.add(Calendar.YEAR, i);
@@ -258,7 +252,7 @@ public class DatumJahr extends Atomar {
 
 					listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal.getTimeInMillis(), true);
 
-					dt = df.parse(s1 + " " + _zeit[1]);
+					dt = df.parse(s1 + " " + zeitArray[1]);
 					cal.setTime(dt);
 					tmp = cal;
 					tmp.add(Calendar.YEAR, i);
@@ -303,7 +297,7 @@ public class DatumJahr extends Atomar {
 			String s1 = null;
 			String s2 = null;
 
-			String[] _jahr = it1.next();
+			String[] localJahr = it1.next();
 
 			long jahre = 0;
 
@@ -311,25 +305,25 @@ public class DatumJahr extends Atomar {
 				Calendar cal1 = new GregorianCalendar();
 				Calendar cal2 = new GregorianCalendar();
 
-				SimpleDateFormat df_jahr = new SimpleDateFormat("dd.MM.yyyy");
+				SimpleDateFormat dfJahr = new SimpleDateFormat("dd.MM.yyyy");
 
-				s1 = _jahr[0];
-				s2 = _jahr[1];
+				s1 = localJahr[0];
+				s2 = localJahr[1];
 
-				if (_jahr[0].contains("*")) {
+				if (localJahr[0].contains("*")) {
 
-					s1 = _jahr[0].replace("*", temp.toString());
-
-				}
-
-				if (_jahr[1].contains("*")) {
-
-					s2 = _jahr[1].replace("*", temp.toString());
+					s1 = localJahr[0].replace("*", temp.toString());
 
 				}
 
-				Long def1 = df_jahr.parse(s1).getTime();
-				Long def2 = df_jahr.parse(s2).getTime();
+				if (localJahr[1].contains("*")) {
+
+					s2 = localJahr[1].replace("*", temp.toString());
+
+				}
+
+				Long def1 = dfJahr.parse(s1).getTime();
+				Long def2 = dfJahr.parse(s2).getTime();
 
 				// Definition von-bis
 				cal1.setTimeInMillis(def1);
@@ -367,8 +361,8 @@ public class DatumJahr extends Atomar {
 					s2 = split1[0] + "." + split1[1] + "." + temp;
 
 				} else {
-					s1 = df_jahr.format(cal1.getTime());
-					s2 = df_jahr.format(cal2.getTime());
+					s1 = dfJahr.format(cal1.getTime());
+					s2 = dfJahr.format(cal2.getTime());
 				}
 
 				jahre = cal2.get(Calendar.YEAR) - cal1.get(Calendar.YEAR);
@@ -381,7 +375,7 @@ public class DatumJahr extends Atomar {
 			// Anzahl der Jahre wird durchlaufen, aber immer eins mehr wie errechnet wurde
 			for (int i = 0; i < jahre + 1; i++) {
 
-				String[] _zeit = { "00:00:00,000", " 23:59:59,999" };
+				String[] zeitArray = { "00:00:00,000", " 23:59:59,999" };
 
 				try {
 					Date dt = new Date();
@@ -395,7 +389,7 @@ public class DatumJahr extends Atomar {
 					SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 					df.setLenient(false);
 
-					dt = df.parse(s1 + " " + _zeit[0]);
+					dt = df.parse(s1 + " " + zeitArray[0]);
 					cal.setTime(dt);
 					tmp = cal;
 					tmp.add(Calendar.YEAR, i);
@@ -403,7 +397,7 @@ public class DatumJahr extends Atomar {
 
 					l1 = cal.getTimeInMillis();
 
-					dt = df.parse(s1 + " " + _zeit[1]);
+					dt = df.parse(s1 + " " + zeitArray[1]);
 					cal.setTime(dt);
 					tmp = cal;
 					tmp.add(Calendar.YEAR, i);
@@ -411,12 +405,7 @@ public class DatumJahr extends Atomar {
 
 					l2 = cal.getTimeInMillis();
 
-					if (l1 != null & l2 != null)
-						liste.put(l1, l2);
-					else if (l1 == null && l2 != null)
-						liste.put(von, l2);
-					else if (l1 != null && l2 == null)
-						liste.put(l1, bis);
+					liste.put(l1, l2);
 
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
@@ -451,7 +440,7 @@ public class DatumJahr extends Atomar {
 			String s1 = null;
 			String s2 = null;
 
-			String[] _jahr = it1.next();
+			String[] localJahr = it1.next();
 
 			long jahre = 0;
 
@@ -459,25 +448,25 @@ public class DatumJahr extends Atomar {
 				Calendar cal1 = new GregorianCalendar();
 				Calendar cal2 = new GregorianCalendar();
 
-				SimpleDateFormat df_jahr = new SimpleDateFormat("dd.MM.yyyy");
+				SimpleDateFormat dfJahr = new SimpleDateFormat("dd.MM.yyyy");
 
-				s1 = _jahr[0];
-				s2 = _jahr[1];
+				s1 = localJahr[0];
+				s2 = localJahr[1];
 
-				if (_jahr[0].contains("*")) {
+				if (localJahr[0].contains("*")) {
 
-					s1 = _jahr[0].replace("*", temp.toString());
-
-				}
-
-				if (_jahr[1].contains("*")) {
-
-					s2 = _jahr[1].replace("*", temp.toString());
+					s1 = localJahr[0].replace("*", temp.toString());
 
 				}
 
-				Long def1 = df_jahr.parse(s1).getTime();
-				Long def2 = df_jahr.parse(s2).getTime();
+				if (localJahr[1].contains("*")) {
+
+					s2 = localJahr[1].replace("*", temp.toString());
+
+				}
+
+				Long def1 = dfJahr.parse(s1).getTime();
+				Long def2 = dfJahr.parse(s2).getTime();
 
 				// Definition von-bis
 				cal1.setTimeInMillis(def1);
@@ -509,8 +498,8 @@ public class DatumJahr extends Atomar {
 				cal1.set(Calendar.YEAR, temp);
 				cal2.set(Calendar.YEAR, temp);
 
-				s1 = df_jahr.format(cal1.getTime());
-				s2 = df_jahr.format(cal2.getTime());
+				s1 = dfJahr.format(cal1.getTime());
+				s2 = dfJahr.format(cal2.getTime());
 
 				jahre = cal2.get(Calendar.YEAR) - cal1.get(Calendar.YEAR);
 
@@ -522,7 +511,7 @@ public class DatumJahr extends Atomar {
 			// Anzahl der Jahre wird durchlaufen, aber immer eins mehr wie errechnet wurde
 			for (int i = 0; i < jahre + 1; i++) {
 
-				String[] _zeit = { "00:00:00,000", " 23:59:59,999" };
+				String[] zeitArray = { "00:00:00,000", " 23:59:59,999" };
 
 				try {
 					Date dt = new Date();
@@ -532,7 +521,7 @@ public class DatumJahr extends Atomar {
 
 					SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
-					dt = df.parse(s1 + " " + _zeit[0]);
+					dt = df.parse(s1 + " " + zeitArray[0]);
 					cal.setTime(dt);
 					tmp = cal;
 					tmp.add(Calendar.YEAR, i);
@@ -542,18 +531,13 @@ public class DatumJahr extends Atomar {
 					// listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal.getTimeInMillis(),
 					// true);
 
-					dt = df.parse(s1 + " " + _zeit[1]);
+					dt = df.parse(s1 + " " + zeitArray[1]);
 					cal.setTime(dt);
 					tmp = cal;
 					tmp.add(Calendar.YEAR, i);
 					cal = tmp;
 
 					listeZustandsWechsel.getListeZustandsWechsel().put(cal.getTimeInMillis(), false);
-					// listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal.getTimeInMillis(),
-					// false);
-					// listeZustandsWechselAbfrage.getListeZustandsWechsel().put(cal.getTimeInMillis()+1,
-					// false);
-
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -570,13 +554,4 @@ public class DatumJahr extends Atomar {
 	public String getDefinition() {
 		return definition;
 	}
-
-	@Override
-	protected DatumJahr clone() {
-		DatumJahr eintrag = new DatumJahr(pid, definition);
-		eintrag.setObjektListeZustandsWechsel(listeZustandsWechsel);
-		return eintrag;
-
-	}
-
 }

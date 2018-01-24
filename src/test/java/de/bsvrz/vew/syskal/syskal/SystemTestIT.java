@@ -14,7 +14,6 @@ import java.util.SortedMap;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import de.bsvrz.dav.daf.main.ClientDavConnection;
@@ -38,21 +37,21 @@ public class SystemTestIT
   /**
    * Datenverteilerverbindung.
    */
-  private static ClientDavInterface _connection = null;
+  private static ClientDavInterface connection = null;
 
 //private static String _strKalender = "kv.testKonfiguration";
-  private static String _strKalender = "kv.aoe.nw.nba.koeln.koblenz";
+  private static String pidKalender = "kv.aoe.nw.nba.koeln.koblenz";
 
   /**
    * Pid Kalender
    */
 //  private static String _strKonfigBereich = "kb.default.testKonfiguration";
-  private static String _strKonfigBereich = "kb.default.aoe.nw.nba.koeln.koblenz";
+  private static String pidKonfigBereich = "kb.default.aoe.nw.nba.koeln.koblenz";
 
   /**
    * Die Instanz des SystenkalenderArbeiters
    */
-  private static SystemkalenderArbeiter _instance;
+  private static SystemkalenderArbeiter systemKalenderArbeiter;
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception
@@ -62,11 +61,12 @@ public class SystemTestIT
     parameters.setDavCommunicationSubAddress(8083);
     parameters.setUserName("Tester");
 
-    _connection = new ClientDavConnection(parameters);
-    _connection.connect();
-    _connection.login("Tester", ClientCredentials.ofPassword("geheim".toCharArray()));
+    connection = new ClientDavConnection(parameters);
+    connection.connect();
+    connection.login("Tester", ClientCredentials.ofPassword("geheim".toCharArray()));
 
-    SystemkalenderArbeiter.getSkeList().clear();  
+	systemKalenderArbeiter = new SystemkalenderArbeiter(connection, null);
+    systemKalenderArbeiter.getSkeList().clear();  
     
     erzeugeSystemKalenderEintrag("ske.osternTest", "Ostersonntag", "Ostersonntag");
     erzeugeSystemKalenderEintrag("ske. ", " ", " :=Ostersonntag");
@@ -127,8 +127,7 @@ public class SystemTestIT
     erzeugeSystemKalenderEintrag("ske.gueltig", "Gueltig", defGueltig);
     erzeugeSystemKalenderEintrag("ske.ungueltig", "Ungueltig", defUngueltig);
     
-    _instance = SystemkalenderArbeiter.getInstance(_connection, _strKalender);
-    _instance.starteSystemKalenderArbeiter();
+    systemKalenderArbeiter.starteSystemKalenderArbeiter();
 
   }
 
@@ -162,17 +161,17 @@ public class SystemTestIT
 
     List<SystemObject> list = new ArrayList<>();
 
-    list.add(_connection.getDataModel().getObject("ske. "));
-    list.add(_connection.getDataModel().getObject("ske.@"));
-    list.add(_connection.getDataModel().getObject("ske.1"));
-    list.add(_connection.getDataModel().getObject("ske._"));
-    list.add(_connection.getDataModel().getObject("ske.#"));
-    list.add(_connection.getDataModel().getObject("ske.^"));
-    list.add(_connection.getDataModel().getObject("ske.º"));
-    list.add(_connection.getDataModel().getObject("ske.\\"));
-    list.add(_connection.getDataModel().getObject("ske./"));
+    list.add(connection.getDataModel().getObject("ske. "));
+    list.add(connection.getDataModel().getObject("ske.@"));
+    list.add(connection.getDataModel().getObject("ske.1"));
+    list.add(connection.getDataModel().getObject("ske._"));
+    list.add(connection.getDataModel().getObject("ske.#"));
+    list.add(connection.getDataModel().getObject("ske.^"));
+    list.add(connection.getDataModel().getObject("ske.º"));
+    list.add(connection.getDataModel().getObject("ske.\\"));
+    list.add(connection.getDataModel().getObject("ske./"));
 
-    SortedMap<String, Boolean> sm = _instance.berechneGueltigVonBis(list, d1.getTime(), d2.getTime());
+    SortedMap<String, Boolean> sm = systemKalenderArbeiter.berechneGueltigVonBis(list, d1.getTime(), d2.getTime());
 
     if (sm != null)
     {
@@ -224,7 +223,7 @@ public class SystemTestIT
       fail("Test 1-25");
     
     
-    SortedMap<String, Long> sm2 = _instance.berechneIntervallVonBis(list, d1.getTime(), d2.getTime());
+    SortedMap<String, Long> sm2 = systemKalenderArbeiter.berechneIntervallVonBis(list, d1.getTime(), d2.getTime());
     
     if (sm2 != null)
     {
@@ -272,13 +271,13 @@ public class SystemTestIT
       fail("Test 26-38");
     
 
-    SystemkalenderArbeiter.parseSystemkalenderEintrag("ske./", "/", "/:=ODER{ ,_,#}*,*");
+    systemKalenderArbeiter.parseSystemkalenderEintrag("ske./", "/", "/:=ODER{ ,_,#}*,*");
     loescheSystemKalenderEintrag("ske.\\");
 
     d1 = sdf.parse("01.01.2003 00:00:00,000");
     d2 = sdf.parse("31.12.2004 23:59:59,999");
 
-    sm = _instance.berechneGueltigVonBis("ske./", d1.getTime(), d2.getTime());
+    sm = systemKalenderArbeiter.berechneGueltigVonBis("ske./", d1.getTime(), d2.getTime());
 
     if (sm != null)
     {
@@ -313,7 +312,7 @@ public class SystemTestIT
     else
       fail("Test 39-47");
     
-    sm2 = _instance.berechneIntervallVonBis("ske./", d1.getTime(), d2.getTime());
+    sm2 = systemKalenderArbeiter.berechneIntervallVonBis("ske./", d1.getTime(), d2.getTime());
     
     if (sm2 != null)
     {
@@ -350,7 +349,7 @@ public class SystemTestIT
     d1 = sdf.parse("01.11.2004 00:00:00,000");
     d2 = sdf.parse("08.11.2004 23:59:59,999");
 
-    sm = _instance.berechneGueltigVonBis("ske.hauptverkehrszeit", d1.getTime(), d2.getTime());
+    sm = systemKalenderArbeiter.berechneGueltigVonBis("ske.hauptverkehrszeit", d1.getTime(), d2.getTime());
 
     if (sm != null)
     {
@@ -409,7 +408,7 @@ public class SystemTestIT
     else
       fail("Test 53-85");
     
-    sm2 = _instance.berechneIntervallVonBis("ske.hauptverkehrszeit", d1.getTime(), d2.getTime());
+    sm2 = systemKalenderArbeiter.berechneIntervallVonBis("ske.hauptverkehrszeit", d1.getTime(), d2.getTime());
     
     if (sm2 != null)
     {
@@ -467,7 +466,7 @@ public class SystemTestIT
     // Jetzt ist heute 12:00:00,000
     String jetzt = sdf.format(cal.getTime());
 
-    Map.Entry<String, Boolean> entry = _instance.berechneGueltigJetzt("ske.gueltig", cal.getTimeInMillis());
+    Map.Entry<String, Boolean> entry = systemKalenderArbeiter.berechneGueltigJetzt("ske.gueltig", cal.getTimeInMillis());
 
     if (entry != null)
     {
@@ -484,7 +483,7 @@ public class SystemTestIT
 
     }
 
-    entry = _instance.berechneGueltigJetzt("ske.ungueltig", cal.getTimeInMillis());
+    entry = systemKalenderArbeiter.berechneGueltigJetzt("ske.ungueltig", cal.getTimeInMillis());
 
     if (entry != null)
     {
@@ -504,45 +503,45 @@ public class SystemTestIT
   public static void erzeugeSystemKalenderEintrag(String pid, String name, String definition)
   {
 
-    ConfigurationArea ca = _connection.getDataModel().getConfigurationArea(_strKonfigBereich);
-    ConfigurationObject co = (ConfigurationObject)_connection.getDataModel().getObject(_strKalender);
-    DynamicObjectType dot = (DynamicObjectType)_connection.getDataModel().getType("typ.systemKalenderEintrag");
+    ConfigurationArea ca = connection.getDataModel().getConfigurationArea(pidKonfigBereich);
+    ConfigurationObject co = (ConfigurationObject)connection.getDataModel().getObject(pidKalender);
+    DynamicObjectType dot = (DynamicObjectType)connection.getDataModel().getType("typ.systemKalenderEintrag");
 
     // Erzeuge dynamisches Objekt
-    AttributeGroup atgKonfig = _connection.getDataModel().getAttributeGroup("atg.systemKalenderEintrag");
-    Aspect aspKonfig = _connection.getDataModel().getAspect("asp.eigenschaften");
-    VerwaltungDynObj vewKonfig = new VerwaltungDynObj(_connection, _connection.getDataModel(), ca, dot, co, atgKonfig,
+    AttributeGroup atgKonfig = connection.getDataModel().getAttributeGroup("atg.systemKalenderEintrag");
+    Aspect aspKonfig = connection.getDataModel().getAspect("asp.eigenschaften");
+    VerwaltungDynObj vewKonfig = new VerwaltungDynObj(connection, connection.getDataModel(), ca, dot, co, atgKonfig,
         aspKonfig);
 
-    Data data = _connection.createData(atgKonfig);
+    Data data = connection.createData(atgKonfig);
     Data[] datas = new Data[1];
     datas[0] = data;
     vewKonfig.erzeuge(pid, name, "SystemKalenderEinträge", null);
 
     // Erzeuge Parameter
-    AttributeGroup atgParam = _connection.getDataModel().getAttributeGroup("atg.systemKalenderEintrag");
-    Aspect aspParam = _connection.getDataModel().getAspect("asp.parameterVorgabe");
-    VerwaltungDynObj vewParam = new VerwaltungDynObj(_connection, _connection.getDataModel(), ca, dot, co, atgParam,
+    AttributeGroup atgParam = connection.getDataModel().getAttributeGroup("atg.systemKalenderEintrag");
+    Aspect aspParam = connection.getDataModel().getAspect("asp.parameterVorgabe");
+    VerwaltungDynObj vewParam = new VerwaltungDynObj(connection, connection.getDataModel(), ca, dot, co, atgParam,
         aspParam);
-    data = _connection.createData(atgParam);
+    data = connection.createData(atgParam);
     data.getTextValue("Definition").setText(definition);
     datas[0] = data;
-    vewParam.setDynamicObject(_connection.getDataModel().getObject(pid));
+    vewParam.setDynamicObject(connection.getDataModel().getObject(pid));
     vewParam.parametriere(datas);
   }
 
   public static void loescheSystemKalenderEintrag(String pid)
   {
-    ConfigurationArea ca = _connection.getDataModel().getConfigurationArea(_strKonfigBereich);
-    ConfigurationObject co = (ConfigurationObject)_connection.getDataModel().getObject(_strKalender);
-    DynamicObjectType dot = (DynamicObjectType)_connection.getDataModel().getType("typ.systemKalenderEintrag");
+    ConfigurationArea ca = connection.getDataModel().getConfigurationArea(pidKonfigBereich);
+    ConfigurationObject co = (ConfigurationObject)connection.getDataModel().getObject(pidKalender);
+    DynamicObjectType dot = (DynamicObjectType)connection.getDataModel().getType("typ.systemKalenderEintrag");
 
-    AttributeGroup atgKonfig = _connection.getDataModel().getAttributeGroup("atg.systemKalenderEintrag");
-    Aspect aspKonfig = _connection.getDataModel().getAspect("asp.eigenschaften");
-    VerwaltungDynObj vewKonfig = new VerwaltungDynObj(_connection, _connection.getDataModel(), ca, dot, co, atgKonfig,
+    AttributeGroup atgKonfig = connection.getDataModel().getAttributeGroup("atg.systemKalenderEintrag");
+    Aspect aspKonfig = connection.getDataModel().getAspect("asp.eigenschaften");
+    VerwaltungDynObj vewKonfig = new VerwaltungDynObj(connection, connection.getDataModel(), ca, dot, co, atgKonfig,
         aspKonfig);
 
-    vewKonfig.setDynamicObject(_connection.getDataModel().getObject(pid));
+    vewKonfig.setDynamicObject(connection.getDataModel().getObject(pid));
     vewKonfig.loesche(pid, "SystemKalenderEinträge");
   }
 
