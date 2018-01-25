@@ -110,15 +110,15 @@ public class SystemkalenderEintragTest
 
     int dow = cal.get(Calendar.DAY_OF_WEEK);
 
-    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
+    Map<String, AlterSystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
 
-    SystemkalenderEintrag skeMo = skeList.get("ske.montag");
-    SystemkalenderEintrag skeDi = skeList.get("ske.dienstag");
-    SystemkalenderEintrag skeMi = skeList.get("ske.mittwoch");
-    SystemkalenderEintrag skeDo = skeList.get("ske.donnerstag");
-    SystemkalenderEintrag skeFr = skeList.get("ske.freitag");
-    SystemkalenderEintrag skeSa = skeList.get("ske.samstag");
-    SystemkalenderEintrag skeSo = skeList.get("ske.sonntag");
+    AlterSystemkalenderEintrag skeMo = skeList.get("ske.montag");
+    AlterSystemkalenderEintrag skeDi = skeList.get("ske.dienstag");
+    AlterSystemkalenderEintrag skeMi = skeList.get("ske.mittwoch");
+    AlterSystemkalenderEintrag skeDo = skeList.get("ske.donnerstag");
+    AlterSystemkalenderEintrag skeFr = skeList.get("ske.freitag");
+    AlterSystemkalenderEintrag skeSa = skeList.get("ske.samstag");
+    AlterSystemkalenderEintrag skeSo = skeList.get("ske.sonntag");
 
     switch (dow)
     {
@@ -200,9 +200,9 @@ public class SystemkalenderEintragTest
 
     int dow = cal.get(Calendar.DAY_OF_WEEK);
 
-    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
+    Map<String, AlterSystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
 
-    SystemkalenderEintrag ske = null;
+    AlterSystemkalenderEintrag ske = null;
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
     int dom = cal.get(Calendar.DAY_OF_MONTH);
@@ -261,9 +261,9 @@ public class SystemkalenderEintragTest
   @Test
   public void berechneZustandsWechselVonBisTest() throws Exception
   {
-    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
+    Map<String, AlterSystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
 
-    SystemkalenderEintrag ske = skeList.get("ske.bereich4");
+    AlterSystemkalenderEintrag ske = skeList.get("ske.bereich4");
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
@@ -436,9 +436,9 @@ public class SystemkalenderEintragTest
   @Test
   public void berechneIntervallVonBisTest() throws Exception
   {
-    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
+    Map<String, AlterSystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
 
-    SystemkalenderEintrag ske = skeList.get("ske.bereich4");
+    AlterSystemkalenderEintrag ske = skeList.get("ske.bereich4");
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
@@ -545,9 +545,9 @@ public class SystemkalenderEintragTest
   @Test
   public void berechneIntervallVonBisTest2() throws Exception
   {
-    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
+    Map<String, AlterSystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
 
-    SystemkalenderEintrag ske = skeList.get("ske.bereich5");
+    AlterSystemkalenderEintrag ske = skeList.get("ske.bereich5");
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
@@ -568,9 +568,9 @@ public class SystemkalenderEintragTest
   @Test
   public void berechneIntervallVonBisTest3() throws Exception
   {
-    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
+    Map<String, AlterSystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
     
-    SystemkalenderEintrag ske = skeList.get("ske.bereich5");
+    AlterSystemkalenderEintrag ske = skeList.get("ske.bereich5");
     
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
     
@@ -612,9 +612,9 @@ public class SystemkalenderEintragTest
   public void berechneIntervallVonBisTest4() throws Exception
   {
     
-    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
+    Map<String, AlterSystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
     
-    SystemkalenderEintrag ske = skeList.get("ske.bereich5");
+    AlterSystemkalenderEintrag ske = skeList.get("ske.bereich5");
     
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
     
@@ -655,9 +655,9 @@ public class SystemkalenderEintragTest
   @Test
   public void berechneIntervallVonBisTest5() throws Exception
   {
-    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
+    Map<String, AlterSystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
     
-    SystemkalenderEintrag ske = skeList.get("ske.bereich5");
+    AlterSystemkalenderEintrag ske = skeList.get("ske.bereich5");
     
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
     
@@ -698,9 +698,9 @@ public class SystemkalenderEintragTest
   @Test
   public void berechneIntervallVonBisTest6() throws Exception
   {
-    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
+    Map<String, AlterSystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
 
-    SystemkalenderEintrag ske = skeList.get("ske.bereich5");
+    AlterSystemkalenderEintrag ske = skeList.get("ske.bereich5");
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
@@ -722,9 +722,9 @@ public class SystemkalenderEintragTest
   public void berechneIntervallVonBisTest7() throws Exception
   {
     
-    Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
+    Map<String, AlterSystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
     
-    SystemkalenderEintrag ske = skeList.get("ske.bereich4");
+    AlterSystemkalenderEintrag ske = skeList.get("ske.bereich4");
     
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
     

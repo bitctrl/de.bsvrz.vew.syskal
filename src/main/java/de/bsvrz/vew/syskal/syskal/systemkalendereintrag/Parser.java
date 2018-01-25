@@ -294,11 +294,11 @@ public class Parser {
 
 		} else {
 
-			Map<String, SystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
+			Map<String, AlterSystemkalenderEintrag> skeList = systemKalenderArbeiter.getSkeList();
 
 			if (skeList.containsKey("ske." + definition)) {
 
-				SystemkalenderEintrag ske = skeList.get("ske." + definition);
+				AlterSystemkalenderEintrag ske = skeList.get("ske." + definition);
 
 				if (ske instanceof DatumJahr) {
 					DatumJahr dtj = (DatumJahr) ske;

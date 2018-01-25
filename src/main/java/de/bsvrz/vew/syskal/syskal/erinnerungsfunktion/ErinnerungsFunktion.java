@@ -29,14 +29,13 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Timer;
 
+import de.bsvrz.vew.syskal.SystemkalenderEintrag;
 import de.bsvrz.vew.syskal.syskal.benachrichtigungsfunktion.BenachrichtigeFunktion;
-import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag;
+import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.AlterSystemkalenderEintrag;
 
 /**
  * Kommentar
  * 
- * @version $Revision: 1.1 $ / $Date: 2009/09/24 12:49:16 $ / ($Author: Pittner
- *          $)
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  */
@@ -50,7 +49,7 @@ public class ErinnerungsFunktion {
 	/**
 	 * Das Ereignis, wird dem Sender-Instanz ÃÂ¼bergeben
 	 */
-	private SystemkalenderEintrag ske;
+	private AlterSystemkalenderEintrag ske;
 
 	/**
 	 * Konstruktor der Klasse
@@ -61,7 +60,7 @@ public class ErinnerungsFunktion {
 	 *            Schalter, der den Wecker sofort(false) oder zum definerten
 	 *            Zeitpunkt(true) losgehen laesst
 	 */
-	public ErinnerungsFunktion(SystemkalenderEintrag ske, Boolean b) {
+	public ErinnerungsFunktion(AlterSystemkalenderEintrag ske, Boolean b) {
 		this.ske = ske;
 
 		Long now = new Date().getTime();

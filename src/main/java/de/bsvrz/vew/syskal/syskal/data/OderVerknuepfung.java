@@ -33,7 +33,6 @@ import java.time.LocalDateTime;
  * Systemkalendereinträge logisch per ODER verknüpft.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
  */
 public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 
@@ -45,8 +44,8 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 	 * @param definition
 	 *            der definierende Text des Eintrags
 	 */
-	public OderVerknuepfung(final String name, final String definition) {
-		super(name, definition);
+	public OderVerknuepfung(KalenderEintragProvider provider, final String name, final String definition) {
+		super(provider, name, definition);
 	}
 
 	@Override

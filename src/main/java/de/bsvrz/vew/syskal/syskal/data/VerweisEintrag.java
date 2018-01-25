@@ -34,9 +34,8 @@ import java.time.LocalDateTime;
  * bestehenden gebildet wird.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
  */
-public class VerweisEintrag extends KalenderEintrag {
+public class VerweisEintrag extends KalenderEintragDefinition {
 
 	/** der definierende Eintrag mit zusätzlichen Erweiterungen. */
 	private Verweis verweis;
@@ -49,10 +48,13 @@ public class VerweisEintrag extends KalenderEintrag {
 	 * @param definition
 	 *            der definierende Text
 	 */
-	public VerweisEintrag(final String name, final String definition) {
+	public VerweisEintrag(KalenderEintragProvider provider, final String name, final String definition) {
 		super(name, definition);
 		try {
-			verweis = new Verweis(definition);
+			verweis = new Verweis(provider, definition);
+			if( verweis.isUngueltig()) {
+				setFehler(true);
+			}
 		} catch (final ParseException e) {
 			verweis = null;
 			setFehler(true);
@@ -118,9 +120,9 @@ public class VerweisEintrag extends KalenderEintrag {
 	 * @throws ParseException
 	 *             der Name des Verweises ist ungültig
 	 */
-	public void setVerweis(final String name, final int offset,
+	public void setVerweis(KalenderEintragProvider provider, final String name, final int offset,
 			final boolean negiert) throws ParseException {
-		verweis = new Verweis(name, offset, negiert);
+		verweis = new Verweis(provider, name, offset, negiert);
 	}
 
 	@Override

@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
 
+import de.bsvrz.vew.syskal.SystemkalenderEintrag;
+
 public class TestSyskalOffline4 {
 	/**
 	 * Das Format der Ergebnisausgabe
@@ -39,7 +41,7 @@ public class TestSyskalOffline4 {
 
 			sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
-			SystemkalenderEintrag ske1 = systemKalenderArbeiter.getSkeList().get("ske.test1");
+			AlterSystemkalenderEintrag ske1 = systemKalenderArbeiter.getSkeList().get("ske.test1");
 
 			Date d1 = sdf.parse("01.01.2000 00:00:00,000");
 			Date d2 = sdf.parse("31.12.2010 23:59:59,999");
@@ -50,7 +52,7 @@ public class TestSyskalOffline4 {
 			erstelleAbfrageUndAusgabeErgebnisTyp1(ske1, d1, d2);
 			erstelleAbfrageUndAusgabeErgebnisTyp2(ske1, d1, d2);
 
-			SystemkalenderEintrag ske2 = systemKalenderArbeiter.getSkeList().get("ske.test2");
+			AlterSystemkalenderEintrag ske2 = systemKalenderArbeiter.getSkeList().get("ske.test2");
 
 			d1 = sdf.parse("01.01.2004 00:00:00,000");
 			d2 = sdf.parse("31.12.2010 23:59:59,999");
@@ -61,7 +63,7 @@ public class TestSyskalOffline4 {
 			erstelleAbfrageUndAusgabeErgebnisTyp1(ske2, d1, d2);
 			erstelleAbfrageUndAusgabeErgebnisTyp2(ske2, d1, d2);
 
-			SystemkalenderEintrag ske3 = systemKalenderArbeiter.getSkeList().get("ske.test3");
+			AlterSystemkalenderEintrag ske3 = systemKalenderArbeiter.getSkeList().get("ske.test3");
 
 			d1 = sdf.parse("10.03.2004 13:30:00,000");
 			d2 = sdf.parse("10.03.2004 15:29:59,999");
@@ -72,7 +74,7 @@ public class TestSyskalOffline4 {
 			erstelleAbfrageUndAusgabeErgebnisTyp1(ske3, d1, d2);
 			erstelleAbfrageUndAusgabeErgebnisTyp2(ske3, d1, d2);
 
-			SystemkalenderEintrag ske31 = systemKalenderArbeiter.getSkeList().get("ske.test31");
+			AlterSystemkalenderEintrag ske31 = systemKalenderArbeiter.getSkeList().get("ske.test31");
 
 			d1 = sdf.parse("10.03.2004 00:00:00,000");
 			d2 = sdf.parse("11.03.2004 23:59:59,999");
@@ -83,7 +85,7 @@ public class TestSyskalOffline4 {
 			erstelleAbfrageUndAusgabeErgebnisTyp1(ske31, d1, d2);
 			erstelleAbfrageUndAusgabeErgebnisTyp2(ske31, d1, d2);
 
-			SystemkalenderEintrag ske = systemKalenderArbeiter.getSkeList().get("ske.ostersonntag");
+			AlterSystemkalenderEintrag ske = systemKalenderArbeiter.getSkeList().get("ske.ostersonntag");
 
 			d1 = sdf.parse("01.01.2000 00:00:00,000");
 			d2 = sdf.parse("31.12.2010 23:59:59,999");
@@ -94,7 +96,7 @@ public class TestSyskalOffline4 {
 			erstelleAbfrageUndAusgabeErgebnisTyp1(ske, d1, d2);
 			erstelleAbfrageUndAusgabeErgebnisTyp2(ske, d1, d2);
 
-			SystemkalenderEintrag ske4 = systemKalenderArbeiter.getSkeList().get("ske.test4");
+			AlterSystemkalenderEintrag ske4 = systemKalenderArbeiter.getSkeList().get("ske.test4");
 
 			d1 = sdf.parse("01.01.2000 00:00:00,000");
 			d2 = sdf.parse("31.12.2003 23:59:59,999");
@@ -105,7 +107,7 @@ public class TestSyskalOffline4 {
 			erstelleAbfrageUndAusgabeErgebnisTyp1(ske4, d1, d2);
 			erstelleAbfrageUndAusgabeErgebnisTyp2(ske4, d1, d2);
 
-			SystemkalenderEintrag ske5 = systemKalenderArbeiter.getSkeList().get("ske.test5");
+			AlterSystemkalenderEintrag ske5 = systemKalenderArbeiter.getSkeList().get("ske.test5");
 
 			d1 = sdf.parse("01.01.2000 00:00:00,000");
 			d2 = sdf.parse("31.12.2003 23:59:59,999");
@@ -116,7 +118,7 @@ public class TestSyskalOffline4 {
 			erstelleAbfrageUndAusgabeErgebnisTyp1(ske5, d1, d2);
 			erstelleAbfrageUndAusgabeErgebnisTyp2(ske5, d1, d2);
 
-			SystemkalenderEintrag skk = systemKalenderArbeiter.getSkeList().get("ske.karfreitag");
+			AlterSystemkalenderEintrag skk = systemKalenderArbeiter.getSkeList().get("ske.karfreitag");
 
 			d1 = sdf.parse("01.01.2000 00:00:00,000");
 			d2 = sdf.parse("31.12.2003 23:59:59,999");
@@ -127,7 +129,7 @@ public class TestSyskalOffline4 {
 			erstelleAbfrageUndAusgabeErgebnisTyp1(skk, d1, d2);
 			erstelleAbfrageUndAusgabeErgebnisTyp2(skk, d1, d2);
 
-			SystemkalenderEintrag ske6 = systemKalenderArbeiter.getSkeList().get("ske.test6");
+			AlterSystemkalenderEintrag ske6 = systemKalenderArbeiter.getSkeList().get("ske.test6");
 
 			d1 = sdf.parse("01.04.2001 00:00:00,000");
 			d2 = sdf.parse("01.05.2001 23:59:59,999");
@@ -138,7 +140,7 @@ public class TestSyskalOffline4 {
 			erstelleAbfrageUndAusgabeErgebnisTyp1(ske6, d1, d2);
 			erstelleAbfrageUndAusgabeErgebnisTyp2(ske6, d1, d2);
 
-			SystemkalenderEintrag ske7 = systemKalenderArbeiter.getSkeList().get("ske.test7");
+			AlterSystemkalenderEintrag ske7 = systemKalenderArbeiter.getSkeList().get("ske.test7");
 
 			d1 = sdf.parse("19.09.2011 00:00:00,000");
 			d2 = sdf.parse("23.09.2011 23:59:59,999");
@@ -169,7 +171,7 @@ public class TestSyskalOffline4 {
 	 * @param bis
 	 *            Enddatum
 	 */
-	private static void erstelleAbfrageUndAusgabeErgebnisTyp1(SystemkalenderEintrag ske, Date von, Date bis) {
+	private static void erstelleAbfrageUndAusgabeErgebnisTyp1(AlterSystemkalenderEintrag ske, Date von, Date bis) {
 		SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBis(von.getTime(), bis.getTime());
 
 		if (sm != null) {
@@ -197,7 +199,7 @@ public class TestSyskalOffline4 {
 	 * @param bis
 	 *            Enddatum
 	 */
-	private static void erstelleAbfrageUndAusgabeErgebnisTyp2(SystemkalenderEintrag ske, Date von, Date bis) {
+	private static void erstelleAbfrageUndAusgabeErgebnisTyp2(AlterSystemkalenderEintrag ske, Date von, Date bis) {
 		SortedMap<Long, Long> sm = ske.berecheneIntervallVonBis(von.getTime(), bis.getTime());
 
 		if (sm != null) {

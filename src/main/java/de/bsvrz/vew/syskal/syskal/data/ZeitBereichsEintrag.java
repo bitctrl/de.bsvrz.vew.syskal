@@ -33,12 +33,12 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 
 /**
- * Repräsentation der Daten eines {@link KalenderEintrag}, der durch einen
+ * Repräsentation der Daten eines {@link KalenderEintragDefinition}, der durch einen
  * Zeitbereich definiert wird.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class ZeitBereichsEintrag extends KalenderEintrag {
+public class ZeitBereichsEintrag extends KalenderEintragDefinition {
 
 	/** der Anfangszeitpunkt in Millisekunden seit 1.1.1970 GMT. */
 	private long start;

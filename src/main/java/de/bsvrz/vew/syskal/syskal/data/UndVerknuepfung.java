@@ -33,7 +33,6 @@ import java.time.LocalDateTime;
  * UND.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
  */
 public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 
@@ -45,8 +44,8 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 	 * @param definition
 	 *            der definierende String des Eintrags
 	 */
-	public UndVerknuepfung(final String name, final String definition) {
-		super(name, definition);
+	public UndVerknuepfung(KalenderEintragProvider provider, final String name, final String definition) {
+		super(provider, name, definition);
 	}
 
 	@Override

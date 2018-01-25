@@ -76,7 +76,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 
 	protected List<ListeZustandsWechsel> listListeZustandsWechsel = new ArrayList<>();
 
-	public DefinierterEintrag(Map<String, SystemkalenderEintrag> skeList, String pid, String definition) {
+	public DefinierterEintrag(Map<String, AlterSystemkalenderEintrag> skeList, String pid, String definition) {
 		super(skeList, pid, definition);
 		this.pid = pid;
 		this.definition = definition;
@@ -121,7 +121,7 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 
 		listListeZustandsWechsel.clear();
 
-		for (SystemkalenderEintrag ske : getSkeList().values()) {
+		for (AlterSystemkalenderEintrag ske : getSkeList().values()) {
 
 			String pid = ske.getPid();
 			String val = ske.getDefinition();
@@ -158,9 +158,9 @@ public class DefinierterEintrag extends LogischeVerknuepfung {
 
 		listListeZustandsWechsel.clear();
 
-		for (Map.Entry<String, SystemkalenderEintrag> me : getSkeList().entrySet()) {
+		for (Map.Entry<String, AlterSystemkalenderEintrag> me : getSkeList().entrySet()) {
 
-			SystemkalenderEintrag ske = me.getValue();
+			AlterSystemkalenderEintrag ske = me.getValue();
 			String val = ske.getDefinition();
 
 			if (val != null) {

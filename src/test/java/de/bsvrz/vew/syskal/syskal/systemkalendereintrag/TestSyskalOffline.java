@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
 
+import de.bsvrz.vew.syskal.SystemkalenderEintrag;
+
 public class TestSyskalOffline {
 	/**
 	 * Das Format der Ergebnisausgabe
@@ -36,7 +38,7 @@ public class TestSyskalOffline {
 
 			sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
-			SystemkalenderEintrag ske1 = systemKalenderArbeiter.getSkeList().get("ske.montag_berufsverkehr");
+			AlterSystemkalenderEintrag ske1 = systemKalenderArbeiter.getSkeList().get("ske.montag_berufsverkehr");
 
 			Date d1 = sdf.parse("01.08.2009 10:40:35,000");
 			Date d2 = sdf.parse("18.09.2009 10:40:35,000");
@@ -47,7 +49,7 @@ public class TestSyskalOffline {
 			erstelleAbfrageUndAusgabeErgebnisTyp2(ske1, d1, d2);
 			erstelleAbfrageUndAusgabeErgebnisTyp3(ske1, 2009);
 
-			SystemkalenderEintrag ske2 = systemKalenderArbeiter.getSkeList().get("ske.geburtstag_hck");
+			AlterSystemkalenderEintrag ske2 = systemKalenderArbeiter.getSkeList().get("ske.geburtstag_hck");
 
 			d1 = sdf.parse("25.09.1970 14:59:09,000");
 			d2 = sdf.parse("25.09.1975 14:59:09,000");
@@ -66,7 +68,7 @@ public class TestSyskalOffline {
 			erstelleAbfrageUndAusgabeErgebnisTyp1(ske2, d1, d2);
 			erstelleAbfrageUndAusgabeErgebnisTyp2(ske2, d1, d2);
 
-			SystemkalenderEintrag ske3 = systemKalenderArbeiter.getSkeList().get("ske.dienstagalsverknüpfung");
+			AlterSystemkalenderEintrag ske3 = systemKalenderArbeiter.getSkeList().get("ske.dienstagalsverknüpfung");
 
 			d1 = sdf.parse("01.01.2009 15:15:37,000");
 			d2 = sdf.parse("21.12.2009 15:15:37,000");
@@ -77,7 +79,7 @@ public class TestSyskalOffline {
 			erstelleAbfrageUndAusgabeErgebnisTyp2(ske3, d1, d2);
 			erstelleAbfrageUndAusgabeErgebnisTyp3(ske3, 2009);
 
-			SystemkalenderEintrag ske4 = systemKalenderArbeiter.getSkeList().get("ske.geburtstag_hck_kopie");
+			AlterSystemkalenderEintrag ske4 = systemKalenderArbeiter.getSkeList().get("ske.geburtstag_hck_kopie");
 
 			d1 = sdf.parse("01.01.2009 15:15:37,000");
 			d2 = sdf.parse("21.12.2009 15:15:37,000");
@@ -107,7 +109,7 @@ public class TestSyskalOffline {
 	 * @param bis
 	 *            Enddatum
 	 */
-	private static void erstelleAbfrageUndAusgabeErgebnisTyp1(SystemkalenderEintrag ske, Date von, Date bis) {
+	private static void erstelleAbfrageUndAusgabeErgebnisTyp1(AlterSystemkalenderEintrag ske, Date von, Date bis) {
 		SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBis(von.getTime(), bis.getTime());
 
 		if (sm != null) {
@@ -135,7 +137,7 @@ public class TestSyskalOffline {
 	 * @param bis
 	 *            Enddatum
 	 */
-	private static void erstelleAbfrageUndAusgabeErgebnisTyp2(SystemkalenderEintrag ske, Date von, Date bis) {
+	private static void erstelleAbfrageUndAusgabeErgebnisTyp2(AlterSystemkalenderEintrag ske, Date von, Date bis) {
 		SortedMap<Long, Long> sm = ske.berecheneIntervallVonBis(von.getTime(), bis.getTime());
 
 		if (sm != null) {
@@ -164,7 +166,7 @@ public class TestSyskalOffline {
 	 * @param jahr
 	 *            das Jahr
 	 */
-	private static void erstelleAbfrageUndAusgabeErgebnisTyp3(SystemkalenderEintrag ske, int jahr) {
+	private static void erstelleAbfrageUndAusgabeErgebnisTyp3(AlterSystemkalenderEintrag ske, int jahr) {
 		SortedMap<Long, Boolean> sm = ske.berechneZustandsWechsel(jahr);
 
 		if (sm != null) {

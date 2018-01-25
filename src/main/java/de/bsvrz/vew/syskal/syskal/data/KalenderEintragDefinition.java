@@ -7,11 +7,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.bsvrz.dav.daf.main.Data;
-import de.bsvrz.dav.daf.main.config.ConfigurationObject;
-import de.bsvrz.dav.daf.main.config.DynamicObject;
-
-public abstract class KalenderEintrag {
+public abstract class KalenderEintragDefinition {
 
 	/** das Pattern zum Ermitteln eines Datumsbereiches im Definitionsstring. */
 	private static final Pattern DATUMSBEREICH_PATTERN = Pattern.compile("<.*>");
@@ -23,10 +19,9 @@ public abstract class KalenderEintrag {
 	protected static final Pattern ZEITBEREICH_PATTERN = Pattern.compile("\\{.[^\\{]*\\}");
 
 	private String definition;
-
 	private String name;
 
-	protected KalenderEintrag(String name, String definition) {
+	protected KalenderEintragDefinition(String name, String definition) {
 		this.name = name;
 		this.definition = definition;
 	}
@@ -47,14 +42,14 @@ public abstract class KalenderEintrag {
 	 * @return das Ergebnis ist ein Systemkalendereintrag, dessen konkreter Typ vom
 	 *         Inhalt der Definition abhängt
 	 */
-	static KalenderEintrag parse(KalenderEintragProvider provider, final String name, final String definitionString) {
+	static KalenderEintragDefinition parse(KalenderEintragProvider provider, final String name, final String definitionString) {
 
-		KalenderEintrag result = null;
+		KalenderEintragDefinition result = null;
 		String rest = definitionString;
 
-		final List<ZeitGrenze> parseZeitBereiche = new ArrayList<ZeitGrenze>();
+		final List<ZeitGrenze> parseZeitBereiche = new ArrayList<>();
 
-		Matcher mat = KalenderEintrag.ZEITBEREICHSLISTE_PATTERN.matcher(rest);
+		Matcher mat = KalenderEintragDefinition.ZEITBEREICHSLISTE_PATTERN.matcher(rest);
 
 		boolean zeitBereichsfehler = false;
 
@@ -62,7 +57,7 @@ public abstract class KalenderEintrag {
 			final String bereich = mat.group();
 			rest = definitionString.replace(bereich, "");
 			final String zeitBereich = bereich.substring(1, bereich.length() - 1);
-			final Matcher zeitMat = KalenderEintrag.ZEITBEREICH_PATTERN.matcher(zeitBereich);
+			final Matcher zeitMat = KalenderEintragDefinition.ZEITBEREICH_PATTERN.matcher(zeitBereich);
 			while (zeitMat.find()) {
 				String zb = zeitMat.group();
 				zb = zb.substring(1, zb.length() - 1);
@@ -77,11 +72,11 @@ public abstract class KalenderEintrag {
 		// und bzw. oder Einträge ermitteln
 
 		if (rest.toLowerCase().startsWith("und")) {
-			result = new UndVerknuepfung(name, rest.substring("und".length()));
+			result = new UndVerknuepfung(provider, name, rest.substring("und".length()));
 		} else if (rest.toLowerCase().startsWith("oder")) {
-			result = new OderVerknuepfung(name, rest.substring("oder".length()));
+			result = new OderVerknuepfung(provider, name, rest.substring("oder".length())); 
 		} else {
-			mat = KalenderEintrag.DATUMSBEREICH_PATTERN.matcher(rest);
+			mat = KalenderEintragDefinition.DATUMSBEREICH_PATTERN.matcher(rest);
 			if (mat.find()) {
 				result = new ZeitBereichsEintrag(name, mat.group().substring(1, mat.group().length() - 1));
 				final String bereich = mat.group();
@@ -93,7 +88,7 @@ public abstract class KalenderEintrag {
 					if (rest.contains(",")) {
 						result = new DatumsEintrag(name, rest);
 					} else {
-						result = new VerweisEintrag(name, rest);
+						result = new VerweisEintrag(provider, name, rest);
 					}
 				}
 			}
@@ -107,15 +102,11 @@ public abstract class KalenderEintrag {
 			result.setFehler(true);
 		}
 		
-		if( result != null) {
-			provider.addEintrag(result.getName(), result);
-		}
-		
 		return result;
 	}
 
 	/** die Zeitgrenzen, die den Kalendereintrag zeitlich einschränken können. */
-	private final List<ZeitGrenze> zeitGrenzen = new ArrayList<ZeitGrenze>();
+	private final List<ZeitGrenze> zeitGrenzen = new ArrayList<>();
 
 	/** der Definitionseintrag konnte nicht korrekt eingelesen werden. */
 	private boolean fehler;
@@ -182,5 +173,4 @@ public abstract class KalenderEintrag {
 	protected String getName() {
 		return name;
 	}
-
 }

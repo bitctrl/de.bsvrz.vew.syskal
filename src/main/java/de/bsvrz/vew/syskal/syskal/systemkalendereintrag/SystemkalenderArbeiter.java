@@ -101,7 +101,7 @@ public class SystemkalenderArbeiter
 	/**
 	 * Die statische Liste der SystemKalenderEintraege
 	 */
-	private Map<String, SystemkalenderEintrag> skeList = new HashMap<>();
+	private Map<String, AlterSystemkalenderEintrag> skeList = new HashMap<>();
 
 	/**
 	 * Zaehler fuer SystemKalenderEintraege
@@ -155,7 +155,7 @@ public class SystemkalenderArbeiter
 	 * 
 	 * @return Liste der Einträge als HashMap
 	 */
-	public Map<String, SystemkalenderEintrag> starteSystemKalenderArbeiter() {
+	public Map<String, AlterSystemkalenderEintrag> starteSystemKalenderArbeiter() {
 		if (used) {
 			used = false;
 
@@ -359,7 +359,7 @@ public class SystemkalenderArbeiter
 	 * 
 	 * @return Liste der Einträge
 	 */
-	public Map<String, SystemkalenderEintrag> getSkeList() {
+	public Map<String, AlterSystemkalenderEintrag> getSkeList() {
 		return skeList;
 	}
 
@@ -412,8 +412,8 @@ public class SystemkalenderArbeiter
 		Date d = new Date();
 		d.setTime(jetzt);
 
-		for (Map.Entry<String, SystemkalenderEintrag> me : getSkeList().entrySet()) {
-			SystemkalenderEintrag ske = me.getValue();
+		for (Map.Entry<String, AlterSystemkalenderEintrag> me : getSkeList().entrySet()) {
+			AlterSystemkalenderEintrag ske = me.getValue();
 
 			if (ske.isGueltig(jetzt)) {
 				ergebnis.put(jetzt + "_" + ske.getPid(), true);
@@ -434,7 +434,7 @@ public class SystemkalenderArbeiter
 		d.setTime(jetzt);
 
 		if (getSkeList().containsKey(pid)) {
-			SystemkalenderEintrag ske = getSkeList().get(pid);
+			AlterSystemkalenderEintrag ske = getSkeList().get(pid);
 
 			if (ske.isGueltig(jetzt)) {
 				ergebnis.put(jetzt + "_" + ske.getPid(), true);
@@ -529,8 +529,8 @@ public class SystemkalenderArbeiter
 
 		SortedMap<String, Boolean> ergebnis = new TreeMap<>();
 
-		for (Map.Entry<String, SystemkalenderEintrag> me : getSkeList().entrySet()) {
-			SystemkalenderEintrag ske = me.getValue();
+		for (Map.Entry<String, AlterSystemkalenderEintrag> me : getSkeList().entrySet()) {
+			AlterSystemkalenderEintrag ske = me.getValue();
 			SortedMap<Long, Boolean> tmp = ske.berecheneZustandsWechselVonBis(von, bis);
 			if (tmp == null)
 				return null;
@@ -549,8 +549,8 @@ public class SystemkalenderArbeiter
 
 		SortedMap<String, Long> ergebnis = new TreeMap<>();
 
-		for (Map.Entry<String, SystemkalenderEintrag> me : getSkeList().entrySet()) {
-			SystemkalenderEintrag ske = me.getValue();
+		for (Map.Entry<String, AlterSystemkalenderEintrag> me : getSkeList().entrySet()) {
+			AlterSystemkalenderEintrag ske = me.getValue();
 			SortedMap<Long, Long> tmp = ske.berecheneIntervallVonBis(von, bis);
 			if (tmp == null)
 				return null;
@@ -572,7 +572,7 @@ public class SystemkalenderArbeiter
 
 		// Eintragen der Ereignisse und Berechnen der Anzahl
 		for (SystemObject so : list) {
-			SystemkalenderEintrag ske = getSkeList().get(so.getPid());
+			AlterSystemkalenderEintrag ske = getSkeList().get(so.getPid());
 
 			if (ske != null) {
 
@@ -601,7 +601,7 @@ public class SystemkalenderArbeiter
 
 		// Eintragen der Ereignisse und Berechnen der Anzahl
 		for (SystemObject so : list) {
-			SystemkalenderEintrag ske = getSkeList().get(so.getPid());
+			AlterSystemkalenderEintrag ske = getSkeList().get(so.getPid());
 
 			if (ske != null) {
 
@@ -632,7 +632,7 @@ public class SystemkalenderArbeiter
 
 		if (getSkeList().containsKey(pid)) {
 
-			SystemkalenderEintrag ske = getSkeList().get(pid);
+			AlterSystemkalenderEintrag ske = getSkeList().get(pid);
 
 			SortedMap<Long, Boolean> tmp = ske.berecheneZustandsWechselVonBis(von, bis);
 
@@ -659,7 +659,7 @@ public class SystemkalenderArbeiter
 
 		if (getSkeList().containsKey(pid)) {
 
-			SystemkalenderEintrag ske = getSkeList().get(pid);
+			AlterSystemkalenderEintrag ske = getSkeList().get(pid);
 
 			SortedMap<Long, Long> tmp = ske.berecheneIntervallVonBis(von, bis);
 

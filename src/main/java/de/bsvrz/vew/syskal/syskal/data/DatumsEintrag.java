@@ -35,9 +35,8 @@ import java.time.LocalDateTime;
  * werden können.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
  */
-public class DatumsEintrag extends KalenderEintrag {
+public class DatumsEintrag extends KalenderEintragDefinition {
 
 	/** das letzte Jahr für das der Eintrag gültig ist. */
 	private Integer endJahr;

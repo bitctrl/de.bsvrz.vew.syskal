@@ -29,7 +29,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimerTask;
 
-import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.SystemkalenderEintrag;
+import de.bsvrz.vew.syskal.SystemkalenderEintrag;
+import de.bsvrz.vew.syskal.syskal.systemkalendereintrag.AlterSystemkalenderEintrag;
 
 /**
  * Die Klasse zum Versenden der Ereigniszustaende. Erweitert die Klasse
@@ -45,7 +46,7 @@ public class BenachrichtigeFunktion extends TimerTask {
 	/**
 	 * Die Zeit bis die Daten versendet werden sollen
 	 */
-	private SystemkalenderEintrag ske;
+	private AlterSystemkalenderEintrag ske;
 
 	/**
 	 * Die Zeit bis die Daten versendet werden sollen
@@ -72,7 +73,7 @@ public class BenachrichtigeFunktion extends TimerTask {
 	 *            Die Zeit bis die Daten versendet werden sollen
 	 * 
 	 */
-	public BenachrichtigeFunktion(SystemkalenderEintrag ske, Long now) {
+	public BenachrichtigeFunktion(AlterSystemkalenderEintrag ske, Long now) {
 		this.ske = ske;
 		this.timeNow = now;
 	}

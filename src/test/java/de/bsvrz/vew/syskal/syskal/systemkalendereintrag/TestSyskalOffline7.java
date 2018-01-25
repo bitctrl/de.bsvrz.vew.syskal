@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
 
+import de.bsvrz.vew.syskal.SystemkalenderEintrag;
+
 public class TestSyskalOffline7 {
 	/**
 	 * Das Format der Ergebnisausgabe
@@ -53,7 +55,7 @@ public class TestSyskalOffline7 {
 					"Werktag:=UND{MoBisFr,NICHT Feiertag}*,*");
 			sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
-			SystemkalenderEintrag ske1 = systemKalenderArbeiter.getSkeList().get("ske.werktag");
+			AlterSystemkalenderEintrag ske1 = systemKalenderArbeiter.getSkeList().get("ske.werktag");
 
 			Date d1 = sdf.parse("01.08.2014 14:00:00,000");
 			Date d2 = sdf.parse("31.08.2014 00:00:00,000");
@@ -82,7 +84,7 @@ public class TestSyskalOffline7 {
 	 * @param bis
 	 *            Enddatum
 	 */
-	private static void erstelleAbfrageUndAusgabeErgebnisTyp2(SystemkalenderEintrag ske, Date von, Date bis) {
+	private static void erstelleAbfrageUndAusgabeErgebnisTyp2(AlterSystemkalenderEintrag ske, Date von, Date bis) {
 		SortedMap<Long, Long> sm = ske.berecheneIntervallVonBis(von.getTime(), bis.getTime());
 
 		if (sm != null) {

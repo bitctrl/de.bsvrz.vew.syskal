@@ -11,11 +11,10 @@ import de.bsvrz.sys.funclib.application.StandardApplication;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.SystemkalenderEintrag;
 
 /**
  * Kommentar
- * 
- * @version $Revision: 1.1 $ / $Date: 2009/10/26 12:13:14 $ / ($Author: Pittner $)
  * 
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
@@ -93,12 +92,12 @@ public void initialize(ClientDavInterface connection) throws Exception
     
 //    System.out.println("TestSyskalOnline2.initialize()");
     
-    Map<String, SystemkalenderEintrag> map = SystemkalenderArbeiter.getInstance(connection, strKonfigObjekt).starteSystemKalenderArbeiter();
+    Map<String, AlterSystemkalenderEintrag> map = SystemkalenderArbeiter.getInstance(connection, strKonfigObjekt).starteSystemKalenderArbeiter();
     
     
     System.out.println("TestSyskalOnline2.initialize(MAP) " + map.size());
     
-    for (Map.Entry<String, SystemkalenderEintrag> me : map.entrySet())
+    for (Map.Entry<String, AlterSystemkalenderEintrag> me : map.entrySet())
     {
       System.out.println("-----------> " + me.getKey() + " : " + me.getValue());
     }
@@ -117,13 +116,13 @@ public void initialize(ClientDavInterface connection) throws Exception
 //      SystemkalenderEintrag ske1 = map.get("ske.nw.vrz-nrw.es.sts.tagvordenweihnachtsferien");
 //      SystemkalenderEintrag ske1 = map.get("ske.nw.vrz-nrw.es.sts.mittwochNachEinemFeiertag");
 //      SystemkalenderEintrag ske1 = map.get("ske.nw.vrz-nrw.es.sts.tagVorEinemFeiertag");
-      SystemkalenderEintrag ske2 = map.get("ske.nw.vrz-nrw.es.sts.tagvoreinemfeiertag");
+    AlterSystemkalenderEintrag ske2 = map.get("ske.nw.vrz-nrw.es.sts.tagvoreinemfeiertag");
 //      SystemkalenderEintrag ske3 = map.get("ske.nw.vrz-nrw.es.sts.werktag");
 //      SystemkalenderEintrag ske4 = map.get("ske.nw.vrz-nrw.es.sts.dienstag");
 //      SystemkalenderEintrag ske4 = map.get("ske.nw.vrz-nrw.es.sts.donnerstag");
 //      SystemkalenderEintrag ske2 = map.get("ske.nw.vrz-nrw.es.sts.donnerstagvoreinemfeiertag");
 //      SystemkalenderEintrag ske1 = map.get("ske.nw.vrz-nrw.es.sts.weihnachtsferien");
-      SystemkalenderEintrag ske1 = map.get("ske.nw.vrz-nrw.es.sts.feiertag");
+      AlterSystemkalenderEintrag ske1 = map.get("ske.nw.vrz-nrw.es.sts.feiertag");
 
     System.out.println("TestSyskalOnline2.initialize(SKE) " + ske1);
     
@@ -228,7 +227,7 @@ public void initialize(ClientDavInterface connection) throws Exception
    * @param bis
    *          Enddatum
    */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp1(SystemkalenderEintrag ske, Date von, Date bis)
+  private static void erstelleAbfrageUndAusgabeErgebnisTyp1(AlterSystemkalenderEintrag ske, Date von, Date bis)
   {
     SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBis(von.getTime(), bis.getTime());
 

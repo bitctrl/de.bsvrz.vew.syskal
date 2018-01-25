@@ -46,8 +46,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
  * dahingehend sein, dass beim Jahrewechsel die Zustandswechsel neu berechnet
  * werden. Muss also noch geklÃÂ¤rt werden *
  * 
- * @version $Revision: 1.6 $ / $Date: 2010/08/03 07:44:21 $ / ($Author: Pittner
- *          $)
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  */

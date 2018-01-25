@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
 
+import de.bsvrz.vew.syskal.SystemkalenderEintrag;
+
 public class TestSyskalOffline8 {
 	/**
 	 * Das Format der Ergebnisausgabe
@@ -53,7 +55,7 @@ public class TestSyskalOffline8 {
 
 			sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
-			SystemkalenderEintrag ske1 = systemKalenderArbeiter.getSkeList().get("ske.ferienplus");
+			AlterSystemkalenderEintrag ske1 = systemKalenderArbeiter.getSkeList().get("ske.ferienplus");
 			// SystemkalenderEintrag ske1 =
 			// systemKalenderArbeiter.getSkeList().get("ske.ferien");
 
@@ -86,7 +88,7 @@ public class TestSyskalOffline8 {
 	 * @param bis
 	 *            Enddatum
 	 */
-	private static void erstelleAbfrageUndAusgabeErgebnisTyp1(SystemkalenderEintrag ske, Date von, Date bis) {
+	private static void erstelleAbfrageUndAusgabeErgebnisTyp1(AlterSystemkalenderEintrag ske, Date von, Date bis) {
 		SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBis(von.getTime(), bis.getTime());
 
 		if (sm != null) {

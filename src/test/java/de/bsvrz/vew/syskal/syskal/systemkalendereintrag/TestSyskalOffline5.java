@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
 
+import de.bsvrz.vew.syskal.SystemkalenderEintrag;
+
 public class TestSyskalOffline5 {
 	/**
 	 * Das Format der Ergebnisausgabe
@@ -24,7 +26,7 @@ public class TestSyskalOffline5 {
 
 			sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
-			SystemkalenderEintrag ske1 = systemKalenderArbeiter.getSkeList().get("ske.wfd");
+			AlterSystemkalenderEintrag ske1 = systemKalenderArbeiter.getSkeList().get("ske.wfd");
 
 			Date d1 = sdf.parse("20.12.2012 00:00:00,000");
 			Date d2 = sdf.parse("31.12.2012 00:00:00,000");
@@ -58,7 +60,7 @@ public class TestSyskalOffline5 {
 	 * @param bis
 	 *            Enddatum
 	 */
-	private static void erstelleAbfrageUndAusgabeErgebnisTyp1(SystemkalenderEintrag ske, Date von, Date bis) {
+	private static void erstelleAbfrageUndAusgabeErgebnisTyp1(AlterSystemkalenderEintrag ske, Date von, Date bis) {
 		SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBis(von.getTime(), bis.getTime());
 
 		if (sm != null) {
@@ -86,7 +88,7 @@ public class TestSyskalOffline5 {
 	 * @param bis
 	 *            Enddatum
 	 */
-	private static void erstelleAbfrageUndAusgabeErgebnisTyp2(SystemkalenderEintrag ske, Date von, Date bis) {
+	private static void erstelleAbfrageUndAusgabeErgebnisTyp2(AlterSystemkalenderEintrag ske, Date von, Date bis) {
 		SortedMap<Long, Long> sm = ske.berecheneIntervallVonBis(von.getTime(), bis.getTime());
 
 		if (sm != null) {
@@ -115,7 +117,7 @@ public class TestSyskalOffline5 {
 	 * @param jetzt
 	 *            Anfangsdatum
 	 */
-	private static void erstelleAbfrageUndAusgabeErgebnisTyp4(SystemkalenderEintrag ske, Date jetzt) {
+	private static void erstelleAbfrageUndAusgabeErgebnisTyp4(AlterSystemkalenderEintrag ske, Date jetzt) {
 
 		boolean gueltig = ske.isGueltig(jetzt.getTime());
 		System.out.println("Ergebnistyp 4: " + sdf.format(jetzt) + " " + gueltig);
@@ -136,7 +138,7 @@ public class TestSyskalOffline5 {
 	 * @param bis
 	 *            Enddatum
 	 */
-	private static void erstelleAbfrageUndAusgabeErgebnisTyp5(SystemkalenderEintrag ske, Date von, Date bis) {
+	private static void erstelleAbfrageUndAusgabeErgebnisTyp5(AlterSystemkalenderEintrag ske, Date von, Date bis) {
 
 		boolean gueltig = ske.isGueltigVonBis(von.getTime(), bis.getTime());
 		System.out.println("Ergebnistyp 5: " + sdf.format(von) + " " + sdf.format(bis) + " " + gueltig);

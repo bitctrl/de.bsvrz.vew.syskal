@@ -47,9 +47,8 @@ import de.bsvrz.dav.daf.main.config.ConfigurationObject;
  * </ul>
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
  */
-public final class VorDefinierterEintrag extends KalenderEintrag {
+public final class VorDefinierterEintrag extends KalenderEintragDefinition {
 
 	/** Vordefinierter Eintrag MONTAG. */
 	private static final VorDefinierterEintrag MONTAG = new VorDefinierterEintrag(

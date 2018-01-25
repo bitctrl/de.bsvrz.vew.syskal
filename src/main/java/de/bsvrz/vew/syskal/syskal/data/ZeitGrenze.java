@@ -34,7 +34,6 @@ import java.text.ParseException;
  * hinzugefügt werden, die durch einen Datumsbereich definiert sind.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
  */
 public class ZeitGrenze implements Comparable<ZeitGrenze> {
 

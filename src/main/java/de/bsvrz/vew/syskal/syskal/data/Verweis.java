@@ -32,7 +32,6 @@ import java.text.ParseException;
  * Repräsentation eines Verweises auf einen anderen Systemkalendereintrag.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
  */
 public class Verweis {
 
@@ -48,15 +47,22 @@ public class Verweis {
 	/** definiert, ob der originale Eintrag negiert werden soll. */
 	private boolean negiert;
 
+	private final boolean ungueltig;
+
+	public boolean isUngueltig() {
+		return ungueltig;
+	}
+
 	/**
 	 * Konstruktor.
+	 * @param provider 
 	 * 
 	 * @param def
 	 *            der Text, der den Verweis definiert
 	 * @throws ParseException
 	 *             der übergeben Text kann nicht als Verweis interprtiert werden
 	 */
-	public Verweis(final String def) throws ParseException {
+	public Verweis(KalenderEintragProvider provider, final String def) throws ParseException {
 		if (def != null) {
 			String rest = def;
 
@@ -83,6 +89,8 @@ public class Verweis {
 				throw new ParseException("Der String \"" + def
 						+ "\" kann nicht als Verweis interpretiert werden!", 0);
 			}
+			
+			ungueltig = provider.getKalenderEintrag(name) == null;
 
 		} else {
 			throw new ParseException(
@@ -103,7 +111,7 @@ public class Verweis {
 	 * @throws ParseException
 	 *             der Name des Verweises ist ungültig
 	 */
-	public Verweis(final String name, final int offset, final boolean negiert)
+	public Verweis(KalenderEintragProvider provider, final String name, final int offset, final boolean negiert)
 			throws ParseException {
 		this.name = name.trim();
 		this.offset = offset;
@@ -111,6 +119,7 @@ public class Verweis {
 		if (name.length() <= 0) {
 			throw new ParseException("Der Verweisname darf nicht leer sein!", 0);
 		}
+		ungueltig = provider.getKalenderEintrag(name) == null;
 	}
 
 	/**

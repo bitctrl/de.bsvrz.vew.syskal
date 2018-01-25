@@ -31,7 +31,6 @@ package de.bsvrz.vew.syskal.syskal.data;
  * Systemkalendereintrags definiert werden kann.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
- * @version $Id$
  */
 public enum EintragsArt {
 

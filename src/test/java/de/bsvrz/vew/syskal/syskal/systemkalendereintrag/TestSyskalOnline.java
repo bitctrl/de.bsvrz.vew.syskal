@@ -13,11 +13,10 @@ import de.bsvrz.sys.funclib.application.StandardApplication;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.SystemkalenderEintrag;
 
 /**
  * Kommentar
- * 
- * @version $Revision: 1.1 $ / $Date: 2009/10/26 12:13:14 $ / ($Author: Pittner $)
  * 
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
@@ -108,11 +107,11 @@ public void initialize(ClientDavInterface connection) throws Exception
       System.out.println("type ist null!");
     
     
-    Map<String, SystemkalenderEintrag> map = SystemkalenderArbeiter.getInstance(connection, pidKonfigObjekt).starteSystemKalenderArbeiter();
+    Map<String, AlterSystemkalenderEintrag> map = SystemkalenderArbeiter.getInstance(connection, pidKonfigObjekt).starteSystemKalenderArbeiter();
     
     sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
 
-    SystemkalenderEintrag ske1 = map.get("ske.montag_berufsverkehr");
+    AlterSystemkalenderEintrag ske1 = map.get("ske.montag_berufsverkehr");
 
     Date d1 = sdf.parse("01.08.2009 10:40:35,000");
     Date d2 = sdf.parse("18.09.2009 10:40:35,000");
@@ -123,7 +122,7 @@ public void initialize(ClientDavInterface connection) throws Exception
     erstelleAbfrageUndAusgabeErgebnisTyp2(ske1, d1, d2);
     erstelleAbfrageUndAusgabeErgebnisTyp3(ske1, 2009);
 
-    SystemkalenderEintrag ske2 = map.get("ske.geburtstag_hck");
+    AlterSystemkalenderEintrag ske2 = map.get("ske.geburtstag_hck");
 
     d1 = sdf.parse("25.09.1970 14:59:09,000");
     d2 = sdf.parse("25.09.1975 14:59:09,000");
@@ -142,7 +141,7 @@ public void initialize(ClientDavInterface connection) throws Exception
     erstelleAbfrageUndAusgabeErgebnisTyp1(ske2, d1, d2);
     erstelleAbfrageUndAusgabeErgebnisTyp2(ske2, d1, d2);
 
-    SystemkalenderEintrag ske3 = map.get("ske.dienstagalsverknüpfung");
+    AlterSystemkalenderEintrag ske3 = map.get("ske.dienstagalsverknüpfung");
 
     d1 = sdf.parse("01.01.2009 15:15:37,000");
     d2 = sdf.parse("21.12.2009 15:15:37,000");
@@ -153,7 +152,7 @@ public void initialize(ClientDavInterface connection) throws Exception
     erstelleAbfrageUndAusgabeErgebnisTyp2(ske3, d1, d2);
     erstelleAbfrageUndAusgabeErgebnisTyp3(ske3, 1970);
 
-    SystemkalenderEintrag ske4 = map.get("ske.geburtstag_hck_kopie");
+    AlterSystemkalenderEintrag ske4 = map.get("ske.geburtstag_hck_kopie");
 
     d1 = sdf.parse("01.01.2009 15:15:37,000");
     d2 = sdf.parse("21.12.2009 15:15:37,000");
@@ -191,7 +190,7 @@ public void initialize(ClientDavInterface connection) throws Exception
    * @param bis
    *          Enddatum
    */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp1(SystemkalenderEintrag ske, Date von, Date bis)
+  private static void erstelleAbfrageUndAusgabeErgebnisTyp1(AlterSystemkalenderEintrag ske, Date von, Date bis)
   {
     SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBis(von.getTime(), bis.getTime());
 
@@ -222,7 +221,7 @@ public void initialize(ClientDavInterface connection) throws Exception
    * @param bis
    *          Enddatum
    */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp2(SystemkalenderEintrag ske, Date von, Date bis)
+  private static void erstelleAbfrageUndAusgabeErgebnisTyp2(AlterSystemkalenderEintrag ske, Date von, Date bis)
   {
     SortedMap<Long, Long> sm = ske.berecheneIntervallVonBis(von.getTime(), bis.getTime());
 
@@ -253,7 +252,7 @@ public void initialize(ClientDavInterface connection) throws Exception
    * @param jahr
    *          Anfangsdatum
    */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp3(SystemkalenderEintrag ske, int jahr)
+  private static void erstelleAbfrageUndAusgabeErgebnisTyp3(AlterSystemkalenderEintrag ske, int jahr)
   {
     SortedMap<Long, Boolean> sm = ske.berechneZustandsWechsel(jahr);
 

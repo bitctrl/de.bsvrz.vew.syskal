@@ -46,7 +46,7 @@ import de.bsvrz.vew.syskal.syskal.erinnerungsfunktion.ErinnerungsFunktion;
  * @author Dambach-Werke GmbH
  * @author Timo Pittner
  */
-public class Atomar implements SystemkalenderEintrag {
+public class Atomar implements AlterSystemkalenderEintrag {
 	/**
 	 * Die Liste der Zeiten der Zustandswechsel fuer die zeitliche Gueltigkeit
 	 */
@@ -396,7 +396,7 @@ public class Atomar implements SystemkalenderEintrag {
 	 * @return Boolean true, wenn der letzte Zustandwechsel von false nach true war
 	 */
 	@Override
-	public boolean isGueltig(long jetzt) {
+	public boolean isGueltig(Long jetzt) {
 		Map.Entry<Long, Boolean> me = listeZustandsWechsel.berechneLetztenZustandsWechsel(jetzt);
 
 		if (me != null) {

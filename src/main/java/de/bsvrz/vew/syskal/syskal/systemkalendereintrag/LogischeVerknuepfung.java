@@ -76,9 +76,9 @@ public class LogischeVerknuepfung extends DatumJahr {
 	/**
 	 * Eigene Liste mit Systemkalenderientraegen
 	 */
-	private Map<String, SystemkalenderEintrag> skeList;
+	private Map<String, AlterSystemkalenderEintrag> skeList;
 
-	public LogischeVerknuepfung(Map<String, SystemkalenderEintrag> skeList, String pid, String value) {
+	public LogischeVerknuepfung(Map<String, AlterSystemkalenderEintrag> skeList, String pid, String value) {
 
 		super(pid, value);
 		ergebnisse = new ArrayList<>();
@@ -113,7 +113,7 @@ public class LogischeVerknuepfung extends DatumJahr {
 
 			String skePid = null;
 
-			for (Map.Entry<String, SystemkalenderEintrag> me : getSkeList().entrySet()) {
+			for (Map.Entry<String, AlterSystemkalenderEintrag> me : getSkeList().entrySet()) {
 
 				String str = me.getValue().getName();
 
@@ -248,11 +248,11 @@ public class LogischeVerknuepfung extends DatumJahr {
 	/**
 	 * @return Map
 	 */
-	public Map<String, SystemkalenderEintrag> getSkeList() {
+	public Map<String, AlterSystemkalenderEintrag> getSkeList() {
 		return skeList;
 	}
 
-	public void setSkeList(Map<String, SystemkalenderEintrag> skeList) {
+	public void setSkeList(Map<String, AlterSystemkalenderEintrag> skeList) {
 		this.skeList = skeList;
 	}
 
@@ -320,7 +320,7 @@ public class LogischeVerknuepfung extends DatumJahr {
 
 					String[] tmp = s.split(" ");
 
-					SystemkalenderEintrag ske = null;
+					AlterSystemkalenderEintrag ske = null;
 
 					if (tmp.length == 2) {
 
@@ -350,7 +350,7 @@ public class LogischeVerknuepfung extends DatumJahr {
 
 				} else {
 
-					SystemkalenderEintrag ske = getSkeList().get(s);
+					AlterSystemkalenderEintrag ske = getSkeList().get(s);
 
 					SortedMap<Long, Boolean> map = ske.berechneZustandsWechsel(von, bis, jahr);
 
@@ -367,7 +367,7 @@ public class LogischeVerknuepfung extends DatumJahr {
 			for (String s : ergebnisse) {
 
 				String tmp = s.replace("nicht ", "");
-				SystemkalenderEintrag ske = getSkeList().get(tmp);
+				AlterSystemkalenderEintrag ske = getSkeList().get(tmp);
 
 				if (ske != null) {
 					ske.berechneZustandsWechsel(von, bis, jahr);
@@ -575,7 +575,7 @@ public class LogischeVerknuepfung extends DatumJahr {
 
 					String[] tmp = s.split(" ");
 
-					SystemkalenderEintrag ske = null;
+					AlterSystemkalenderEintrag ske = null;
 
 					if (tmp.length == 2) {
 
@@ -605,7 +605,7 @@ public class LogischeVerknuepfung extends DatumJahr {
 
 				} else {
 
-					SystemkalenderEintrag ske = getSkeList().get(s);
+					AlterSystemkalenderEintrag ske = getSkeList().get(s);
 
 					SortedMap<Long, Boolean> map = ske.berechneZustandsWechsel(von, bis, jahr);
 
@@ -622,7 +622,7 @@ public class LogischeVerknuepfung extends DatumJahr {
 			for (String s : ergebnisse) {
 
 				String tmp = s.replace("nicht ", "");
-				SystemkalenderEintrag ske = getSkeList().get(tmp);
+				AlterSystemkalenderEintrag ske = getSkeList().get(tmp);
 
 				if (ske != null) {
 					ske.berechneZustandsWechsel(von, bis, jahr);
@@ -846,7 +846,7 @@ public class LogischeVerknuepfung extends DatumJahr {
 
 					String[] tmp = s.split(" ");
 
-					SystemkalenderEintrag ske = null;
+					AlterSystemkalenderEintrag ske = null;
 
 					if (tmp.length == 2) {
 
@@ -873,7 +873,7 @@ public class LogischeVerknuepfung extends DatumJahr {
 
 				} else {
 
-					SystemkalenderEintrag ske = getSkeList().get(s);
+					AlterSystemkalenderEintrag ske = getSkeList().get(s);
 
 					SortedMap<Long, Boolean> map = ske.berechneZustandsWechsel(von, bis, jahr);
 
@@ -888,7 +888,7 @@ public class LogischeVerknuepfung extends DatumJahr {
 			for (String s : ergebnisse) {
 
 				String tmp = s.replace("nicht ", "");
-				SystemkalenderEintrag ske = getSkeList().get(tmp);
+				AlterSystemkalenderEintrag ske = getSkeList().get(tmp);
 
 				if (ske != null) {
 					ske.berechneZustandsWechsel(von, bis, jahr);
