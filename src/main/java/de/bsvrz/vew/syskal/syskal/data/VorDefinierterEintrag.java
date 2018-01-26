@@ -28,6 +28,7 @@ package de.bsvrz.vew.syskal.syskal.data;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.bsvrz.dav.daf.main.config.ConfigurationObject;
@@ -161,7 +162,7 @@ public final class VorDefinierterEintrag extends KalenderEintragDefinition {
 	}
 
 	@Override
-	public ZustandsWechsel getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
+	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
 		// TODO Auto-generated method stub
 		return null;
 	}

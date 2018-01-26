@@ -27,6 +27,7 @@
 package de.bsvrz.vew.syskal.syskal.data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Repräsentation einer logischen Verknüpfung mehrere Systemkalendereinträge mit
@@ -60,7 +61,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 	}
 
 	@Override
-	public ZustandsWechsel getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
+	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
 		// TODO Auto-generated method stub
 		return null;
 	}

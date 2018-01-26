@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.bsvrz.sys.funclib.debug.Debug;
+
 public abstract class KalenderEintragDefinition {
 
 	/** das Pattern zum Ermitteln eines Datumsbereiches im Definitionsstring. */
@@ -28,7 +30,7 @@ public abstract class KalenderEintragDefinition {
 
 	public abstract Gueltigkeit getGueltigKeit(LocalDateTime zeitpunkt);
 
-	public abstract ZustandsWechsel getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende);
+	public abstract List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende);
 
 	/**
 	 * zerlegt den übergebenen Definitionsstring. Die Funktion initialisiert die
@@ -42,11 +44,25 @@ public abstract class KalenderEintragDefinition {
 	 * @return das Ergebnis ist ein Systemkalendereintrag, dessen konkreter Typ vom
 	 *         Inhalt der Definition abhängt
 	 */
-	static KalenderEintragDefinition parse(KalenderEintragProvider provider, final String name, final String definitionString) {
+	public static KalenderEintragDefinition parse(KalenderEintragProvider provider, final String name, final String definition) {
 
 		KalenderEintragDefinition result = null;
-		String rest = definitionString;
+		String rest = definition;
 
+		final String[] parts = definition.split(":=");
+
+		if (parts.length < 2) {
+			rest = parts[0].trim();
+		} else {
+			final String defName = parts[0].trim();
+			if (!defName.equals(name)) {
+				Debug.getLogger().warning("Für den Systemkalendereintrag " + name
+						+ " ist der abweichende Name: \"" + defName + "\" definiert!");
+			}
+			rest = parts[1].trim();
+		}
+
+		
 		final List<ZeitGrenze> parseZeitBereiche = new ArrayList<>();
 
 		Matcher mat = KalenderEintragDefinition.ZEITBEREICHSLISTE_PATTERN.matcher(rest);
@@ -55,7 +71,7 @@ public abstract class KalenderEintragDefinition {
 
 		while (mat.find()) {
 			final String bereich = mat.group();
-			rest = definitionString.replace(bereich, "");
+			rest = rest.replace(bereich, "");
 			final String zeitBereich = bereich.substring(1, bereich.length() - 1);
 			final Matcher zeitMat = KalenderEintragDefinition.ZEITBEREICH_PATTERN.matcher(zeitBereich);
 			while (zeitMat.find()) {
@@ -80,7 +96,7 @@ public abstract class KalenderEintragDefinition {
 			if (mat.find()) {
 				result = new ZeitBereichsEintrag(name, mat.group().substring(1, mat.group().length() - 1));
 				final String bereich = mat.group();
-				rest = definitionString.replace(bereich, "");
+				rest = rest.replace(bereich, "");
 			} else {
 				if (rest.trim().length() == 0) {
 					result = new ZeitBereichsEintrag(name, "");
@@ -96,7 +112,7 @@ public abstract class KalenderEintragDefinition {
 			result.zeitGrenzen.addAll(parseZeitBereiche); 
 		}
 
-		result.definition = definitionString;
+		result.definition = definition;
 
 		if (zeitBereichsfehler) {
 			result.setFehler(true);
@@ -170,7 +186,12 @@ public abstract class KalenderEintragDefinition {
 	}
 
 
-	protected String getName() {
+	public String getName() {
 		return name;
+	}
+
+	public boolean isGueltig(LocalDateTime zeitpunkt) {
+		// TODO Auto-generated method stub
+		return getGueltigKeit(zeitpunkt).getBeginn().isWirdGueltig();
 	}
 }

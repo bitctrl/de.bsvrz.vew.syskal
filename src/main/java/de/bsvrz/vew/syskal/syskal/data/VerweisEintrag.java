@@ -28,6 +28,7 @@ package de.bsvrz.vew.syskal.syskal.data;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Repräsentation eines Eintrags, der durch die Erweiterung eines bereits
@@ -140,7 +141,7 @@ public class VerweisEintrag extends KalenderEintragDefinition {
 	}
 
 	@Override
-	public ZustandsWechsel getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
+	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -1,8 +1,7 @@
 package de.bsvrz.vew.syskal.syskal.data;
 
 import java.time.LocalDateTime;
-
-import com.google.common.base.Objects;
+import java.util.Objects;
 
 import de.bsvrz.dav.daf.main.config.DynamicObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
@@ -50,12 +49,13 @@ public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
 	}
 
 	void setDefinition(String text) {
-		if (!Objects.equal(originalDefinition, text)) {
+		if (!Objects.equals(originalDefinition, text)) {
 			originalDefinition = text;
 			bestimmeKalendereintrag();
 		}
 	}
 
+	@Override
 	public String getName() {
 		return systemObject.getName();
 	}
@@ -84,7 +84,7 @@ public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
 	}
 
 	@Override
-	public ZustandsWechsel getZustandWechsel(LocalDateTime von, LocalDateTime bis) {
+	public ZustandsWechsel getZustandsWechsel(LocalDateTime von, LocalDateTime bis) {
 		// TODO Auto-generated method stub
 		return null;
 	}

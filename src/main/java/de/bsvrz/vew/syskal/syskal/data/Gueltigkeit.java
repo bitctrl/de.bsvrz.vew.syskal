@@ -6,7 +6,6 @@ public class Gueltigkeit {
 
 	private LocalDateTime zeitPunkt;
 	private ZustandsWechsel beginn;
-
 	private ZustandsWechsel naechsteAenderung;
 
 	public Gueltigkeit(LocalDateTime zeitPunkt) {

@@ -2,101 +2,71 @@ package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
+import org.junit.Test;
+
 import de.bsvrz.vew.syskal.SystemkalenderEintrag;
+import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.syskal.data.KalenderEintragDefinition;
+import de.bsvrz.vew.syskal.syskal.data.KalenderEintragProvider;
+import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
 
 public class TestSyskalOffline7 {
-	/**
-	 * Das Format der Ergebnisausgabe
-	 */
-	private static DateFormat sdf;
 
-	public static void main(String[] args) {
-		SystemkalenderArbeiter systemKalenderArbeiter = new SystemkalenderArbeiter(null, null);
+	@Test
+	public void beispiele7() {
 
-		try {
+		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.montag", "Montag", "Montag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.dienstag", "Dienstag", "Dienstag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.mittwoch", "Mittwoch", "Mittwoch");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.donnerstag", "Donnerstag", "Donnerstag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.freitag", "Freitag", "Freitag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.samstag", "Samstag", "Samstag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.sonntag", "Sonntag", "Sonntag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.ostersonntag", "Ostersonntag", "Ostersonntag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.tag", "Tag", "Tag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.neujahr", "Neujahr", "Neujahr:=01.01.*,*");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.karfreitag", "Karfreitag",
-					"Karfreitag:=Ostersonntag-2Tage");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.tdde", "Einheit", "Einheit:=03.10.*,*");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.tda", "Arbeit", "Arbeit:=01.05.*,*");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.allerheil", "Allerheil", "Allerheil:=01.11.*,*");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.weihnacht1", "Weihnacht1", "Weihnacht1:=25.12.*,*");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.weihnacht2", "Weihnacht2", "Weihnacht2:=26.12.*,*");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.ostermontag", "Ostermontag",
-					"Ostermontag:=Ostersonntag+1Tag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.himmel", "Himmel", "Himmel:=Ostersonntag+39Tage");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.pfingstmo", "PfingstMo",
-					"PfingstMo:=Ostersonntag+50Tage");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.fronleich", "Fronleich",
-					"Fronleich:=Ostersonntag+60Tage");
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Montag", "Montag"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Dienstag", "Dienstag"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Mittwoch", "Mittwoch"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Freitag", "Freitag"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Samstag", "Samstag"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Sonntag", "Sonntag"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Tag", "Tag"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Neujahr", "Neujahr:=01.01.*,*"));
+		eintragsProvider.addEintrag(
+				KalenderEintragDefinition.parse(eintragsProvider, "Karfreitag", "Karfreitag:=Ostersonntag-2Tage"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Einheit", "Einheit:=03.10.*,*"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Arbeit", "Arbeit:=01.05.*,*"));
+		eintragsProvider
+				.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Allerheil", "Allerheil:=01.11.*,*"));
+		eintragsProvider
+				.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Weihnacht1", "Weihnacht1:=25.12.*,*"));
+		eintragsProvider
+				.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Weihnacht2", "Weihnacht2:=26.12.*,*"));
+		eintragsProvider.addEintrag(
+				KalenderEintragDefinition.parse(eintragsProvider, "Ostermontag", "Ostermontag:=Ostersonntag+1Tag"));
+		eintragsProvider
+				.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Himmel", "Himmel:=Ostersonntag+39Tage"));
+		eintragsProvider.addEintrag(
+				KalenderEintragDefinition.parse(eintragsProvider, "PfingstMo", "PfingstMo:=Ostersonntag+50Tage"));
+		eintragsProvider.addEintrag(
+				KalenderEintragDefinition.parse(eintragsProvider, "Fronleich", "Fronleich:=Ostersonntag+60Tage"));
 
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.feiertag", "Feiertag",
-					"Feiertag:=ODER{Neujahr,Karfreitag,Ostersonntag,Ostermontag,Arbeit,Himmel,PfingstMo,Fronleich,Einheit,Allerheil,Weihnacht1,Weihnacht2}*,*");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.mobissa", "MoBisSa",
-					"MoBisSa:=ODER{Montag,Dienstag,Mittwoch,Donnerstag,Freitag,Samstag}*,*");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.mobisfr", "MoBisFr",
-					"MoBisFr:=ODER{Montag,Dienstag,Mittwoch,Donnerstag,Freitag}*,*");
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Feiertag",
+				"Feiertag:=ODER{Neujahr,Karfreitag,Ostersonntag,Ostermontag,Arbeit,Himmel,PfingstMo,Fronleich,Einheit,Allerheil,Weihnacht1,Weihnacht2}*,*"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "MoBisSa",
+				"MoBisSa:=ODER{Montag,Dienstag,Mittwoch,Donnerstag,Freitag,Samstag}*,*"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "MoBisFr",
+				"MoBisFr:=ODER{Montag,Dienstag,Mittwoch,Donnerstag,Freitag}*,*"));
 
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.werktag", "Werktag",
-					"Werktag:=UND{MoBisFr,NICHT Feiertag}*,*");
-			sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Werktag",
+				"Werktag:=UND{MoBisFr,NICHT Feiertag}*,*"));
 
-			AlterSystemkalenderEintrag ske1 = systemKalenderArbeiter.getSkeList().get("ske.werktag");
-
-			Date d1 = sdf.parse("01.08.2014 14:00:00,000");
-			Date d2 = sdf.parse("31.08.2014 00:00:00,000");
-
-			System.out.println("Abfrage: " + ske1.getPid() + " " + sdf.format(d1) + " - " + sdf.format(d2));
-
-			erstelleAbfrageUndAusgabeErgebnisTyp2(ske1, d1, d2);
-
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Erstellt eine Abfrage der manuellen Zeitbereiche durch Benutzung der <br>
-	 * vom Systemkalender bereitgestellten Methode <br>
-	 * {@link SystemkalenderEintrag#berecheneIntervallVonBis(Long, Long)} <br>
-	 * Diese Methode liefert das Ergebnis in der Form: <br>
-	 * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Long}>
-	 * 
-	 * @param ske
-	 *            der Systemkalendereintrag
-	 * @param von
-	 *            Anfangsdatum
-	 * @param bis
-	 *            Enddatum
-	 */
-	private static void erstelleAbfrageUndAusgabeErgebnisTyp2(AlterSystemkalenderEintrag ske, Date von, Date bis) {
-		SortedMap<Long, Long> sm = ske.berecheneIntervallVonBis(von.getTime(), bis.getTime());
-
-		if (sm != null) {
-			Date d1 = new Date();
-			Date d2 = new Date();
-			for (Map.Entry<Long, Long> me : sm.entrySet()) {
-				d1.setTime(me.getKey());
-				d2.setTime(me.getValue());
-				System.out.println("Ergebnistyp 2: " + sdf.format(d1) + " " + sdf.format(d2));
-
-			}
-		} else
-			System.out.println("Abfrage liefert kein Ergebnis!");
+		KalenderEintragDefinition eintrag = eintragsProvider.getKalenderEintrag("Werktag");
+		LocalDateTime startTime = LocalDateTime.of(2014, 8, 1, 14, 0, 0);
+		LocalDateTime endTime = LocalDateTime.of(2014, 8, 31, 0, 0, 0);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
+		System.out
+				.println("Abfrage1: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
 	}
 }

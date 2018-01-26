@@ -81,7 +81,7 @@ public abstract class LogischerVerkuepfungsEintrag extends
 				for (final String def : verweisDefinitionen) {
 					try {
 						Verweis verweis = new Verweis(provider, def);
-						setFehler(verweis.isUngueltig());
+						setFehler(verweis.isUngueltig() | isFehler());
 						verweise.add(verweis);
 					} catch (final ParseException e) {
 						setFehler(true);

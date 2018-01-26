@@ -41,6 +41,6 @@ import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
  */
 public interface SystemkalenderEintrag {
 	Gueltigkeit getGueltigkeit(LocalDateTime zeitPunkt);
-	ZustandsWechsel getZustandWechsel(LocalDateTime von, LocalDateTime bis);
+	ZustandsWechsel getZustandsWechsel(LocalDateTime von, LocalDateTime bis);
 	String getName();
 }

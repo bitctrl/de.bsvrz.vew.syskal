@@ -31,6 +31,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Repräsentation der Daten eines {@link KalenderEintragDefinition}, der durch einen
@@ -265,7 +266,7 @@ public class ZeitBereichsEintrag extends KalenderEintragDefinition {
 	}
 
 	@Override
-	public ZustandsWechsel getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
+	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
 		// TODO Auto-generated method stub
 		return null;
 	}

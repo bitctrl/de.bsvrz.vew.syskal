@@ -1,92 +1,59 @@
 package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
+import org.junit.Test;
+
 import de.bsvrz.vew.syskal.SystemkalenderEintrag;
+import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.syskal.data.KalenderEintragDefinition;
+import de.bsvrz.vew.syskal.syskal.data.KalenderEintragProvider;
+import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
 
 public class TestSyskalOffline2 {
-	/**
-	 * Das Format der Ergebnisausgabe
-	 */
-	private static DateFormat sdf;
 
-	public static void main(String[] args) {
+	private LocalDateTime endTime;
 
-		SystemkalenderArbeiter systemKalenderArbeiter = new SystemkalenderArbeiter(null, null);
+	@Test
+	public void beispiele2() {
 
-		try {
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.ostersonntag", "Ostersonntag", "Ostersonntag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.berufsverkehr", "Berufsverkehr",
-					"Berufsverkehr:=({07:00:00,000-11:00:00,000}{15:00:00,000-18:00:00,000})");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.keinberufsverkehr", "KeinBerufsverkehr",
-					"Berufsverkehr:=({00:00:00,000-08:00:00,000}{11:00:00,000-15:00:00,000}{18:00:00,000-23:59:59,999})");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.dienstag", "Dienstag", "Dienstag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.superdienstag", "SuperDienstag",
-					"SuperDienstag:=UND{Dienstag,Berufsverkehr}*,*");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.supermittwoch", "SuperMittwoch",
-					"SuperMittwoch:=SuperDienstag+1Tag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.ostermontag", "Ostermontag",
-					"Ostermontag:=Ostersonntag+1Tag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.osterdienstag", "Osterdienstag",
-					"Osterdienstag:=Ostermontag+1Tag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.karfreitag", "Karfreitag",
-					"Karfreitag:=Ostersonntag-2Tage");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.pfingsonntag", "Pfingstsonntag",
-					"Pfingstsonntag:=Ostersonntag+49Tage");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.pfingstmontag", "Pfingstmontag",
-					"Pfingstmontag:=Pfingstsonntag+1Tag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.tag", "Tag", "Tag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.sonntag", "Sonntag", "Sonntag");
-			systemKalenderArbeiter.parseSystemkalenderEintrag("ske.keinsonntag", "KeinSonntag",
-					"KeinSonntag:=UND{Tag,NICHT Sonntag}*,*");
+		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-			sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Berufsverkehr",
+				"Berufsverkehr:=({07:00:00,000-11:00:00,000}{15:00:00,000-18:00:00,000})"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "KeinBerufsverkehr",
+				"Berufsverkehr:=({00:00:00,000-08:00:00,000}{11:00:00,000-15:00:00,000}{18:00:00,000-23:59:59,999})"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Dienstag", "Dienstag"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "SuperDienstag",
+				"SuperDienstag:=UND{Dienstag,Berufsverkehr}*,*"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "SuperMittwoch",
+				"SuperMittwoch:=SuperDienstag+1Tag"));
+		eintragsProvider.addEintrag(
+				KalenderEintragDefinition.parse(eintragsProvider, "Ostermontag", "Ostermontag:=Ostersonntag+1Tag"));
+		eintragsProvider.addEintrag(
+				KalenderEintragDefinition.parse(eintragsProvider, "Osterdienstag", "Osterdienstag:=Ostermontag+1Tag"));
+		eintragsProvider.addEintrag(
+				KalenderEintragDefinition.parse(eintragsProvider, "Karfreitag", "Karfreitag:=Ostersonntag-2Tage"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Pfingstsonntag",
+				"Pfingstsonntag:=Ostersonntag+49Tage"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Pfingstmontag",
+				"Pfingstmontag:=Pfingstsonntag+1Tag"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Tag", "Tag"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Sonntag", "Sonntag"));
+		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "KeinSonntag",
+				"KeinSonntag:=UND{Tag,NICHT Sonntag}*,*"));
 
-			AlterSystemkalenderEintrag ske1 = systemKalenderArbeiter.getSkeList().get("ske.tag");
+		KalenderEintragDefinition eintrag = eintragsProvider.getKalenderEintrag("Tag");
+		LocalDateTime startTime = LocalDateTime.of(2009, 10, 1, 14, 0, 0);
+		endTime = LocalDateTime.of(2009, 10, 5, 14, 0, 0);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
+		System.out
+				.println("Abfrage1: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
 
-			Date d1 = sdf.parse("01.10.2009 14:00:00,000");
-			Date d2 = sdf.parse("05.10.2009 14:00:00,000");
-
-			System.out.println("Abfrage1: " + ske1.getPid() + " " + sdf.format(d1) + " - " + sdf.format(d2));
-
-			erstelleAbfrageUndAusgabeErgebnisTyp2(ske1, d1, d2);
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Erstellt eine Abfrage der manuellen Zeitbereiche durch Benutzung der <br>
-	 * vom Systemkalender bereitgestellten Methode <br>
-	 * {@link SystemkalenderEintrag#berecheneIntervallVonBis(Long, Long)} <br>
-	 * Diese Methode liefert das Ergebnis in der Form: <br>
-	 * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Long}>
-	 * 
-	 * @param ske
-	 *            der Systemkalendereintrag
-	 * @param von
-	 *            Anfangsdatum
-	 * @param bis
-	 *            Enddatum
-	 */
-	private static void erstelleAbfrageUndAusgabeErgebnisTyp2(AlterSystemkalenderEintrag ske, Date von, Date bis) {
-		SortedMap<Long, Long> sm = ske.berecheneIntervallVonBis(von.getTime(), bis.getTime());
-
-		if (sm != null) {
-			Date d1 = new Date();
-			Date d2 = new Date();
-			for (Map.Entry<Long, Long> me : sm.entrySet()) {
-				d1.setTime(me.getKey());
-				d2.setTime(me.getValue());
-				System.out.println("Ergebnistyp 2: " + sdf.format(d1) + " " + sdf.format(d2));
-
-			}
-		} else
-			System.out.println("Abfrage liefert kein Ergebnis!");
 	}
 }

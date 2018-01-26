@@ -27,6 +27,7 @@
 package de.bsvrz.vew.syskal.syskal.data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Spezielle Form eines Systemkalendereintrags für die Angabe eines konkreten
@@ -64,23 +65,27 @@ public class DatumsEintrag extends KalenderEintragDefinition {
 
 		if (definition != null) {
 
-			final String[] parts = definition.split(",");
-			final String[] dateParts = parts[0].split("\\.");
+			try {
+				final String[] parts = definition.split(",");
+				final String[] dateParts = parts[0].split("\\.");
 
-			if (dateParts.length > 1) {
-				tag = Integer.parseInt(dateParts[0].trim());
-				monat = Integer.parseInt(dateParts[1].trim());
-				if (dateParts.length > 2) {
-					if (!"*".equalsIgnoreCase(dateParts[2].trim())) {
-						jahr = Integer.parseInt(dateParts[2].trim());
+				if (dateParts.length > 1) {
+					tag = Integer.parseInt(dateParts[0].trim());
+					monat = Integer.parseInt(dateParts[1].trim());
+					if (dateParts.length > 2) {
+						if (!"*".equalsIgnoreCase(dateParts[2].trim())) {
+							jahr = Integer.parseInt(dateParts[2].trim());
+						}
 					}
 				}
-			}
 
-			if (parts.length > 1) {
-				if (!"*".equalsIgnoreCase(parts[1].trim())) {
-					endJahr = Integer.parseInt(parts[1].trim());
+				if (parts.length > 1) {
+					if (!"*".equalsIgnoreCase(parts[1].trim())) {
+						endJahr = Integer.parseInt(parts[1].trim());
+					}
 				}
+			} catch (NumberFormatException e) {
+				setFehler(true);
 			}
 		}
 	}
@@ -207,7 +212,7 @@ public class DatumsEintrag extends KalenderEintragDefinition {
 	}
 
 	@Override
-	public ZustandsWechsel getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
+	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
 		// TODO Auto-generated method stub
 		return null;
 	}
