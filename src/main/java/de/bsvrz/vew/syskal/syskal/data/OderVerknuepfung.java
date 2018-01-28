@@ -40,6 +40,9 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 	/**
 	 * Konstruktor.
 	 * 
+	 * @param provider
+	 *            die Verwaltung aller bekannten Systemkalendereinträge zur
+	 *            Verifizierung von Referenzen
 	 * @param name
 	 *            der Name des Eintrags
 	 * @param definition

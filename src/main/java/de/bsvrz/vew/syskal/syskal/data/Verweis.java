@@ -39,8 +39,7 @@ public class Verweis {
 	private String name;
 
 	/**
-	 * der Offset (in Tagen) um den der originale Eintrag verschoben werden
-	 * soll.
+	 * der Offset (in Tagen) um den der originale Eintrag verschoben werden soll.
 	 */
 	private int offset;
 
@@ -55,8 +54,10 @@ public class Verweis {
 
 	/**
 	 * Konstruktor.
-	 * @param provider 
 	 * 
+	 * @param provider
+	 *            die Verwaltung aller bekannten Systemkalendereinträge zur
+	 *            Verifizierung von Referenzen
 	 * @param def
 	 *            der Text, der den Verweis definiert
 	 * @throws ParseException
@@ -69,16 +70,13 @@ public class Verweis {
 			final String negationsFilter = rest.toLowerCase();
 			if (negationsFilter.contains("nicht")) {
 				negiert = true;
-				rest = rest.substring(
-						negationsFilter.indexOf("nicht") + "nicht".length())
-						.trim();
+				rest = rest.substring(negationsFilter.indexOf("nicht") + "nicht".length()).trim();
 			}
 
 			final String[] parts = rest.split("[+-]");
 			name = parts[0].trim();
 			if (parts.length > 1) {
-				final String wert = parts[1].trim().replaceAll("[TAGEtage() ]",
-						"");
+				final String wert = parts[1].trim().replaceAll("[TAGEtage() ]", "");
 				offset = Integer.parseInt(wert);
 				if (rest.contains("-")) {
 					offset *= -1;
@@ -86,22 +84,22 @@ public class Verweis {
 			}
 
 			if (name.length() < 0) {
-				throw new ParseException("Der String \"" + def
-						+ "\" kann nicht als Verweis interpretiert werden!", 0);
+				throw new ParseException("Der String \"" + def + "\" kann nicht als Verweis interpretiert werden!", 0);
 			}
-			
+
 			ungueltig = provider.getKalenderEintrag(name) == null;
 
 		} else {
-			throw new ParseException(
-					"Der String \"null\" kann nicht als Verweis interpretiert werden!",
-					0);
+			throw new ParseException("Der String \"null\" kann nicht als Verweis interpretiert werden!", 0);
 		}
 	}
 
 	/**
 	 * Konstruktor.
 	 * 
+	 * @param provider
+	 *            die Verwaltung aller bekannten Systemkalendereinträge zur
+	 *            Verifizierung von Referenzen
 	 * @param name
 	 *            der Name
 	 * @param offset
@@ -160,8 +158,7 @@ public class Verweis {
 	public void setName(final String name) throws ParseException {
 		final String neuerName = name.trim();
 		if (neuerName.length() <= 0) {
-			throw new ParseException(
-					"Ein leerer Name für einen Verweis ist nicht zulässig!", 0);
+			throw new ParseException("Ein leerer Name für einen Verweis ist nicht zulässig!", 0);
 		}
 		this.name = neuerName;
 	}

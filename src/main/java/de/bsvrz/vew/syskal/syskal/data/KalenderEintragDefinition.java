@@ -14,10 +14,14 @@ public abstract class KalenderEintragDefinition {
 	/** das Pattern zum Ermitteln eines Datumsbereiches im Definitionsstring. */
 	private static final Pattern DATUMSBEREICH_PATTERN = Pattern.compile("<.*>");
 
-	/** das Pattern zum Ermitteln eines Zeitgrenzenbereiches im Definitionsstring. */
+	/**
+	 * das Pattern zum Ermitteln eines Zeitgrenzenbereiches im Definitionsstring.
+	 */
 	private static final Pattern ZEITBEREICHSLISTE_PATTERN = Pattern.compile("\\(.*\\)");
 
-	/** das Pattern zum Ermitteln eines Zeitbereiches oder einer Verknüpfungsliste. */
+	/**
+	 * das Pattern zum Ermitteln eines Zeitbereiches oder einer Verknüpfungsliste.
+	 */
 	protected static final Pattern ZEITBEREICH_PATTERN = Pattern.compile("\\{.[^\\{]*\\}");
 
 	private String definition;
@@ -37,14 +41,18 @@ public abstract class KalenderEintragDefinition {
 	 * Datenstrukturen der Klasse und wird nur vom Konstruktor aufgerufen, d.h. ein
 	 * mehrfacher Aufruf könnte zu falschen Daten führen!
 	 * 
+	 * @param provider
+	 *            die Verwaltung aller bekannten Systemkalendereinträge zur
+	 *            Verifizierung von Referenzen
 	 * @param name
 	 *            der Name des Dateneintrages
-	 * @param definitionString
+	 * @param definition
 	 *            der Definitionsstring
 	 * @return das Ergebnis ist ein Systemkalendereintrag, dessen konkreter Typ vom
 	 *         Inhalt der Definition abhängt
 	 */
-	public static KalenderEintragDefinition parse(KalenderEintragProvider provider, final String name, final String definition) {
+	public static KalenderEintragDefinition parse(KalenderEintragProvider provider, final String name,
+			final String definition) {
 
 		KalenderEintragDefinition result = null;
 		String rest = definition;
@@ -56,13 +64,12 @@ public abstract class KalenderEintragDefinition {
 		} else {
 			final String defName = parts[0].trim();
 			if (!defName.equals(name)) {
-				Debug.getLogger().warning("Für den Systemkalendereintrag " + name
-						+ " ist der abweichende Name: \"" + defName + "\" definiert!");
+				Debug.getLogger().warning("Für den Systemkalendereintrag " + name + " ist der abweichende Name: \""
+						+ defName + "\" definiert!");
 			}
 			rest = parts[1].trim();
 		}
 
-		
 		final List<ZeitGrenze> parseZeitBereiche = new ArrayList<>();
 
 		Matcher mat = KalenderEintragDefinition.ZEITBEREICHSLISTE_PATTERN.matcher(rest);
@@ -90,7 +97,7 @@ public abstract class KalenderEintragDefinition {
 		if (rest.toLowerCase().startsWith("und")) {
 			result = new UndVerknuepfung(provider, name, rest.substring("und".length()));
 		} else if (rest.toLowerCase().startsWith("oder")) {
-			result = new OderVerknuepfung(provider, name, rest.substring("oder".length())); 
+			result = new OderVerknuepfung(provider, name, rest.substring("oder".length()));
 		} else {
 			mat = KalenderEintragDefinition.DATUMSBEREICH_PATTERN.matcher(rest);
 			if (mat.find()) {
@@ -109,7 +116,7 @@ public abstract class KalenderEintragDefinition {
 				}
 			}
 
-			result.zeitGrenzen.addAll(parseZeitBereiche); 
+			result.zeitGrenzen.addAll(parseZeitBereiche);
 		}
 
 		result.definition = definition;
@@ -117,7 +124,7 @@ public abstract class KalenderEintragDefinition {
 		if (zeitBereichsfehler) {
 			result.setFehler(true);
 		}
-		
+
 		return result;
 	}
 
@@ -184,7 +191,6 @@ public abstract class KalenderEintragDefinition {
 	protected void setFehler(final boolean state) {
 		fehler = state;
 	}
-
 
 	public String getName() {
 		return name;

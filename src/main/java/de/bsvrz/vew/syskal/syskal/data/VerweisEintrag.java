@@ -44,6 +44,9 @@ public class VerweisEintrag extends KalenderEintragDefinition {
 	/**
 	 * Konstruktor.
 	 * 
+	 * @param provider
+	 *            die Verwaltung aller bekannten Systemkalendereinträge zur
+	 *            Verifizierung von Referenzen
 	 * @param name
 	 *            der Name des Eintrags
 	 * @param definition
@@ -53,7 +56,7 @@ public class VerweisEintrag extends KalenderEintragDefinition {
 		super(name, definition);
 		try {
 			verweis = new Verweis(provider, definition);
-			if( verweis.isUngueltig()) {
+			if (verweis.isUngueltig()) {
 				setFehler(true);
 			}
 		} catch (final ParseException e) {
@@ -68,8 +71,8 @@ public class VerweisEintrag extends KalenderEintragDefinition {
 	}
 
 	/**
-	 * liefert den potentiellen Offset (in Tagen) um den der Basiseintrag
-	 * verschoben werden soll.
+	 * liefert den potentiellen Offset (in Tagen) um den der Basiseintrag verschoben
+	 * werden soll.
 	 * 
 	 * @return der Offset
 	 */
@@ -111,18 +114,21 @@ public class VerweisEintrag extends KalenderEintragDefinition {
 	/**
 	 * setzt den Verweis, der diesen definieren soll.
 	 * 
+	 * @param provider
+	 *            die Verwaltung aller bekannten Systemkalendereinträge zur
+	 *            Verifizierung von Referenzen
 	 * @param name
 	 *            der name des Verweises
 	 * @param offset
-	 *            der Offset, um den originale Eintrag verschoben werden soll
-	 *            (in Tagen)
+	 *            der Offset, um den originale Eintrag verschoben werden soll (in
+	 *            Tagen)
 	 * @param negiert
 	 *            true, wenn der originale Eintrag negiert werden soll
 	 * @throws ParseException
 	 *             der Name des Verweises ist ungültig
 	 */
-	public void setVerweis(KalenderEintragProvider provider, final String name, final int offset,
-			final boolean negiert) throws ParseException {
+	public void setVerweis(KalenderEintragProvider provider, final String name, final int offset, final boolean negiert)
+			throws ParseException {
 		verweis = new Verweis(provider, name, offset, negiert);
 	}
 
