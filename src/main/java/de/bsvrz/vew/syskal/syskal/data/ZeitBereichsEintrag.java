@@ -29,31 +29,31 @@ package de.bsvrz.vew.syskal.syskal.data;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Repräsentation der Daten eines {@link KalenderEintragDefinition}, der durch einen
- * Zeitbereich definiert wird.
+ * Repräsentation der Daten eines {@link KalenderEintragDefinition}, der durch
+ * einen Zeitbereich definiert wird.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
 public class ZeitBereichsEintrag extends KalenderEintragDefinition {
 
-	/** der Anfangszeitpunkt in Millisekunden seit 1.1.1970 GMT. */
-	private long start;
-
-	/** der Endzeitpunkt in Millisekunden seit 1.1.1970 GMT. */
-	private long ende;
+	private LocalDateTime start;
+	private LocalDateTime ende;
 
 	/** das Datumsformat mit Zeitangabe. */
-	private static DateFormat formatMitZeit = new SimpleDateFormat(
-			"dd.MM.yyyy HH:mm:ss,SSS");
+	private static String formatMitZeit = "dd.MM.yyyy HH:mm:ss,SSS";
 
 	/** verkürztes Datumsformat für 0 Uhr. */
-	private static DateFormat formatOhneZeit = new SimpleDateFormat(
-			"dd.MM.yyyy");
+	private static String formatOhneZeit = "dd.MM.yyyy";
 
 	/**
 	 * Konstruktor.
@@ -66,13 +66,8 @@ public class ZeitBereichsEintrag extends KalenderEintragDefinition {
 	public ZeitBereichsEintrag(final String name, final String definition) {
 		super(name, definition);
 		if (definition == null) {
-			final Calendar cal = Calendar.getInstance();
-			cal.set(Calendar.HOUR_OF_DAY, 0);
-			cal.set(Calendar.MINUTE, 0);
-			cal.set(Calendar.SECOND, 0);
-			cal.set(Calendar.MILLISECOND, 0);
-			start = cal.getTimeInMillis();
-			ende = start + (24 * 3600 * 1000);
+			start = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+			ende = start.plusDays(1);
 		} else {
 			if (definition.contains("-")) {
 				final String[] parts = definition.split("-");
@@ -86,8 +81,8 @@ public class ZeitBereichsEintrag extends KalenderEintragDefinition {
 				if (definition.length() > 0) {
 					setFehler(true);
 				}
-				start = 0L;
-				ende = 0L;
+				start = LocalDateTime.MIN;
+				ende = LocalDateTime.MAX;
 			}
 		}
 	}
@@ -102,7 +97,7 @@ public class ZeitBereichsEintrag extends KalenderEintragDefinition {
 	 * 
 	 * @return den Zeitpunkt
 	 */
-	public long getEnde() {
+	public LocalDateTime getEnde() {
 		return ende;
 	}
 
@@ -111,7 +106,7 @@ public class ZeitBereichsEintrag extends KalenderEintragDefinition {
 	 * 
 	 * @return den Zeitpunkt
 	 */
-	public long getStart() {
+	public LocalDateTime getStart() {
 		return start;
 	}
 
@@ -143,14 +138,20 @@ public class ZeitBereichsEintrag extends KalenderEintragDefinition {
 	 * @throws ParseException
 	 *             der Text konnte nicht als Zeit interpretiert werden
 	 */
-	private long parseDatum(final String string) throws ParseException {
-		final String[] parts = string.split("[.:, ]");
-		final Calendar calender = Calendar.getInstance();
+	private LocalDateTime parseDatum(final String string) throws ParseException {
 
+		final String[] parts = string.split("[.:, ]");
 		if (parts.length < 3) {
-			throw new ParseException(
-					"Text kann nicht als Zeiteintrag interpretiert werden", 0);
+			throw new ParseException("Text kann nicht als Zeiteintrag interpretiert werden", 0);
 		}
+
+		int tag = 1;
+		int monat = 1;
+		int jahr = 1970;
+		int stunde = 0;
+		int minute = 0;
+		int sekunde = 0;
+		int milliSekunde = 0;
 
 		for (int idx = 0; idx < 7; idx++) {
 			int value;
@@ -158,79 +159,52 @@ public class ZeitBereichsEintrag extends KalenderEintragDefinition {
 				try {
 					value = Integer.parseInt(parts[idx].trim());
 				} catch (final NumberFormatException e) {
-					throw new ParseException(
-							"Text kann nicht als Zeiteintrag interpretiert werden",
-							0);
+					throw new ParseException("Text kann nicht als Zeiteintrag interpretiert werden", 0);
 				}
 			} else {
 				value = 0;
 			}
 			switch (idx) {
 			case 0:
-				calender.set(Calendar.DAY_OF_MONTH, value);
+				tag = value;
 				break;
 			case 1:
-				calender.set(Calendar.MONTH, value - 1);
+				monat = value;
 				break;
 			case 2:
-				calender.set(Calendar.YEAR, value);
+				jahr = value;
 				break;
 			case 3:
-				calender.set(Calendar.HOUR_OF_DAY, value);
+				stunde = value;
 				break;
 			case 4:
-				calender.set(Calendar.MINUTE, value);
+				minute = value;
 				break;
 			case 5:
-				calender.set(Calendar.SECOND, value);
+				sekunde = value;
 				break;
 			case 6:
-				calender.set(Calendar.MILLISECOND, value);
+				milliSekunde = value;
 				break;
 			default:
 				break;
 			}
 		}
 
-		return calender.getTimeInMillis();
-	}
-
-	/**
-	 * setzt den Endezeitpunkt des Eintrags.
-	 * 
-	 * @param ende
-	 *            der Zeitpunkt in Millisekunden
-	 */
-	public void setEnde(final long ende) {
-		this.ende = ende;
-	}
-
-	/**
-	 * setzt den Anfangszeitpunkt des Eintrags.
-	 * 
-	 * @param start
-	 *            der Zeitpunkt in Millisekunden
-	 */
-	public void setStart(final long start) {
-		this.start = start;
+		return LocalDateTime.of(jahr, monat, tag, stunde, minute, sekunde).plusNanos(milliSekunde * 1000);
 	}
 
 	@Override
 	public String toString() {
 
-		final Calendar startCal = Calendar.getInstance();
-		startCal.setTimeInMillis(start);
-		final Calendar endCal = Calendar.getInstance();
-		endCal.setTimeInMillis(ende);
-
 		final StringBuffer buffer = new StringBuffer(getName());
 		buffer.append(":=");
-		if ((start > 0) && (ende > 0)) {
+		if (start.isAfter(LocalDateTime.MIN) && ende.isBefore(LocalDateTime.MAX)) {
 			buffer.append('<');
-			buffer.append(verwendetesFormat(startCal)
-					.format(startCal.getTime()));
+			start.format(verwendetesFormat(start));
+			buffer.append(start.format(verwendetesFormat(start)));
 			buffer.append('-');
-			buffer.append(verwendetesFormat(endCal).format(endCal.getTime()));
+			buffer.append(ende.format(verwendetesFormat(ende)));
 			buffer.append('>');
 		}
 
@@ -247,27 +221,91 @@ public class ZeitBereichsEintrag extends KalenderEintragDefinition {
 	 *            die auszugebende Zeit
 	 * @return das Format
 	 */
-	private DateFormat verwendetesFormat(final Calendar kalender) {
-		DateFormat format = ZeitBereichsEintrag.formatMitZeit;
-		if (kalender.get(Calendar.HOUR_OF_DAY) == 0) {
-			if (kalender.get(Calendar.MINUTE) == 0) {
-				if (kalender.get(Calendar.SECOND) == 0) {
-					format = ZeitBereichsEintrag.formatOhneZeit;
+	private DateTimeFormatter verwendetesFormat(final LocalDateTime zeitstempel) {
+		if (zeitstempel.getHour() == 0) {
+			if (zeitstempel.getMinute() == 0) {
+				if (zeitstempel.getSecond() == 0) {
+					return DateTimeFormatter.ofPattern(ZeitBereichsEintrag.formatOhneZeit);
 				}
 			}
 		}
-		return format;
+		return DateTimeFormatter.ofPattern(ZeitBereichsEintrag.formatMitZeit);
 	}
 
 	@Override
 	public Gueltigkeit getGueltigKeit(LocalDateTime zeitpunkt) {
-		// TODO Auto-generated method stub
-		return null;
+
+		LocalDate startDate;
+
+		if (zeitpunkt.isAfter(ende)) {
+			return Gueltigkeit.NICHT_GUELTIG;
+		}
+
+		List<ZeitGrenze> zeitGrenzen = getZeitGrenzen();
+
+		if (zeitGrenzen.isEmpty()) {
+			if (zeitpunkt.isBefore(start)) {
+				return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.MIN, false), ZustandsWechsel.of(start, true));
+			}
+			return Gueltigkeit.of(ZustandsWechsel.of(start, true), ZustandsWechsel.of(ende, false));
+		}
+
+		LocalDate datum = zeitpunkt.toLocalDate();
+		LocalTime abfrageZeit = zeitpunkt.toLocalTime();
+
+		ZeitGrenze letzteGrenze = null;
+		for (ZeitGrenze grenze : zeitGrenzen) {
+			if (abfrageZeit.equals(grenze.getStart())) {
+				return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(datum, abfrageZeit), true),
+						ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getEnde()), false));
+			}
+			if (abfrageZeit.isBefore(grenze.getStart())) {
+				if (letzteGrenze == null) {
+					return Gueltigkeit.of(
+							ZustandsWechsel.of(LocalDateTime.of(datum.minusDays(1),
+									zeitGrenzen.get(zeitGrenzen.size() - 1).getEnde()), false),
+							ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getStart()), true));
+				}
+				return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(datum, letzteGrenze.getEnde()), false),
+						ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getStart()), true));
+			}
+			letzteGrenze = grenze;
+		}
+
+		return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(datum, letzteGrenze.getEnde()), false),
+				ZustandsWechsel.of(LocalDateTime.of(datum.plusDays(1), zeitGrenzen.get(0).getStart()), true));
 	}
 
 	@Override
 	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
+
+		if (ende.isBefore(this.start) || start.isAfter(this.ende)) {
+			return Collections.emptyList();
+		}
+
+		List<ZustandsWechsel> result = new ArrayList<>();
+
+		LocalDate startDate = start.toLocalDate();
+		LocalTime startZeit = start.toLocalTime();
+
+		List<ZeitGrenze> zeitGrenzen = getZeitGrenzen();
+		if (zeitGrenzen.isEmpty()) {
+			if (start.isEqual(this.start) || start.isAfter(this.start)) {
+				result.add(ZustandsWechsel.of(start, true));
+				if (ende.isEqual(this.ende) || ende.isBefore(this.ende)) {
+					result.add(ZustandsWechsel.of(this.ende, false));
+				}
+				return result;
+			} else
+				result.add(ZustandsWechsel.of(start, true));
+			if (ende.isEqual(this.ende) || ende.isBefore(this.ende)) {
+				result.add(ZustandsWechsel.of(this.ende, false));
+			}
+			return result;
+
+		}
+
 		// TODO Auto-generated method stub
-		return null;
+		return Collections.emptyList();
 	}
 }

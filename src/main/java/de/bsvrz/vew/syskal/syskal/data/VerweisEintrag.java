@@ -28,6 +28,8 @@ package de.bsvrz.vew.syskal.syskal.data;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -142,13 +144,50 @@ public class VerweisEintrag extends KalenderEintragDefinition {
 
 	@Override
 	public Gueltigkeit getGueltigKeit(LocalDateTime zeitpunkt) {
-		// TODO Auto-generated method stub
-		return null;
+
+		if (verweis.isUngueltig()) {
+			return Gueltigkeit.NICHT_GUELTIG;
+		}
+
+		KalenderEintragDefinition referenzEintrag = verweis.getReferenzEintrag();
+		int tagesOffset = verweis.getOffset();
+		Gueltigkeit gueltigKeit = referenzEintrag.getGueltigKeit(zeitpunkt.minusDays(tagesOffset));
+
+		if (verweis.isNegiert()) {
+			return Gueltigkeit.of(
+					ZustandsWechsel.of(gueltigKeit.getBeginn().getZeitPunkt().plusDays(tagesOffset),
+							!gueltigKeit.getBeginn().isWirdGueltig()),
+					ZustandsWechsel.of(gueltigKeit.getNaechsteAenderung().getZeitPunkt().plusDays(tagesOffset),
+							!gueltigKeit.getNaechsteAenderung().isWirdGueltig()));
+		}
+		return Gueltigkeit.of(
+				ZustandsWechsel.of(gueltigKeit.getBeginn().getZeitPunkt().plusDays(tagesOffset),
+						gueltigKeit.getBeginn().isWirdGueltig()),
+				ZustandsWechsel.of(gueltigKeit.getNaechsteAenderung().getZeitPunkt().plusDays(tagesOffset),
+						gueltigKeit.getNaechsteAenderung().isWirdGueltig()));
 	}
 
 	@Override
 	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
-		// TODO Auto-generated method stub
-		return null;
+
+		if (verweis.isUngueltig()) {
+			return Collections.emptyList();
+		}
+
+		KalenderEintragDefinition referenzEintrag = verweis.getReferenzEintrag();
+		int tagesOffset = verweis.getOffset();
+		List<ZustandsWechsel> referenzWechsel = referenzEintrag
+				.getZustandsWechselImBereich(start.minusDays(tagesOffset), ende.minusDays(tagesOffset));
+
+		List<ZustandsWechsel> result = new ArrayList<>();
+		for (ZustandsWechsel wechsel : referenzWechsel) {
+			if (verweis.isNegiert()) {
+				result.add(ZustandsWechsel.of(wechsel.getZeitPunkt().plusDays(tagesOffset), !wechsel.isWirdGueltig()));
+			} else {
+				result.add(ZustandsWechsel.of(wechsel.getZeitPunkt().plusDays(tagesOffset), wechsel.isWirdGueltig()));
+			}
+		}
+
+		return result;
 	}
 }

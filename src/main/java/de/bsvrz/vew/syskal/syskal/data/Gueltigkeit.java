@@ -1,17 +1,23 @@
 package de.bsvrz.vew.syskal.syskal.data;
 
-import java.time.LocalDateTime;
-
 public class Gueltigkeit {
 
-	private LocalDateTime zeitPunkt;
 	private ZustandsWechsel beginn;
 	private ZustandsWechsel naechsteAenderung;
 
-	public Gueltigkeit(LocalDateTime zeitPunkt) {
-		this.zeitPunkt = zeitPunkt;
+	public static final Gueltigkeit NICHT_GUELTIG = Gueltigkeit.of(ZustandsWechsel.MIN, ZustandsWechsel.MAX);
+	
+	public static Gueltigkeit of(ZustandsWechsel beginn, ZustandsWechsel naechsteAenderung) {
+		Gueltigkeit gueltigkeit = new Gueltigkeit();
+		gueltigkeit.beginn = beginn;
+		gueltigkeit.naechsteAenderung = naechsteAenderung;
+		return gueltigkeit;
 	}
 
+	private Gueltigkeit() {
+		// Objekt wird nur per 'of' erzeugt
+	}
+	
 	public ZustandsWechsel getBeginn() {
 		return beginn;
 	}
@@ -19,7 +25,9 @@ public class Gueltigkeit {
 		return naechsteAenderung;
 	}
 
-	public LocalDateTime getZeitPunkt() {
-		return zeitPunkt;
+	@Override
+	public String toString() {
+		return "Gueltigkeit [beginn=" + beginn + ", naechsteAenderung=" + naechsteAenderung
+				+ "]";
 	}
 }

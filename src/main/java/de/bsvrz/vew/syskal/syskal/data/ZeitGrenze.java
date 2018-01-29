@@ -27,6 +27,7 @@
 package de.bsvrz.vew.syskal.syskal.data;
 
 import java.text.ParseException;
+import java.time.LocalTime;
 
 /**
  * Repräsentation einer Zeitbegrenzung für einen Systemkalendereintrag.
@@ -38,10 +39,10 @@ import java.text.ParseException;
 public class ZeitGrenze implements Comparable<ZeitGrenze> {
 
 	/** der Anfang der Zeitgrenze in Millisekunden innerhalb eines Tages. */
-	private final long start;
+	private final LocalTime start;
 
 	/** das Ende der Zeitgrenze in Millisekunden innerhalb eines Tages. */
-	private final long ende;
+	private final LocalTime ende;
 
 	/**
 	 * Konstruktor, der ein Zeitgrenzenobjekt aus den übergebenen Grenzen in
@@ -52,7 +53,7 @@ public class ZeitGrenze implements Comparable<ZeitGrenze> {
 	 * @param ende
 	 *            das Ende des Grenzbereiches
 	 */
-	public ZeitGrenze(final long start, final long ende) {
+	public ZeitGrenze(final LocalTime start, final LocalTime ende) {
 		super();
 		this.start = start;
 		this.ende = ende;
@@ -79,9 +80,9 @@ public class ZeitGrenze implements Comparable<ZeitGrenze> {
 
 	@Override
 	public int compareTo(final ZeitGrenze o) {
-		int result = Long.compare(start, o.start);
+		int result = start.compareTo(o.start);
 		if (result == 0) {
-			result = Long.compare(ende, o.ende);
+			result = ende.compareTo(o.ende);
 		}
 		return result;
 	}
@@ -91,7 +92,7 @@ public class ZeitGrenze implements Comparable<ZeitGrenze> {
 	 * 
 	 * @return den Wert
 	 */
-	public long getEnde() {
+	public LocalTime getEnde() {
 		return ende;
 	}
 
@@ -110,7 +111,7 @@ public class ZeitGrenze implements Comparable<ZeitGrenze> {
 	 * 
 	 * @return den Wert
 	 */
-	public long getStart() {
+	public LocalTime getStart() {
 		return start;
 	}
 
@@ -132,25 +133,20 @@ public class ZeitGrenze implements Comparable<ZeitGrenze> {
 	 *            der Wert
 	 * @return die Zeichenkette
 	 */
-	private String longToStr(final long value) {
-		long millis = value;
-		final StringBuffer buffer = new StringBuffer();
+	private String longToStr(final LocalTime value) {
 
-		Long val = millis / (3600 * 1000);
-		buffer.append(String.format("%02d", val));
+		final StringBuilder buffer = new StringBuilder(20);
+
+		buffer.append(String.format("%02d", value.getHour()));
 		buffer.append(':');
-		millis -= val * 3600 * 1000;
 
-		val = millis / (60 * 1000);
-		buffer.append(String.format("%02d", val));
+		buffer.append(String.format("%02d", value.getMinute()));
 		buffer.append(':');
-		millis -= val * 60 * 1000;
 
-		val = millis / 1000;
-		buffer.append(String.format("%02d", val));
+		buffer.append(String.format("%02d", value.getSecond()));
 		buffer.append(',');
-		millis -= val * 1000;
-		buffer.append(String.format("%03d", millis));
+
+ 		buffer.append(String.format("%03d", value.getNano() / 1000));
 		return buffer.toString();
 	}
 
@@ -164,8 +160,8 @@ public class ZeitGrenze implements Comparable<ZeitGrenze> {
 	 * @throws ParseException
 	 *             der Text kann nicht als Zeiteintrag interpretiert werden
 	 */
-	private long parseZeit(final String string) throws ParseException {
-		long result = 0;
+	private LocalTime parseZeit(final String string) throws ParseException {
+
 		final String[] parts = string.split("[:,]");
 
 		if (parts.length <= 0) {
@@ -173,6 +169,10 @@ public class ZeitGrenze implements Comparable<ZeitGrenze> {
 					+ "\" kann nicht als Zeit interpretiert werden!", 0);
 		}
 
+		int stunde = 0;
+		int minute = 0;
+		int sekunde = 0;
+		int milliSekunde = 0;
 		for (int idx = 0; idx < 7; idx++) {
 			int value;
 			if (parts.length > idx) {
@@ -182,23 +182,23 @@ public class ZeitGrenze implements Comparable<ZeitGrenze> {
 			}
 			switch (idx) {
 			case 0:
-				result += 3600L * 1000L * value;
+				stunde = value;
 				break;
 			case 1:
-				result += 60L * 1000L * value;
+				minute = value;
 				break;
 			case 2:
-				result += 1000L * value;
+				sekunde = value;
 				break;
 			case 3:
-				result += value;
+				milliSekunde = value;
 				break;
 			default:
 				break;
 			}
 		}
 
-		return result;
+		return LocalTime.of(stunde, minute, sekunde, milliSekunde * 1000);
 	}
 
 	@Override

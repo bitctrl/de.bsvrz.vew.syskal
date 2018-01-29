@@ -27,6 +27,7 @@
 package de.bsvrz.vew.syskal.syskal.data;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,12 +61,14 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 	@Override
 	public Gueltigkeit getGueltigKeit(LocalDateTime zeitpunkt) {
 		// TODO Auto-generated method stub
-		return null;
+		return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.MIN, false), ZustandsWechsel.of(LocalDateTime.MIN, false));
+
 	}
 
 	@Override
 	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
 		// TODO Auto-generated method stub
-		return null;
+		return Collections.emptyList();
+
 	}
 }

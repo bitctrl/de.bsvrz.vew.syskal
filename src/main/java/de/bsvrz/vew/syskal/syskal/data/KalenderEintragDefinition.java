@@ -55,6 +55,12 @@ public abstract class KalenderEintragDefinition {
 			final String definition) {
 
 		KalenderEintragDefinition result = null;
+
+		result = VorDefinierterEintrag.getEintrag(name);
+		if( result != null) {
+			return result;
+		}
+		
 		String rest = definition;
 
 		final String[] parts = definition.split(":=");
@@ -197,7 +203,6 @@ public abstract class KalenderEintragDefinition {
 	}
 
 	public boolean isGueltig(LocalDateTime zeitpunkt) {
-		// TODO Auto-generated method stub
 		return getGueltigKeit(zeitpunkt).getBeginn().isWirdGueltig();
 	}
 }

@@ -17,4 +17,10 @@ public final class TestKalenderEintragProvider implements KalenderEintragProvide
 	public void addEintrag(KalenderEintragDefinition eintrag) {
 		eintraege.put(eintrag.getName(), eintrag);
 	}
+
+	public KalenderEintragDefinition parseAndAdd(TestKalenderEintragProvider provider, String name, String definition) {
+		KalenderEintragDefinition eintrag = KalenderEintragDefinition.parse(provider, name, definition);
+		addEintrag(eintrag);
+		return eintrag;
+	}
 }

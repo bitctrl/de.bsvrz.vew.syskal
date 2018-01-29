@@ -26,7 +26,11 @@
 
 package de.bsvrz.vew.syskal.syskal.data;
 
+import java.security.GuardedObject;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,8 +56,8 @@ public class DatumsEintrag extends KalenderEintragDefinition {
 	private Integer tag;
 
 	/**
-	 * Konstruktor, erzeugt einen Eintrag mit dem übergebenen Namen, der Inhalt
-	 * wird durch den Definitionsstring beschrieben.
+	 * Konstruktor, erzeugt einen Eintrag mit dem übergebenen Namen, der Inhalt wird
+	 * durch den Definitionsstring beschrieben.
 	 * 
 	 * @param name
 	 *            der Name des Eintrags
@@ -106,8 +110,8 @@ public class DatumsEintrag extends KalenderEintragDefinition {
 	}
 
 	/**
-	 * liefert den Wert für das definierte Anfangsjahr oder <code>null</code>,
-	 * wenn keines festgelegt wurde.
+	 * liefert den Wert für das definierte Anfangsjahr oder <code>null</code>, wenn
+	 * keines festgelegt wurde.
 	 * 
 	 * @return das Jahr oder <code>null</code>
 	 */
@@ -126,8 +130,8 @@ public class DatumsEintrag extends KalenderEintragDefinition {
 	}
 
 	/**
-	 * liefert den Wert für den definierten Tag oder <code>null</code>, wenn
-	 * keiner festgelegt wurde.
+	 * liefert den Wert für den definierten Tag oder <code>null</code>, wenn keiner
+	 * festgelegt wurde.
 	 * 
 	 * @return den Tag das Monats oder <code>null</code>
 	 */
@@ -139,8 +143,8 @@ public class DatumsEintrag extends KalenderEintragDefinition {
 	 * setzt den Wert für das Endjahr.
 	 * 
 	 * @param endJahr
-	 *            das Jahr oder <code>null</code>, wenn es nicht beschränkt
-	 *            werden soll.
+	 *            das Jahr oder <code>null</code>, wenn es nicht beschränkt werden
+	 *            soll.
 	 */
 	public void setEndJahr(final Integer endJahr) {
 		this.endJahr = endJahr;
@@ -150,8 +154,8 @@ public class DatumsEintrag extends KalenderEintragDefinition {
 	 * setzt den Wert für das Anfangsjahr.
 	 * 
 	 * @param jahr
-	 *            das Jahr oder <code>null</code>, wenn es nicht beschränkt
-	 *            werden soll.
+	 *            das Jahr oder <code>null</code>, wenn es nicht beschränkt werden
+	 *            soll.
 	 */
 	public void setJahr(final Integer jahr) {
 		this.jahr = jahr;
@@ -207,13 +211,24 @@ public class DatumsEintrag extends KalenderEintragDefinition {
 
 	@Override
 	public Gueltigkeit getGueltigKeit(LocalDateTime zeitpunkt) {
+		
+		boolean gueltig = jahr == null || jahr <= zeitpunkt.getYear();
+		gueltig &= endJahr == null || endJahr >= zeitpunkt.getYear();
+		gueltig &= monat == null || monat == zeitpunkt.getMonthValue();
+		gueltig &= tag == null || tag == zeitpunkt.getDayOfMonth();
+		
+		if( gueltig) {
+			return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(LocalDate.of(zeitpunkt.getDayOfMonth(), zeitpunkt.getMonthValue(),  zeitpunkt.getYear()), LocalTime.MIDNIGHT), true),ZustandsWechsel.of(LocalDateTime.of(LocalDate.of(zeitpunkt.getDayOfMonth(), zeitpunkt.getMonthValue(),  zeitpunkt.getYear()), LocalTime.MIDNIGHT).plusDays(1), false) );
+		}
+		
 		// TODO Auto-generated method stub
-		return null;
+		return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.MIN, false), ZustandsWechsel.of(LocalDateTime.MIN, false));
 	}
 
 	@Override
 	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
 		// TODO Auto-generated method stub
-		return null;
+		return Collections.emptyList();
+
 	}
 }

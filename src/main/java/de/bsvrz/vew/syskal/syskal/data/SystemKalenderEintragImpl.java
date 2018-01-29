@@ -23,21 +23,7 @@ public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
 
 	void bestimmeKalendereintrag() {
 		String name = systemObject.getName();
-		kalenderEintrag = VorDefinierterEintrag.getEintrag(name);
-		if (kalenderEintrag == null && originalDefinition != null) {
-			final String[] parts = originalDefinition.split(":=");
-
-			if (parts.length < 2) {
-				kalenderEintrag = KalenderEintragDefinition.parse(provider, name, parts[0].trim());
-			} else {
-				final String defName = parts[0].trim();
-				if (!defName.equals(name)) {
-					Debug.getLogger().warning("Für den Systemkalendereintrag " + systemObject
-							+ " ist der abweichende Name: \"" + name + "\" definiert!");
-				}
-				kalenderEintrag = KalenderEintragDefinition.parse(provider, name, parts[1].trim());
-			}
-		}
+		kalenderEintrag = KalenderEintragDefinition.parse(provider, name, originalDefinition);
 	}
 
 	public KalenderEintragDefinition getKalenderEintrag() {

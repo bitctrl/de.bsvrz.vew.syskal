@@ -63,7 +63,7 @@ public class SystemkalenderEintragTest {
 		KalenderEintragDefinition skeSo = eintragsProvider.getKalenderEintrag("Sonntag");
 
 		switch (dow) {
-		case SUNDAY:
+		case SATURDAY:
 			assertTrue("Test 0", skeSa.isGueltig(zeitpunkt));
 			assertFalse("Test 1", skeSo.isGueltig(zeitpunkt));
 			assertFalse("Test 2", skeMo.isGueltig(zeitpunkt));
@@ -72,7 +72,7 @@ public class SystemkalenderEintragTest {
 			assertFalse("Test 5", skeDo.isGueltig(zeitpunkt));
 			assertFalse("Test 6", skeFr.isGueltig(zeitpunkt));
 			break;
-		case MONDAY:
+		case SUNDAY:
 			assertFalse("Test 0", skeSa.isGueltig(zeitpunkt));
 			assertTrue("Test 1", skeSo.isGueltig(zeitpunkt));
 			assertFalse("Test 2", skeMo.isGueltig(zeitpunkt));
@@ -81,7 +81,7 @@ public class SystemkalenderEintragTest {
 			assertFalse("Test 5", skeDo.isGueltig(zeitpunkt));
 			assertFalse("Test 6", skeFr.isGueltig(zeitpunkt));
 			break;
-		case TUESDAY:
+		case MONDAY:
 			assertFalse("Test 0", skeSa.isGueltig(zeitpunkt));
 			assertFalse("Test 1", skeSo.isGueltig(zeitpunkt));
 			assertTrue("Test 2", skeMo.isGueltig(zeitpunkt));
@@ -90,7 +90,7 @@ public class SystemkalenderEintragTest {
 			assertFalse("Test 5", skeDo.isGueltig(zeitpunkt));
 			assertFalse("Test 6", skeFr.isGueltig(zeitpunkt));
 			break;
-		case WEDNESDAY:
+		case TUESDAY:
 			assertFalse("Test 0", skeSa.isGueltig(zeitpunkt));
 			assertFalse("Test 1", skeSo.isGueltig(zeitpunkt));
 			assertFalse("Test 2", skeMo.isGueltig(zeitpunkt));
@@ -99,7 +99,7 @@ public class SystemkalenderEintragTest {
 			assertFalse("Test 5", skeDo.isGueltig(zeitpunkt));
 			assertFalse("Test 6", skeFr.isGueltig(zeitpunkt));
 			break;
-		case THURSDAY:
+		case WEDNESDAY:
 			assertFalse("Test 0", skeSa.isGueltig(zeitpunkt));
 			assertFalse("Test 1", skeSo.isGueltig(zeitpunkt));
 			assertFalse("Test 2", skeMo.isGueltig(zeitpunkt));
@@ -108,7 +108,7 @@ public class SystemkalenderEintragTest {
 			assertFalse("Test 5", skeDo.isGueltig(zeitpunkt));
 			assertFalse("Test 6", skeFr.isGueltig(zeitpunkt));
 			break;
-		case FRIDAY:
+		case THURSDAY:
 			assertFalse("Test 0", skeSa.isGueltig(zeitpunkt));
 			assertFalse("Test 1", skeSo.isGueltig(zeitpunkt));
 			assertFalse("Test 2", skeMo.isGueltig(zeitpunkt));
@@ -117,7 +117,7 @@ public class SystemkalenderEintragTest {
 			assertTrue("Test 5", skeDo.isGueltig(zeitpunkt));
 			assertFalse("Test 6", skeFr.isGueltig(zeitpunkt));
 			break;
-		case SATURDAY:
+		case FRIDAY:
 			assertFalse("Test 0", skeSa.isGueltig(zeitpunkt));
 			assertFalse("Test 1", skeSo.isGueltig(zeitpunkt));
 			assertFalse("Test 2", skeMo.isGueltig(zeitpunkt));

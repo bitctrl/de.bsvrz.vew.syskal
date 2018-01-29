@@ -48,9 +48,7 @@ public class Verweis {
 
 	private final boolean ungueltig;
 
-	public boolean isUngueltig() {
-		return ungueltig;
-	}
+	private KalenderEintragDefinition referenzEintrag;
 
 	/**
 	 * Konstruktor.
@@ -87,7 +85,8 @@ public class Verweis {
 				throw new ParseException("Der String \"" + def + "\" kann nicht als Verweis interpretiert werden!", 0);
 			}
 
-			ungueltig = provider.getKalenderEintrag(name) == null;
+			referenzEintrag = provider.getKalenderEintrag(name);
+			ungueltig = referenzEintrag == null;
 
 		} else {
 			throw new ParseException("Der String \"null\" kann nicht als Verweis interpretiert werden!", 0);
@@ -138,6 +137,10 @@ public class Verweis {
 		return offset;
 	}
 
+	public KalenderEintragDefinition getReferenzEintrag() {
+		return referenzEintrag;
+	}
+
 	/**
 	 * ermittelt, ob der Verweiseintrag negiert werden soll.
 	 * 
@@ -145,6 +148,10 @@ public class Verweis {
 	 */
 	public boolean isNegiert() {
 		return negiert;
+	}
+
+	public boolean isUngueltig() {
+		return ungueltig;
 	}
 
 	/**
