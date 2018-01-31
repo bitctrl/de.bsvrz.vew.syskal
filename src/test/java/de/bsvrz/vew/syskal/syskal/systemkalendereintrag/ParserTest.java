@@ -11,7 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintragDefinition;
+import de.bsvrz.vew.syskal.syskal.data.KalenderEintrag;
 import de.bsvrz.vew.syskal.syskal.data.KalenderEintragProvider;
 
 public class ParserTest {
@@ -29,28 +29,28 @@ public class ParserTest {
 
 		eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Montag", "Montag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Dienstag", "Dienstag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Mittwoch", "Mittwoch"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Freitag", "Freitag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Samstag", "Samstag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Sonntag", "Sonntag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Tag", "Tag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Bereich1",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Montag", "Montag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Dienstag", "Dienstag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Mittwoch", "Mittwoch"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Freitag", "Freitag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Samstag", "Samstag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Sonntag", "Sonntag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Tag", "Tag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Bereich1",
 				"Bereich1:=<01.01.2008 00:00:00,000-31.01.2008 23:59:59,999>"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Bereich2",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Bereich2",
 				"Bereich2:=<15.01.2008 00:00:00,000-15.02.2008 23:59:59,999>"));
 		eintragsProvider.addEintrag(
-				KalenderEintragDefinition.parse(eintragsProvider, "Bereich3", "Bereich3:=<15.01.2008-15.02.2008>"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Bereich4",
+				KalenderEintrag.parse(eintragsProvider, "Bereich3", "Bereich3:=<15.01.2008-15.02.2008>"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Bereich4",
 				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})"));
 
 	}
 
-	private KalenderEintragDefinition ergaenzeEintrag(String name, String definition) {
-		KalenderEintragDefinition eintragDefinition = KalenderEintragDefinition.parse(eintragsProvider, name,
+	private KalenderEintrag ergaenzeEintrag(String name, String definition) {
+		KalenderEintrag eintragDefinition = KalenderEintrag.parse(eintragsProvider, name,
 				definition);
 		eintragsProvider.addEintrag(eintragDefinition);
 		return eintragDefinition;

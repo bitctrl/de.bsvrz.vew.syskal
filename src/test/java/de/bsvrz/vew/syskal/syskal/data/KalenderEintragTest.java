@@ -19,21 +19,21 @@ public class KalenderEintragTest {
 	public static void setUpBeforeClass() throws Exception {
 		provider = new TestKalenderEintragProvider();
 
-		provider.addEintrag(KalenderEintragDefinition.parse(provider, "Montag", "Montag"));
-		provider.addEintrag(KalenderEintragDefinition.parse(provider, "Dienstag", "Dienstag"));
-		provider.addEintrag(KalenderEintragDefinition.parse(provider, "Mittwoch", "Mittwoch"));
-		provider.addEintrag(KalenderEintragDefinition.parse(provider, "Donnerstag", "Donnerstag"));
-		provider.addEintrag(KalenderEintragDefinition.parse(provider, "Freitag", "Freitag"));
-		provider.addEintrag(KalenderEintragDefinition.parse(provider, "Samstag", "Samstag"));
-		provider.addEintrag(KalenderEintragDefinition.parse(provider, "Sonntag", "Sonntag"));
-		provider.addEintrag(KalenderEintragDefinition.parse(provider, "Tag", "Tag"));
-		provider.addEintrag(KalenderEintragDefinition.parse(provider, "Ostersonntag", "Ostersonntag"));
-		provider.addEintrag(KalenderEintragDefinition.parse(provider, "Bereich1",
+		provider.addEintrag(KalenderEintrag.parse(provider, "Montag", "Montag"));
+		provider.addEintrag(KalenderEintrag.parse(provider, "Dienstag", "Dienstag"));
+		provider.addEintrag(KalenderEintrag.parse(provider, "Mittwoch", "Mittwoch"));
+		provider.addEintrag(KalenderEintrag.parse(provider, "Donnerstag", "Donnerstag"));
+		provider.addEintrag(KalenderEintrag.parse(provider, "Freitag", "Freitag"));
+		provider.addEintrag(KalenderEintrag.parse(provider, "Samstag", "Samstag"));
+		provider.addEintrag(KalenderEintrag.parse(provider, "Sonntag", "Sonntag"));
+		provider.addEintrag(KalenderEintrag.parse(provider, "Tag", "Tag"));
+		provider.addEintrag(KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag"));
+		provider.addEintrag(KalenderEintrag.parse(provider, "Bereich1",
 				"Bereich1:=<01.01.2008 00:00:00,000-31.01.2008 23:59:59,999>"));
-		provider.addEintrag(KalenderEintragDefinition.parse(provider, "Bereich2",
+		provider.addEintrag(KalenderEintrag.parse(provider, "Bereich2",
 				"Bereich2:=<15.01.2008 00:00:00,000-15.02.2008 23:59:59,999>"));
-		provider.addEintrag(KalenderEintragDefinition.parse(provider, "Bereich3", "Bereich3:=<15.01.2008-15.02.2008>"));
-		provider.addEintrag(KalenderEintragDefinition.parse(provider, "Bereich4",
+		provider.addEintrag(KalenderEintrag.parse(provider, "Bereich3", "Bereich3:=<15.01.2008-15.02.2008>"));
+		provider.addEintrag(KalenderEintrag.parse(provider, "Bereich4",
 				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})"));
 
 	}

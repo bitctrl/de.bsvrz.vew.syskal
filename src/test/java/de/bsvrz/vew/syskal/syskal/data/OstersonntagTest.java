@@ -21,7 +21,7 @@ public class OstersonntagTest {
 	public void testeGetDatumImJahr() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		KalenderEintragDefinition osterSonntag = KalenderEintragDefinition.parse(provider, "Ostersonntag",
+		KalenderEintrag osterSonntag = KalenderEintrag.parse(provider, "Ostersonntag",
 				"Ostersonntag");
 
 		assertTrue(osterSonntag instanceof Ostersonntag);
@@ -125,7 +125,7 @@ public class OstersonntagTest {
 	public void testeGueltigkeit() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintragDefinition.parse(provider, "Ostersonntag",
+		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag",
 				"Ostersonntag");
 
 		LocalDate now = LocalDate.now();
@@ -163,7 +163,7 @@ public class OstersonntagTest {
 	public void testeZustandswechsel() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintragDefinition.parse(provider, "Ostersonntag",
+		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag",
 				"Ostersonntag");
 
 		LocalDateTime start = LocalDateTime.of(2015, 1, 1, 0, 0);

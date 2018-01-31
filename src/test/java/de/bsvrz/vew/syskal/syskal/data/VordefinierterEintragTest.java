@@ -20,7 +20,7 @@ public class VordefinierterEintragTest {
 	public void testeGueltigkeit() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintragDefinition.parse(provider, "Mittwoch",
+		VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintrag.parse(provider, "Mittwoch",
 				"Mittwoch");
 
 		LocalDateTime now = LocalDateTime.now();
@@ -60,7 +60,7 @@ public class VordefinierterEintragTest {
 	public void testeZustandswechsel() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintragDefinition.parse(provider, "Mittwoch",
+		VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintrag.parse(provider, "Mittwoch",
 				"Mittwoch");
 
 		LocalDateTime start = LocalDateTime.of(2018, 1, 24, 12, 10);

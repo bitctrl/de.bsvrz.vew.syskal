@@ -26,25 +26,22 @@
 
 package de.bsvrz.vew.syskal.syskal.data;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Repräsentation der Daten eines {@link KalenderEintragDefinition}, der durch
+ * Repräsentation der Daten eines {@link KalenderEintrag}, der durch
  * einen Zeitbereich definiert wird.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class ZeitBereichsEintrag extends KalenderEintragDefinition {
+public class ZeitBereichsEintrag extends KalenderEintrag {
 
 	private LocalDateTime start;
 	private LocalDateTime ende;
@@ -269,9 +266,19 @@ public class ZeitBereichsEintrag extends KalenderEintragDefinition {
 				return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(datum, letzteGrenze.getEnde()), false),
 						ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getStart()), true));
 			}
+
+			if (abfrageZeit.isBefore(grenze.getEnde())) {
+				return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getStart()), true),
+						ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getEnde()), false));
+			}
+
 			letzteGrenze = grenze;
 		}
 
+		if( letzteGrenze == null) {
+			return Gueltigkeit.NICHT_GUELTIG;
+		}
+		
 		return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(datum, letzteGrenze.getEnde()), false),
 				ZustandsWechsel.of(LocalDateTime.of(datum.plusDays(1), zeitGrenzen.get(0).getStart()), true));
 	}
@@ -285,27 +292,59 @@ public class ZeitBereichsEintrag extends KalenderEintragDefinition {
 
 		List<ZustandsWechsel> result = new ArrayList<>();
 
-		LocalDate startDate = start.toLocalDate();
-		LocalTime startZeit = start.toLocalTime();
-
 		List<ZeitGrenze> zeitGrenzen = getZeitGrenzen();
 		if (zeitGrenzen.isEmpty()) {
-			if (start.isEqual(this.start) || start.isAfter(this.start)) {
+			if (!start.isBefore(this.start)) {
 				result.add(ZustandsWechsel.of(start, true));
 				if (ende.isEqual(this.ende) || ende.isBefore(this.ende)) {
 					result.add(ZustandsWechsel.of(this.ende, false));
 				}
 				return result;
-			} else
-				result.add(ZustandsWechsel.of(start, true));
-			if (ende.isEqual(this.ende) || ende.isBefore(this.ende)) {
+			}
+
+			result.add(ZustandsWechsel.of(start, true));
+			if (!ende.isAfter(this.ende)) {
 				result.add(ZustandsWechsel.of(this.ende, false));
 			}
 			return result;
-
 		}
 
-		// TODO Auto-generated method stub
-		return Collections.emptyList();
+		LocalDateTime currentTime = start;
+
+		boolean firstDay = true;
+		while (!currentTime.isAfter(ende)) {
+			for (ZeitGrenze grenze : zeitGrenzen) {
+				if (firstDay) {
+					if (currentTime.toLocalTime().isBefore(grenze.getStart())) {
+						if (currentTime.toLocalTime().isBefore(grenze.getEnde())) {
+							result.add(ZustandsWechsel.of(currentTime, false));
+							firstDay = false;
+						}
+					} else if (currentTime.toLocalTime().isBefore(grenze.getEnde())) {
+						result.add(ZustandsWechsel.of(currentTime, true));
+						if (!LocalDateTime.of(currentTime.toLocalDate(), grenze.getEnde()).isAfter(ende)) {
+							result.add(ZustandsWechsel.of(LocalDateTime.of(currentTime.toLocalDate(), grenze.getEnde()),
+									false));
+						}
+						firstDay = false;
+						continue;
+					} else {
+						continue;
+					}
+				}
+
+				if (LocalDateTime.of(currentTime.toLocalDate(), grenze.getStart()).isBefore(ende)) {
+					result.add(
+							ZustandsWechsel.of(LocalDateTime.of(currentTime.toLocalDate(), grenze.getStart()), true));
+				}
+				if (!LocalDateTime.of(currentTime.toLocalDate(), grenze.getEnde()).isAfter(ende)) {
+					result.add(
+							ZustandsWechsel.of(LocalDateTime.of(currentTime.toLocalDate(), grenze.getEnde()), false));
+				}
+			}
+			currentTime = LocalDateTime.of(currentTime.toLocalDate().plusDays(1), LocalTime.MIDNIGHT);
+		}
+
+		return result;
 	}
 }

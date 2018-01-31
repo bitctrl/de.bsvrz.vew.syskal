@@ -64,7 +64,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
 	}
 
 	@Override
-	public KalenderEintragDefinition getKalenderEintrag(String name) {
+	public KalenderEintrag getKalenderEintrag(String name) {
 		Optional<SystemKalenderEintragImpl> systemKalenderEintrag = cache.values().stream().filter(s->name.equals(s.getName())).findFirst();
 		if (systemKalenderEintrag.isPresent()) {
 			return systemKalenderEintrag.get().getKalenderEintrag();

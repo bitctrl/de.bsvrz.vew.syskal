@@ -61,7 +61,7 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 	@Override
 	public Gueltigkeit getGueltigKeit(LocalDateTime zeitpunkt) {
 		// TODO Auto-generated method stub
-		return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.MIN, false), ZustandsWechsel.of(LocalDateTime.MIN, false));
+		return Gueltigkeit.of(ZustandsWechsel.MIN, ZustandsWechsel.MAX);
 
 	}
 

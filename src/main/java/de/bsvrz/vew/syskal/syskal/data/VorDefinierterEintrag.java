@@ -51,7 +51,7 @@ import java.util.Map;
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class VorDefinierterEintrag extends KalenderEintragDefinition {
+public class VorDefinierterEintrag extends KalenderEintrag {
 
 	/** Vordefinierter Eintrag MONTAG. */
 	private static final VorDefinierterEintrag MONTAG = new VorDefinierterEintrag("Montag", DayOfWeek.MONDAY);

@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.syskal.data.Gueltigkeit;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintragDefinition;
+import de.bsvrz.vew.syskal.syskal.data.KalenderEintrag;
 import de.bsvrz.vew.syskal.syskal.data.KalenderEintragProvider;
 import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
 
@@ -18,13 +18,13 @@ public class TestSyskalOffline5 {
 
 		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
 		eintragsProvider
-				.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "WF", "WF:=<24.12.2012-04.01.2013>"));
+				.addEintrag(KalenderEintrag.parse(eintragsProvider, "WF", "WF:=<24.12.2012-04.01.2013>"));
 		eintragsProvider
-				.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "WFD", "WFD:=UND{Donnerstag,WF}*,*"));
+				.addEintrag(KalenderEintrag.parse(eintragsProvider, "WFD", "WFD:=UND{Donnerstag,WF}*,*"));
 
-		KalenderEintragDefinition eintrag = eintragsProvider.getKalenderEintrag("WFD");
+		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("WFD");
 		LocalDateTime startTime = LocalDateTime.of(2012, 12, 20, 0, 0, 0);
 		LocalDateTime endTime = LocalDateTime.of(2012, 12, 31, 0, 0, 0);
 		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);

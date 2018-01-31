@@ -28,7 +28,7 @@ package de.bsvrz.vew.syskal;
 import java.time.LocalDateTime;
 
 import de.bsvrz.vew.syskal.syskal.data.Gueltigkeit;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintragDefinition;
+import de.bsvrz.vew.syskal.syskal.data.KalenderEintrag;
 import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
 
 /**

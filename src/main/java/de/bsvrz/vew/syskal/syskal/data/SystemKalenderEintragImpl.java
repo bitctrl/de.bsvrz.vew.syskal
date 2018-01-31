@@ -10,7 +10,7 @@ import de.bsvrz.vew.syskal.SystemkalenderEintrag;
 
 public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
 
-	private KalenderEintragDefinition kalenderEintrag;
+	private KalenderEintrag kalenderEintrag;
 	private KalenderEintragProvider provider;
 	private DynamicObject systemObject;
 	private String originalDefinition;
@@ -23,10 +23,10 @@ public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
 
 	void bestimmeKalendereintrag() {
 		String name = systemObject.getName();
-		kalenderEintrag = KalenderEintragDefinition.parse(provider, name, originalDefinition);
+		kalenderEintrag = KalenderEintrag.parse(provider, name, originalDefinition);
 	}
 
-	public KalenderEintragDefinition getKalenderEintrag() {
+	public KalenderEintrag getKalenderEintrag() {
 		return kalenderEintrag;
 	}
 

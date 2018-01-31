@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import de.bsvrz.vew.syskal.SystemkalenderEintrag;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintragDefinition;
+import de.bsvrz.vew.syskal.syskal.data.KalenderEintrag;
 import de.bsvrz.vew.syskal.syskal.data.KalenderEintragProvider;
 import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
 
@@ -23,32 +23,32 @@ public class TestSyskalOffline2 {
 
 		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Berufsverkehr",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Berufsverkehr",
 				"Berufsverkehr:=({07:00:00,000-11:00:00,000}{15:00:00,000-18:00:00,000})"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "KeinBerufsverkehr",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "KeinBerufsverkehr",
 				"Berufsverkehr:=({00:00:00,000-08:00:00,000}{11:00:00,000-15:00:00,000}{18:00:00,000-23:59:59,999})"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Dienstag", "Dienstag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "SuperDienstag",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Dienstag", "Dienstag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "SuperDienstag",
 				"SuperDienstag:=UND{Dienstag,Berufsverkehr}*,*"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "SuperMittwoch",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "SuperMittwoch",
 				"SuperMittwoch:=SuperDienstag+1Tag"));
 		eintragsProvider.addEintrag(
-				KalenderEintragDefinition.parse(eintragsProvider, "Ostermontag", "Ostermontag:=Ostersonntag+1Tag"));
+				KalenderEintrag.parse(eintragsProvider, "Ostermontag", "Ostermontag:=Ostersonntag+1Tag"));
 		eintragsProvider.addEintrag(
-				KalenderEintragDefinition.parse(eintragsProvider, "Osterdienstag", "Osterdienstag:=Ostermontag+1Tag"));
+				KalenderEintrag.parse(eintragsProvider, "Osterdienstag", "Osterdienstag:=Ostermontag+1Tag"));
 		eintragsProvider.addEintrag(
-				KalenderEintragDefinition.parse(eintragsProvider, "Karfreitag", "Karfreitag:=Ostersonntag-2Tage"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Pfingstsonntag",
+				KalenderEintrag.parse(eintragsProvider, "Karfreitag", "Karfreitag:=Ostersonntag-2Tage"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Pfingstsonntag",
 				"Pfingstsonntag:=Ostersonntag+49Tage"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Pfingstmontag",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Pfingstmontag",
 				"Pfingstmontag:=Pfingstsonntag+1Tag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Tag", "Tag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Sonntag", "Sonntag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "KeinSonntag",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Tag", "Tag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Sonntag", "Sonntag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "KeinSonntag",
 				"KeinSonntag:=UND{Tag,NICHT Sonntag}*,*"));
 
-		KalenderEintragDefinition eintrag = eintragsProvider.getKalenderEintrag("Tag");
+		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Tag");
 		LocalDateTime startTime = LocalDateTime.of(2009, 10, 1, 14, 0, 0);
 		endTime = LocalDateTime.of(2009, 10, 5, 14, 0, 0);
 		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);

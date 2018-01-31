@@ -34,13 +34,13 @@ import java.util.regex.Matcher;
 import de.bsvrz.sys.funclib.debug.Debug;
 
 /**
- * Repräsentation der Daten eines {@link KalenderEintragDefinition}, der durch die
+ * Repräsentation der Daten eines {@link KalenderEintrag}, der durch die
  * logische Verknüpfung mehrerer anderer Einträge definiert wird.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
 public abstract class LogischerVerkuepfungsEintrag extends
-		KalenderEintragDefinition {
+		KalenderEintrag {
 
 	/** die Liste der Verweise, die den Eintrag definieren. */
 	private final List<Verweis> verweise = new ArrayList<>();
@@ -71,7 +71,7 @@ public abstract class LogischerVerkuepfungsEintrag extends
 		if (definition != null) {
 			String rest = definition;
 
-			final Matcher mat = KalenderEintragDefinition.ZEITBEREICH_PATTERN
+			final Matcher mat = KalenderEintrag.ZEITBEREICH_PATTERN
 					.matcher(rest);
 			while (mat.find()) {
 				String elemente = mat.group();

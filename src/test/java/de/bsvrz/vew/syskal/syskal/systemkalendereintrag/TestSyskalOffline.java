@@ -6,7 +6,7 @@ import java.util.List;
 import org.junit.Test;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintragDefinition;
+import de.bsvrz.vew.syskal.syskal.data.KalenderEintrag;
 import de.bsvrz.vew.syskal.syskal.data.KalenderEintragProvider;
 import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
 
@@ -17,24 +17,24 @@ public class TestSyskalOffline {
 
 		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 		
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Montag", "Montag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Berufsverkehr",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Montag", "Montag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Berufsverkehr",
 				"Berufsverkehr:=({07:00:00,000-11:00:00,000}{15:00:00,000-18:00:00,000})"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Montag_Berufsverkehr",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Montag_Berufsverkehr",
 				"Montag_Berufsverkehr:=UND{Montag,Berufsverkehr}*,*"));
 		eintragsProvider.addEintrag(
-				KalenderEintragDefinition.parse(eintragsProvider, "GeburtstagHCK", "GeburtstagHCK:=27.11.1963,*"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Dienstag", "Dienstag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "SuperDienstag",
+				KalenderEintrag.parse(eintragsProvider, "GeburtstagHCK", "GeburtstagHCK:=27.11.1963,*"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Dienstag", "Dienstag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "SuperDienstag",
 				"SuperDienstag:=UND{Dienstag,Berufsverkehr}*,*"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "DienstagAlsVerknüpfung",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "DienstagAlsVerknüpfung",
 				"DienstagAlsVerknüpfung:=UND{Dienstag}*,*"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "GeburtstagHCKFeierKopie",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "GeburtstagHCKFeierKopie",
 				"GeburtstagHCKFeierKopie:=GeburtstagHCK-3Tage"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "SuperMittwoch",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "SuperMittwoch",
 				"SuperMittwoch:=SuperDienstag-1Tag"));
 
-		KalenderEintragDefinition eintrag = eintragsProvider.getKalenderEintrag("Montag_Berufsverkehr");
+		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Montag_Berufsverkehr");
 		LocalDateTime startTime = LocalDateTime.of(2009, 8, 1, 10, 40, 35);
 		LocalDateTime endTime = LocalDateTime.of(2009, 9, 18, 10, 40, 35);
 		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);

@@ -48,7 +48,7 @@ public class Verweis {
 
 	private final boolean ungueltig;
 
-	private KalenderEintragDefinition referenzEintrag;
+	private KalenderEintrag referenzEintrag;
 
 	/**
 	 * Konstruktor.
@@ -137,7 +137,7 @@ public class Verweis {
 		return offset;
 	}
 
-	public KalenderEintragDefinition getReferenzEintrag() {
+	public KalenderEintrag getReferenzEintrag() {
 		return referenzEintrag;
 	}
 

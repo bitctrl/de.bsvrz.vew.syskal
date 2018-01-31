@@ -26,7 +26,6 @@
 
 package de.bsvrz.vew.syskal.syskal.data;
 
-import java.security.GuardedObject;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -41,7 +40,7 @@ import java.util.List;
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class DatumsEintrag extends KalenderEintragDefinition {
+public class DatumsEintrag extends KalenderEintrag {
 
 	/** das letzte Jahr für das der Eintrag gültig ist. */
 	private Integer endJahr;
@@ -222,7 +221,7 @@ public class DatumsEintrag extends KalenderEintragDefinition {
 		}
 		
 		// TODO Auto-generated method stub
-		return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.MIN, false), ZustandsWechsel.of(LocalDateTime.MIN, false));
+		return Gueltigkeit.of(ZustandsWechsel.MIN, ZustandsWechsel.MAX);
 	}
 
 	@Override

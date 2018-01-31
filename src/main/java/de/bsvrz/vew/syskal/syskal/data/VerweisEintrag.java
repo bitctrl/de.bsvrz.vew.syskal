@@ -38,7 +38,7 @@ import java.util.List;
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class VerweisEintrag extends KalenderEintragDefinition {
+public class VerweisEintrag extends KalenderEintrag {
 
 	/** der definierende Eintrag mit zusätzlichen Erweiterungen. */
 	private Verweis verweis;
@@ -149,7 +149,7 @@ public class VerweisEintrag extends KalenderEintragDefinition {
 			return Gueltigkeit.NICHT_GUELTIG;
 		}
 
-		KalenderEintragDefinition referenzEintrag = verweis.getReferenzEintrag();
+		KalenderEintrag referenzEintrag = verweis.getReferenzEintrag();
 		int tagesOffset = verweis.getOffset();
 		Gueltigkeit gueltigKeit = referenzEintrag.getGueltigKeit(zeitpunkt.minusDays(tagesOffset));
 
@@ -174,7 +174,7 @@ public class VerweisEintrag extends KalenderEintragDefinition {
 			return Collections.emptyList();
 		}
 
-		KalenderEintragDefinition referenzEintrag = verweis.getReferenzEintrag();
+		KalenderEintrag referenzEintrag = verweis.getReferenzEintrag();
 		int tagesOffset = verweis.getOffset();
 		List<ZustandsWechsel> referenzWechsel = referenzEintrag
 				.getZustandsWechselImBereich(start.minusDays(tagesOffset), ende.minusDays(tagesOffset));
@@ -190,4 +190,5 @@ public class VerweisEintrag extends KalenderEintragDefinition {
 
 		return result;
 	}
+
 }

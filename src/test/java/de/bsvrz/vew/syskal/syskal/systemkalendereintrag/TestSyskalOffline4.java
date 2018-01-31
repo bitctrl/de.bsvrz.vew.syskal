@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import de.bsvrz.vew.syskal.SystemkalenderEintrag;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintragDefinition;
+import de.bsvrz.vew.syskal.syskal.data.KalenderEintrag;
 import de.bsvrz.vew.syskal.syskal.data.KalenderEintragProvider;
 import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
 
@@ -23,32 +23,32 @@ public class TestSyskalOffline4 {
 
 		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Tag", "Tag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Tag", "Tag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
 		eintragsProvider
-				.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Test1", "Test1:=29.02.2001,2010"));
+				.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test1", "Test1:=29.02.2001,2010"));
 		eintragsProvider
-				.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Test2", "Test2:=29.02.2004,2010"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Test3",
+				.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test2", "Test2:=29.02.2004,2010"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test3",
 				"Test3:=({13:00:00,000-15:00:00,000}{14:00:00,000-16:00:00,000})*,*"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Test31",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test31",
 				"Test31:=({13:00:00,000-14:00:00,000}{14:00:00,000-15:00:00,000})*,*"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Test32",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test32",
 				"Test32:=({13:00:00,000-14:00:00,000}{15:00:00,000-16:00:00,000})"));
 		eintragsProvider
-				.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Test4", "Test4:=Ostersonntag+1Tag"));
+				.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test4", "Test4:=Ostersonntag+1Tag"));
 		eintragsProvider
-				.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Test5", "Test5:=Ostersonntag-4Tage"));
+				.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test5", "Test5:=Ostersonntag-4Tage"));
 		eintragsProvider.addEintrag(
-				KalenderEintragDefinition.parse(eintragsProvider, "Ostermontag", "Ostermontag:=Ostersonntag+1Tag"));
+				KalenderEintrag.parse(eintragsProvider, "Ostermontag", "Ostermontag:=Ostersonntag+1Tag"));
 		eintragsProvider.addEintrag(
-				KalenderEintragDefinition.parse(eintragsProvider, "Karfreitag", "Karfreitag:=Ostermontag-3Tage"));
+				KalenderEintrag.parse(eintragsProvider, "Karfreitag", "Karfreitag:=Ostermontag-3Tage"));
 		eintragsProvider.addEintrag(
-				KalenderEintragDefinition.parse(eintragsProvider, "Test6", "Test6:=UND{Tag,NICHT Ostersonntag}*,*"));
+				KalenderEintrag.parse(eintragsProvider, "Test6", "Test6:=UND{Tag,NICHT Ostersonntag}*,*"));
 		eintragsProvider
-				.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Test7", "Test7:=UND{Test32,Tag}*,*"));
+				.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test7", "Test7:=UND{Test32,Tag}*,*"));
 
-		KalenderEintragDefinition eintrag = eintragsProvider.getKalenderEintrag("Test1");
+		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test1");
 		LocalDateTime startTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
 		LocalDateTime endTime = LocalDateTime.of(2010, 12, 31, 23, 59, 59);
 		endTime = endTime.plusNanos(999000);

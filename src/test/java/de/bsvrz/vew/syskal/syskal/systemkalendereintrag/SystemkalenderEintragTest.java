@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintragDefinition;
+import de.bsvrz.vew.syskal.syskal.data.KalenderEintrag;
 import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
 
 public class SystemkalenderEintragTest {
@@ -23,28 +23,28 @@ public class SystemkalenderEintragTest {
 	public static void setUpBeforeClass() throws Exception {
 		eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Montag", "Montag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Dienstag", "Dienstag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Mittwoch", "Mittwoch"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Freitag", "Freitag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Samstag", "Samstag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Sonntag", "Sonntag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Tag", "Tag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Bereich1",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Montag", "Montag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Dienstag", "Dienstag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Mittwoch", "Mittwoch"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Freitag", "Freitag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Samstag", "Samstag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Sonntag", "Sonntag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Tag", "Tag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Bereich1",
 				"Bereich1:=<01.01.2008 00:00:00,000-31.01.2008 23:59:59,999>"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Bereich2",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Bereich2",
 				"Bereich2:=<15.01.2008 00:00:00,000-15.02.2008 23:59:59,999>"));
 		eintragsProvider.addEintrag(
-				KalenderEintragDefinition.parse(eintragsProvider, "Bereich3", "Bereich3:=<15.01.2008-15.02.2008>"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Bereich4",
+				KalenderEintrag.parse(eintragsProvider, "Bereich3", "Bereich3:=<15.01.2008-15.02.2008>"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Bereich4",
 				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "TDDEalt", "17.06.1963,1989"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "TDDEneu", "03.10.1990,*"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Tag der deutschen Einheit",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "TDDEalt", "17.06.1963,1989"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "TDDEneu", "03.10.1990,*"));
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Tag der deutschen Einheit",
 				"ODER{TDDEalt,TDDEneu}*,*"));
-		eintragsProvider.addEintrag(KalenderEintragDefinition.parse(eintragsProvider, "Bereich5",
+		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Bereich5",
 				"Bereich5:=<01.09.2009-30.09.2009>({08:00:00,000-16:00:00,000})"));
 	}
 
@@ -54,13 +54,13 @@ public class SystemkalenderEintragTest {
 		LocalDateTime zeitpunkt = LocalDateTime.now();
 		DayOfWeek dow = zeitpunkt.getDayOfWeek();
 
-		KalenderEintragDefinition skeMo = eintragsProvider.getKalenderEintrag("Montag");
-		KalenderEintragDefinition skeDi = eintragsProvider.getKalenderEintrag("Dienstag");
-		KalenderEintragDefinition skeMi = eintragsProvider.getKalenderEintrag("Mittwoch");
-		KalenderEintragDefinition skeDo = eintragsProvider.getKalenderEintrag("Donnerstag");
-		KalenderEintragDefinition skeFr = eintragsProvider.getKalenderEintrag("Freitag");
-		KalenderEintragDefinition skeSa = eintragsProvider.getKalenderEintrag("Samstag");
-		KalenderEintragDefinition skeSo = eintragsProvider.getKalenderEintrag("Sonntag");
+		KalenderEintrag skeMo = eintragsProvider.getKalenderEintrag("Montag");
+		KalenderEintrag skeDi = eintragsProvider.getKalenderEintrag("Dienstag");
+		KalenderEintrag skeMi = eintragsProvider.getKalenderEintrag("Mittwoch");
+		KalenderEintrag skeDo = eintragsProvider.getKalenderEintrag("Donnerstag");
+		KalenderEintrag skeFr = eintragsProvider.getKalenderEintrag("Freitag");
+		KalenderEintrag skeSa = eintragsProvider.getKalenderEintrag("Samstag");
+		KalenderEintrag skeSo = eintragsProvider.getKalenderEintrag("Sonntag");
 
 		switch (dow) {
 		case SATURDAY:
@@ -137,7 +137,7 @@ public class SystemkalenderEintragTest {
 	@Test
 	public void berechneZustandsWechselVonBisTest() throws Exception {
 
-		KalenderEintragDefinition eintrag = eintragsProvider.getKalenderEintrag("Bereich4");
+		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Bereich4");
 
 		LocalDateTime startTime = LocalDateTime.of(2008, 1, 15, 0, 0, 0);
 		LocalDateTime endTime = LocalDateTime.of(2008, 1, 16, 23, 59, 59);
