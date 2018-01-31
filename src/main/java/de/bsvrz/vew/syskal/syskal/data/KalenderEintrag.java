@@ -32,6 +32,16 @@ public abstract class KalenderEintrag {
 		this.definition = definition;
 	}
 
+	ZustandsWechsel getWechselZuVor(LocalDateTime zeitPunkt, boolean status) {
+		return null;
+		// TODO für einzelne Einträge implementieren
+	}
+	
+	ZustandsWechsel getWechselZuNach(LocalDateTime zeitPunkt, boolean status) {
+		return null;
+		// TODO für einzelne Einträge implementieren
+	}
+	
 	public abstract Gueltigkeit getGueltigKeit(LocalDateTime zeitpunkt);
 
 	public abstract List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende);
@@ -206,13 +216,23 @@ public abstract class KalenderEintrag {
 		return getGueltigKeit(zeitpunkt).getBeginn().isWirdGueltig();
 	}
 
-	public final ZustandsWechsel nachsterZustandswechselNach(LocalDateTime zeitpunkt, LocalDateTime maximalesSuchdatum, boolean gueltig) {
+	public final ZustandsWechsel zustandswechselNach(LocalDateTime zeitpunkt, LocalDateTime maximalesSuchdatum, boolean gueltig) {
 		Gueltigkeit gueltigKeit = getGueltigKeit(zeitpunkt);
 		if( gueltig == gueltigKeit.getNaechsteAenderung().isWirdGueltig() || zeitpunkt.isAfter(maximalesSuchdatum)) {
 			return gueltigKeit.getNaechsteAenderung();
 		}
 		
-		return nachsterZustandswechselNach(gueltigKeit.getNaechsteAenderung().getZeitPunkt(), maximalesSuchdatum, gueltig);
+		return zustandswechselNach(gueltigKeit.getNaechsteAenderung().getZeitPunkt(), maximalesSuchdatum, gueltig);
 	}
 
+	// TODO Implementieren
+	public final ZustandsWechsel zustandswechselVor(LocalDateTime zeitpunkt, LocalDateTime maximalesSuchdatum, boolean gueltig) {
+		Gueltigkeit gueltigKeit = getGueltigKeit(zeitpunkt);
+		if( gueltig == gueltigKeit.getNaechsteAenderung().isWirdGueltig() || zeitpunkt.isAfter(maximalesSuchdatum)) {
+			return gueltigKeit.getNaechsteAenderung();
+		}
+		
+		return zustandswechselVor(gueltigKeit.getNaechsteAenderung().getZeitPunkt(), maximalesSuchdatum, gueltig);
+	}
+	
 }

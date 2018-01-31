@@ -68,9 +68,9 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 	@Override
 	public Gueltigkeit getGueltigKeit(LocalDateTime zeitpunkt) {
 
-		ZustandsWechsel beginn = null;
 		boolean zustand = true;
-		Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel = new LinkedHashMap<>();
+		Map<KalenderEintrag, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
+		Map<KalenderEintrag, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
 
 		for (Verweis verweis : getVerweise()) {
 			KalenderEintrag eintrag = verweis.getReferenzEintrag();
@@ -79,28 +79,38 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 			}
 
 			Gueltigkeit gueltigKeit = eintrag.getGueltigKeit(zeitpunkt);
-			if (beginn == null) {
-				beginn = gueltigKeit.getBeginn();
-				zustand = zustand & beginn.isWirdGueltig();
-			} else if (beginn.getZeitPunkt().isBefore(gueltigKeit.getBeginn().getZeitPunkt())) {
-				beginn = gueltigKeit.getBeginn();
-				zustand = zustand & beginn.isWirdGueltig();
-			}
+			zustand = zustand & gueltigKeit.getBeginn().isWirdGueltig();
 
-			potentielleWechsel.put(eintrag, gueltigKeit.getNaechsteAenderung());
+			potentielleStartWechsel.put(eintrag, gueltigKeit.getBeginn());
+			potentielleEndWechsel.put(eintrag, gueltigKeit.getNaechsteAenderung());
 		}
 
-		ZustandsWechsel ende = berechneNaechstenWechselAuf(!zustand, potentielleWechsel);
+		ZustandsWechsel beginn = berechneBeginnWechselAuf(zustand, potentielleStartWechsel);
+		ZustandsWechsel ende = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);
 
 		return Gueltigkeit.of(beginn, ende);
 	}
 
-	private ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand,
+	private ZustandsWechsel berechneBeginnWechselAuf(boolean zielZustand,
 			Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
 
 		ZustandsWechsel result = null;
 
 		if (zielZustand) {
+			
+			for (ZustandsWechsel wechsel : potentielleWechsel.values()) {
+				if (!wechsel.isWirdGueltig()) {
+					continue;
+				}
+				if (result == null) {
+					result = wechsel;
+				} else if (result.getZeitPunkt().isBefore(wechsel.getZeitPunkt())) {
+					result = wechsel;
+				}
+			}
+			
+		} else {
+
 			Map<KalenderEintrag, ZustandsWechsel> zustandsWechsel = new LinkedHashMap<>(potentielleWechsel);
 
 			do {
@@ -109,7 +119,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 					if (entry.getValue().isWirdGueltig() == zielZustand) {
 						korrigierteZustandsWechsel.put(entry.getKey(), entry.getValue());
 					} else {
-						ZustandsWechsel wechsel = entry.getKey().nachsterZustandswechselNach(
+						ZustandsWechsel wechsel = entry.getKey().zustandswechselVor(
 								entry.getValue().getZeitPunkt(), entry.getValue().getZeitPunkt().plusYears(10),
 								zielZustand);
 						if (wechsel != null) {
@@ -135,7 +145,62 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 				for (Entry<KalenderEintrag, ZustandsWechsel> entry : korrigierteZustandsWechsel.entrySet()) {
 					KalenderEintrag eintrag = entry.getKey();
 					if (entry.getValue().getZeitPunkt().isBefore(result.getZeitPunkt())) {
-						zustandsWechsel.put(eintrag, eintrag.nachsterZustandswechselNach(result.getZeitPunkt(),
+						zustandsWechsel.put(eintrag, eintrag.zustandswechselNach(result.getZeitPunkt(),
+								result.getZeitPunkt().plusYears(10), zielZustand));
+					}
+					if (eintrag.isGueltig(result.getZeitPunkt()) != zielZustand) {
+						result = null;
+					}
+				}
+
+			} while (result == null);
+
+		}
+		return result;
+	}
+	
+	
+	private ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand,
+			Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
+
+		ZustandsWechsel result = null;
+
+		if (zielZustand) {
+			Map<KalenderEintrag, ZustandsWechsel> zustandsWechsel = new LinkedHashMap<>(potentielleWechsel);
+
+			do {
+				Map<KalenderEintrag, ZustandsWechsel> korrigierteZustandsWechsel = new LinkedHashMap<>();
+				for (Entry<KalenderEintrag, ZustandsWechsel> entry : zustandsWechsel.entrySet()) {
+					if (entry.getValue().isWirdGueltig() == zielZustand) {
+						korrigierteZustandsWechsel.put(entry.getKey(), entry.getValue());
+					} else {
+						ZustandsWechsel wechsel = entry.getKey().zustandswechselNach(
+								entry.getValue().getZeitPunkt(), entry.getValue().getZeitPunkt().plusYears(10),
+								zielZustand);
+						if (wechsel != null) {
+							korrigierteZustandsWechsel.put(entry.getKey(), wechsel);
+						}
+					}
+				}
+
+				Optional<ZustandsWechsel> first = korrigierteZustandsWechsel.values().stream()
+						.sorted(new Comparator<ZustandsWechsel>() {
+
+							@Override
+							public int compare(ZustandsWechsel o1, ZustandsWechsel o2) {
+								return o2.getZeitPunkt().compareTo(o1.getZeitPunkt());
+							}
+						}).findFirst();
+
+				if (!first.isPresent()) {
+					return ZustandsWechsel.MAX;
+				}
+
+				result = first.get();
+				for (Entry<KalenderEintrag, ZustandsWechsel> entry : korrigierteZustandsWechsel.entrySet()) {
+					KalenderEintrag eintrag = entry.getKey();
+					if (entry.getValue().getZeitPunkt().isBefore(result.getZeitPunkt())) {
+						zustandsWechsel.put(eintrag, eintrag.zustandswechselNach(result.getZeitPunkt(),
 								result.getZeitPunkt().plusYears(10), zielZustand));
 					}
 					if (eintrag.isGueltig(result.getZeitPunkt()) != zielZustand) {
