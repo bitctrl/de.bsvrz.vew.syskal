@@ -24,7 +24,7 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.vew.syskal.syskal.data;
+package de.bsvrz.vew.syskal.internal;
 
 /**
  * Definition für die Arten der Daten mit denen der Inhalt eines

@@ -1,4 +1,4 @@
-package de.bsvrz.vew.syskal.syskal.data;
+package de.bsvrz.vew.syskal.internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;

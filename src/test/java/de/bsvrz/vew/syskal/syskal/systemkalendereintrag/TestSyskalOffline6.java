@@ -6,9 +6,9 @@ import java.util.List;
 import org.junit.Test;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintrag;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintragProvider;
-import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
+import de.bsvrz.vew.syskal.internal.KalenderEintrag;
+import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 
 public class TestSyskalOffline6 {
 

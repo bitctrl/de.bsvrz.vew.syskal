@@ -24,7 +24,7 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.vew.syskal.syskal.data;
+package de.bsvrz.vew.syskal.internal;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -35,9 +35,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
+
 /**
- * Repräsentation der Daten eines {@link KalenderEintrag}, der durch
- * einen Zeitbereich definiert wird.
+ * Repräsentation der Daten eines {@link KalenderEintrag}, der durch einen
+ * Zeitbereich definiert wird.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
@@ -230,7 +233,7 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public Gueltigkeit getGueltigKeit(LocalDateTime zeitpunkt) {
+	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitpunkt) {
 
 		LocalDate startDate;
 
@@ -242,45 +245,37 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
 
 		if (zeitGrenzen.isEmpty()) {
 			if (zeitpunkt.isBefore(start)) {
-				return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.MIN, false), ZustandsWechsel.of(start, true));
+				return Gueltigkeit.of(false, ZustandsWechsel.of(start, true));
 			}
-			return Gueltigkeit.of(ZustandsWechsel.of(start, true), ZustandsWechsel.of(ende, false));
+			return Gueltigkeit.of(true, ZustandsWechsel.of(ende, false));
 		}
-
+		
 		LocalDate datum = zeitpunkt.toLocalDate();
 		LocalTime abfrageZeit = zeitpunkt.toLocalTime();
 
 		ZeitGrenze letzteGrenze = null;
 		for (ZeitGrenze grenze : zeitGrenzen) {
+			
 			if (abfrageZeit.equals(grenze.getStart())) {
-				return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(datum, abfrageZeit), true),
-						ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getEnde()), false));
+				return Gueltigkeit.of(true, ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getEnde()), false));
 			}
 			if (abfrageZeit.isBefore(grenze.getStart())) {
-				if (letzteGrenze == null) {
-					return Gueltigkeit.of(
-							ZustandsWechsel.of(LocalDateTime.of(datum.minusDays(1),
-									zeitGrenzen.get(zeitGrenzen.size() - 1).getEnde()), false),
-							ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getStart()), true));
-				}
-				return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(datum, letzteGrenze.getEnde()), false),
-						ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getStart()), true));
+				return Gueltigkeit.of(false, ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getStart()), true));
 			}
 
 			if (abfrageZeit.isBefore(grenze.getEnde())) {
-				return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getStart()), true),
-						ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getEnde()), false));
+				return Gueltigkeit.of(true, ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getEnde()), false));
 			}
 
 			letzteGrenze = grenze;
 		}
 
-		if( letzteGrenze == null) {
+		LocalDateTime wechselZeit = LocalDateTime.of(zeitpunkt.toLocalDate().plusDays(1),
+				zeitGrenzen.get(0).getStart());
+		if (ende != null && wechselZeit.isAfter(ende)) {
 			return Gueltigkeit.NICHT_GUELTIG;
 		}
-		
-		return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(datum, letzteGrenze.getEnde()), false),
-				ZustandsWechsel.of(LocalDateTime.of(datum.plusDays(1), zeitGrenzen.get(0).getStart()), true));
+		return Gueltigkeit.of(false, ZustandsWechsel.of(wechselZeit, true));
 	}
 
 	@Override

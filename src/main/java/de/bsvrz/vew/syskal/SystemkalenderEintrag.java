@@ -27,10 +27,6 @@ package de.bsvrz.vew.syskal;
 
 import java.time.LocalDateTime;
 
-import de.bsvrz.vew.syskal.syskal.data.Gueltigkeit;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintrag;
-import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
-
 /**
  * Schnittstelle zum Erzeugen von SystemKalenderEinträgen. Bietet einen
  * einheitlichen Zugriff auf alle Typen von SystemKalendereinträgen *
@@ -40,7 +36,10 @@ import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
  * 
  */
 public interface SystemkalenderEintrag {
-	Gueltigkeit getGueltigkeit(LocalDateTime zeitPunkt);
-	ZustandsWechsel getZustandsWechsel(LocalDateTime von, LocalDateTime bis);
+
 	String getName();
+	
+	boolean isGueltig(LocalDateTime zeitPunkt);
+	ZustandsWechsel getNaechstenWechsel(LocalDateTime zeitPunkt);
+	ZustandsWechsel getZustandsWechsel(LocalDateTime von, LocalDateTime bis);
 }

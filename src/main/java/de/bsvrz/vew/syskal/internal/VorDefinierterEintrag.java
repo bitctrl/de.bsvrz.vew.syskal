@@ -24,7 +24,7 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.vew.syskal.syskal.data;
+package de.bsvrz.vew.syskal.internal;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -34,6 +34,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Repräsentation der vordefinierten Einträge des Systemkalender. Laut
@@ -151,25 +154,21 @@ public class VorDefinierterEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public Gueltigkeit getGueltigKeit(LocalDateTime zeitPunkt) {
+	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitPunkt) {
+		
+		boolean gueltig = zeitPunkt.getDayOfWeek().equals(dayOfWeek);
 
-		DayOfWeek todayWeekday = zeitPunkt.getDayOfWeek();
-		LocalDateTime beginn = LocalDateTime.of(zeitPunkt.toLocalDate(), LocalTime.MIDNIGHT);
-		LocalDateTime ende = LocalDateTime.from(beginn).plusDays(1);
-
-		if (todayWeekday.equals(dayOfWeek)) {
-			return Gueltigkeit.of(ZustandsWechsel.of(beginn, true), ZustandsWechsel.of(ende, false));
+		LocalDate checkDate = zeitPunkt.toLocalDate();
+		if( gueltig ) {
+			return Gueltigkeit.of(gueltig, ZustandsWechsel.of(LocalDateTime.of(checkDate.plusDays(1), LocalTime.MIDNIGHT), false));
 		}
 
-		while (beginn.getDayOfWeek() != dayOfWeek) {
-			beginn = beginn.minusDays(1);
+		while (checkDate.getDayOfWeek() != dayOfWeek) {
+			checkDate = checkDate.plusDays(1);
 		}
-		beginn = beginn.plusDays(1);
 
-		while (ende.getDayOfWeek() != dayOfWeek) {
-			ende = ende.plusDays(1);
-		}
-		return Gueltigkeit.of(ZustandsWechsel.of(beginn, false), ZustandsWechsel.of(ende, true));
+		return Gueltigkeit.of(gueltig, ZustandsWechsel.of(LocalDateTime.of(checkDate, LocalTime.MIDNIGHT), true));
+
 	}
 
 	@Override
@@ -179,9 +178,9 @@ public class VorDefinierterEintrag extends KalenderEintrag {
 		LocalDate startDate = start.toLocalDate();
 		LocalDate endDate = ende.toLocalDate();
 
-		Gueltigkeit gueltigKeit = getGueltigKeit(start);
-		result.add(ZustandsWechsel.of(start, gueltigKeit.getBeginn().isWirdGueltig()));
-		if (gueltigKeit.getBeginn().isWirdGueltig()) {
+		boolean gueltig = isZeitlichGueltig(start).isZeitlichGueltig();
+		result.add(ZustandsWechsel.of(start, gueltig));
+		if (gueltig) {
 			result.add(ZustandsWechsel.of(LocalDateTime.of(startDate, LocalTime.MIDNIGHT).plusDays(1), false));
 		}
 

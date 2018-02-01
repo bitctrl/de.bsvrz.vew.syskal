@@ -3,17 +3,17 @@ package de.bsvrz.vew.syskal.syskal.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
+import de.bsvrz.vew.syskal.Gueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
+import de.bsvrz.vew.syskal.internal.ZeitBereichsEintrag;
 
 public class ZeitBereichsEintragTest {
 
@@ -24,12 +24,11 @@ public class ZeitBereichsEintragTest {
 		ZeitBereichsEintrag bereich4 = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Bereich4",
 				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
 
-		Gueltigkeit gueltigKeit = bereich4.getGueltigKeit(LocalDateTime.of(2008, 1, 30, 12, 10));
-		assertEquals(LocalDateTime.of(2008, 1, 30, 11, 59, 59).plusNanos(999000),
-				gueltigKeit.getBeginn().getZeitPunkt());
-		assertFalse(gueltigKeit.getBeginn().isWirdGueltig());
-		assertEquals(LocalDateTime.of(2008, 1, 30, 15, 30), gueltigKeit.getNaechsteAenderung().getZeitPunkt());
-		assertTrue(gueltigKeit.getNaechsteAenderung().isWirdGueltig());
+		Gueltigkeit gueltigKeit = bereich4.isZeitlichGueltig(LocalDateTime.of(2008, 1, 30, 12, 10));
+
+		assertFalse(gueltigKeit.isZeitlichGueltig());
+		assertEquals(LocalDateTime.of(2008, 1, 30, 15, 30), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 	}
 
 	@Test
@@ -39,12 +38,12 @@ public class ZeitBereichsEintragTest {
 		ZeitBereichsEintrag bereich4 = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Bereich4",
 				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
 
-		Gueltigkeit gueltigKeit = bereich4.getGueltigKeit(LocalDateTime.of(2008, 1, 30, 10, 10));
-		assertEquals(LocalDateTime.of(2008, 1, 30, 9, 0, 0), gueltigKeit.getBeginn().getZeitPunkt());
-		assertTrue(gueltigKeit.getBeginn().isWirdGueltig());
-		assertEquals(LocalDateTime.of(2008, 1, 30, 11, 59, 59).plusNanos(999000),
-				gueltigKeit.getNaechsteAenderung().getZeitPunkt());
-		assertFalse(gueltigKeit.getNaechsteAenderung().isWirdGueltig());
+		Gueltigkeit gueltigKeit = bereich4.isZeitlichGueltig(LocalDateTime.of(2008, 1, 30, 10, 10));
+
+		assertTrue(gueltigKeit.isZeitlichGueltig());
+		assertEquals(LocalDateTime.of(2008, 1, 30, 11, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
+				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 	}
 
 	@Test
@@ -73,7 +72,7 @@ public class ZeitBereichsEintragTest {
 				assertTrue(zustandsWechsel.isWirdGueltig());
 				break;
 			case 2:
-				assertEquals(LocalDateTime.of(2008, 1, 30, 17, 59, 59).plusNanos(999000),
+				assertEquals(LocalDateTime.of(2008, 1, 30, 17, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
 						zustandsWechsel.getZeitPunkt());
 				assertFalse(zustandsWechsel.isWirdGueltig());
 				break;
@@ -82,7 +81,7 @@ public class ZeitBereichsEintragTest {
 				assertTrue(zustandsWechsel.isWirdGueltig());
 				break;
 			case 4:
-				assertEquals(LocalDateTime.of(2008, 1, 31, 11, 59, 59).plusNanos(999000),
+				assertEquals(LocalDateTime.of(2008, 1, 31, 11, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
 						zustandsWechsel.getZeitPunkt());
 				assertFalse(zustandsWechsel.isWirdGueltig());
 				break;
@@ -91,7 +90,7 @@ public class ZeitBereichsEintragTest {
 				assertTrue(zustandsWechsel.isWirdGueltig());
 				break;
 			case 6:
-				assertEquals(LocalDateTime.of(2008, 1, 31, 17, 59, 59).plusNanos(999000),
+				assertEquals(LocalDateTime.of(2008, 1, 31, 17, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
 						zustandsWechsel.getZeitPunkt());
 				assertFalse(zustandsWechsel.isWirdGueltig());
 				break;

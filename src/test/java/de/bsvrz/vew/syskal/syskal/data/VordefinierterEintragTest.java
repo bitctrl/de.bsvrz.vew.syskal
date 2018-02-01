@@ -12,7 +12,11 @@ import java.util.List;
 
 import org.junit.Test;
 
+import de.bsvrz.vew.syskal.Gueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
+import de.bsvrz.vew.syskal.internal.KalenderEintrag;
+import de.bsvrz.vew.syskal.internal.VorDefinierterEintrag;
 
 public class VordefinierterEintragTest {
 
@@ -26,19 +30,17 @@ public class VordefinierterEintragTest {
 		LocalDateTime now = LocalDateTime.now();
 
 		for (int offset = 0; offset < 20; offset++) {
-			Gueltigkeit gueltigKeit = mittwoch.getGueltigKeit(now);
+			Gueltigkeit gueltigKeit = mittwoch.isZeitlichGueltig(now);
 
 			LocalDateTime startCheck;
 			LocalDateTime endeCheck;
 
 			if (now.getDayOfWeek().equals(DayOfWeek.WEDNESDAY)) {
-				assertTrue(gueltigKeit.getBeginn().isWirdGueltig());
-				assertFalse(gueltigKeit.getNaechsteAenderung().isWirdGueltig());
+				assertTrue(gueltigKeit.isZeitlichGueltig());
 				startCheck = LocalDateTime.of(now.toLocalDate(), LocalTime.MIDNIGHT);
 				endeCheck = LocalDateTime.of(now.toLocalDate(), LocalTime.MIDNIGHT).plusDays(1);
 			} else {
-				assertFalse(gueltigKeit.getBeginn().isWirdGueltig());
-				assertTrue(gueltigKeit.getNaechsteAenderung().isWirdGueltig());
+				assertFalse(gueltigKeit.isZeitlichGueltig());
 				endeCheck = LocalDateTime.of(now.toLocalDate(), LocalTime.MIDNIGHT).plusDays(1);
 				while (!endeCheck.getDayOfWeek().equals(DayOfWeek.WEDNESDAY)) {
 					endeCheck = endeCheck.plusDays(1);
@@ -49,8 +51,7 @@ public class VordefinierterEintragTest {
 				}
 				startCheck = startCheck.plusDays(1);
 			}
-			assertEquals(gueltigKeit.getBeginn().getZeitPunkt(), startCheck);
-			assertEquals(gueltigKeit.getNaechsteAenderung().getZeitPunkt(), endeCheck);
+			assertEquals(gueltigKeit.getNaechsterWechsel().getZeitPunkt(), endeCheck);
 
 			now = now.plusDays(1);
 		}

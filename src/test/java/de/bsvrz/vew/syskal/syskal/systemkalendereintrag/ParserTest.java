@@ -11,8 +11,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintrag;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintragProvider;
+import de.bsvrz.vew.syskal.internal.KalenderEintrag;
+import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 
 public class ParserTest {
 

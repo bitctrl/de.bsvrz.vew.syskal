@@ -1,4 +1,4 @@
-package de.bsvrz.vew.syskal.syskal.data;
+package de.bsvrz.vew.syskal.internal;
 
 import static org.junit.Assert.fail;
 
@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+
+import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class Ostersonntag extends VorDefinierterEintrag {
 
@@ -34,25 +37,27 @@ public class Ostersonntag extends VorDefinierterEintrag {
 	}
 
 	@Override
-	public Gueltigkeit getGueltigKeit(LocalDateTime zeitPunkt) {
+	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitPunkt) {
 
 		LocalDate checkDate = zeitPunkt.toLocalDate();
 		LocalDate osterDate = Ostersonntag.getDatumImJahr(checkDate.getYear());
 
-		if (osterDate.equals(checkDate)) {
-			return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(osterDate, LocalTime.MIDNIGHT), true),
-					ZustandsWechsel.of(LocalDateTime.of(osterDate, LocalTime.MIDNIGHT).plusDays(1), false));
+		boolean gueltig = osterDate.equals(checkDate);
+
+		if (gueltig) {
+			return Gueltigkeit.of(gueltig, ZustandsWechsel
+					.of(LocalDateTime.of(zeitPunkt.toLocalDate().plusDays(1), LocalTime.MIDNIGHT), !gueltig));
 		}
 
-		if (osterDate.isAfter(checkDate)) {
-			return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(Ostersonntag.getDatumImJahr(checkDate.getYear() - 1), LocalTime.MIDNIGHT), false),
-					ZustandsWechsel.of(LocalDateTime.of(osterDate, LocalTime.MIDNIGHT), true));
+		if (zeitPunkt.toLocalDate().isBefore(osterDate)) {
+			return Gueltigkeit.of(gueltig,
+					ZustandsWechsel.of(LocalDateTime.of(osterDate, LocalTime.MIDNIGHT), !gueltig));
 		}
+		return Gueltigkeit.of(gueltig, ZustandsWechsel.of(
+				LocalDateTime.of(Ostersonntag.getDatumImJahr(zeitPunkt.getYear() + 1), LocalTime.MIDNIGHT), !gueltig));
 
-		return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(osterDate, LocalTime.MIDNIGHT).plusDays(1), false),
-				ZustandsWechsel.of(LocalDateTime.of(Ostersonntag.getDatumImJahr(checkDate.getYear() + 1), LocalTime.MIDNIGHT), true));
 	}
-	
+
 	@Override
 	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
 
@@ -61,9 +66,9 @@ public class Ostersonntag extends VorDefinierterEintrag {
 		LocalDate startDate = start.toLocalDate();
 		LocalDate endDate = ende.toLocalDate();
 		LocalDate ostern = Ostersonntag.getDatumImJahr(start.getYear());
-		
+
 		int jahr = startDate.getYear();
-		if( startDate.equals(ostern)) {
+		if (startDate.equals(ostern)) {
 			result.add(ZustandsWechsel.of(start, true));
 			jahr++;
 		} else if (startDate.isBefore(ostern)) {
@@ -73,15 +78,15 @@ public class Ostersonntag extends VorDefinierterEintrag {
 			jahr++;
 		}
 
-		while( jahr <= endDate.getYear()) {
+		while (jahr <= endDate.getYear()) {
 			ostern = Ostersonntag.getDatumImJahr(jahr);
 			LocalDateTime jahrStartTime = LocalDateTime.of(ostern, LocalTime.MIDNIGHT);
 			LocalDateTime jahrEndTime = LocalDateTime.of(ostern, LocalTime.MIDNIGHT).plusDays(1);
 
-			if( ende.isEqual(jahrStartTime) || ende.isAfter(jahrStartTime)) {
+			if (ende.isEqual(jahrStartTime) || ende.isAfter(jahrStartTime)) {
 				result.add(ZustandsWechsel.of(jahrStartTime, true));
 			}
-			if( ende.isEqual(jahrEndTime) || ende.isAfter(jahrEndTime)) {
+			if (ende.isEqual(jahrEndTime) || ende.isAfter(jahrEndTime)) {
 				result.add(ZustandsWechsel.of(jahrEndTime, false));
 			}
 			jahr++;

@@ -24,10 +24,11 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.vew.syskal.syskal.data;
+package de.bsvrz.vew.syskal.internal;
 
 import java.text.ParseException;
 import java.time.LocalTime;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Repräsentation einer Zeitbegrenzung für einen Systemkalendereintrag.
@@ -146,7 +147,7 @@ public class ZeitGrenze implements Comparable<ZeitGrenze> {
 		buffer.append(String.format("%02d", value.getSecond()));
 		buffer.append(',');
 
- 		buffer.append(String.format("%03d", value.getNano() / 1000));
+ 		buffer.append(String.format("%03d", TimeUnit.NANOSECONDS.toMillis(value.getNano())));
 		return buffer.toString();
 	}
 
@@ -198,7 +199,7 @@ public class ZeitGrenze implements Comparable<ZeitGrenze> {
 			}
 		}
 
-		return LocalTime.of(stunde, minute, sekunde, milliSekunde * 1000);
+		return LocalTime.of(stunde, minute, sekunde, (int) TimeUnit.MILLISECONDS.toNanos(milliSekunde));
 	}
 
 	@Override

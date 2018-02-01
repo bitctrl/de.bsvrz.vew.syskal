@@ -1,4 +1,4 @@
-package de.bsvrz.vew.syskal.syskal.data;
+package de.bsvrz.vew.syskal.internal;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -7,6 +7,7 @@ import de.bsvrz.dav.daf.main.config.DynamicObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.SystemkalenderEintrag;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
 
@@ -64,13 +65,19 @@ public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
 	}
 
 	@Override
-	public Gueltigkeit getGueltigkeit(LocalDateTime zeitPunkt) {
+	public ZustandsWechsel getZustandsWechsel(LocalDateTime von, LocalDateTime bis) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ZustandsWechsel getZustandsWechsel(LocalDateTime von, LocalDateTime bis) {
+	public boolean isGueltig(LocalDateTime zeitPunkt) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ZustandsWechsel getNaechstenWechsel(LocalDateTime zeitPunkt) {
 		// TODO Auto-generated method stub
 		return null;
 	}

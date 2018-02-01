@@ -1,4 +1,4 @@
-package de.bsvrz.vew.syskal.syskal.data;
+package de.bsvrz.vew.syskal;
 
 import java.time.LocalDateTime;
 

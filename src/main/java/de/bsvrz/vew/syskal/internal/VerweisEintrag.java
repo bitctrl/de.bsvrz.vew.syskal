@@ -24,13 +24,16 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.vew.syskal.syskal.data;
+package de.bsvrz.vew.syskal.internal;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Repräsentation eines Eintrags, der durch die Erweiterung eines bereits
@@ -143,7 +146,7 @@ public class VerweisEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public Gueltigkeit getGueltigKeit(LocalDateTime zeitpunkt) {
+	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitpunkt) {
 
 		if (verweis.isUngueltig()) {
 			return Gueltigkeit.NICHT_GUELTIG;
@@ -151,20 +154,15 @@ public class VerweisEintrag extends KalenderEintrag {
 
 		KalenderEintrag referenzEintrag = verweis.getReferenzEintrag();
 		int tagesOffset = verweis.getOffset();
-		Gueltigkeit gueltigKeit = referenzEintrag.getGueltigKeit(zeitpunkt.minusDays(tagesOffset));
+		Gueltigkeit gueltigKeit = referenzEintrag.isZeitlichGueltig(zeitpunkt.minusDays(tagesOffset));
 
+		LocalDateTime wechselZeit = gueltigKeit.getNaechsterWechsel().getZeitPunkt().plusDays(tagesOffset);
+		
 		if (verweis.isNegiert()) {
-			return Gueltigkeit.of(
-					ZustandsWechsel.of(gueltigKeit.getBeginn().getZeitPunkt().plusDays(tagesOffset),
-							!gueltigKeit.getBeginn().isWirdGueltig()),
-					ZustandsWechsel.of(gueltigKeit.getNaechsteAenderung().getZeitPunkt().plusDays(tagesOffset),
-							!gueltigKeit.getNaechsteAenderung().isWirdGueltig()));
+			return Gueltigkeit.of(!gueltigKeit.isZeitlichGueltig(), ZustandsWechsel.of(wechselZeit, gueltigKeit.isZeitlichGueltig()));
 		}
-		return Gueltigkeit.of(
-				ZustandsWechsel.of(gueltigKeit.getBeginn().getZeitPunkt().plusDays(tagesOffset),
-						gueltigKeit.getBeginn().isWirdGueltig()),
-				ZustandsWechsel.of(gueltigKeit.getNaechsteAenderung().getZeitPunkt().plusDays(tagesOffset),
-						gueltigKeit.getNaechsteAenderung().isWirdGueltig()));
+		return Gueltigkeit.of(gueltigKeit.isZeitlichGueltig(), ZustandsWechsel.of(wechselZeit, !gueltigKeit.isZeitlichGueltig()));
+
 	}
 
 	@Override

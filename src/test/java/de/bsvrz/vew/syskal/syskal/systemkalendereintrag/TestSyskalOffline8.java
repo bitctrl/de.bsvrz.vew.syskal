@@ -2,12 +2,13 @@ package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintrag;
-import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
+import de.bsvrz.vew.syskal.internal.KalenderEintrag;
 
 public class TestSyskalOffline8 {
 
@@ -37,7 +38,7 @@ public class TestSyskalOffline8 {
 		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("FerienPlus");
 		LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0, 0);
 		LocalDateTime endTime = LocalDateTime.of(2015, 12, 31, 23, 59, 59);
-		endTime = endTime.plusNanos(999000);
+		endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
 		System.out
 				.println("Abfrage1: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);

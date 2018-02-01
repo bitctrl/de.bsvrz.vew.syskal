@@ -13,7 +13,11 @@ import java.util.List;
 
 import org.junit.Test;
 
+import de.bsvrz.vew.syskal.Gueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
+import de.bsvrz.vew.syskal.internal.KalenderEintrag;
+import de.bsvrz.vew.syskal.internal.Ostersonntag;
 
 public class OstersonntagTest {
 
@@ -21,8 +25,7 @@ public class OstersonntagTest {
 	public void testeGetDatumImJahr() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		KalenderEintrag osterSonntag = KalenderEintrag.parse(provider, "Ostersonntag",
-				"Ostersonntag");
+		KalenderEintrag osterSonntag = KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag");
 
 		assertTrue(osterSonntag instanceof Ostersonntag);
 
@@ -125,36 +128,29 @@ public class OstersonntagTest {
 	public void testeGueltigkeit() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag",
-				"Ostersonntag");
+		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag");
 
 		LocalDate now = LocalDate.now();
 
 		for (int jahr = 2000; jahr < 2020; jahr++) {
 			LocalDate checkDate = LocalDate.of(jahr, now.getMonth(), now.getDayOfMonth());
-			Gueltigkeit gueltigKeit = osterSonntag.getGueltigKeit(LocalDateTime.of(checkDate, LocalTime.NOON));
+			Gueltigkeit gueltigKeit = osterSonntag.isZeitlichGueltig(LocalDateTime.of(checkDate, LocalTime.NOON));
 			LocalDate osterDate = Ostersonntag.getDatumImJahr(jahr);
 
 			if (checkDate.equals(osterDate)) {
-				assertEquals(LocalDateTime.of(osterDate, LocalTime.MIDNIGHT), gueltigKeit.getBeginn().getZeitPunkt());
-				assertTrue(gueltigKeit.getBeginn().isWirdGueltig());
-				assertEquals(LocalDateTime.of(osterDate, LocalTime.MIDNIGHT).plusDays(1),
-						gueltigKeit.getNaechsteAenderung().getZeitPunkt());
-				assertFalse(gueltigKeit.getNaechsteAenderung().isWirdGueltig());
+				assertTrue(gueltigKeit.isZeitlichGueltig());
+				assertEquals(LocalDateTime.of(osterDate, LocalTime.MIDNIGHT).plusDays(1), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+				assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 			} else if (checkDate.isBefore(osterDate)) {
-				assertEquals(LocalDateTime.of(Ostersonntag.getDatumImJahr(jahr - 1), LocalTime.MIDNIGHT),
-						gueltigKeit.getBeginn().getZeitPunkt());
-				assertFalse(gueltigKeit.getBeginn().isWirdGueltig());
+				assertFalse(gueltigKeit.isZeitlichGueltig());
 				assertEquals(LocalDateTime.of(osterDate, LocalTime.MIDNIGHT),
-						gueltigKeit.getNaechsteAenderung().getZeitPunkt());
-				assertTrue(gueltigKeit.getNaechsteAenderung().isWirdGueltig());
+						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+				assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 			} else {
-				assertEquals(LocalDateTime.of(osterDate, LocalTime.MIDNIGHT).plusDays(1),
-						gueltigKeit.getBeginn().getZeitPunkt());
-				assertFalse(gueltigKeit.getBeginn().isWirdGueltig());
+				assertFalse(gueltigKeit.isZeitlichGueltig());
 				assertEquals(LocalDateTime.of(Ostersonntag.getDatumImJahr(jahr + 1), LocalTime.MIDNIGHT),
-						gueltigKeit.getNaechsteAenderung().getZeitPunkt());
-				assertTrue(gueltigKeit.getNaechsteAenderung().isWirdGueltig());
+						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+				assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 			}
 		}
 	}
@@ -163,8 +159,7 @@ public class OstersonntagTest {
 	public void testeZustandswechsel() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag",
-				"Ostersonntag");
+		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag");
 
 		LocalDateTime start = LocalDateTime.of(2015, 1, 1, 0, 0);
 		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 0);

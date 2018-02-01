@@ -24,13 +24,16 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.vew.syskal.syskal.data;
+package de.bsvrz.vew.syskal.internal;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
+
+import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Spezielle Form eines Systemkalendereintrags für die Angabe eines konkreten
@@ -209,19 +212,18 @@ public class DatumsEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public Gueltigkeit getGueltigKeit(LocalDateTime zeitpunkt) {
+	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitpunkt) {
 		
 		boolean gueltig = jahr == null || jahr <= zeitpunkt.getYear();
 		gueltig &= endJahr == null || endJahr >= zeitpunkt.getYear();
 		gueltig &= monat == null || monat == zeitpunkt.getMonthValue();
 		gueltig &= tag == null || tag == zeitpunkt.getDayOfMonth();
-		
-		if( gueltig) {
-			return Gueltigkeit.of(ZustandsWechsel.of(LocalDateTime.of(LocalDate.of(zeitpunkt.getDayOfMonth(), zeitpunkt.getMonthValue(),  zeitpunkt.getYear()), LocalTime.MIDNIGHT), true),ZustandsWechsel.of(LocalDateTime.of(LocalDate.of(zeitpunkt.getDayOfMonth(), zeitpunkt.getMonthValue(),  zeitpunkt.getYear()), LocalTime.MIDNIGHT).plusDays(1), false) );
+
+		if( gueltig ) {
+			return Gueltigkeit.of(gueltig, ZustandsWechsel.of(LocalDateTime.of(zeitpunkt.toLocalDate().plusDays(1), LocalTime.MIDNIGHT), !gueltig));
 		}
 		
-		// TODO Auto-generated method stub
-		return Gueltigkeit.of(ZustandsWechsel.MIN, ZustandsWechsel.MAX);
+		return Gueltigkeit.of(gueltig, ZustandsWechsel.MAX);
 	}
 
 	@Override

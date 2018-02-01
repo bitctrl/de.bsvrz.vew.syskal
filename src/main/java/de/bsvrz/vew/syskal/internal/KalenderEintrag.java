@@ -1,4 +1,4 @@
-package de.bsvrz.vew.syskal.syskal.data;
+package de.bsvrz.vew.syskal.internal;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -8,6 +8,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public abstract class KalenderEintrag {
 
@@ -31,19 +33,8 @@ public abstract class KalenderEintrag {
 		this.name = name;
 		this.definition = definition;
 	}
-
-	ZustandsWechsel getWechselZuVor(LocalDateTime zeitPunkt, boolean status) {
-		return null;
-		// TODO für einzelne Einträge implementieren
-	}
 	
-	ZustandsWechsel getWechselZuNach(LocalDateTime zeitPunkt, boolean status) {
-		return null;
-		// TODO für einzelne Einträge implementieren
-	}
-	
-	public abstract Gueltigkeit getGueltigKeit(LocalDateTime zeitpunkt);
-
+	public abstract Gueltigkeit isZeitlichGueltig(LocalDateTime zeitpunkt);
 	public abstract List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende);
 
 	/**
@@ -211,28 +202,4 @@ public abstract class KalenderEintrag {
 	public String getName() {
 		return name;
 	}
-
-	public boolean isGueltig(LocalDateTime zeitpunkt) {
-		return getGueltigKeit(zeitpunkt).getBeginn().isWirdGueltig();
-	}
-
-	public final ZustandsWechsel zustandswechselNach(LocalDateTime zeitpunkt, LocalDateTime maximalesSuchdatum, boolean gueltig) {
-		Gueltigkeit gueltigKeit = getGueltigKeit(zeitpunkt);
-		if( gueltig == gueltigKeit.getNaechsteAenderung().isWirdGueltig() || zeitpunkt.isAfter(maximalesSuchdatum)) {
-			return gueltigKeit.getNaechsteAenderung();
-		}
-		
-		return zustandswechselNach(gueltigKeit.getNaechsteAenderung().getZeitPunkt(), maximalesSuchdatum, gueltig);
-	}
-
-	// TODO Implementieren
-	public final ZustandsWechsel zustandswechselVor(LocalDateTime zeitpunkt, LocalDateTime maximalesSuchdatum, boolean gueltig) {
-		Gueltigkeit gueltigKeit = getGueltigKeit(zeitpunkt);
-		if( gueltig == gueltigKeit.getNaechsteAenderung().isWirdGueltig() || zeitpunkt.isAfter(maximalesSuchdatum)) {
-			return gueltigKeit.getNaechsteAenderung();
-		}
-		
-		return zustandswechselVor(gueltigKeit.getNaechsteAenderung().getZeitPunkt(), maximalesSuchdatum, gueltig);
-	}
-	
 }

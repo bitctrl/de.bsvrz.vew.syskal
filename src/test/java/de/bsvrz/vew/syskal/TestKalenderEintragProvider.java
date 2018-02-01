@@ -3,8 +3,8 @@ package de.bsvrz.vew.syskal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintrag;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintragProvider;
+import de.bsvrz.vew.syskal.internal.KalenderEintrag;
+import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 
 public final class TestKalenderEintragProvider implements KalenderEintragProvider {
 	Map<String, KalenderEintrag> eintraege = new LinkedHashMap<>();

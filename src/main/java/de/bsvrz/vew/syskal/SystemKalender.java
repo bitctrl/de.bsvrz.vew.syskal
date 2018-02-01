@@ -5,7 +5,7 @@ import java.util.Collection;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.ConfigurationObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.vew.syskal.syskal.data.EintragsVerwaltung;
+import de.bsvrz.vew.syskal.internal.EintragsVerwaltung;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;

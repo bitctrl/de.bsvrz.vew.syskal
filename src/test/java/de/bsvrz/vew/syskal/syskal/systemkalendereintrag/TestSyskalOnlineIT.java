@@ -13,7 +13,7 @@ import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemkalenderEintrag;
-import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Kommentar

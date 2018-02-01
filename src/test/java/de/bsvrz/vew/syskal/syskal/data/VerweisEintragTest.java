@@ -3,17 +3,19 @@ package de.bsvrz.vew.syskal.syskal.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.util.List;
 
 import org.junit.Test;
 
+import de.bsvrz.vew.syskal.Gueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
+import de.bsvrz.vew.syskal.internal.Ostersonntag;
+import de.bsvrz.vew.syskal.internal.VerweisEintrag;
 
 public class VerweisEintragTest {
 
@@ -30,29 +32,24 @@ public class VerweisEintragTest {
 
 		for (int jahr = 2000; jahr < 2020; jahr++) {
 			LocalDate checkDate = LocalDate.of(jahr, now.getMonth(), now.getDayOfMonth());
-			Gueltigkeit gueltigKeit = osterMontag.getGueltigKeit(LocalDateTime.of(checkDate, LocalTime.NOON));
+			Gueltigkeit gueltigKeit = osterMontag.isZeitlichGueltig(LocalDateTime.of(checkDate, LocalTime.NOON));
 			LocalDate osterMontagDate = Ostersonntag.getDatumImJahr(jahr).plusDays(1);
 
 			if (checkDate.equals(osterMontagDate)) {
-				assertEquals(LocalDateTime.of(osterMontagDate, LocalTime.MIDNIGHT), gueltigKeit.getBeginn().getZeitPunkt());
-				assertTrue(gueltigKeit.getBeginn().isWirdGueltig());
+				assertTrue(gueltigKeit.isZeitlichGueltig());
 				assertEquals(LocalDateTime.of(osterMontagDate, LocalTime.MIDNIGHT).plusDays(1),
-						gueltigKeit.getNaechsteAenderung().getZeitPunkt());
-				assertFalse(gueltigKeit.getNaechsteAenderung().isWirdGueltig());
+						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+				assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 			} else if (checkDate.isBefore(osterMontagDate)) {
-				assertEquals(LocalDateTime.of(Ostersonntag.getDatumImJahr(jahr - 1).plusDays(1), LocalTime.MIDNIGHT),
-						gueltigKeit.getBeginn().getZeitPunkt());
-				assertFalse(gueltigKeit.getBeginn().isWirdGueltig());
+				assertFalse(gueltigKeit.isZeitlichGueltig());
 				assertEquals(LocalDateTime.of(osterMontagDate, LocalTime.MIDNIGHT),
-						gueltigKeit.getNaechsteAenderung().getZeitPunkt());
-				assertTrue(gueltigKeit.getNaechsteAenderung().isWirdGueltig());
+						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+				assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 			} else {
-				assertEquals(LocalDateTime.of(osterMontagDate, LocalTime.MIDNIGHT).plusDays(1),
-						gueltigKeit.getBeginn().getZeitPunkt());
-				assertFalse(gueltigKeit.getBeginn().isWirdGueltig());
+				assertFalse(gueltigKeit.isZeitlichGueltig());
 				assertEquals(LocalDateTime.of(Ostersonntag.getDatumImJahr(jahr + 1).plusDays(1), LocalTime.MIDNIGHT),
-						gueltigKeit.getNaechsteAenderung().getZeitPunkt());
-				assertTrue(gueltigKeit.getNaechsteAenderung().isWirdGueltig());
+						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+				assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 			}
 		}
 	}
@@ -123,29 +120,24 @@ public class VerweisEintragTest {
 
 		for (int jahr = 2000; jahr < 2020; jahr++) {
 			LocalDate checkDate = LocalDate.of(jahr, now.getMonth(), now.getDayOfMonth());
-			Gueltigkeit gueltigKeit = karFreitag.getGueltigKeit(LocalDateTime.of(checkDate, LocalTime.NOON));
+			Gueltigkeit gueltigKeit = karFreitag.isZeitlichGueltig(LocalDateTime.of(checkDate, LocalTime.NOON));
 			LocalDate karfreitagDatum = Ostersonntag.getDatumImJahr(jahr).minusDays(2);
 
 			if (checkDate.equals(karfreitagDatum)) {
-				assertEquals(LocalDateTime.of(karfreitagDatum, LocalTime.MIDNIGHT), gueltigKeit.getBeginn().getZeitPunkt());
-				assertTrue(gueltigKeit.getBeginn().isWirdGueltig());
+				assertTrue(gueltigKeit.isZeitlichGueltig());
 				assertEquals(LocalDateTime.of(karfreitagDatum, LocalTime.MIDNIGHT).plusDays(1),
-						gueltigKeit.getNaechsteAenderung().getZeitPunkt());
-				assertFalse(gueltigKeit.getNaechsteAenderung().isWirdGueltig());
+						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+				assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 			} else if (checkDate.isBefore(karfreitagDatum)) {
-				assertEquals(LocalDateTime.of(Ostersonntag.getDatumImJahr(jahr - 1).minusDays(2), LocalTime.MIDNIGHT),
-						gueltigKeit.getBeginn().getZeitPunkt());
-				assertFalse(gueltigKeit.getBeginn().isWirdGueltig());
+				assertFalse(gueltigKeit.isZeitlichGueltig());
 				assertEquals(LocalDateTime.of(karfreitagDatum, LocalTime.MIDNIGHT),
-						gueltigKeit.getNaechsteAenderung().getZeitPunkt());
-				assertTrue(gueltigKeit.getNaechsteAenderung().isWirdGueltig());
+						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+				assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 			} else {
-				assertEquals(LocalDateTime.of(karfreitagDatum, LocalTime.MIDNIGHT).plusDays(1),
-						gueltigKeit.getBeginn().getZeitPunkt());
-				assertFalse(gueltigKeit.getBeginn().isWirdGueltig());
+				assertFalse(gueltigKeit.isZeitlichGueltig());
 				assertEquals(LocalDateTime.of(Ostersonntag.getDatumImJahr(jahr + 1).minusDays(2), LocalTime.MIDNIGHT),
-						gueltigKeit.getNaechsteAenderung().getZeitPunkt());
-				assertTrue(gueltigKeit.getNaechsteAenderung().isWirdGueltig());
+						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+				assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 			}
 		}
 	}

@@ -1,20 +1,14 @@
 package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import de.bsvrz.vew.syskal.SystemkalenderEintrag;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintrag;
-import de.bsvrz.vew.syskal.syskal.data.KalenderEintragProvider;
-import de.bsvrz.vew.syskal.syskal.data.ZustandsWechsel;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
+import de.bsvrz.vew.syskal.internal.KalenderEintrag;
 
 public class TestSyskalOffline4 {
 
@@ -51,7 +45,7 @@ public class TestSyskalOffline4 {
 		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test1");
 		LocalDateTime startTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
 		LocalDateTime endTime = LocalDateTime.of(2010, 12, 31, 23, 59, 59);
-		endTime = endTime.plusNanos(999000);
+		endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
 		System.out
 				.println("Abfrage1: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
@@ -59,7 +53,7 @@ public class TestSyskalOffline4 {
 		eintrag = eintragsProvider.getKalenderEintrag("Test2");
 		startTime = LocalDateTime.of(2004, 1, 1, 0, 0, 0);
 		endTime = LocalDateTime.of(2010, 12, 31, 23, 59, 59);
-		endTime = endTime.plusNanos(999000);
+		endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
 		System.out
 				.println("Abfrage2: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
@@ -67,7 +61,7 @@ public class TestSyskalOffline4 {
 		eintrag = eintragsProvider.getKalenderEintrag("Test3");
 		startTime = LocalDateTime.of(2004, 3, 10, 13, 30, 0);
 		endTime = LocalDateTime.of(2004, 3, 10, 15, 29, 59);
-		endTime = endTime.plusNanos(999000);
+		endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
 		System.out
 				.println("Abfrage3: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
@@ -75,7 +69,7 @@ public class TestSyskalOffline4 {
 		eintrag = eintragsProvider.getKalenderEintrag("Test31");
 		startTime = LocalDateTime.of(2004, 3, 10, 0, 0, 0);
 		endTime = LocalDateTime.of(2004, 3, 11, 15, 29, 59);
-		endTime = endTime.plusNanos(999000);
+		endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
 		System.out.println(
 				"Abfrage31: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
@@ -83,7 +77,7 @@ public class TestSyskalOffline4 {
 		eintrag = eintragsProvider.getKalenderEintrag("Ostersonntag");
 		startTime = LocalDateTime.of(2000, 1, 11, 0, 0, 0);
 		endTime = LocalDateTime.of(2010, 12, 31, 23, 59, 59);
-		endTime = endTime.plusNanos(999000);
+		endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
 		System.out
 				.println("Abfrage4: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
@@ -91,7 +85,7 @@ public class TestSyskalOffline4 {
 		eintrag = eintragsProvider.getKalenderEintrag("Test4");
 		startTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
 		endTime = LocalDateTime.of(2003, 12, 31, 23, 59, 59);
-		endTime = endTime.plusNanos(999000);
+		endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
 		System.out
 				.println("Abfrage5: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
@@ -99,7 +93,7 @@ public class TestSyskalOffline4 {
 		eintrag = eintragsProvider.getKalenderEintrag("Test5");
 		startTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
 		endTime = LocalDateTime.of(2003, 12, 31, 23, 59, 59);
-		endTime = endTime.plusNanos(999000);
+		endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
 		System.out
 				.println("Abfrage6: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
@@ -107,7 +101,7 @@ public class TestSyskalOffline4 {
 		eintrag = eintragsProvider.getKalenderEintrag("Karfreitag");
 		startTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
 		endTime = LocalDateTime.of(2003, 12, 31, 23, 59, 59);
-		endTime = endTime.plusNanos(999000);
+		endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
 		System.out
 				.println("Abfrage7: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
@@ -115,7 +109,7 @@ public class TestSyskalOffline4 {
 		eintrag = eintragsProvider.getKalenderEintrag("Test6");
 		startTime = LocalDateTime.of(2001, 4, 1, 0, 0, 0);
 		endTime = LocalDateTime.of(2001, 5, 1, 23, 59, 59);
-		endTime = endTime.plusNanos(999000);
+		endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
 		System.out
 				.println("Abfrage8: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
@@ -123,7 +117,7 @@ public class TestSyskalOffline4 {
 		eintrag = eintragsProvider.getKalenderEintrag("Test7");
 		startTime = LocalDateTime.of(2011, 9, 19, 0, 0, 0);
 		endTime = LocalDateTime.of(2011, 9, 23, 23, 59, 59);
-		endTime = endTime.plusNanos(999000);
+		endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
 		System.out
 				.println("Abfrage9: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
