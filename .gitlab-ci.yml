@@ -3,5 +3,5 @@ vew-syskal-build:
         falkoschumann/oracle-java:8
         
     script:
-      - ./gradlew build -x test
+      - ./gradlew build
 

@@ -165,7 +165,7 @@ public class DatumsEintrag extends KalenderEintrag  {
 					.of(LocalDateTime.of(zeitpunkt.toLocalDate().plusDays(1), LocalTime.MIDNIGHT), !gueltig));
 		}
 
-		LocalDate fruehestesDatum = LocalDate.of(jahr, monat, tag).plusDays(1);
+		LocalDate fruehestesDatum = LocalDate.of(jahr, monat, tag);
 		if (zeitpunkt.toLocalDate().isBefore(fruehestesDatum)) {
 			return GueltigkeitImpl.of(gueltig,
 					ZustandsWechselImpl.of(LocalDateTime.of(fruehestesDatum, LocalTime.MIDNIGHT), !gueltig));
@@ -177,7 +177,7 @@ public class DatumsEintrag extends KalenderEintrag  {
 		if (zeitpunkt.toLocalDate().isBefore(spaetestesDatum)) {
 			
 			int checkJahr = zeitpunkt.getYear();
-			if( spaetestesDatum.withYear(2000).isBefore(zeitpunkt.toLocalDate().withYear(2000))) {
+			if(!zeitpunkt.toLocalDate().withYear(2000).isBefore(spaetestesDatum.withYear(2000))) {
 				checkJahr++;
 			}
 			
