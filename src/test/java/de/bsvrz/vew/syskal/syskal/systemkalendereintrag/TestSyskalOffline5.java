@@ -29,7 +29,7 @@ public class TestSyskalOffline5 {
 				.println("Abfrage1: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
 
 		startTime = LocalDateTime.of(2012, 12, 27, 10, 0, 0);
-		Gueltigkeit gueltigkeit = eintrag.isZeitlichGueltig(startTime);
+		Gueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(startTime);
 		System.out.println("Abfrage2: " + eintrag.getName() + " " + startTime + ":" + gueltigkeit);
 	}
 

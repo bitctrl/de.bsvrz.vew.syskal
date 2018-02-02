@@ -63,7 +63,7 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 	}
 
 	@Override
-	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitpunkt) {
+	public Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
 
 		boolean zustand = false;
 		Map<KalenderEintrag, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
@@ -71,10 +71,10 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 		for (Verweis verweis : getVerweise()) {
 			KalenderEintrag eintrag = verweis.getReferenzEintrag();
 			if (eintrag == null) {
-				return Gueltigkeit.NICHT_GUELTIG;
+				return GueltigkeitImpl.NICHT_GUELTIG;
 			}
 
-			Gueltigkeit gueltigKeit = eintrag.isZeitlichGueltig(zeitpunkt);
+			Gueltigkeit gueltigKeit = eintrag.getZeitlicheGueltigkeit(zeitpunkt);
 			if (gueltigKeit.isZeitlichGueltig()) {
 				zustand = true;
 			}
@@ -83,7 +83,7 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 
 		ZustandsWechsel wechsel = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);
 
-		return Gueltigkeit.of(zustand, wechsel);
+		return GueltigkeitImpl.of(zustand, wechsel);
 	}
 
 	private ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand,
@@ -123,13 +123,13 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 				}
 
 				if (fruehesterVerweis == null) {
-					return ZustandsWechsel.MAX;
+					return ZustandsWechselImpl.MAX;
 				}
 
 				LocalDateTime moeglicherZeitPunkt = fruehesterVerweis.getValue().getZeitPunkt();
 				for (KalenderEintrag eintrag : zustandsWechsel.keySet()) {
-					if (!eintrag.isZeitlichGueltig(moeglicherZeitPunkt).isZeitlichGueltig()) {
-						result = ZustandsWechsel.of(moeglicherZeitPunkt, false);
+					if (!eintrag.getZeitlicheGueltigkeit(moeglicherZeitPunkt).isZeitlichGueltig()) {
+						result = ZustandsWechselImpl.of(moeglicherZeitPunkt, false);
 						break;
 					}
 				}
@@ -140,7 +140,7 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 						ZustandsWechsel wechsel = entry.getValue();
 						if (!wechsel.getZeitPunkt().isAfter(moeglicherZeitPunkt)) {
 							do {
-								wechsel = entry.getKey().isZeitlichGueltig(wechsel.getZeitPunkt())
+								wechsel = entry.getKey().getZeitlicheGueltigkeit(wechsel.getZeitPunkt())
 										.getNaechsterWechsel();
 							} while (wechsel.isWirdGueltig() != zielZustand);
 						}
@@ -153,7 +153,7 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 		}
 
 		if (result == null) {
-			return ZustandsWechsel.MAX;
+			return ZustandsWechselImpl.MAX;
 		}
 		return result;
 	}

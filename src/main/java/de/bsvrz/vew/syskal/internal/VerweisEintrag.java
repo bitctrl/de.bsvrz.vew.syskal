@@ -30,7 +30,6 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 
 import de.bsvrz.vew.syskal.Gueltigkeit;
-import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Repräsentation eines Eintrags, der durch die Erweiterung eines bereits
@@ -143,15 +142,15 @@ public class VerweisEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitpunkt) {
+	public Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
 
 		if (verweis.isUngueltig()) {
-			return Gueltigkeit.NICHT_GUELTIG;
+			return GueltigkeitImpl.NICHT_GUELTIG;
 		}
 
 		KalenderEintrag referenzEintrag = verweis.getReferenzEintrag();
 		int tagesOffset = verweis.getOffset();
-		Gueltigkeit gueltigKeit = referenzEintrag.isZeitlichGueltig(zeitpunkt.minusDays(tagesOffset));
+		Gueltigkeit gueltigKeit = referenzEintrag.getZeitlicheGueltigkeit(zeitpunkt.minusDays(tagesOffset));
 
 		LocalDateTime wechselZeit = gueltigKeit.getNaechsterWechsel().getZeitPunkt();
 		if (tagesOffset > 0) {
@@ -165,11 +164,11 @@ public class VerweisEintrag extends KalenderEintrag {
 		}
 
 		if (verweis.isNegiert()) {
-			return Gueltigkeit.of(!gueltigKeit.isZeitlichGueltig(),
-					ZustandsWechsel.of(wechselZeit, gueltigKeit.isZeitlichGueltig()));
+			return GueltigkeitImpl.of(!gueltigKeit.isZeitlichGueltig(),
+					ZustandsWechselImpl.of(wechselZeit, gueltigKeit.isZeitlichGueltig()));
 		}
-		return Gueltigkeit.of(gueltigKeit.isZeitlichGueltig(),
-				ZustandsWechsel.of(wechselZeit, !gueltigKeit.isZeitlichGueltig()));
+		return GueltigkeitImpl.of(gueltigKeit.isZeitlichGueltig(),
+				ZustandsWechselImpl.of(wechselZeit, !gueltigKeit.isZeitlichGueltig()));
 
 	}
 }

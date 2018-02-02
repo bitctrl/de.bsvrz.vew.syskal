@@ -63,7 +63,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 	}
 
 	@Override
-	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitPunkt) {
+	public Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
 
 		boolean zustand = true;
 		Map<KalenderEintrag, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
@@ -71,10 +71,10 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 		for (Verweis verweis : getVerweise()) {
 			KalenderEintrag eintrag = verweis.getReferenzEintrag();
 			if ((eintrag == null) || eintrag.isFehler()) {
-				return Gueltigkeit.NICHT_GUELTIG;
+				return GueltigkeitImpl.NICHT_GUELTIG;
 			}
 
-			Gueltigkeit gueltigKeit = eintrag.isZeitlichGueltig(zeitPunkt);
+			Gueltigkeit gueltigKeit = eintrag.getZeitlicheGueltigkeit(zeitPunkt);
 			if (!gueltigKeit.isZeitlichGueltig()) {
 				zustand = false;
 			}
@@ -83,7 +83,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 
 		ZustandsWechsel wechsel = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);
 
-		return Gueltigkeit.of(zustand, wechsel);
+		return GueltigkeitImpl.of(zustand, wechsel);
 	}
 
 	private ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand,
@@ -111,14 +111,14 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 				}
 
 				if (fruehesterVerweis == null) {
-					return ZustandsWechsel.MAX;
+					return ZustandsWechselImpl.MAX;
 				}
 
 				LocalDateTime moeglicherZeitPunkt = fruehesterVerweis.getValue().getZeitPunkt();
 				for (KalenderEintrag eintrag : zustandsWechsel.keySet()) {
-					if (eintrag.isZeitlichGueltig(moeglicherZeitPunkt).isZeitlichGueltig()) {
+					if (eintrag.getZeitlicheGueltigkeit(moeglicherZeitPunkt).isZeitlichGueltig()) {
 						if (result == null) {
-							result = ZustandsWechsel.of(moeglicherZeitPunkt, true);
+							result = ZustandsWechselImpl.of(moeglicherZeitPunkt, true);
 						}
 					} else {
 						result = null;
@@ -132,9 +132,9 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 						ZustandsWechsel wechsel = entry.getValue();
 						if (!wechsel.getZeitPunkt().isAfter(moeglicherZeitPunkt)) {
 							do {
-								wechsel = entry.getKey().isZeitlichGueltig(wechsel.getZeitPunkt())
+								wechsel = entry.getKey().getZeitlicheGueltigkeit(wechsel.getZeitPunkt())
 										.getNaechsterWechsel();
-							} while (wechsel.isWirdGueltig() != zielZustand && !wechsel.equals(ZustandsWechsel.MAX));
+							} while (wechsel.isWirdGueltig() != zielZustand && !wechsel.equals(ZustandsWechselImpl.MAX));
 						}
 						korrigierteZustandsWechsel.put(entry.getKey(), wechsel);
 					}

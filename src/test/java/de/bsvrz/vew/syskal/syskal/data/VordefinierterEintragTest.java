@@ -3,7 +3,6 @@ package de.bsvrz.vew.syskal.syskal.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -30,7 +29,7 @@ public class VordefinierterEintragTest {
 		LocalDateTime now = LocalDateTime.now();
 
 		for (int offset = 0; offset < 20; offset++) {
-			Gueltigkeit gueltigKeit = mittwoch.isZeitlichGueltig(now);
+			Gueltigkeit gueltigKeit = mittwoch.getZeitlicheGueltigkeit(now);
 
 			LocalDateTime startCheck;
 			LocalDateTime endeCheck;

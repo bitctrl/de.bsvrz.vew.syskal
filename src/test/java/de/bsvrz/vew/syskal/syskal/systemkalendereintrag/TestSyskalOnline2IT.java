@@ -1,6 +1,5 @@
 package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Collection;
 

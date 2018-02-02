@@ -34,7 +34,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import de.bsvrz.vew.syskal.Gueltigkeit;
-import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Repräsentation der Daten eines {@link KalenderEintrag}, der durch einen
@@ -231,22 +230,22 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitpunkt) {
+	public Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
 
 		if (zeitpunkt.isAfter(ende)) {
-			return Gueltigkeit.NICHT_GUELTIG;
+			return GueltigkeitImpl.NICHT_GUELTIG;
 		}
 
 		List<ZeitGrenze> zeitGrenzen = getZeitGrenzen();
 
 		if (zeitGrenzen.isEmpty()) {
 			if (zeitpunkt.isBefore(start)) {
-				return Gueltigkeit.of(false, ZustandsWechsel.of(start, true));
+				return GueltigkeitImpl.of(false, ZustandsWechselImpl.of(start, true));
 			}
 			if (!zeitpunkt.isBefore(ende)) {
-				return Gueltigkeit.NICHT_GUELTIG;
+				return GueltigkeitImpl.NICHT_GUELTIG;
 			}
-			return Gueltigkeit.of(true, ZustandsWechsel.of(ende, false));
+			return GueltigkeitImpl.of(true, ZustandsWechselImpl.of(ende, false));
 		}
 		
 		LocalDate datum = zeitpunkt.toLocalDate();
@@ -255,22 +254,22 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
 		for (ZeitGrenze grenze : zeitGrenzen) {
 			
 			if (abfrageZeit.equals(grenze.getStart())) {
-				return Gueltigkeit.of(true, ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getEnde()), false));
+				return GueltigkeitImpl.of(true, ZustandsWechselImpl.of(LocalDateTime.of(datum, grenze.getEnde()), false));
 			}
 			if (abfrageZeit.isBefore(grenze.getStart())) {
-				return Gueltigkeit.of(false, ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getStart()), true));
+				return GueltigkeitImpl.of(false, ZustandsWechselImpl.of(LocalDateTime.of(datum, grenze.getStart()), true));
 			}
 
 			if (abfrageZeit.isBefore(grenze.getEnde())) {
-				return Gueltigkeit.of(true, ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getEnde()), false));
+				return GueltigkeitImpl.of(true, ZustandsWechselImpl.of(LocalDateTime.of(datum, grenze.getEnde()), false));
 			}
 		}
 
 		LocalDateTime wechselZeit = LocalDateTime.of(zeitpunkt.toLocalDate().plusDays(1),
 				zeitGrenzen.get(0).getStart());
 		if (ende != null && wechselZeit.isAfter(ende)) {
-			return Gueltigkeit.NICHT_GUELTIG;
+			return GueltigkeitImpl.NICHT_GUELTIG;
 		}
-		return Gueltigkeit.of(false, ZustandsWechsel.of(wechselZeit, true));
+		return GueltigkeitImpl.of(false, ZustandsWechselImpl.of(wechselZeit, true));
 	}
 }

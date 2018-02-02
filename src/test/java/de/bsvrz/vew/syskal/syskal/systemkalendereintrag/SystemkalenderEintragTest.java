@@ -66,67 +66,67 @@ public class SystemkalenderEintragTest {
 
 		switch (dow) {
 		case SATURDAY:
-			assertTrue("Test 0", skeSa.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 1", skeSo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 2", skeMo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 3", skeDi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 4", skeMi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 5", skeDo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 6", skeFr.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
+			assertTrue("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
 			break;
 		case SUNDAY:
-			assertFalse("Test 0", skeSa.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertTrue("Test 1", skeSo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 2", skeMo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 3", skeDi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 4", skeMi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 5", skeDo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 6", skeFr.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertTrue("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
 			break;
 		case MONDAY:
-			assertFalse("Test 0", skeSa.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 1", skeSo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertTrue("Test 2", skeMo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 3", skeDi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 4", skeMi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 5", skeDo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 6", skeFr.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertTrue("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
 			break;
 		case TUESDAY:
-			assertFalse("Test 0", skeSa.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 1", skeSo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 2", skeMo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertTrue("Test 3", skeDi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 4", skeMi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 5", skeDo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 6", skeFr.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertTrue("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
 			break;
 		case WEDNESDAY:
-			assertFalse("Test 0", skeSa.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 1", skeSo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 2", skeMo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 3", skeDi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertTrue("Test 4", skeMi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 5", skeDo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 6", skeFr.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertTrue("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
 			break;
 		case THURSDAY:
-			assertFalse("Test 0", skeSa.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 1", skeSo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 2", skeMo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 3", skeDi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 4", skeMi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertTrue("Test 5", skeDo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 6", skeFr.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertTrue("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
 			break;
 		case FRIDAY:
-			assertFalse("Test 0", skeSa.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 1", skeSo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 2", skeMo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 3", skeDi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 4", skeMi.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertFalse("Test 5", skeDo.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
-			assertTrue("Test 6", skeFr.isZeitlichGueltig(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertFalse("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+			assertTrue("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
 			break;
 
 		default:

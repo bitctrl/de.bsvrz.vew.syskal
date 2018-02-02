@@ -2,17 +2,12 @@ package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.internal.KalenderEintrag;
-import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 
 public class ParserTest {
 

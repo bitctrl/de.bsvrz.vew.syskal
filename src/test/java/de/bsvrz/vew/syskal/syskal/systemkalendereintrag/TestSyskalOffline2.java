@@ -1,18 +1,13 @@
 package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
 
 import org.junit.Test;
 
-import de.bsvrz.vew.syskal.SystemkalenderEintrag;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 import de.bsvrz.vew.syskal.internal.KalenderEintrag;
-import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 
 public class TestSyskalOffline2 {
 

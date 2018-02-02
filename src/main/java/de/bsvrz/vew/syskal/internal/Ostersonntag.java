@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import de.bsvrz.vew.syskal.Gueltigkeit;
-import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class Ostersonntag extends VorDefinierterEintrag {
 
@@ -31,7 +30,7 @@ public class Ostersonntag extends VorDefinierterEintrag {
 	}
 
 	@Override
-	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitPunkt) {
+	public Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
 
 		LocalDate checkDate = zeitPunkt.toLocalDate();
 		LocalDate osterDate = Ostersonntag.getDatumImJahr(checkDate.getYear());
@@ -39,15 +38,15 @@ public class Ostersonntag extends VorDefinierterEintrag {
 		boolean gueltig = osterDate.equals(checkDate);
 
 		if (gueltig) {
-			return Gueltigkeit.of(gueltig, ZustandsWechsel
+			return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl
 					.of(LocalDateTime.of(zeitPunkt.toLocalDate().plusDays(1), LocalTime.MIDNIGHT), !gueltig));
 		}
 
 		if (zeitPunkt.toLocalDate().isBefore(osterDate)) {
-			return Gueltigkeit.of(gueltig,
-					ZustandsWechsel.of(LocalDateTime.of(osterDate, LocalTime.MIDNIGHT), !gueltig));
+			return GueltigkeitImpl.of(gueltig,
+					ZustandsWechselImpl.of(LocalDateTime.of(osterDate, LocalTime.MIDNIGHT), !gueltig));
 		}
-		return Gueltigkeit.of(gueltig, ZustandsWechsel.of(
+		return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl.of(
 				LocalDateTime.of(Ostersonntag.getDatumImJahr(zeitPunkt.getYear() + 1), LocalTime.MIDNIGHT), !gueltig));
 
 	}

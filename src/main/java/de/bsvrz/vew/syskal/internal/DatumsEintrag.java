@@ -26,13 +26,13 @@
 
 package de.bsvrz.vew.syskal.internal;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Year;
 
 import de.bsvrz.vew.syskal.Gueltigkeit;
-import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Spezielle Form eines Systemkalendereintrags für die Angabe eines konkreten
@@ -42,7 +42,7 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class DatumsEintrag extends KalenderEintrag {
+public class DatumsEintrag extends KalenderEintrag  {
 
 	/** das letzte Jahr für das der Eintrag gültig ist. */
 	private int endJahr = Year.MAX_VALUE;
@@ -82,6 +82,8 @@ public class DatumsEintrag extends KalenderEintrag {
 							jahr = Integer.parseInt(dateParts[2].trim());
 						}
 					}
+				} else {
+					setFehler(true);
 				}
 
 				if (parts.length > 1) {
@@ -89,6 +91,16 @@ public class DatumsEintrag extends KalenderEintrag {
 						endJahr = Integer.parseInt(parts[1].trim());
 					}
 				}
+				
+				if((tag == 29) && (monat == 2)) {
+					while(!Year.isLeap(jahr)) {
+						jahr++;
+					}
+					while(!Year.isLeap(endJahr)) {
+						endJahr--;
+					}
+				}
+				
 			} catch (NumberFormatException e) {
 				setFehler(true);
 			}
@@ -100,86 +112,20 @@ public class DatumsEintrag extends KalenderEintrag {
 		return EintragsArt.NURDATUM;
 	}
 
-	/**
-	 * liefert den Wert für das definierte Endjahr oder <code>null</code>, wenn
-	 * keines festgelegt wurde.
-	 * 
-	 * @return das Jahr oder <code>null</code>
-	 */
-	public Integer getEndJahr() {
+	public int getEndJahr() {
 		return endJahr;
 	}
 
-	/**
-	 * liefert den Wert für das definierte Anfangsjahr oder <code>null</code>, wenn
-	 * keines festgelegt wurde.
-	 * 
-	 * @return das Jahr oder <code>null</code>
-	 */
-	public Integer getJahr() {
+	public int getJahr() {
 		return jahr;
 	}
 
-	/**
-	 * liefert den Wert für den definierten Monat oder <code>null</code>, wenn
-	 * keiner festgelegt wurde.
-	 * 
-	 * @return den Monat oder <code>null</code>
-	 */
-	public Integer getMonat() {
+	public int getMonat() {
 		return monat;
 	}
 
-	/**
-	 * liefert den Wert für den definierten Tag oder <code>null</code>, wenn keiner
-	 * festgelegt wurde.
-	 * 
-	 * @return den Tag das Monats oder <code>null</code>
-	 */
-	public Integer getTag() {
+	public int getTag() {
 		return tag;
-	}
-
-	/**
-	 * setzt den Wert für das Endjahr.
-	 * 
-	 * @param endJahr
-	 *            das Jahr oder <code>null</code>, wenn es nicht beschränkt werden
-	 *            soll.
-	 */
-	public void setEndJahr(final Integer endJahr) {
-		this.endJahr = endJahr;
-	}
-
-	/**
-	 * setzt den Wert für das Anfangsjahr.
-	 * 
-	 * @param jahr
-	 *            das Jahr oder <code>null</code>, wenn es nicht beschränkt werden
-	 *            soll.
-	 */
-	public void setJahr(final Integer jahr) {
-		this.jahr = jahr;
-	}
-
-	/**
-	 * setzt den Wert für den Monat.
-	 * 
-	 * @param monat
-	 *            der Monat oder <code>null</code>, wenn er beliebig ist.
-	 */
-	public void setMonat(final Integer monat) {
-		this.monat = monat;
-	}
-
-	/**
-	 * setzt den Wert für den Tag des Monats.
-	 * 
-	 * @param tag
-	 *            der Tag oder <code>null</code>, wenn er beliebig ist.
-	 */
-	public void setTag(final Integer tag) {
-		this.tag = tag;
 	}
 
 	@Override
@@ -207,7 +153,7 @@ public class DatumsEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitpunkt) {
+	public Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
 
 		boolean gueltig = jahr <= zeitpunkt.getYear();
 		gueltig &= endJahr >= zeitpunkt.getYear();
@@ -215,40 +161,38 @@ public class DatumsEintrag extends KalenderEintrag {
 		gueltig &= tag == zeitpunkt.getDayOfMonth();
 
 		if (gueltig) {
-			return Gueltigkeit.of(gueltig, ZustandsWechsel
+			return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl
 					.of(LocalDateTime.of(zeitpunkt.toLocalDate().plusDays(1), LocalTime.MIDNIGHT), !gueltig));
 		}
 
-		int checkJahr = jahr;
-		if (tag == 29 && monat == 2) {
-			while (!Year.isLeap(checkJahr)) {
-				checkJahr++;
-			}
-		}
-		LocalDate fruehestesDatum = LocalDate.of(checkJahr, monat, tag);
+		LocalDate fruehestesDatum = LocalDate.of(jahr, monat, tag).plusDays(1);
 		if (zeitpunkt.toLocalDate().isBefore(fruehestesDatum)) {
-			return Gueltigkeit.of(gueltig,
-					ZustandsWechsel.of(LocalDateTime.of(fruehestesDatum, LocalTime.MIDNIGHT), !gueltig));
+			return GueltigkeitImpl.of(gueltig,
+					ZustandsWechselImpl.of(LocalDateTime.of(fruehestesDatum, LocalTime.MIDNIGHT), !gueltig));
 		}
 
-		checkJahr = endJahr;
-		if (tag == 29 && monat == 2) {
-			while (!Year.isLeap(checkJahr)) {
-				checkJahr--;
-			}
-		}
-		LocalDate spaetestesDatum = LocalDate.of(checkJahr, monat, tag);
+		
+		
+		LocalDate spaetestesDatum = LocalDate.of(endJahr, monat, tag).plusDays(1);
 		if (zeitpunkt.toLocalDate().isBefore(spaetestesDatum)) {
-			checkJahr = zeitpunkt.getYear() + 1;
+			
+			int checkJahr = zeitpunkt.getYear();
+			if( spaetestesDatum.withYear(2000).isBefore(zeitpunkt.toLocalDate().withYear(2000))) {
+				checkJahr++;
+			}
+			
 			if (tag == 29 && monat == 2) {
 				while (!Year.isLeap(checkJahr)) {
 					checkJahr++;
 				}
 			}
-			return Gueltigkeit.of(gueltig, ZustandsWechsel.of(
-					LocalDateTime.of(LocalDate.of(checkJahr, monat, tag), LocalTime.MIDNIGHT), !gueltig));
+
+			LocalDateTime wechselZeit = LocalDateTime.of(LocalDate.of(checkJahr, monat, tag), LocalTime.MIDNIGHT);
+			
+			return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl.of(
+					wechselZeit, !gueltig));
 		}
 
-		return Gueltigkeit.of(gueltig, ZustandsWechsel.MAX);
+		return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl.MAX);
 	}
 }

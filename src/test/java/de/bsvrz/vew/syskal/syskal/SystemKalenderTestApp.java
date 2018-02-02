@@ -1,13 +1,9 @@
 package de.bsvrz.vew.syskal.syskal;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
-import de.bsvrz.sys.funclib.application.SimpleApplicationGUI;
 import de.bsvrz.sys.funclib.application.StandardApplication;
 import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;

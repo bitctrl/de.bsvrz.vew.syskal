@@ -13,50 +13,14 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public abstract class KalenderEintrag {
 
-	/** das Pattern zum Ermitteln eines Datumsbereiches im Definitionsstring. */
+	/** das Pattern eines Datumsbereiches im Definitionsstring. */
 	private static final Pattern DATUMSBEREICH_PATTERN = Pattern.compile("<.*>");
 
-	/**
-	 * das Pattern zum Ermitteln eines Zeitgrenzenbereiches im Definitionsstring.
-	 */
+	/** das Pattern eines Zeitgrenzenbereiches im Definitionsstring. */
 	private static final Pattern ZEITBEREICHSLISTE_PATTERN = Pattern.compile("\\(.*\\)");
 
-	/**
-	 * das Pattern zum Ermitteln eines Zeitbereiches oder einer Verknüpfungsliste.
-	 */
+	/** das Pattern eines Zeitbereiches oder einer Verknüpfungsliste. */
 	protected static final Pattern ZEITBEREICH_PATTERN = Pattern.compile("\\{.[^\\{]*\\}");
-
-	private String definition;
-	private String name;
-
-	protected KalenderEintrag(String name, String definition) {
-		this.name = name;
-		this.definition = definition;
-	}
-	
-	public abstract Gueltigkeit isZeitlichGueltig(LocalDateTime zeitpunkt);
-	
-	public final List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
-
-		List<ZustandsWechsel> result = new ArrayList<>();
-
-		Gueltigkeit gueltigkeit = isZeitlichGueltig(start);
-		result.add(ZustandsWechsel.of(start, gueltigkeit.isZeitlichGueltig()));
-
-		LocalDateTime aktuellerZeitPunkt = start;
-		do {
-			ZustandsWechsel wechsel = gueltigkeit.getNaechsterWechsel();
-			aktuellerZeitPunkt = wechsel.getZeitPunkt();
-			
-			if(!aktuellerZeitPunkt.isAfter(ende)) {
-				result.add(wechsel);
-				gueltigkeit = isZeitlichGueltig(wechsel.getZeitPunkt());
-			}
-			
-		} while(!aktuellerZeitPunkt.isAfter(ende));
-		
-		return result;
-	}
 
 	/**
 	 * zerlegt den übergebenen Definitionsstring. Die Funktion initialisiert die
@@ -73,30 +37,16 @@ public abstract class KalenderEintrag {
 	 * @return das Ergebnis ist ein Systemkalendereintrag, dessen konkreter Typ vom
 	 *         Inhalt der Definition abhängt
 	 */
-	public static KalenderEintrag parse(KalenderEintragProvider provider, final String name,
-			final String definition) {
+	public static KalenderEintrag parse(KalenderEintragProvider provider, final String name, final String definition) {
 
 		KalenderEintrag result = null;
 
 		result = VorDefinierterEintrag.getEintrag(name);
-		if( result != null) {
+		if (result != null) {
 			return result;
 		}
-		
-		String rest = definition;
 
-		final String[] parts = definition.split(":=");
-
-		if (parts.length < 2) {
-			rest = parts[0].trim();
-		} else {
-			final String defName = parts[0].trim();
-			if (!defName.equals(name)) {
-				Debug.getLogger().warning("Für den Systemkalendereintrag " + name + " ist der abweichende Name: \""
-						+ defName + "\" definiert!");
-			}
-			rest = parts[1].trim();
-		}
+		String rest = entferneNamensPrefix(name, definition);
 
 		final List<ZeitGrenze> parseZeitBereiche = new ArrayList<>();
 
@@ -115,6 +65,7 @@ public abstract class KalenderEintrag {
 				try {
 					parseZeitBereiche.add(new ZeitGrenze(zb));
 				} catch (final ParseException e) {
+					Debug.getLogger().warning(e.getLocalizedMessage());
 					zeitBereichsfehler = true;
 				}
 			}
@@ -156,11 +107,36 @@ public abstract class KalenderEintrag {
 		return result;
 	}
 
+	private static String entferneNamensPrefix(final String name, final String definition) {
+
+		final String[] parts = definition.split(":=");
+
+		if (parts.length < 2) {
+			return parts[0].trim();
+		}
+		
+		final String defName = parts[0].trim();
+		if (!defName.equals(name)) {
+			Debug.getLogger().warning("Für den Systemkalendereintrag " + name + " ist der abweichende Name: \""
+					+ defName + "\" definiert!");
+		}
+		return parts[1].trim();
+	}
+	
+	private String definition;
+
+	private String name;
+
 	/** die Zeitgrenzen, die den Kalendereintrag zeitlich einschränken können. */
 	private final List<ZeitGrenze> zeitGrenzen = new ArrayList<>();
 
 	/** der Definitionseintrag konnte nicht korrekt eingelesen werden. */
 	private boolean fehler;
+
+	protected KalenderEintrag(String name, String definition) {
+		this.name = name;
+		this.definition = definition;
+	}
 
 	/**
 	 * fügt eine Zeitgrenze hinzu.
@@ -172,12 +148,7 @@ public abstract class KalenderEintrag {
 		zeitGrenzen.add(grenze);
 	}
 
-	/**
-	 * liefert die Art des Dateneintrags.
-	 * 
-	 * @return dte Art
-	 */
-	public abstract EintragsArt getEintragsArt();
+	protected abstract Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt);
 
 	/**
 	 * liefert die Zeichenkette mit der initialen Definitionszeichenkette des
@@ -190,6 +161,17 @@ public abstract class KalenderEintrag {
 	}
 
 	/**
+	 * liefert die Art des Dateneintrags.
+	 * 
+	 * @return die Art
+	 */
+	public abstract EintragsArt getEintragsArt();
+
+	public String getName() {
+		return name;
+	}
+
+	/**
 	 * liefert die Liste der für den Eintrag definierten Zeitgrenzen.
 	 * 
 	 * TODO Klärung, welche Eintragsarten die Zuordnung von Zeitgrenzen erlauben!
@@ -198,6 +180,36 @@ public abstract class KalenderEintrag {
 	 */
 	public List<ZeitGrenze> getZeitGrenzen() {
 		return zeitGrenzen;
+	}
+
+	public final Gueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
+		if (fehler) {
+			return GueltigkeitImpl.NICHT_GUELTIG;
+		}
+
+		return berechneZeitlicheGueltigkeit(zeitpunkt);
+	}
+
+	public final List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
+
+		List<ZustandsWechsel> result = new ArrayList<>();
+
+		Gueltigkeit gueltigkeit = getZeitlicheGueltigkeit(start);
+		result.add(ZustandsWechselImpl.of(start, gueltigkeit.isZeitlichGueltig()));
+
+		LocalDateTime aktuellerZeitPunkt = start;
+		do {
+			ZustandsWechsel wechsel = gueltigkeit.getNaechsterWechsel();
+			aktuellerZeitPunkt = wechsel.getZeitPunkt();
+
+			if (!aktuellerZeitPunkt.isAfter(ende)) {
+				result.add(wechsel);
+				gueltigkeit = getZeitlicheGueltigkeit(wechsel.getZeitPunkt());
+			}
+
+		} while (!aktuellerZeitPunkt.isAfter(ende));
+
+		return result;
 	}
 
 	/**
@@ -218,9 +230,5 @@ public abstract class KalenderEintrag {
 	 */
 	protected void setFehler(final boolean state) {
 		fehler = state;
-	}
-
-	public String getName() {
-		return name;
 	}
 }

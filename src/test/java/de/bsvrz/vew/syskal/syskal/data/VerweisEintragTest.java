@@ -32,7 +32,7 @@ public class VerweisEintragTest {
 
 		for (int jahr = 2000; jahr < 2020; jahr++) {
 			LocalDate checkDate = LocalDate.of(jahr, now.getMonth(), now.getDayOfMonth());
-			Gueltigkeit gueltigKeit = osterMontag.isZeitlichGueltig(LocalDateTime.of(checkDate, LocalTime.NOON));
+			Gueltigkeit gueltigKeit = osterMontag.getZeitlicheGueltigkeit(LocalDateTime.of(checkDate, LocalTime.NOON));
 			LocalDate osterMontagDate = Ostersonntag.getDatumImJahr(jahr).plusDays(1);
 
 			if (checkDate.equals(osterMontagDate)) {
@@ -120,7 +120,7 @@ public class VerweisEintragTest {
 
 		for (int jahr = 2000; jahr < 2020; jahr++) {
 			LocalDate checkDate = LocalDate.of(jahr, now.getMonth(), now.getDayOfMonth());
-			Gueltigkeit gueltigKeit = karFreitag.isZeitlichGueltig(LocalDateTime.of(checkDate, LocalTime.NOON));
+			Gueltigkeit gueltigKeit = karFreitag.getZeitlicheGueltigkeit(LocalDateTime.of(checkDate, LocalTime.NOON));
 			LocalDate karfreitagDatum = Ostersonntag.getDatumImJahr(jahr).minusDays(2);
 
 			if (checkDate.equals(karfreitagDatum)) {

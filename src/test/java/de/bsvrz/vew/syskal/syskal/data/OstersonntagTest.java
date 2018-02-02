@@ -134,7 +134,7 @@ public class OstersonntagTest {
 
 		for (int jahr = 2000; jahr < 2020; jahr++) {
 			LocalDate checkDate = LocalDate.of(jahr, now.getMonth(), now.getDayOfMonth());
-			Gueltigkeit gueltigKeit = osterSonntag.isZeitlichGueltig(LocalDateTime.of(checkDate, LocalTime.NOON));
+			Gueltigkeit gueltigKeit = osterSonntag.getZeitlicheGueltigkeit(LocalDateTime.of(checkDate, LocalTime.NOON));
 			LocalDate osterDate = Ostersonntag.getDatumImJahr(jahr);
 
 			if (checkDate.equals(osterDate)) {

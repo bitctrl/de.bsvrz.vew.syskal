@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.bsvrz.vew.syskal.Gueltigkeit;
-import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Repräsentation der vordefinierten Einträge des Systemkalender. Laut
@@ -152,20 +151,20 @@ public class VorDefinierterEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitPunkt) {
+	public Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
 		
 		boolean gueltig = zeitPunkt.getDayOfWeek().equals(dayOfWeek);
 
 		LocalDate checkDate = zeitPunkt.toLocalDate();
 		if( gueltig ) {
-			return Gueltigkeit.of(gueltig, ZustandsWechsel.of(LocalDateTime.of(checkDate.plusDays(1), LocalTime.MIDNIGHT), false));
+			return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl.of(LocalDateTime.of(checkDate.plusDays(1), LocalTime.MIDNIGHT), false));
 		}
 
 		while (checkDate.getDayOfWeek() != dayOfWeek) {
 			checkDate = checkDate.plusDays(1);
 		}
 
-		return Gueltigkeit.of(gueltig, ZustandsWechsel.of(LocalDateTime.of(checkDate, LocalTime.MIDNIGHT), true));
+		return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl.of(LocalDateTime.of(checkDate, LocalTime.MIDNIGHT), true));
 
 	}
 }

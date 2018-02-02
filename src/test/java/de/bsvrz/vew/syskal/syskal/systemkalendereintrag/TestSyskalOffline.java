@@ -8,7 +8,6 @@ import org.junit.Test;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 import de.bsvrz.vew.syskal.internal.KalenderEintrag;
-import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 
 public class TestSyskalOffline {
 

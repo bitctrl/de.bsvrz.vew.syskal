@@ -24,7 +24,7 @@ public class ZeitBereichsEintragTest {
 		ZeitBereichsEintrag bereich4 = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Bereich4",
 				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
 
-		Gueltigkeit gueltigKeit = bereich4.isZeitlichGueltig(LocalDateTime.of(2008, 1, 30, 12, 10));
+		Gueltigkeit gueltigKeit = bereich4.getZeitlicheGueltigkeit(LocalDateTime.of(2008, 1, 30, 12, 10));
 
 		assertFalse(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(2008, 1, 30, 15, 30), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
@@ -38,7 +38,7 @@ public class ZeitBereichsEintragTest {
 		ZeitBereichsEintrag bereich4 = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Bereich4",
 				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
 
-		Gueltigkeit gueltigKeit = bereich4.isZeitlichGueltig(LocalDateTime.of(2008, 1, 30, 10, 10));
+		Gueltigkeit gueltigKeit = bereich4.getZeitlicheGueltigkeit(LocalDateTime.of(2008, 1, 30, 10, 10));
 
 		assertTrue(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(2008, 1, 30, 11, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),

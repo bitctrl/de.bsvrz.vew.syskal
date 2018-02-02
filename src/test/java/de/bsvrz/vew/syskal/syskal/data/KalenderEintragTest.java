@@ -3,9 +3,6 @@ package de.bsvrz.vew.syskal.syskal.data;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
