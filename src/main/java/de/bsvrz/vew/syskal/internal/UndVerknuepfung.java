@@ -27,9 +27,7 @@
 package de.bsvrz.vew.syskal.internal;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -72,7 +70,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 
 		for (Verweis verweis : getVerweise()) {
 			KalenderEintrag eintrag = verweis.getReferenzEintrag();
-			if (eintrag == null) {
+			if ((eintrag == null) || eintrag.isFehler()) {
 				return Gueltigkeit.NICHT_GUELTIG;
 			}
 
@@ -136,7 +134,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 							do {
 								wechsel = entry.getKey().isZeitlichGueltig(wechsel.getZeitPunkt())
 										.getNaechsterWechsel();
-							} while (wechsel.isWirdGueltig() != zielZustand);
+							} while (wechsel.isWirdGueltig() != zielZustand && !wechsel.equals(ZustandsWechsel.MAX));
 						}
 						korrigierteZustandsWechsel.put(entry.getKey(), wechsel);
 					}
@@ -158,12 +156,5 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 			}
 		}
 		return result;
-	}
-
-	@Override
-	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
-		// TODO Auto-generated method stub
-		return Collections.emptyList();
-
 	}
 }

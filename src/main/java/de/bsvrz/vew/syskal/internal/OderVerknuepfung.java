@@ -27,9 +27,7 @@
 package de.bsvrz.vew.syskal.internal;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -66,7 +64,7 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 
 	@Override
 	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitpunkt) {
-		
+
 		boolean zustand = false;
 		Map<KalenderEintrag, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
 
@@ -82,26 +80,26 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 			}
 			potentielleEndWechsel.put(eintrag, gueltigKeit.getNaechsterWechsel());
 		}
-		
+
 		ZustandsWechsel wechsel = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);
 
 		return Gueltigkeit.of(zustand, wechsel);
 	}
-	
+
 	private ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand,
 			Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
 
 		ZustandsWechsel result = null;
 
 		if (zielZustand) {
-			
+
 			for (ZustandsWechsel wechsel : potentielleWechsel.values()) {
 				if (!wechsel.isWirdGueltig()) {
 					continue;
 				}
 				if (result == null) {
 					result = wechsel;
-				} else if (result.getZeitPunkt().isBefore(wechsel.getZeitPunkt())) {
+				} else if (result.getZeitPunkt().isAfter(wechsel.getZeitPunkt())) {
 					result = wechsel;
 				}
 			}
@@ -131,11 +129,7 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 				LocalDateTime moeglicherZeitPunkt = fruehesterVerweis.getValue().getZeitPunkt();
 				for (KalenderEintrag eintrag : zustandsWechsel.keySet()) {
 					if (!eintrag.isZeitlichGueltig(moeglicherZeitPunkt).isZeitlichGueltig()) {
-						if (result == null) {
-							result = ZustandsWechsel.of(moeglicherZeitPunkt, true);
-						}
-					} else {
-						result = null;
+						result = ZustandsWechsel.of(moeglicherZeitPunkt, false);
 						break;
 					}
 				}
@@ -156,16 +150,11 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 					zustandsWechsel.putAll(korrigierteZustandsWechsel);
 				}
 			} while (result == null);
-		} 
+		}
 
+		if (result == null) {
+			return ZustandsWechsel.MAX;
+		}
 		return result;
-	}
-	
-	
-	@Override
-	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
-		// TODO Auto-generated method stub
-		return Collections.emptyList();
-
 	}
 }

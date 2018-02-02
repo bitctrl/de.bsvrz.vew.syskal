@@ -5,7 +5,6 @@ import java.util.Objects;
 
 import de.bsvrz.dav.daf.main.config.DynamicObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.SystemkalenderEintrag;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 

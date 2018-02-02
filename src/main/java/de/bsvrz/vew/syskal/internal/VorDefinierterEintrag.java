@@ -30,9 +30,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.bsvrz.vew.syskal.Gueltigkeit;
@@ -108,9 +106,9 @@ public class VorDefinierterEintrag extends KalenderEintrag {
 	}
 
 	/** interne Funktion zur Initialisierung der vordefinierten Einträge. */
-	private synchronized static void initialisiereEintrage() {
+	private static synchronized void initialisiereEintrage() {
 		if (VorDefinierterEintrag.eintraege == null) {
-			VorDefinierterEintrag.eintraege = new HashMap<String, VorDefinierterEintrag>();
+			VorDefinierterEintrag.eintraege = new HashMap<>();
 			VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.MONTAG.getName().toLowerCase(),
 					VorDefinierterEintrag.MONTAG);
 			VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.DIENSTAG.getName().toLowerCase(),
@@ -169,32 +167,5 @@ public class VorDefinierterEintrag extends KalenderEintrag {
 
 		return Gueltigkeit.of(gueltig, ZustandsWechsel.of(LocalDateTime.of(checkDate, LocalTime.MIDNIGHT), true));
 
-	}
-
-	@Override
-	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
-		ArrayList<ZustandsWechsel> result = new ArrayList<>();
-
-		LocalDate startDate = start.toLocalDate();
-		LocalDate endDate = ende.toLocalDate();
-
-		boolean gueltig = isZeitlichGueltig(start).isZeitlichGueltig();
-		result.add(ZustandsWechsel.of(start, gueltig));
-		if (gueltig) {
-			result.add(ZustandsWechsel.of(LocalDateTime.of(startDate, LocalTime.MIDNIGHT).plusDays(1), false));
-		}
-
-		startDate = startDate.plusDays(1);
-		while (startDate.isBefore(endDate) || startDate.equals(endDate)) {
-			if (startDate.getDayOfWeek().equals(dayOfWeek)) {
-				result.add(ZustandsWechsel.of(LocalDateTime.of(startDate, LocalTime.MIDNIGHT), true));
-				if (startDate.isBefore(endDate)) {
-					result.add(ZustandsWechsel.of(LocalDateTime.of(startDate, LocalTime.MIDNIGHT).plusDays(1), false));
-				}
-			}
-			startDate = startDate.plusDays(1);
-		}
-
-		return result;
 	}
 }

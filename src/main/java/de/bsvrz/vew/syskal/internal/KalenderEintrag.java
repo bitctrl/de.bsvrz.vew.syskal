@@ -35,7 +35,28 @@ public abstract class KalenderEintrag {
 	}
 	
 	public abstract Gueltigkeit isZeitlichGueltig(LocalDateTime zeitpunkt);
-	public abstract List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende);
+	
+	public final List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
+
+		List<ZustandsWechsel> result = new ArrayList<>();
+
+		Gueltigkeit gueltigkeit = isZeitlichGueltig(start);
+		result.add(ZustandsWechsel.of(start, gueltigkeit.isZeitlichGueltig()));
+
+		LocalDateTime aktuellerZeitPunkt = start;
+		do {
+			ZustandsWechsel wechsel = gueltigkeit.getNaechsterWechsel();
+			aktuellerZeitPunkt = wechsel.getZeitPunkt();
+			
+			if(!aktuellerZeitPunkt.isAfter(ende)) {
+				result.add(wechsel);
+				gueltigkeit = isZeitlichGueltig(wechsel.getZeitPunkt());
+			}
+			
+		} while(!aktuellerZeitPunkt.isAfter(ende));
+		
+		return result;
+	}
 
 	/**
 	 * zerlegt den übergebenen Definitionsstring. Die Funktion initialisiert die

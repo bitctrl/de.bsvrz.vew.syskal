@@ -29,8 +29,7 @@ package de.bsvrz.vew.syskal.internal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
+import java.time.Year;
 
 import de.bsvrz.vew.syskal.Gueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -46,16 +45,16 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
 public class DatumsEintrag extends KalenderEintrag {
 
 	/** das letzte Jahr für das der Eintrag gültig ist. */
-	private Integer endJahr;
+	private int endJahr = Year.MAX_VALUE;
 
 	/** das erste Jahr für das der Eintrag gültig ist. */
-	private Integer jahr;
+	private int jahr = Year.MIN_VALUE;
 
 	/** der Monat des definierten Datums. */
-	private Integer monat;
+	private int monat;
 
 	/** der Tag innerhalb des Monats für das definierte Datum. */
-	private Integer tag;
+	private int tag;
 
 	/**
 	 * Konstruktor, erzeugt einen Eintrag mit dem übergebenen Namen, der Inhalt wird
@@ -187,22 +186,18 @@ public class DatumsEintrag extends KalenderEintrag {
 	public String toString() {
 		final StringBuffer buffer = new StringBuffer(getName());
 		buffer.append(":=");
-		if ((tag == null) || (monat == null)) {
+		buffer.append(tag);
+		buffer.append('.');
+		buffer.append(monat);
+		buffer.append('.');
+
+		if (jahr == Year.MIN_VALUE) {
 			buffer.append('*');
 		} else {
-			buffer.append(tag);
-			buffer.append('.');
-			buffer.append(monat);
-			buffer.append('.');
-
-			if (jahr == null) {
-				buffer.append('*');
-			} else {
-				buffer.append(jahr);
-			}
+			buffer.append(jahr);
 		}
 		buffer.append(',');
-		if (endJahr == null) {
+		if (endJahr == Year.MAX_VALUE) {
 			buffer.append('*');
 		} else {
 			buffer.append(endJahr);
@@ -213,23 +208,47 @@ public class DatumsEintrag extends KalenderEintrag {
 
 	@Override
 	public Gueltigkeit isZeitlichGueltig(LocalDateTime zeitpunkt) {
-		
-		boolean gueltig = jahr == null || jahr <= zeitpunkt.getYear();
-		gueltig &= endJahr == null || endJahr >= zeitpunkt.getYear();
-		gueltig &= monat == null || monat == zeitpunkt.getMonthValue();
-		gueltig &= tag == null || tag == zeitpunkt.getDayOfMonth();
 
-		if( gueltig ) {
-			return Gueltigkeit.of(gueltig, ZustandsWechsel.of(LocalDateTime.of(zeitpunkt.toLocalDate().plusDays(1), LocalTime.MIDNIGHT), !gueltig));
+		boolean gueltig = jahr <= zeitpunkt.getYear();
+		gueltig &= endJahr >= zeitpunkt.getYear();
+		gueltig &= monat == zeitpunkt.getMonthValue();
+		gueltig &= tag == zeitpunkt.getDayOfMonth();
+
+		if (gueltig) {
+			return Gueltigkeit.of(gueltig, ZustandsWechsel
+					.of(LocalDateTime.of(zeitpunkt.toLocalDate().plusDays(1), LocalTime.MIDNIGHT), !gueltig));
 		}
-		
+
+		int checkJahr = jahr;
+		if (tag == 29 && monat == 2) {
+			while (!Year.isLeap(checkJahr)) {
+				checkJahr++;
+			}
+		}
+		LocalDate fruehestesDatum = LocalDate.of(checkJahr, monat, tag);
+		if (zeitpunkt.toLocalDate().isBefore(fruehestesDatum)) {
+			return Gueltigkeit.of(gueltig,
+					ZustandsWechsel.of(LocalDateTime.of(fruehestesDatum, LocalTime.MIDNIGHT), !gueltig));
+		}
+
+		checkJahr = endJahr;
+		if (tag == 29 && monat == 2) {
+			while (!Year.isLeap(checkJahr)) {
+				checkJahr--;
+			}
+		}
+		LocalDate spaetestesDatum = LocalDate.of(checkJahr, monat, tag);
+		if (zeitpunkt.toLocalDate().isBefore(spaetestesDatum)) {
+			checkJahr = zeitpunkt.getYear() + 1;
+			if (tag == 29 && monat == 2) {
+				while (!Year.isLeap(checkJahr)) {
+					checkJahr++;
+				}
+			}
+			return Gueltigkeit.of(gueltig, ZustandsWechsel.of(
+					LocalDateTime.of(LocalDate.of(checkJahr, monat, tag), LocalTime.MIDNIGHT), !gueltig));
+		}
+
 		return Gueltigkeit.of(gueltig, ZustandsWechsel.MAX);
-	}
-
-	@Override
-	public List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
-		// TODO Auto-generated method stub
-		return Collections.emptyList();
-
 	}
 }

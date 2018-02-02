@@ -24,9 +24,9 @@ public class TestSyskalOffline4 {
 		eintragsProvider
 				.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test2", "Test2:=29.02.2004,2010"));
 		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test3",
-				"Test3:=({13:00:00,000-15:00:00,000}{14:00:00,000-16:00:00,000})*,*"));
+				"Test3:=({13:00:00,000-15:00:00,000}{14:00:00,000-16:00:00,000})"));
 		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test31",
-				"Test31:=({13:00:00,000-14:00:00,000}{14:00:00,000-15:00:00,000})*,*"));
+				"Test31:=({13:00:00,000-14:00:00,000}{14:00:00,000-15:00:00,000})"));
 		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test32",
 				"Test32:=({13:00:00,000-14:00:00,000}{15:00:00,000-16:00:00,000})"));
 		eintragsProvider

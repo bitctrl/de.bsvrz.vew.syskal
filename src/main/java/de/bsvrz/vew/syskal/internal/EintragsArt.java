@@ -70,7 +70,7 @@ public enum EintragsArt {
 	 * @param name
 	 *            der Name des Typs
 	 */
-	private EintragsArt(final String name) {
+	EintragsArt(final String name) {
 		this.name = name;
 	}
 
