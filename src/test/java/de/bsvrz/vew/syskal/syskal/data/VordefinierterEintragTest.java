@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.Gueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
@@ -19,6 +21,9 @@ import de.bsvrz.vew.syskal.internal.VorDefinierterEintrag;
 
 public class VordefinierterEintragTest {
 
+	@Rule
+	public Timeout globalTimeout = Timeout.seconds(20);
+	
 	@Test
 	public void testeGueltigkeit() {
 

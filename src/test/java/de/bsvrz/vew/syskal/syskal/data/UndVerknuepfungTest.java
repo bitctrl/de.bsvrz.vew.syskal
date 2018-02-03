@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.Gueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
@@ -17,6 +19,9 @@ import de.bsvrz.vew.syskal.internal.UndVerknuepfung;
 
 public class UndVerknuepfungTest {
 
+	@Rule
+	public Timeout globalTimeout = Timeout.seconds(20);
+	
 	private static TestKalenderEintragProvider provider;
 	private static UndVerknuepfung verknuepfung;
 	private static LocalDate testMontag;

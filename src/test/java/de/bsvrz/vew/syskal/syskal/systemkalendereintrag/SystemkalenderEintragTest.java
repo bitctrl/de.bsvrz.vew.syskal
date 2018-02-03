@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -19,6 +21,9 @@ import de.bsvrz.vew.syskal.internal.KalenderEintrag;
 
 public class SystemkalenderEintragTest {
 
+	@Rule
+	public Timeout globalTimeout = Timeout.seconds(20);
+	
 	private static TestKalenderEintragProvider eintragsProvider;
 
 	@BeforeClass

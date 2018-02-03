@@ -3,7 +3,9 @@ package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.Gueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
@@ -12,6 +14,9 @@ import de.bsvrz.vew.syskal.internal.KalenderEintrag;
 
 public class TestSyskalOffline5 {
 
+	@Rule
+	public Timeout globalTimeout = Timeout.seconds(20);
+	
 	@Test
 	public void beispiele5() {
 

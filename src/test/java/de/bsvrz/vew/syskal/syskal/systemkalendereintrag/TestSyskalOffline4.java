@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -12,6 +14,9 @@ import de.bsvrz.vew.syskal.internal.KalenderEintrag;
 
 public class TestSyskalOffline4 {
 
+	@Rule
+	public Timeout globalTimeout = Timeout.seconds(20);
+	
 	@Test
 	public void beispiele4() {
 

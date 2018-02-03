@@ -3,25 +3,25 @@ package de.bsvrz.vew.syskal.syskal.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
-import java.util.List;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.Gueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.ZustandsWechsel;
 import de.bsvrz.vew.syskal.internal.DatumsEintrag;
 import de.bsvrz.vew.syskal.internal.KalenderEintrag;
-import de.bsvrz.vew.syskal.internal.Ostersonntag;
 
 public class DatumsEintragsTest {
 
+	@Rule
+	public Timeout globalTimeout = Timeout.seconds(20);
+	
 	@Test
 	public void testeTagDerArbeit() {
 

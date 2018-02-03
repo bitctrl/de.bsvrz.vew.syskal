@@ -4,13 +4,18 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.internal.KalenderEintrag;
 
 public class ParserTest {
 
+	@Rule
+	public Timeout globalTimeout = Timeout.seconds(20);
+	
 	private static TestKalenderEintragProvider eintragsProvider;
 
 	/**
