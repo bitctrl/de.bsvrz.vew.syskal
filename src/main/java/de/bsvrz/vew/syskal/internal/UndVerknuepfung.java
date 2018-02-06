@@ -68,17 +68,16 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 		boolean zustand = true;
 		Map<KalenderEintrag, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
 
-		for (Verweis verweis : getVerweise()) {
-			KalenderEintrag eintrag = verweis.getReferenzEintrag();
-			if ((eintrag == null) || eintrag.isFehler()) {
+		for (VerweisEintrag verweis : getVerweise()) {
+			if (verweis.isFehler()) {
 				return GueltigkeitImpl.NICHT_GUELTIG;
 			}
 
-			Gueltigkeit gueltigKeit = eintrag.getZeitlicheGueltigkeit(zeitPunkt);
+			Gueltigkeit gueltigKeit = verweis.getZeitlicheGueltigkeit(zeitPunkt);
 			if (!gueltigKeit.isZeitlichGueltig()) {
 				zustand = false;
 			}
-			potentielleEndWechsel.put(eintrag, gueltigKeit.getNaechsterWechsel());
+			potentielleEndWechsel.put(verweis, gueltigKeit.getNaechsterWechsel());
 		}
 
 		ZustandsWechsel wechsel = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);

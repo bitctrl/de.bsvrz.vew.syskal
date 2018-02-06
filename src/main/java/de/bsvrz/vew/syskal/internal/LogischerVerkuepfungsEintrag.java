@@ -43,7 +43,7 @@ public abstract class LogischerVerkuepfungsEintrag extends
 		KalenderEintrag {
 
 	/** die Liste der Verweise, die den Eintrag definieren. */
-	private final List<Verweis> verweise = new ArrayList<>();
+	private final List<VerweisEintrag> verweise = new ArrayList<>();
 
 	/**
 	 * ein optionales Anfangsjahr, mit dem der Gültigkeitsbereich des Eintrags
@@ -82,7 +82,7 @@ public abstract class LogischerVerkuepfungsEintrag extends
 					try {
 						Verweis verweis = new Verweis(provider, def);
 						setFehler(verweis.isUngueltig() | isFehler());
-						verweise.add(verweis);
+						verweise.add(new VerweisEintrag(verweis));
 					} catch (final ParseException e) {
 						setFehler(true);
 					}
@@ -114,18 +114,6 @@ public abstract class LogischerVerkuepfungsEintrag extends
 					}
 				}
 			}
-		}
-	}
-
-	/**
-	 * fügt einen zu verknüpfenden Verweis hinzu.
-	 * 
-	 * @param verweis
-	 *            der neue Verweis
-	 */
-	public final void addVerweis(final Verweis verweis) {
-		if (verweis != null) {
-			verweise.add(verweis);
 		}
 	}
 
@@ -166,7 +154,7 @@ public abstract class LogischerVerkuepfungsEintrag extends
 	 * 
 	 * @return die Liste
 	 */
-	public List<Verweis> getVerweise() {
+	public List<VerweisEintrag> getVerweise() {
 		return verweise;
 	}
 
@@ -197,11 +185,11 @@ public abstract class LogischerVerkuepfungsEintrag extends
 		buffer.append(getVerknuepfungsArt());
 		buffer.append('{');
 		int idx = 0;
-		for (final Verweis verweis : verweise) {
+		for (final VerweisEintrag verweis : verweise) {
 			if (idx > 0) {
 				buffer.append(',');
 			}
-			buffer.append(verweis);
+			buffer.append(verweis.getVerweis());
 			idx++;
 		}
 		buffer.append('}');

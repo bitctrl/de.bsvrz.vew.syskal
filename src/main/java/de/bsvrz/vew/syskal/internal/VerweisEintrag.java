@@ -66,6 +66,11 @@ public class VerweisEintrag extends KalenderEintrag {
 		}
 	}
 
+	VerweisEintrag(Verweis verweis) {
+		super(verweis.getName(), verweis.toString());
+		this.verweis = verweis;
+	}
+
 	@Override
 	public EintragsArt getEintragsArt() {
 		return EintragsArt.ABGELEITET;
@@ -170,5 +175,9 @@ public class VerweisEintrag extends KalenderEintrag {
 		return GueltigkeitImpl.of(gueltigKeit.isZeitlichGueltig(),
 				ZustandsWechselImpl.of(wechselZeit, !gueltigKeit.isZeitlichGueltig()));
 
+	}
+
+	Verweis getVerweis() {
+		return verweis;
 	}
 }

@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 import de.bsvrz.vew.syskal.internal.KalenderEintrag;
 
@@ -63,8 +64,21 @@ public class TestSyskalOffline7 {
 		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Werktag");
 		LocalDateTime startTime = LocalDateTime.of(2014, 8, 1, 14, 0, 0);
 		LocalDateTime endTime = LocalDateTime.of(2014, 8, 31, 0, 0, 0);
+
+		TestWechsel[] erwarteteWechsel = { 
+				TestWechsel.of("1.8.2014 14:00", true),
+				TestWechsel.of("2.8.2014 00:00", false), 
+				TestWechsel.of("4.8.2014 00:00", true),
+				TestWechsel.of("9.8.2014 00:00", false), 
+				TestWechsel.of("11.8.2014 00:00", true),
+				TestWechsel.of("16.8.2014 00:00", false),
+				TestWechsel.of("18.8.2014 00:00", true), 
+				TestWechsel.of("23.8.2014 00:00", false),
+				TestWechsel.of("25.8.2014 00:00", true), 
+				TestWechsel.of("30.8.2014 00:00", false)
+		};
+
 		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
-		System.out
-				.println("Abfrage1: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
+		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.Gueltigkeit;
@@ -95,7 +96,7 @@ public abstract class KalenderEintrag {
 				}
 			}
 
-			result.zeitGrenzen.addAll(parseZeitBereiche);
+			result.komprimiereZeitBereiche(parseZeitBereiche.stream().sorted().collect(Collectors.toList()));
 		}
 
 		result.definition = definition;
@@ -107,6 +108,29 @@ public abstract class KalenderEintrag {
 		return result;
 	}
 
+	private void komprimiereZeitBereiche(List<ZeitGrenze> grenzen) {
+
+		ZeitGrenze aktuell = null;
+
+		for (ZeitGrenze grenze : grenzen) {
+			if (aktuell == null) {
+				aktuell = grenze;
+				continue;
+			}
+
+			if (!grenze.getStart().isAfter(aktuell.getEnde())) {
+				aktuell = new ZeitGrenze(aktuell.getStart(), grenze.getEnde());
+			} else {
+				zeitGrenzen.add(aktuell);
+				aktuell = grenze;
+			}
+		}
+
+		if (aktuell != null) {
+			zeitGrenzen.add(aktuell);
+		}
+	}
+
 	private static String entferneNamensPrefix(final String name, final String definition) {
 
 		final String[] parts = definition.split(":=");
@@ -114,7 +138,7 @@ public abstract class KalenderEintrag {
 		if (parts.length < 2) {
 			return parts[0].trim();
 		}
-		
+
 		final String defName = parts[0].trim();
 		if (!defName.equals(name)) {
 			Debug.getLogger().warning("Für den Systemkalendereintrag " + name + " ist der abweichende Name: \""
@@ -122,7 +146,7 @@ public abstract class KalenderEintrag {
 		}
 		return parts[1].trim();
 	}
-	
+
 	private String definition;
 
 	private String name;

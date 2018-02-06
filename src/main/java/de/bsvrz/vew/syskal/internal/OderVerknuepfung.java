@@ -68,17 +68,13 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 		boolean zustand = false;
 		Map<KalenderEintrag, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
 
-		for (Verweis verweis : getVerweise()) {
-			KalenderEintrag eintrag = verweis.getReferenzEintrag();
-			if (eintrag == null) {
-				return GueltigkeitImpl.NICHT_GUELTIG;
-			}
+		for (VerweisEintrag verweis : getVerweise()) {
 
-			Gueltigkeit gueltigKeit = eintrag.getZeitlicheGueltigkeit(zeitpunkt);
+			Gueltigkeit gueltigKeit = verweis.getZeitlicheGueltigkeit(zeitpunkt);
 			if (gueltigKeit.isZeitlichGueltig()) {
 				zustand = true;
 			}
-			potentielleEndWechsel.put(eintrag, gueltigKeit.getNaechsterWechsel());
+			potentielleEndWechsel.put(verweis, gueltigKeit.getNaechsterWechsel());
 		}
 
 		ZustandsWechsel wechsel = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);
@@ -130,6 +126,8 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 				for (KalenderEintrag eintrag : zustandsWechsel.keySet()) {
 					if (!eintrag.getZeitlicheGueltigkeit(moeglicherZeitPunkt).isZeitlichGueltig()) {
 						result = ZustandsWechselImpl.of(moeglicherZeitPunkt, false);
+					} else {
+						result = null;
 						break;
 					}
 				}

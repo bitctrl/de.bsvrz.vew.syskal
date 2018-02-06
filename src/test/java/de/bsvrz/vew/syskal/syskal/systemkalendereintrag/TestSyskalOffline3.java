@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 import de.bsvrz.vew.syskal.internal.KalenderEintrag;
 
@@ -27,10 +28,11 @@ public class TestSyskalOffline3 {
 
 		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("TestSKE");
 		LocalDateTime startTime = LocalDateTime.of(2010, 9, 2, 16, 30, 0);
-		LocalDateTime endTime = LocalDateTime.of(2010, 9, 2, 17, 29, 59);
-		endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
+		LocalDateTime endTime = LocalDateTime.of(2010, 9, 2, 17, 29, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
+		
+		TestWechsel[] erwarteteWechsel = { TestWechsel.of("2.9.2010 16:30", true) };
+
 		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
-		System.out
-				.println("Abfrage1: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
+		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 }
