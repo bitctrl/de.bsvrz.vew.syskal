@@ -4,4 +4,5 @@ vew-syskal-build:
         
     script:
       - ./gradlew build
+      - ./gradlew publishMavenJavaPublicationToNerzSnapshotRepository
 
