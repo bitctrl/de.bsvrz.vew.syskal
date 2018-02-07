@@ -2,6 +2,7 @@ package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.ConfigurationObject;
@@ -100,7 +101,7 @@ public class TestSyskalOnline2IT implements StandardApplication {
 				.getEintrag(connection.getDataModel().getObject("ske.nw.vrz-nrw.es.sts.tagvoreinemfeiertag"));
 		LocalDateTime startTime = LocalDateTime.of(2016, 1, 1, 0, 0, 0);
 		LocalDateTime endTime = LocalDateTime.of(2016, 12, 31, 0, 0, 0);
-		ZustandsWechsel zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		System.out
 				.println("Abfrage1: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
 

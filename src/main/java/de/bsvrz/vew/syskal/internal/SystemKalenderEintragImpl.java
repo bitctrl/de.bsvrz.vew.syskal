@@ -1,6 +1,8 @@
 package de.bsvrz.vew.syskal.internal;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import de.bsvrz.dav.daf.main.config.DynamicObject;
@@ -23,7 +25,11 @@ public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
 
 	void bestimmeKalendereintrag() {
 		String name = systemObject.getName();
-		kalenderEintrag = KalenderEintrag.parse(provider, name, originalDefinition);
+		if (originalDefinition == null) {
+			kalenderEintrag = new Undefined();
+		} else {
+			kalenderEintrag = KalenderEintrag.parse(provider, name, originalDefinition);
+		}
 	}
 
 	public KalenderEintrag getKalenderEintrag() {
@@ -45,39 +51,45 @@ public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
 	public String getName() {
 		return systemObject.getName();
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder(100);
 		builder.append(systemObject.getName());
 		builder.append(':');
-		
+
 		if (kalenderEintrag == null) {
 			builder.append("NULL  :");
 		} else if (kalenderEintrag.isFehler()) {
-			builder.append("FEHLER :"); 
+			builder.append("FEHLER :");
 		} else {
-			builder.append("OK    :"); 
+			builder.append("OK    :");
 		}
 		builder.append(kalenderEintrag);
 		return builder.toString();
 	}
 
 	@Override
-	public ZustandsWechsel getZustandsWechsel(LocalDateTime von, LocalDateTime bis) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ZustandsWechsel> getZustandsWechsel(LocalDateTime von, LocalDateTime bis) {
+		if ((kalenderEintrag == null) || kalenderEintrag.isFehler()) {
+			return Collections.emptyList();
+		}
+		return kalenderEintrag.getZustandsWechselImBereich(von, bis);
 	}
 
 	@Override
 	public boolean isGueltig(LocalDateTime zeitPunkt) {
-		// TODO Auto-generated method stub
-		return false;
+		if ((kalenderEintrag == null) || kalenderEintrag.isFehler()) {
+			return false;
+		}
+		return kalenderEintrag.getZeitlicheGueltigkeit(zeitPunkt).isZeitlichGueltig();
 	}
 
 	@Override
 	public ZustandsWechsel getNaechstenWechsel(LocalDateTime zeitPunkt) {
-		// TODO Auto-generated method stub
-		return null;
+		if ((kalenderEintrag == null) || kalenderEintrag.isFehler()) {
+			return ZustandsWechselImpl.MAX;
+		}
+		return kalenderEintrag.getZeitlicheGueltigkeit(zeitPunkt).getNaechsterWechsel();
 	}
 }

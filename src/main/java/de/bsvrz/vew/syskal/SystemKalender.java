@@ -6,7 +6,6 @@ import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.ConfigurationObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.vew.syskal.internal.EintragsVerwaltung;
-import javafx.beans.property.SimpleLongProperty;
 
 public class SystemKalender  {
 

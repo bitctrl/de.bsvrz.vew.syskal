@@ -26,6 +26,7 @@
 package de.bsvrz.vew.syskal;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Schnittstelle zum Erzeugen von SystemKalenderEinträgen. Bietet einen
@@ -41,5 +42,5 @@ public interface SystemkalenderEintrag {
 	
 	boolean isGueltig(LocalDateTime zeitPunkt);
 	ZustandsWechsel getNaechstenWechsel(LocalDateTime zeitPunkt);
-	ZustandsWechsel getZustandsWechsel(LocalDateTime von, LocalDateTime bis);
+	List<ZustandsWechsel> getZustandsWechsel(LocalDateTime von, LocalDateTime bis);
 }

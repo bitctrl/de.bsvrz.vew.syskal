@@ -100,7 +100,7 @@ public class TestSyskalOnlineIT implements StandardApplication {
 				.getEintrag(connection.getDataModel().getObject("ske.montag_berufsverkehr"));
 		LocalDateTime startTime = LocalDateTime.of(2009, 8, 1, 10, 40, 35);
 		LocalDateTime endTime = LocalDateTime.of(2009, 9, 18, 10, 40, 35);
-		ZustandsWechsel zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		System.out
 				.println("Abfrage1: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
 
