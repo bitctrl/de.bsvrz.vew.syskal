@@ -12,7 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
-import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.internal.DatumsEintrag;
 import de.bsvrz.vew.syskal.internal.KalenderEintrag;
@@ -20,7 +20,7 @@ import de.bsvrz.vew.syskal.internal.KalenderEintrag;
 public class DatumsEintragsTest {
 
 	@Rule
-	public Timeout globalTimeout = Timeout.seconds(20);
+	public Timeout globalTimeout = Timeout.seconds(5);
 	
 	@Test
 	public void testeTagDerArbeit() {
@@ -31,7 +31,7 @@ public class DatumsEintragsTest {
 		assertTrue(datumsEintrag instanceof DatumsEintrag);
 
 		LocalDateTime checkDate = LocalDateTime.of(2018, 4, 15, 12, 0);
-		Gueltigkeit gueltigKeit = datumsEintrag.getZeitlicheGueltigkeit(checkDate);
+		SystemkalenderGueltigkeit gueltigKeit = datumsEintrag.getZeitlicheGueltigkeit(checkDate);
 
 		assertFalse(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(LocalDate.of(2018,  5, 1), LocalTime.MIDNIGHT), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
@@ -68,7 +68,7 @@ public class DatumsEintragsTest {
 		assertTrue(datumsEintrag instanceof DatumsEintrag);
 
 		LocalDateTime checkDate = LocalDateTime.of(2018, 1, 15, 12, 0);
-		Gueltigkeit gueltigKeit = datumsEintrag.getZeitlicheGueltigkeit(checkDate);
+		SystemkalenderGueltigkeit gueltigKeit = datumsEintrag.getZeitlicheGueltigkeit(checkDate);
 
 		assertFalse(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(LocalDate.of(2020,  2, 29), LocalTime.MIDNIGHT), gueltigKeit.getNaechsterWechsel().getZeitPunkt());

@@ -13,7 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
-import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -22,7 +22,7 @@ import de.bsvrz.vew.syskal.internal.KalenderEintrag;
 public class TestSyskalOffline5 {
 
 	@Rule
-	public Timeout globalTimeout = Timeout.seconds(20);
+	public Timeout globalTimeout = Timeout.seconds(5);
 	
 	private static TestKalenderEintragProvider eintragsProvider;
 
@@ -58,7 +58,7 @@ public class TestSyskalOffline5 {
 
 		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("WFD");
 		LocalDateTime startTime = LocalDateTime.of(2012, 12, 27, 10, 0, 0);
-		Gueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(startTime);
+		SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(startTime);
 
 		assertTrue("Gültigkeit", gueltigkeit.isZeitlichGueltig());
 		assertFalse("Statuswechsel", gueltigkeit.getNaechsterWechsel().isWirdGueltig());

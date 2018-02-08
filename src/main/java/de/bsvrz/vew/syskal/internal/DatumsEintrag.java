@@ -26,13 +26,13 @@
 
 package de.bsvrz.vew.syskal.internal;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.Year;
 
-import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.SystemKalender;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Spezielle Form eines Systemkalendereintrags für die Angabe eines konkreten
@@ -42,7 +42,7 @@ import de.bsvrz.vew.syskal.Gueltigkeit;
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class DatumsEintrag extends KalenderEintrag  {
+public class DatumsEintrag extends KalenderEintrag {
 
 	/** das letzte Jahr für das der Eintrag gültig ist. */
 	private int endJahr = Year.MAX_VALUE;
@@ -91,16 +91,16 @@ public class DatumsEintrag extends KalenderEintrag  {
 						endJahr = Integer.parseInt(parts[1].trim());
 					}
 				}
-				
-				if((tag == 29) && (monat == 2)) {
-					while(!Year.isLeap(jahr)) {
+
+				if ((tag == 29) && (monat == 2)) {
+					while (!Year.isLeap(jahr)) {
 						jahr++;
 					}
-					while(!Year.isLeap(endJahr)) {
+					while (!Year.isLeap(endJahr)) {
 						endJahr--;
 					}
 				}
-				
+
 			} catch (NumberFormatException e) {
 				setFehler(true);
 			}
@@ -153,7 +153,7 @@ public class DatumsEintrag extends KalenderEintrag  {
 	}
 
 	@Override
-	public Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
 
 		boolean gueltig = jahr <= zeitpunkt.getYear();
 		gueltig &= endJahr >= zeitpunkt.getYear();
@@ -161,38 +161,93 @@ public class DatumsEintrag extends KalenderEintrag  {
 		gueltig &= tag == zeitpunkt.getDayOfMonth();
 
 		if (gueltig) {
-			return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl
-					.of(LocalDateTime.of(zeitpunkt.toLocalDate().plusDays(1), LocalTime.MIDNIGHT), !gueltig));
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(zeitpunkt.toLocalDate(), true),
+					ZustandsWechsel.of(zeitpunkt.toLocalDate().plusDays(1), false));
 		}
 
 		LocalDate fruehestesDatum = LocalDate.of(jahr, monat, tag);
 		if (zeitpunkt.toLocalDate().isBefore(fruehestesDatum)) {
-			return GueltigkeitImpl.of(gueltig,
-					ZustandsWechselImpl.of(LocalDateTime.of(fruehestesDatum, LocalTime.MIDNIGHT), !gueltig));
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.MIN, ZustandsWechsel.of(fruehestesDatum, true));
 		}
 
-		
-		
 		LocalDate spaetestesDatum = LocalDate.of(endJahr, monat, tag).plusDays(1);
 		if (zeitpunkt.toLocalDate().isBefore(spaetestesDatum)) {
-			
+
 			int checkJahr = zeitpunkt.getYear();
-			if(!zeitpunkt.toLocalDate().withYear(2000).isBefore(spaetestesDatum.withYear(2000))) {
+			if (!zeitpunkt.toLocalDate().withYear(2000).isBefore(spaetestesDatum.withYear(2000))) {
 				checkJahr++;
 			}
-			
+
 			if (tag == 29 && monat == 2) {
 				while (!Year.isLeap(checkJahr)) {
 					checkJahr++;
 				}
 			}
 
-			LocalDateTime wechselZeit = LocalDateTime.of(LocalDate.of(checkJahr, monat, tag), LocalTime.MIDNIGHT);
-			
-			return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl.of(
-					wechselZeit, !gueltig));
+			LocalDate wechselDatum = LocalDate.of(checkJahr, monat, tag);
+			LocalDate aktivierungsDatum = wechselDatum.minusYears(1).plusDays(1);
+			if (aktivierungsDatum.isBefore(fruehestesDatum)) {
+				aktivierungsDatum = SystemKalender.MIN_DATETIME.toLocalDate();
+			}
+
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsDatum, false),
+					ZustandsWechsel.of(wechselDatum, true));
 		}
 
-		return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl.MAX);
+		return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+	}
+
+	@Override
+	protected SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
+
+		boolean gueltig = jahr <= zeitpunkt.getYear();
+		gueltig &= endJahr >= zeitpunkt.getYear();
+		gueltig &= monat == zeitpunkt.getMonthValue();
+		gueltig &= tag == zeitpunkt.getDayOfMonth();
+
+		LocalDate fruehestesDatum = LocalDate.of(jahr, monat, tag);
+
+		if (gueltig) {
+
+			LocalDate wechselDatum = LocalDate.of(zeitpunkt.getYear(), monat, tag);
+			LocalDate aktivierungsDatum = wechselDatum.minusYears(1).plusDays(1);
+			if (aktivierungsDatum.isBefore(fruehestesDatum)) {
+				aktivierungsDatum = SystemKalender.MIN_DATETIME.toLocalDate();
+			}
+
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsDatum, false),
+					ZustandsWechsel.of(wechselDatum, true));
+		}
+
+		if (zeitpunkt.toLocalDate().isBefore(fruehestesDatum)) {
+			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+		}
+
+		LocalDate spaetestesDatum = LocalDate.of(endJahr, monat, tag).plusDays(1);
+		if (zeitpunkt.toLocalDate().isBefore(spaetestesDatum)) {
+
+			int checkJahr = zeitpunkt.getYear();
+			if (!zeitpunkt.toLocalDate().withYear(2000).isBefore(spaetestesDatum.withYear(2000))) {
+				checkJahr++;
+			}
+
+			if (tag == 29 && monat == 2) {
+				while (!Year.isLeap(checkJahr)) {
+					checkJahr++;
+				}
+			}
+
+			LocalDate wechselDatum = LocalDate.of(checkJahr, monat, tag).minusYears(1).plusDays(1);
+			LocalDate aktivierungsDatum = wechselDatum.minusDays(1);
+			if (aktivierungsDatum.isBefore(fruehestesDatum)) {
+				aktivierungsDatum = SystemKalender.MIN_DATETIME.toLocalDate();
+				return SystemkalenderGueltigkeit.of(ZustandsWechsel.MIN, ZustandsWechsel.of(wechselDatum, false));
+			}
+
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsDatum, true),
+					ZustandsWechsel.of(wechselDatum, false));
+		}
+
+		return SystemkalenderGueltigkeit.NICHT_GUELTIG;
 	}
 }

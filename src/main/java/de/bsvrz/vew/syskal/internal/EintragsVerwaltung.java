@@ -91,7 +91,8 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
 	}
 
 	private void berechneKalendereintraegeNeu() {
-		cache.values().stream().forEach(e -> e.bestimmeKalendereintrag());
+		Collection<SystemKalenderEintragImpl> berechnungsListe = new ArrayList<>(cache.values());
+		berechnungsListe.stream().forEach(e -> e.bestimmeKalendereintrag());
 	}
 
 	private void invalidate() {

@@ -15,7 +15,7 @@ import de.bsvrz.vew.syskal.internal.KalenderEintrag;
 public class TestSyskalOffline6 {
 
 	@Rule
-	public Timeout globalTimeout = Timeout.seconds(20);
+	public Timeout globalTimeout = Timeout.seconds(5);
 
 	@Test
 	public void beispiel6() {

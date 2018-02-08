@@ -13,7 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
-import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 import de.bsvrz.vew.syskal.internal.KalenderEintrag;
@@ -22,7 +22,7 @@ import de.bsvrz.vew.syskal.internal.VorDefinierterEintrag;
 public class VordefinierterEintragTest {
 
 	@Rule
-	public Timeout globalTimeout = Timeout.seconds(20);
+	public Timeout globalTimeout = Timeout.seconds(5);
 	
 	@Test
 	public void testeGueltigkeit() {
@@ -34,7 +34,7 @@ public class VordefinierterEintragTest {
 		LocalDateTime now = LocalDateTime.now();
 
 		for (int offset = 0; offset < 20; offset++) {
-			Gueltigkeit gueltigKeit = mittwoch.getZeitlicheGueltigkeit(now);
+			SystemkalenderGueltigkeit gueltigKeit = mittwoch.getZeitlicheGueltigkeit(now);
 
 			LocalDateTime startCheck;
 			LocalDateTime endeCheck;

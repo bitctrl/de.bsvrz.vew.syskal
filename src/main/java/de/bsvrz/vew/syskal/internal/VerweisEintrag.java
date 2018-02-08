@@ -29,7 +29,9 @@ package de.bsvrz.vew.syskal.internal;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 
-import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.SystemKalender;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Repräsentation eines Eintrags, der durch die Erweiterung eines bereits
@@ -138,6 +140,10 @@ public class VerweisEintrag extends KalenderEintrag {
 		verweis = new Verweis(provider, name, offset, negiert);
 	}
 
+	Verweis getVerweis() {
+		return verweis;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuffer buffer = new StringBuffer(getName());
@@ -147,37 +153,73 @@ public class VerweisEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
 
 		if (verweis.isUngueltig()) {
-			return GueltigkeitImpl.NICHT_GUELTIG;
+			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
 		}
 
 		KalenderEintrag referenzEintrag = verweis.getReferenzEintrag();
 		int tagesOffset = verweis.getOffset();
-		Gueltigkeit gueltigKeit = referenzEintrag.getZeitlicheGueltigkeit(zeitpunkt.minusDays(tagesOffset));
+		SystemkalenderGueltigkeit gueltigKeit = referenzEintrag
+				.getZeitlicheGueltigkeit(zeitpunkt.minusDays(tagesOffset));
 
 		LocalDateTime wechselZeit = gueltigKeit.getNaechsterWechsel().getZeitPunkt();
 		if (tagesOffset > 0) {
-			if (!LocalDateTime.MAX.minusDays(tagesOffset).isBefore(wechselZeit)) {
+			if (!SystemKalender.MAX_DATETIME.minusDays(tagesOffset).isBefore(wechselZeit)) {
 				wechselZeit = wechselZeit.plusDays(tagesOffset);
 			} else {
-				wechselZeit = LocalDateTime.MAX;
+				wechselZeit = SystemKalender.MAX_DATETIME;
 			}
 		} else {
 			wechselZeit = wechselZeit.plusDays(tagesOffset);
 		}
 
-		if (verweis.isNegiert()) {
-			return GueltigkeitImpl.of(!gueltigKeit.isZeitlichGueltig(),
-					ZustandsWechselImpl.of(wechselZeit, gueltigKeit.isZeitlichGueltig()));
+		LocalDateTime aktivierungsZeit = gueltigKeit.getErsterWechsel().getZeitPunkt();
+		if (SystemKalender.MIN_DATETIME != aktivierungsZeit) {
+			aktivierungsZeit = aktivierungsZeit.plusDays(tagesOffset);
 		}
-		return GueltigkeitImpl.of(gueltigKeit.isZeitlichGueltig(),
-				ZustandsWechselImpl.of(wechselZeit, !gueltigKeit.isZeitlichGueltig()));
 
+		if (verweis.isNegiert()) {
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsZeit, !gueltigKeit.isZeitlichGueltig()),
+					ZustandsWechsel.of(wechselZeit, !gueltigKeit.getNaechsterWechsel().isWirdGueltig()));
+		}
+		return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsZeit, gueltigKeit.isZeitlichGueltig()),
+				ZustandsWechsel.of(wechselZeit, gueltigKeit.getNaechsterWechsel().isWirdGueltig()));
 	}
 
-	Verweis getVerweis() {
-		return verweis;
+	@Override
+	protected SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
+		if (verweis.isUngueltig()) {
+			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+		}
+
+		KalenderEintrag referenzEintrag = verweis.getReferenzEintrag();
+		int tagesOffset = verweis.getOffset();
+		SystemkalenderGueltigkeit gueltigKeit = referenzEintrag
+				.getZeitlicheGueltigkeitVor((zeitpunkt.minusDays(tagesOffset)));
+
+		LocalDateTime wechselZeit = gueltigKeit.getNaechsterWechsel().getZeitPunkt();
+		if (tagesOffset > 0) {
+			if (!SystemKalender.MAX_DATETIME.minusDays(tagesOffset).isBefore(wechselZeit)) {
+				wechselZeit = wechselZeit.plusDays(tagesOffset);
+			} else {
+				wechselZeit = SystemKalender.MAX_DATETIME;
+			}
+		} else {
+			wechselZeit = wechselZeit.plusDays(tagesOffset);
+		}
+
+		LocalDateTime aktivierungsZeit = gueltigKeit.getErsterWechsel().getZeitPunkt();
+		if (SystemKalender.MIN_DATETIME != aktivierungsZeit) {
+			wechselZeit = wechselZeit.plusDays(tagesOffset);
+		}
+
+		if (verweis.isNegiert()) {
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsZeit, !gueltigKeit.isZeitlichGueltig()),
+					ZustandsWechsel.of(wechselZeit, !gueltigKeit.getNaechsterWechsel().isWirdGueltig()));
+		}
+		return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsZeit, gueltigKeit.isZeitlichGueltig()),
+				ZustandsWechsel.of(wechselZeit, gueltigKeit.getNaechsterWechsel().isWirdGueltig()));
 	}
 }

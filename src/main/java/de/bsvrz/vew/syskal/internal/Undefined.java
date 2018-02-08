@@ -5,7 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 
 public class Undefined extends VorDefinierterEintrag {
 
@@ -30,7 +31,12 @@ public class Undefined extends VorDefinierterEintrag {
 	}
 
 	@Override
-	public Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
-		return GueltigkeitImpl.NICHT_GUELTIG;
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
+		return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+	}
+	
+	@Override
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
+		return SystemkalenderGueltigkeit.NICHT_GUELTIG;
 	}
 }

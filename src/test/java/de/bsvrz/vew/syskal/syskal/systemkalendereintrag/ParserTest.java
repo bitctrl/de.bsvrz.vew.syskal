@@ -14,7 +14,7 @@ import de.bsvrz.vew.syskal.internal.KalenderEintrag;
 public class ParserTest {
 
 	@Rule
-	public Timeout globalTimeout = Timeout.seconds(20);
+	public Timeout globalTimeout = Timeout.seconds(5);
 	
 	private static TestKalenderEintragProvider eintragsProvider;
 

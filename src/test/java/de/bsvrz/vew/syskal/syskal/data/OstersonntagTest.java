@@ -15,7 +15,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
-import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 import de.bsvrz.vew.syskal.internal.KalenderEintrag;
@@ -24,7 +24,7 @@ import de.bsvrz.vew.syskal.internal.Ostersonntag;
 public class OstersonntagTest {
 
 	@Rule
-	public Timeout globalTimeout = Timeout.seconds(20);
+	public Timeout globalTimeout = Timeout.seconds(5);
 	
 	@Test
 	public void testeGetDatumImJahr() {
@@ -139,7 +139,7 @@ public class OstersonntagTest {
 
 		for (int jahr = 2000; jahr < 2020; jahr++) {
 			LocalDate checkDate = LocalDate.of(jahr, now.getMonth(), now.getDayOfMonth());
-			Gueltigkeit gueltigKeit = osterSonntag.getZeitlicheGueltigkeit(LocalDateTime.of(checkDate, LocalTime.NOON));
+			SystemkalenderGueltigkeit gueltigKeit = osterSonntag.getZeitlicheGueltigkeit(LocalDateTime.of(checkDate, LocalTime.NOON));
 			LocalDate osterDate = Ostersonntag.getDatumImJahr(jahr);
 
 			if (checkDate.equals(osterDate)) {

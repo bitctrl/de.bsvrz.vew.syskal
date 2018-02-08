@@ -14,7 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
-import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -23,7 +23,7 @@ import de.bsvrz.vew.syskal.internal.UndVerknuepfung;
 public class UndVerknuepfungTest {
 
 	@Rule
-	public Timeout globalTimeout = Timeout.seconds(20);
+	public Timeout globalTimeout = Timeout.seconds(5);
 
 	private static TestKalenderEintragProvider provider;
 	private static UndVerknuepfung verknuepfung;
@@ -42,7 +42,7 @@ public class UndVerknuepfungTest {
 	@Test
 	public void testeGueltigkeitMontagMittag() {
 
-		Gueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeit(LocalDateTime.of(testMontag, LocalTime.NOON));
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeit(LocalDateTime.of(testMontag, LocalTime.NOON));
 		assertTrue(gueltigKeit.isZeitlichGueltig());
 
 		assertEquals(LocalDateTime.of(testMontag, LocalTime.of(13, 30)),
@@ -53,7 +53,7 @@ public class UndVerknuepfungTest {
 	@Test
 	public void testeGueltigkeitMontagVorMittag() {
 
-		Gueltigkeit gueltigKeit = verknuepfung
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung
 				.getZeitlicheGueltigkeit(LocalDateTime.of(testMontag, LocalTime.of(10, 0)));
 		assertFalse(gueltigKeit.isZeitlichGueltig());
 
@@ -65,7 +65,7 @@ public class UndVerknuepfungTest {
 	@Test
 	public void testeGueltigkeitMontagBeginnMittag() {
 
-		Gueltigkeit gueltigKeit = verknuepfung
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung
 				.getZeitlicheGueltigkeit(LocalDateTime.of(testMontag, LocalTime.of(11, 30)));
 		assertTrue(gueltigKeit.isZeitlichGueltig());
 
@@ -77,7 +77,7 @@ public class UndVerknuepfungTest {
 	@Test
 	public void testeGueltigkeitMontagNachMittag() {
 
-		Gueltigkeit gueltigKeit = verknuepfung
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung
 				.getZeitlicheGueltigkeit(LocalDateTime.of(testMontag, LocalTime.of(14, 0)));
 		assertFalse(gueltigKeit.isZeitlichGueltig());
 
@@ -89,7 +89,7 @@ public class UndVerknuepfungTest {
 	@Test
 	public void testeGueltigkeitMontagEndeMittag() {
 
-		Gueltigkeit gueltigKeit = verknuepfung
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung
 				.getZeitlicheGueltigkeit(LocalDateTime.of(testMontag, LocalTime.of(13, 30)));
 		assertFalse(gueltigKeit.isZeitlichGueltig());
 
@@ -101,7 +101,7 @@ public class UndVerknuepfungTest {
 	@Test
 	public void testeGueltigkeitDienstagMittag() {
 
-		Gueltigkeit gueltigKeit = verknuepfung
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung
 				.getZeitlicheGueltigkeit(LocalDateTime.of(testMontag.plusDays(1), LocalTime.NOON));
 		assertFalse(gueltigKeit.isZeitlichGueltig());
 
@@ -113,7 +113,7 @@ public class UndVerknuepfungTest {
 	@Test
 	public void testeGueltigkeitSonntagMittag() {
 
-		Gueltigkeit gueltigKeit = verknuepfung
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung
 				.getZeitlicheGueltigkeit(LocalDateTime.of(testMontag.minusDays(1), LocalTime.NOON));
 		assertFalse(gueltigKeit.isZeitlichGueltig());
 

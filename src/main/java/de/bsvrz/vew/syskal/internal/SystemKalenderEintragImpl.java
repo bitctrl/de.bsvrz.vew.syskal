@@ -8,6 +8,7 @@ import java.util.Objects;
 import de.bsvrz.dav.daf.main.config.DynamicObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
 import de.bsvrz.vew.syskal.SystemkalenderEintrag;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
@@ -88,8 +89,24 @@ public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
 	@Override
 	public ZustandsWechsel getNaechstenWechsel(LocalDateTime zeitPunkt) {
 		if ((kalenderEintrag == null) || kalenderEintrag.isFehler()) {
-			return ZustandsWechselImpl.MAX;
+			return ZustandsWechsel.MAX;
 		}
 		return kalenderEintrag.getZeitlicheGueltigkeit(zeitPunkt).getNaechsterWechsel();
+	}
+
+	@Override
+	public SystemkalenderGueltigkeit getGueltigkeit(LocalDateTime zeitPunkt) {
+		if ((kalenderEintrag == null) || kalenderEintrag.isFehler()) {
+			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+		}
+		return kalenderEintrag.getZeitlicheGueltigkeit(zeitPunkt);
+	}
+
+	@Override
+	public SystemkalenderGueltigkeit getGueltigkeitVor(LocalDateTime zeitPunkt) {
+		if ((kalenderEintrag == null) || kalenderEintrag.isFehler()) {
+			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+		}
+		return kalenderEintrag.getZeitlicheGueltigkeitVor(zeitPunkt);
 	}
 }

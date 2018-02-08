@@ -3,9 +3,10 @@ package de.bsvrz.vew.syskal.internal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
-import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.SystemKalender;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class Ostersonntag extends VorDefinierterEintrag {
 
@@ -30,24 +31,61 @@ public class Ostersonntag extends VorDefinierterEintrag {
 	}
 
 	@Override
-	public Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
 
 		LocalDate checkDate = zeitPunkt.toLocalDate();
+		if( checkDate.getYear() <= 0) {
+			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+		}
+		
 		LocalDate osterDate = Ostersonntag.getDatumImJahr(checkDate.getYear());
 
 		boolean gueltig = osterDate.equals(checkDate);
 
 		if (gueltig) {
-			return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl
-					.of(LocalDateTime.of(zeitPunkt.toLocalDate().plusDays(1), LocalTime.MIDNIGHT), !gueltig));
+			return SystemkalenderGueltigkeit.of(
+					ZustandsWechsel.of(zeitPunkt.toLocalDate(), true),
+					ZustandsWechsel.of(zeitPunkt.toLocalDate().plusDays(1), false));
+		}
+
+		
+		if (checkDate.isBefore(osterDate)) {
+			return SystemkalenderGueltigkeit.of(
+					ZustandsWechsel.of(Ostersonntag.getDatumImJahr(checkDate.getYear() - 1).plusDays(1), false),
+					ZustandsWechsel.of(osterDate, true));
+		}
+		
+		return SystemkalenderGueltigkeit.of(
+				ZustandsWechsel.of(osterDate.plusDays(1), false), 
+				ZustandsWechsel.of(Ostersonntag.getDatumImJahr(checkDate.getYear() + 1), true));
+	}
+
+	@Override
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitPunkt) {
+
+		LocalDate checkDate = zeitPunkt.toLocalDate();
+		if( checkDate.getYear() <= 0) {
+			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+		}
+
+		LocalDate osterDate = Ostersonntag.getDatumImJahr(checkDate.getYear());
+
+		boolean gueltig = osterDate.equals(checkDate);
+
+		if (gueltig) {
+			return SystemkalenderGueltigkeit.of(
+					ZustandsWechsel.of(osterDate.minusYears(1).plusDays(1), false),
+					ZustandsWechsel.of(osterDate, true));
 		}
 
 		if (zeitPunkt.toLocalDate().isBefore(osterDate)) {
-			return GueltigkeitImpl.of(gueltig,
-					ZustandsWechselImpl.of(LocalDateTime.of(osterDate, LocalTime.MIDNIGHT), !gueltig));
+			return SystemkalenderGueltigkeit.of(
+					ZustandsWechsel.of(osterDate.minusYears(1), true),
+					ZustandsWechsel.of(osterDate.minusYears(1).plusDays(1), false));
 		}
-		return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl.of(
-				LocalDateTime.of(Ostersonntag.getDatumImJahr(zeitPunkt.getYear() + 1), LocalTime.MIDNIGHT), !gueltig));
-
+		
+		return SystemkalenderGueltigkeit.of(
+				ZustandsWechsel.of(osterDate, true), 
+				ZustandsWechsel.of(osterDate.plusDays(1), false));
 	}
 }

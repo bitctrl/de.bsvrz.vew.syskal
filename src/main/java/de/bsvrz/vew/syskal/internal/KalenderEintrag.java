@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import de.bsvrz.sys.funclib.debug.Debug;
-import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public abstract class KalenderEintrag {
@@ -172,7 +172,8 @@ public abstract class KalenderEintrag {
 		zeitGrenzen.add(grenze);
 	}
 
-	protected abstract Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt);
+	protected abstract SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt);
+	protected abstract SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt);
 
 	/**
 	 * liefert die Zeichenkette mit der initialen Definitionszeichenkette des
@@ -206,20 +207,28 @@ public abstract class KalenderEintrag {
 		return zeitGrenzen;
 	}
 
-	public final Gueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
+	public final SystemkalenderGueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
 		if (fehler) {
-			return GueltigkeitImpl.NICHT_GUELTIG;
+			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
 		}
 
 		return berechneZeitlicheGueltigkeit(zeitpunkt);
+	}
+
+	public SystemkalenderGueltigkeit getZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt) {
+		if (fehler) {
+			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+		}
+
+		return berechneZeitlicheGueltigkeitsVor(zeitPunkt);
 	}
 
 	public final List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
 
 		List<ZustandsWechsel> result = new ArrayList<>();
 
-		Gueltigkeit gueltigkeit = getZeitlicheGueltigkeit(start);
-		result.add(ZustandsWechselImpl.of(start, gueltigkeit.isZeitlichGueltig()));
+		SystemkalenderGueltigkeit gueltigkeit = getZeitlicheGueltigkeit(start);
+		result.add(ZustandsWechsel.of(start, gueltigkeit.isZeitlichGueltig()));
 
 		LocalDateTime aktuellerZeitPunkt = start;
 		do {

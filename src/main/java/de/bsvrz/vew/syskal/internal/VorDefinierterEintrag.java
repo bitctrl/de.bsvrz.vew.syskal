@@ -33,7 +33,9 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 
 /**
  * Repräsentation der vordefinierten Einträge des Systemkalender. Laut
@@ -151,20 +153,40 @@ public class VorDefinierterEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public Gueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
-		
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
+
 		boolean gueltig = zeitPunkt.getDayOfWeek().equals(dayOfWeek);
 
 		LocalDate checkDate = zeitPunkt.toLocalDate();
-		if( gueltig ) {
-			return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl.of(LocalDateTime.of(checkDate.plusDays(1), LocalTime.MIDNIGHT), false));
+		if (gueltig) {
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(checkDate, true),
+					ZustandsWechsel.of(checkDate.plusDays(1), false));
 		}
 
 		while (checkDate.getDayOfWeek() != dayOfWeek) {
 			checkDate = checkDate.plusDays(1);
 		}
 
-		return GueltigkeitImpl.of(gueltig, ZustandsWechselImpl.of(LocalDateTime.of(checkDate, LocalTime.MIDNIGHT), true));
+		return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(checkDate.minusDays(6), false),
+				ZustandsWechsel.of(checkDate, true));
+	}
 
+	@Override
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitPunkt) {
+
+		boolean gueltig = zeitPunkt.getDayOfWeek().equals(dayOfWeek);
+
+		LocalDate checkDate = zeitPunkt.toLocalDate();
+		if (gueltig) {
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(checkDate.minusDays(6), false),
+					ZustandsWechsel.of(checkDate, true));
+		}
+
+		while (checkDate.getDayOfWeek() != dayOfWeek) {
+			checkDate = checkDate.minusDays(1);
+		}
+
+		return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(checkDate, true),
+				ZustandsWechsel.of(checkDate.plusDays(1), false));
 	}
 }

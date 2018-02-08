@@ -42,5 +42,9 @@ public interface SystemkalenderEintrag {
 	
 	boolean isGueltig(LocalDateTime zeitPunkt);
 	ZustandsWechsel getNaechstenWechsel(LocalDateTime zeitPunkt);
+
+	SystemkalenderGueltigkeit getGueltigkeit(LocalDateTime zeitPunkt);
+	SystemkalenderGueltigkeit getGueltigkeitVor(LocalDateTime zeitPunkt);
+
 	List<ZustandsWechsel> getZustandsWechsel(LocalDateTime von, LocalDateTime bis);
 }

@@ -13,7 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
-import de.bsvrz.vew.syskal.Gueltigkeit;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 import de.bsvrz.vew.syskal.internal.Ostersonntag;
@@ -22,7 +22,7 @@ import de.bsvrz.vew.syskal.internal.VerweisEintrag;
 public class VerweisEintragTest {
 
 	@Rule
-	public Timeout globalTimeout = Timeout.seconds(20);
+	public Timeout globalTimeout = Timeout.seconds(5);
 	
 	@Test
 	public void testeGueltigkeitOsterMontag() {
@@ -37,7 +37,7 @@ public class VerweisEintragTest {
 
 		for (int jahr = 2000; jahr < 2020; jahr++) {
 			LocalDate checkDate = LocalDate.of(jahr, now.getMonth(), now.getDayOfMonth());
-			Gueltigkeit gueltigKeit = osterMontag.getZeitlicheGueltigkeit(LocalDateTime.of(checkDate, LocalTime.NOON));
+			SystemkalenderGueltigkeit gueltigKeit = osterMontag.getZeitlicheGueltigkeit(LocalDateTime.of(checkDate, LocalTime.NOON));
 			LocalDate osterMontagDate = Ostersonntag.getDatumImJahr(jahr).plusDays(1);
 
 			if (checkDate.equals(osterMontagDate)) {
@@ -125,7 +125,7 @@ public class VerweisEintragTest {
 
 		for (int jahr = 2000; jahr < 2020; jahr++) {
 			LocalDate checkDate = LocalDate.of(jahr, now.getMonth(), now.getDayOfMonth());
-			Gueltigkeit gueltigKeit = karFreitag.getZeitlicheGueltigkeit(LocalDateTime.of(checkDate, LocalTime.NOON));
+			SystemkalenderGueltigkeit gueltigKeit = karFreitag.getZeitlicheGueltigkeit(LocalDateTime.of(checkDate, LocalTime.NOON));
 			LocalDate karfreitagDatum = Ostersonntag.getDatumImJahr(jahr).minusDays(2);
 
 			if (checkDate.equals(karfreitagDatum)) {
