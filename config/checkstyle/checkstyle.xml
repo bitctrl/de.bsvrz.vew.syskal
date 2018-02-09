@@ -61,10 +61,8 @@
     <module name="ParameterNumber"/>
   </module>
   <module name="Header">
-    <property name="severity" value="ignore"/>
     <property name="headerFile" value="${config_loc}/java.header"/>
     <property name="fileExtensions" value="java"/>
-    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
   <module name="FileLength"/>
   <module name="UniqueProperties"/>

@@ -1,7 +1,9 @@
 /*
+ * SWE Systemkalender - Version 2
+ *
  * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -14,13 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * 
  * Contact Information:
- * Dambach-Werke GmbH
- * Elektronische Leitsysteme
- * Fritz-Minhardt-Str. 1
- * 76456 Kuppenheim
- * Phone: +49-7222-402-0
- * Fax: +49-7222-402-200
- * mailto: info@els.dambach.de
+ * BitCtrl Systems GmbH
+ * Weißenfelser Straße 67
+ * 04229 Leipzig
+ * Phone: +49-341-49067-0
+ * Fax: +49-341-49067-15
+ * mailto: info@bitctrl.de
  */
 
 package de.bsvrz.vew.syskal;
@@ -29,12 +30,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Schnittstelle zum Erzeugen von SystemKalenderEinträgen. Bietet einen
- * einheitlichen Zugriff auf alle Typen von SystemKalendereinträgen *
+ * Schnittstelle für einen Systemkalendereintrag.
  * 
- * @author Dambach-Werke GmbH
- * @author Timo Pittner
- * 
+ * @author BitCtrl Systems GmbH, Uwe Peuker
  */
 public interface SystemkalenderEintrag {
 
