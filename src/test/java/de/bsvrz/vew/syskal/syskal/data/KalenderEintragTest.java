@@ -1,13 +1,18 @@
 package de.bsvrz.vew.syskal.syskal.data;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.time.LocalDateTime;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.SystemKalender;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.internal.KalenderEintrag;
 
@@ -66,4 +71,34 @@ public class KalenderEintragTest {
 		assertFalse("Test 19", provider.parseAndAdd(provider, "Ske19", "Ske16+1Tag").isFehler());
 	}
 
+	@Test
+	public void testeNieGueltig() { 
+		provider.addEintrag(KalenderEintrag.parse(provider, "NieGueltig",
+				"NieGueltig:=UND{Montag,Dienstag}"));
+
+		KalenderEintrag eintrag = provider.getKalenderEintrag("NieGueltig");
+		SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(LocalDateTime.now());
+		
+		assertFalse(gueltigkeit.isZeitlichGueltig());
+		assertEquals(SystemKalender.MIN_DATETIME, gueltigkeit.getErsterWechsel().getZeitPunkt());
+		assertFalse(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(SystemKalender.MAX_DATETIME, gueltigkeit.getNaechsterWechsel().getZeitPunkt());
+		
+	}
+
+	@Test
+	public void testeImmerGueltig() { 
+		provider.addEintrag(KalenderEintrag.parse(provider, "ImmerGueltig",
+				"ImmerGueltig:=ODER{Montag,Dienstag,Mittwoch,Donnerstag,Freitag,Samstag,Sonntag}"));
+
+		KalenderEintrag eintrag = provider.getKalenderEintrag("ImmerGueltig");
+		SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(LocalDateTime.now());
+		
+		assertTrue(gueltigkeit.isZeitlichGueltig());
+		assertEquals(SystemKalender.MIN_DATETIME, gueltigkeit.getErsterWechsel().getZeitPunkt());
+		assertTrue(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(SystemKalender.MAX_DATETIME, gueltigkeit.getNaechsterWechsel().getZeitPunkt());
+		
+	}
+	
 }

@@ -205,8 +205,70 @@ public class OstersonntagTest {
 				assertEquals(LocalDateTime.of(2017, 4, 17, 0, 0), zustandsWechsel.getZeitPunkt());
 				assertFalse(zustandsWechsel.isWirdGueltig());
 				break;
+			default:
+				break;
 			}
 		}
 	}
+	
+	@Test
+	public void testeOsterSonntagAmOsterSonntag() {
+		
+		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag");
 
+		// Mitten am Tag
+		SystemkalenderGueltigkeit gueltigKeit = osterSonntag.getZeitlicheGueltigkeit(LocalDateTime.of(LocalDate.of(2018, 4, 1), LocalTime.of(11, 34)));
+		
+		assertTrue(gueltigKeit.isZeitlichGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 4, 1), LocalTime.MIDNIGHT), gueltigKeit.getErsterWechsel().getZeitPunkt());
+		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 4, 2), LocalTime.MIDNIGHT), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+
+		// Genau am Anfang
+		gueltigKeit = osterSonntag.getZeitlicheGueltigkeit(LocalDateTime.of(LocalDate.of(2018, 4, 1), LocalTime.MIDNIGHT));
+		
+		assertTrue(gueltigKeit.isZeitlichGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 4, 1), LocalTime.MIDNIGHT), gueltigKeit.getErsterWechsel().getZeitPunkt());
+		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 4, 2), LocalTime.MIDNIGHT), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+
+		
+		// Genau am Ende
+		gueltigKeit = osterSonntag.getZeitlicheGueltigkeit(LocalDateTime.of(LocalDate.of(2018, 4, 2), LocalTime.MIDNIGHT));
+		
+		assertFalse(gueltigKeit.isZeitlichGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 4, 2), LocalTime.MIDNIGHT), gueltigKeit.getErsterWechsel().getZeitPunkt());
+		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2019, 4, 21), LocalTime.MIDNIGHT), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+
+	}
+
+	@Test
+	public void testeOsterSonntagDavor() {
+		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag");
+
+		SystemkalenderGueltigkeit gueltigKeit = osterSonntag.getZeitlicheGueltigkeit(LocalDateTime.of(LocalDate.of(2018, 3, 15), LocalTime.NOON));
+		
+		assertFalse(gueltigKeit.isZeitlichGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2017, 4, 17), LocalTime.MIDNIGHT), gueltigKeit.getErsterWechsel().getZeitPunkt());
+		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 4, 1), LocalTime.MIDNIGHT), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+	}
+
+	@Test
+	public void testeOsterSonntagDanach() {
+		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag");
+
+		SystemkalenderGueltigkeit gueltigKeit = osterSonntag.getZeitlicheGueltigkeit(LocalDateTime.of(LocalDate.of(2018, 5, 15), LocalTime.NOON));
+		
+		assertFalse(gueltigKeit.isZeitlichGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 4, 2), LocalTime.MIDNIGHT), gueltigKeit.getErsterWechsel().getZeitPunkt());
+		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2019, 4, 21), LocalTime.MIDNIGHT), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+	}
+
+	
 }

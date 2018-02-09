@@ -212,7 +212,7 @@ public class VerweisEintrag extends KalenderEintrag {
 
 		LocalDateTime aktivierungsZeit = gueltigKeit.getErsterWechsel().getZeitPunkt();
 		if (SystemKalender.MIN_DATETIME != aktivierungsZeit) {
-			wechselZeit = wechselZeit.plusDays(tagesOffset);
+			aktivierungsZeit = aktivierungsZeit.plusDays(tagesOffset);
 		}
 
 		if (verweis.isNegiert()) {

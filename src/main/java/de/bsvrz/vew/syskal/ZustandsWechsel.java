@@ -3,6 +3,7 @@ package de.bsvrz.vew.syskal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class ZustandsWechsel {
 
@@ -42,5 +43,23 @@ public class ZustandsWechsel {
 	public String toString() {
 		return "ZustandsWechsel [" + zeitPunkt + ": " + wirdGueltig + "]";
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(zeitPunkt, wirdGueltig);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		
+		ZustandsWechsel other = (ZustandsWechsel) obj;
+		return Objects.equals(zeitPunkt, other.zeitPunkt) && wirdGueltig == other.wirdGueltig;
+	}
 }

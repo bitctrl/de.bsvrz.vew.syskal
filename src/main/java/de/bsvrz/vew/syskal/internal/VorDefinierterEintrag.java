@@ -29,13 +29,11 @@ package de.bsvrz.vew.syskal.internal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 
 /**
  * Repräsentation der vordefinierten Einträge des Systemkalender. Laut

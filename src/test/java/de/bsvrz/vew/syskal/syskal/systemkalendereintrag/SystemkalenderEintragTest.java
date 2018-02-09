@@ -56,7 +56,7 @@ public class SystemkalenderEintragTest {
 	}
 
 	@Test
-	public void isGueltigTest() throws Exception {
+	public void testeGueltigkeit() throws Exception {
 
 		LocalDateTime zeitpunkt = LocalDateTime.now();
 		DayOfWeek dow = zeitpunkt.getDayOfWeek();

@@ -10,8 +10,8 @@ import de.bsvrz.vew.syskal.internal.EintragsVerwaltung;
 
 public class SystemKalender  {
 
-	public static final LocalDateTime MIN_DATETIME = LocalDateTime.of(-290000000, 1, 1, 0, 0, 0);
-	public static final LocalDateTime MAX_DATETIME = LocalDateTime.of(290000000, 1, 1, 0, 0, 0);
+	public static final LocalDateTime MIN_DATETIME = LocalDateTime.of(0, 1, 1, 0, 0, 0);
+	public static final LocalDateTime MAX_DATETIME = LocalDateTime.of(3000, 1, 1, 0, 0, 0);
 	
 	private final EintragsVerwaltung verwaltung;
 	

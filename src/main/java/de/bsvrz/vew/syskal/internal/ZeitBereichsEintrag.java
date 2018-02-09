@@ -33,10 +33,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.SystemKalender;
-import de.bsvrz.vew.syskal.ZustandsWechsel;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Repräsentation der Daten eines {@link KalenderEintrag}, der durch einen
