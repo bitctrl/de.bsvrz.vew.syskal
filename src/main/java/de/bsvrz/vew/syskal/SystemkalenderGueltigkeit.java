@@ -28,4 +28,9 @@ public class SystemkalenderGueltigkeit {
 	public boolean isZeitlichGueltig() {
 		return ersterWechsel.isWirdGueltig();
 	}
+	
+	@Override
+	public String toString() {
+		return ersterWechsel + " --> " + naechsterWechsel;
+	}
 }

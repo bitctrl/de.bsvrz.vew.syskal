@@ -103,6 +103,8 @@ public class ZeitBereichsEintragTest {
 				assertEquals(LocalDateTime.of(2008, 2, 1, 9, 0), zustandsWechsel.getZeitPunkt());
 				assertTrue(zustandsWechsel.isWirdGueltig());
 				break;
+			default:
+				break;
 			}
 		}
 	}

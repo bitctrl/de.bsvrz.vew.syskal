@@ -195,6 +195,8 @@ public class VerweisEintragTest {
 				assertEquals(LocalDateTime.of(2017, 4, 18, 0, 0), zustandsWechsel.getZeitPunkt());
 				assertFalse(zustandsWechsel.isWirdGueltig());
 				break;
+			default:
+				break;
 			}
 		}
 	}

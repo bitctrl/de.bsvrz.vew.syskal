@@ -185,7 +185,13 @@ public class DatumsEintrag extends KalenderEintrag {
 			}
 
 			LocalDate wechselDatum = LocalDate.of(checkJahr, monat, tag);
+			
 			LocalDate aktivierungsDatum = wechselDatum.minusYears(1).plusDays(1);
+			if( tag == 29 && monat == 2) {
+				while (!Year.isLeap(aktivierungsDatum.getYear())) {
+					aktivierungsDatum = aktivierungsDatum.minusYears(1);
+				}
+			}
 			if (aktivierungsDatum.isBefore(fruehestesDatum)) {
 				aktivierungsDatum = SystemKalender.MIN_DATETIME.toLocalDate();
 			}

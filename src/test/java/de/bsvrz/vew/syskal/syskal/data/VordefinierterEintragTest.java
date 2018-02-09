@@ -123,6 +123,8 @@ public class VordefinierterEintragTest {
 				assertEquals(LocalDateTime.of(2018, 2, 28, 0, 0), zustandsWechsel.getZeitPunkt());
 				assertTrue(zustandsWechsel.isWirdGueltig());
 				break;
+			default:
+				break;
 			}
 		}
 	}

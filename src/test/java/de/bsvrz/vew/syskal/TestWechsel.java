@@ -11,7 +11,7 @@ public class TestWechsel {
 	boolean status;
 	
 	private TestWechsel(String datum, boolean status) {
-		this.datum = LocalDateTime.parse(datum, DateTimeFormatter.ofPattern("d.M.y H[:m[:s[.S]]]"));
+		this.datum = LocalDateTime.parse(datum, DateTimeFormatter.ofPattern("d.M.y H[:m[:s[.SSS]]]"));
 		this.status = status;
 	}
 
