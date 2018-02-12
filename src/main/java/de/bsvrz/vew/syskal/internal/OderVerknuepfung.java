@@ -266,7 +266,7 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 	private ZustandsWechsel berechneVorigenWechselAufGueltig(Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
 
 		Map<KalenderEintrag, ZustandsWechsel> zustandsWechsel = new LinkedHashMap<>(potentielleWechsel);
-		LocalDateTime wechselZeit = SystemKalender.MAX_DATETIME;
+		LocalDateTime wechselZeit = SystemKalender.MIN_DATETIME;
 		LocalDateTime letzteWechselZeit = SystemKalender.MAX_DATETIME;
 
 		do {
@@ -279,7 +279,7 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 							.getErsterWechsel();
 				}
 				entry.setValue(wechsel);
-				if (wechsel.getZeitPunkt().isBefore(wechselZeit)) {
+				if (wechsel.getZeitPunkt().isAfter(wechselZeit)) {
 					wechselZeit = wechsel.getZeitPunkt();
 				}
 			}
