@@ -44,7 +44,7 @@ import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 import de.bsvrz.vew.syskal.internal.DatumsEintrag;
-import de.bsvrz.vew.syskal.internal.KalenderEintrag;
+import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class DatumsEintragsTest {
 
@@ -55,7 +55,7 @@ public class DatumsEintragsTest {
 	public void testeTagDerArbeit() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		KalenderEintrag datumsEintrag = KalenderEintrag.parse(provider, "Mai1", "1.5.*,*");
+		KalenderEintragImpl datumsEintrag = KalenderEintragImpl.parse(provider, "Mai1", "1.5.*,*");
 
 		assertTrue(datumsEintrag instanceof DatumsEintrag);
 
@@ -104,7 +104,7 @@ public class DatumsEintragsTest {
 	public void testeFebruar29() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		KalenderEintrag datumsEintrag = KalenderEintrag.parse(provider, "Februar29", "29.2.*,*");
+		KalenderEintragImpl datumsEintrag = KalenderEintragImpl.parse(provider, "Februar29", "29.2.*,*");
 
 		assertTrue(datumsEintrag instanceof DatumsEintrag);
 
@@ -153,7 +153,7 @@ public class DatumsEintragsTest {
 	public void testeZustandswechselTagDerArbeit() {
 		
 		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
-		KalenderEintrag datumsEintrag = KalenderEintrag.parse(eintragsProvider, "Mai1", "1.5.*,*");
+		KalenderEintragImpl datumsEintrag = KalenderEintragImpl.parse(eintragsProvider, "Mai1", "1.5.*,*");
 
 		LocalDateTime startTime = LocalDateTime.of(2000, 12, 24, 14, 27, 17);
 		LocalDateTime endTime = LocalDateTime.of(2020, 3, 14, 14, 28, 17);
@@ -200,7 +200,7 @@ public class DatumsEintragsTest {
 				TestWechsel.of("2.5.2019 00:00", false)
 		};
 
-		List<ZustandsWechsel> zustandsWechsel = datumsEintrag.getZustandsWechselImBereich(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = datumsEintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 
@@ -208,7 +208,7 @@ public class DatumsEintragsTest {
 	public void testeZustandswechselFebruar29() {
 		
 		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
-		KalenderEintrag datumsEintrag = KalenderEintrag.parse(eintragsProvider, "Februar29", "29.2.*,*");
+		KalenderEintragImpl datumsEintrag = KalenderEintragImpl.parse(eintragsProvider, "Februar29", "29.2.*,*");
 
 		LocalDateTime startTime = LocalDateTime.of(2000, 12, 24, 14, 27, 17);
 		LocalDateTime endTime = LocalDateTime.of(2020, 3, 14, 14, 28, 17);
@@ -227,7 +227,7 @@ public class DatumsEintragsTest {
 				TestWechsel.of("1.3.2020 00:00", false)
 		};
 
-		List<ZustandsWechsel> zustandsWechsel = datumsEintrag.getZustandsWechselImBereich(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = datumsEintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 }

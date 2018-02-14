@@ -36,7 +36,7 @@ import org.junit.rules.Timeout;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.KalenderEintrag;
+import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline2 {
 
@@ -47,15 +47,15 @@ public class TestSyskalOffline2 {
 	public void beispiele2() {
 
 		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Tag", "Tag"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Tag", "Tag"));
 
-		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Tag");
+		KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Tag");
 		LocalDateTime startTime = LocalDateTime.of(2009, 10, 1, 14, 0, 0);
 		LocalDateTime endTime = LocalDateTime.of(2009, 10, 5, 14, 0, 0);
 
 		TestWechsel[] erwarteteWechsel = { TestWechsel.of("1.10.2009 14:00", false) };
 
-		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 }

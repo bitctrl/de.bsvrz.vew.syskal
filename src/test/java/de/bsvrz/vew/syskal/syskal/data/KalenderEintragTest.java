@@ -40,7 +40,7 @@ import org.junit.rules.Timeout;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.internal.KalenderEintrag;
+import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class KalenderEintragTest {
 
@@ -53,21 +53,21 @@ public class KalenderEintragTest {
 	public static void setUpBeforeClass() throws Exception {
 		provider = new TestKalenderEintragProvider();
 
-		provider.addEintrag(KalenderEintrag.parse(provider, "Montag", "Montag"));
-		provider.addEintrag(KalenderEintrag.parse(provider, "Dienstag", "Dienstag"));
-		provider.addEintrag(KalenderEintrag.parse(provider, "Mittwoch", "Mittwoch"));
-		provider.addEintrag(KalenderEintrag.parse(provider, "Donnerstag", "Donnerstag"));
-		provider.addEintrag(KalenderEintrag.parse(provider, "Freitag", "Freitag"));
-		provider.addEintrag(KalenderEintrag.parse(provider, "Samstag", "Samstag"));
-		provider.addEintrag(KalenderEintrag.parse(provider, "Sonntag", "Sonntag"));
-		provider.addEintrag(KalenderEintrag.parse(provider, "Tag", "Tag"));
-		provider.addEintrag(KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag"));
-		provider.addEintrag(KalenderEintrag.parse(provider, "Bereich1",
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Montag", "Montag"));
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Dienstag", "Dienstag"));
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Mittwoch", "Mittwoch"));
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Donnerstag", "Donnerstag"));
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Freitag", "Freitag"));
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Samstag", "Samstag"));
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Sonntag", "Sonntag"));
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Tag", "Tag"));
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Ostersonntag", "Ostersonntag"));
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Bereich1",
 				"Bereich1:=<01.01.2008 00:00:00,000-31.01.2008 23:59:59,999>"));
-		provider.addEintrag(KalenderEintrag.parse(provider, "Bereich2",
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Bereich2",
 				"Bereich2:=<15.01.2008 00:00:00,000-15.02.2008 23:59:59,999>"));
-		provider.addEintrag(KalenderEintrag.parse(provider, "Bereich3", "Bereich3:=<15.01.2008-15.02.2008>"));
-		provider.addEintrag(KalenderEintrag.parse(provider, "Bereich4",
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Bereich3", "Bereich3:=<15.01.2008-15.02.2008>"));
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Bereich4",
 				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})"));
 
 	}
@@ -99,10 +99,10 @@ public class KalenderEintragTest {
 
 	@Test
 	public void testeNieGueltig() { 
-		provider.addEintrag(KalenderEintrag.parse(provider, "NieGueltig",
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "NieGueltig",
 				"NieGueltig:=UND{Montag,Dienstag}"));
 
-		KalenderEintrag eintrag = provider.getKalenderEintrag("NieGueltig");
+		KalenderEintragImpl eintrag = provider.getKalenderEintrag("NieGueltig");
 		SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(LocalDateTime.now());
 		
 		assertFalse(gueltigkeit.isZeitlichGueltig());
@@ -114,10 +114,10 @@ public class KalenderEintragTest {
 
 	@Test
 	public void testeImmerGueltig() { 
-		provider.addEintrag(KalenderEintrag.parse(provider, "ImmerGueltig",
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "ImmerGueltig",
 				"ImmerGueltig:=ODER{Montag,Dienstag,Mittwoch,Donnerstag,Freitag,Samstag,Sonntag}"));
 
-		KalenderEintrag eintrag = provider.getKalenderEintrag("ImmerGueltig");
+		KalenderEintragImpl eintrag = provider.getKalenderEintrag("ImmerGueltig");
 		SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(LocalDateTime.now());
 		
 		assertTrue(gueltigkeit.isZeitlichGueltig());
@@ -129,10 +129,10 @@ public class KalenderEintragTest {
 
 	@Test
 	public void testeWochentag() { 
-		provider.addEintrag(KalenderEintrag.parse(provider, "Wochentag",
+		provider.addEintrag(KalenderEintragImpl.parse(provider, "Wochentag",
 				"Wochentag:=ODER{Montag,Dienstag,Mittwoch,Donnerstag,Freitag}*,*"));
 
-		KalenderEintrag eintrag = provider.getKalenderEintrag("Wochentag");
+		KalenderEintragImpl eintrag = provider.getKalenderEintrag("Wochentag");
 		SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(LocalDateTime.of(2018,2,12,13,24));
 		
 		assertTrue(gueltigkeit.isZeitlichGueltig());

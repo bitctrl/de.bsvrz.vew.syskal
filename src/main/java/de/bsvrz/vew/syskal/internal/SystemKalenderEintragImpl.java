@@ -26,20 +26,19 @@
 
 package de.bsvrz.vew.syskal.internal;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 
 import de.bsvrz.dav.daf.main.config.DynamicObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.vew.syskal.SystemkalenderEintrag;
-import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
-import de.bsvrz.vew.syskal.ZustandsWechsel;
+import de.bsvrz.vew.syskal.KalenderEintrag;
+import de.bsvrz.vew.syskal.SystemKalenderEintrag;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
-public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
+public class SystemKalenderEintragImpl implements SystemKalenderEintrag {
 
-	private KalenderEintrag kalenderEintrag;
+	private ObjectProperty<KalenderEintrag> kalenderEintragProperty = new SimpleObjectProperty<>(this, "kalendereintrag", VorDefinierterEintrag.UNDEFINIERT);
 	private KalenderEintragProvider provider;
 	private DynamicObject systemObject;
 	private String originalDefinition;
@@ -47,27 +46,28 @@ public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
 	public SystemKalenderEintragImpl(KalenderEintragProvider provider, DynamicObject obj) {
 		this.provider = provider;
 		this.systemObject = obj;
-		kalenderEintrag = VorDefinierterEintrag.getEintrag(systemObject.getName());
 	}
 
 	void bestimmeKalendereintrag() {
 		String name = systemObject.getName();
 		if (originalDefinition == null) {
-			kalenderEintrag = new Undefined();
+			kalenderEintragProperty.set(VorDefinierterEintrag.UNDEFINIERT);
 		} else {
-			kalenderEintrag = KalenderEintrag.parse(provider, name, originalDefinition);
+			kalenderEintragProperty.set(KalenderEintragImpl.parse(provider, name, originalDefinition));
 		}
 	}
 
+	@Override
 	public KalenderEintrag getKalenderEintrag() {
-		return kalenderEintrag;
+		return kalenderEintragProperty.get();
 	}
-
+	
+	@Override
 	public SystemObject getSystemObject() {
 		return systemObject;
 	}
 
-	void setDefinition(String text) {
+	public void setDefinition(String text) {
 		if (!Objects.equals(originalDefinition, text)) {
 			originalDefinition = text;
 			bestimmeKalendereintrag();
@@ -85,54 +85,32 @@ public class SystemKalenderEintragImpl implements SystemkalenderEintrag {
 		builder.append(systemObject.getName());
 		builder.append(':');
 
-		if (kalenderEintrag == null) {
+		if (kalenderEintragProperty == null) {
 			builder.append("NULL  :");
-		} else if (kalenderEintrag.isFehler()) {
+		} else if (((KalenderEintragImpl) kalenderEintragProperty.get()).isFehler()) {
 			builder.append("FEHLER :");
 		} else {
 			builder.append("OK    :");
 		}
-		builder.append(kalenderEintrag);
+		builder.append(kalenderEintragProperty.get());
 		return builder.toString();
 	}
 
 	@Override
-	public List<ZustandsWechsel> getZustandsWechsel(LocalDateTime von, LocalDateTime bis) {
-		if ((kalenderEintrag == null) || kalenderEintrag.isFehler()) {
-			return Collections.emptyList();
-		}
-		return kalenderEintrag.getZustandsWechselImBereich(von, bis);
+	public ObjectProperty<KalenderEintrag> getKalenderEintragProperty() {
+		return kalenderEintragProperty;
 	}
 
-	@Override
-	public boolean isGueltig(LocalDateTime zeitPunkt) {
-		if ((kalenderEintrag == null) || kalenderEintrag.isFehler()) {
-			return false;
+	public void aktualisiereVonReferenzen(Collection<SystemKalenderEintrag> referenzen) {
+		for( SystemKalenderEintrag referenz  : referenzen) {
+			if (referenz.equals(this)) {
+				continue;
+			}
+			
+			if( ((KalenderEintragImpl) getKalenderEintrag()).benutzt(referenz)) {
+				bestimmeKalendereintrag();
+				return;
+			}
 		}
-		return kalenderEintrag.getZeitlicheGueltigkeit(zeitPunkt).isZeitlichGueltig();
-	}
-
-	@Override
-	public ZustandsWechsel getNaechstenWechsel(LocalDateTime zeitPunkt) {
-		if ((kalenderEintrag == null) || kalenderEintrag.isFehler()) {
-			return ZustandsWechsel.MAX;
-		}
-		return kalenderEintrag.getZeitlicheGueltigkeit(zeitPunkt).getNaechsterWechsel();
-	}
-
-	@Override
-	public SystemkalenderGueltigkeit getGueltigkeit(LocalDateTime zeitPunkt) {
-		if ((kalenderEintrag == null) || kalenderEintrag.isFehler()) {
-			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-		}
-		return kalenderEintrag.getZeitlicheGueltigkeit(zeitPunkt);
-	}
-
-	@Override
-	public SystemkalenderGueltigkeit getGueltigkeitVor(LocalDateTime zeitPunkt) {
-		if ((kalenderEintrag == null) || kalenderEintrag.isFehler()) {
-			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-		}
-		return kalenderEintrag.getZeitlicheGueltigkeitVor(zeitPunkt);
 	}
 }

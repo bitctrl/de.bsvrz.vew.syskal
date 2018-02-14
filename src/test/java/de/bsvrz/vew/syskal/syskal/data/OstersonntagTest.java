@@ -44,7 +44,7 @@ import org.junit.rules.Timeout;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.KalenderEintrag;
+import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 import de.bsvrz.vew.syskal.internal.Ostersonntag;
 
 public class OstersonntagTest {
@@ -56,7 +56,7 @@ public class OstersonntagTest {
 	public void testeGetDatumImJahr() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		KalenderEintrag osterSonntag = KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag");
+		KalenderEintragImpl osterSonntag = KalenderEintragImpl.parse(provider, "Ostersonntag", "Ostersonntag");
 
 		assertTrue(osterSonntag instanceof Ostersonntag);
 
@@ -159,7 +159,7 @@ public class OstersonntagTest {
 	public void testeGueltigkeit() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag");
+		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintragImpl.parse(provider, "Ostersonntag", "Ostersonntag");
 
 		LocalDate now = LocalDate.now();
 
@@ -190,12 +190,12 @@ public class OstersonntagTest {
 	public void testeZustandswechsel() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag");
+		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintragImpl.parse(provider, "Ostersonntag", "Ostersonntag");
 
 		LocalDateTime start = LocalDateTime.of(2015, 1, 1, 0, 0);
 		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 0);
 
-		List<ZustandsWechsel> zustandsWechselImBereich = osterSonntag.getZustandsWechselImBereich(start, ende);
+		List<ZustandsWechsel> zustandsWechselImBereich = osterSonntag.getZustandsWechsel(start, ende);
 
 		assertEquals("Erwartete Zustandswechsel", 7, zustandsWechselImBereich.size());
 		for (int index = 0; index < zustandsWechselImBereich.size(); index++) {
@@ -241,7 +241,7 @@ public class OstersonntagTest {
 	public void testeOsterSonntagAmOsterSonntag() {
 		
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag");
+		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintragImpl.parse(provider, "Ostersonntag", "Ostersonntag");
 
 		// Mitten am Tag
 		SystemkalenderGueltigkeit gueltigKeit = osterSonntag.getZeitlicheGueltigkeit(LocalDateTime.of(LocalDate.of(2018, 4, 1), LocalTime.of(11, 34)));
@@ -273,7 +273,7 @@ public class OstersonntagTest {
 	@Test
 	public void testeOsterSonntagDavor() {
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag");
+		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintragImpl.parse(provider, "Ostersonntag", "Ostersonntag");
 
 		SystemkalenderGueltigkeit gueltigKeit = osterSonntag.getZeitlicheGueltigkeit(LocalDateTime.of(LocalDate.of(2018, 3, 15), LocalTime.NOON));
 		
@@ -286,7 +286,7 @@ public class OstersonntagTest {
 	@Test
 	public void testeOsterSonntagDanach() {
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintrag.parse(provider, "Ostersonntag", "Ostersonntag");
+		Ostersonntag osterSonntag = (Ostersonntag) KalenderEintragImpl.parse(provider, "Ostersonntag", "Ostersonntag");
 
 		SystemkalenderGueltigkeit gueltigKeit = osterSonntag.getZeitlicheGueltigkeit(LocalDateTime.of(LocalDate.of(2018, 5, 15), LocalTime.NOON));
 		

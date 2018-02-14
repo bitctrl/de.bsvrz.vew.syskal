@@ -48,7 +48,7 @@ public class Verweis {
 
 	private final boolean ungueltig;
 
-	private KalenderEintrag referenzEintrag;
+	private KalenderEintragImpl referenzEintrag;
 
 	/**
 	 * Konstruktor.
@@ -85,7 +85,7 @@ public class Verweis {
 				throw new ParseException("Der String \"" + def + "\" kann nicht als Verweis interpretiert werden!", 0);
 			}
 
-			referenzEintrag = provider.getKalenderEintrag(name);
+			referenzEintrag = (KalenderEintragImpl) provider.getKalenderEintrag(name);
 			ungueltig = referenzEintrag == null;
 
 		} else {
@@ -137,7 +137,7 @@ public class Verweis {
 		return offset;
 	}
 
-	public KalenderEintrag getReferenzEintrag() {
+	public KalenderEintragImpl getReferenzEintrag() {
 		return referenzEintrag;
 	}
 

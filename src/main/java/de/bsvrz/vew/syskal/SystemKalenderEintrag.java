@@ -26,23 +26,15 @@
 
 package de.bsvrz.vew.syskal;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import de.bsvrz.dav.daf.main.config.SystemObject;
+import javafx.beans.property.ObjectProperty;
 
-/**
- * Schnittstelle für einen Systemkalendereintrag.
- * 
- * @author BitCtrl Systems GmbH, Uwe Peuker
- */
-public interface SystemkalenderEintrag {
+public interface SystemKalenderEintrag {
 
 	String getName();
-	
-	boolean isGueltig(LocalDateTime zeitPunkt);
-	ZustandsWechsel getNaechstenWechsel(LocalDateTime zeitPunkt);
+	SystemObject getSystemObject();
 
-	SystemkalenderGueltigkeit getGueltigkeit(LocalDateTime zeitPunkt);
-	SystemkalenderGueltigkeit getGueltigkeitVor(LocalDateTime zeitPunkt);
-
-	List<ZustandsWechsel> getZustandsWechsel(LocalDateTime von, LocalDateTime bis);
+	ObjectProperty<KalenderEintrag> getKalenderEintragProperty();
+	KalenderEintrag getKalenderEintrag();
 }
+	

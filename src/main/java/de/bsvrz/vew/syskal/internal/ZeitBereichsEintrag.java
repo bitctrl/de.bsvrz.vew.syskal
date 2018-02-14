@@ -34,16 +34,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import de.bsvrz.vew.syskal.SystemKalender;
+import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
- * Repräsentation der Daten eines {@link KalenderEintrag}, der durch einen
+ * Repräsentation der Daten eines {@link KalenderEintragImpl}, der durch einen
  * Zeitbereich definiert wird.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class ZeitBereichsEintrag extends KalenderEintrag {
+public class ZeitBereichsEintrag extends KalenderEintragImpl {
 
 	private LocalDateTime start;
 	private LocalDateTime ende;
@@ -376,5 +377,10 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
 		}
 		return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsZeit, true),
 				ZustandsWechsel.of(wechselZeit, false));
+	}
+
+	@Override
+	boolean benutzt(SystemKalenderEintrag referenz) {
+		return false;
 	}
 }

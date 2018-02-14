@@ -32,15 +32,16 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 
 /**
- * Repräsentation der Daten eines {@link KalenderEintrag}, der durch die
+ * Repräsentation der Daten eines {@link KalenderEintragImpl}, der durch die
  * logische Verknüpfung mehrerer anderer Einträge definiert wird.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
 public abstract class LogischerVerkuepfungsEintrag extends
-		KalenderEintrag {
+		KalenderEintragImpl {
 
 	/** die Liste der Verweise, die den Eintrag definieren. */
 	private final List<VerweisEintrag> verweise = new ArrayList<>();
@@ -71,7 +72,7 @@ public abstract class LogischerVerkuepfungsEintrag extends
 		if (definition != null) {
 			String rest = definition;
 
-			final Matcher mat = KalenderEintrag.ZEITBEREICH_PATTERN
+			final Matcher mat = KalenderEintragImpl.ZEITBEREICH_PATTERN
 					.matcher(rest);
 			while (mat.find()) {
 				String elemente = mat.group();
@@ -207,5 +208,15 @@ public abstract class LogischerVerkuepfungsEintrag extends
 		}
 
 		return buffer.toString();
+	}
+	
+	@Override
+	boolean benutzt(SystemKalenderEintrag referenz) {
+		for( VerweisEintrag verweis : verweise) {
+			if( verweis.getVerweis().getName().equals(referenz.getName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -37,7 +37,7 @@ import org.junit.rules.Timeout;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.KalenderEintrag;
+import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline {
 
@@ -50,26 +50,26 @@ public class TestSyskalOffline {
 
 		eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Montag", "Montag"));
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Berufsverkehr",
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Montag", "Montag"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Berufsverkehr",
 				"Berufsverkehr:=({07:00:00,000-11:00:00,000}{15:00:00,000-18:00:00,000})"));
 
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Montag_Berufsverkehr",
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Montag_Berufsverkehr",
 				"Montag_Berufsverkehr:=UND{Montag,Berufsverkehr}*,*"));
 		eintragsProvider
-				.addEintrag(KalenderEintrag.parse(eintragsProvider, "GeburtstagHCK", "GeburtstagHCK:=27.11.1963,*"));
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "GeburtstagHCKFeierKopie",
+				.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "GeburtstagHCK", "GeburtstagHCK:=27.11.1963,*"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "GeburtstagHCKFeierKopie",
 				"GeburtstagHCKFeierKopie:=GeburtstagHCK-3Tage"));
 
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Dienstag", "Dienstag"));
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "DienstagAlsVerknüpfung",
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Dienstag", "Dienstag"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "DienstagAlsVerknüpfung",
 				"DienstagAlsVerknüpfung:=UND{Dienstag}*,*"));
 	}
 
 	@Test
 	public void montagBerufsVerkehr() {
 
-		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Montag_Berufsverkehr");
+		KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Montag_Berufsverkehr");
 		LocalDateTime startTime = LocalDateTime.of(2009, 8, 1, 10, 40, 35);
 		LocalDateTime endTime = LocalDateTime.of(2009, 9, 18, 10, 40, 35);
 
@@ -105,14 +105,14 @@ public class TestSyskalOffline {
 				TestWechsel.of("14.9.2009 18:00", false)
 			};
 
-		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 
 	@Test
 	public void geburtstagHCK() {
 
-		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("GeburtstagHCK");
+		KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("GeburtstagHCK");
 		LocalDateTime startTime = LocalDateTime.of(1970, 9, 25, 14, 59, 9);
 		LocalDateTime endTime = LocalDateTime.of(1975, 9, 25, 14, 59, 9);
 
@@ -131,14 +131,14 @@ public class TestSyskalOffline {
 			};
 
 		
-		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 
 	@Test
 	public void geburtstagHCK2() {
 
-		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("GeburtstagHCK");
+		KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("GeburtstagHCK");
 		LocalDateTime startTime = LocalDateTime.of(1970, 1, 1, 0, 0, 0);
 		LocalDateTime endTime = LocalDateTime.of(1970, 12, 31, 23, 59, 59);
 
@@ -148,7 +148,7 @@ public class TestSyskalOffline {
 				TestWechsel.of("28.11.1970 00:00", false)
 			};
 
-		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 
@@ -156,7 +156,7 @@ public class TestSyskalOffline {
 	@Test
 	public void dienstagAlsVerknuepfung() {
 
-		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("DienstagAlsVerknüpfung");
+		KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("DienstagAlsVerknüpfung");
 		LocalDateTime startTime = LocalDateTime.of(2009, 1, 1, 15, 15, 37);
 		LocalDateTime endTime = LocalDateTime.of(2009, 12, 21, 15, 15, 37);
 
@@ -265,14 +265,14 @@ public class TestSyskalOffline {
 			};
 
 		
-		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 
 	@Test
 	public void geburtstagsFeierHCK() {
 
-		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("GeburtstagHCKFeierKopie");
+		KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("GeburtstagHCKFeierKopie");
 		LocalDateTime startTime = LocalDateTime.of(2009, 1, 1, 15, 15, 37);
 		LocalDateTime endTime = LocalDateTime.of(2009, 12, 21, 15, 15, 37);
 
@@ -283,7 +283,7 @@ public class TestSyskalOffline {
 
 			};
 
-		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 }

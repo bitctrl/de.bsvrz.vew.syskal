@@ -45,11 +45,11 @@ public class SystemKalender  {
 		verwaltung = new EintragsVerwaltung(dav, object);
 	}
 	
-	public SystemkalenderEintrag getEintrag(SystemObject object) throws SystemKalenderException {
+	public SystemKalenderEintrag getEintrag(SystemObject object) throws SystemKalenderException {
 		return verwaltung.getSystemKalenderEintrag(object);
 	} 
 
-	public Collection<SystemkalenderEintrag> getEintraege() throws SystemKalenderException {
+	public Collection<SystemKalenderEintrag> getEintraege() throws SystemKalenderException {
 		return verwaltung.getSystemKalenderEintraege();
 	} 
 }

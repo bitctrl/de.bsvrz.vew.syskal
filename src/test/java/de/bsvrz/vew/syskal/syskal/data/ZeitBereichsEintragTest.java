@@ -85,7 +85,7 @@ public class ZeitBereichsEintragTest {
 				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
 
 		LocalDateTime start = LocalDateTime.of(2008, 1, 30, 12, 10);
-		List<ZustandsWechsel> zustandsWechselListe = bereich4.getZustandsWechselImBereich(start,
+		List<ZustandsWechsel> zustandsWechselListe = bereich4.getZustandsWechsel(start,
 				LocalDateTime.of(2008, 2, 1, 11, 11));
 
 		assertEquals("Erwartete Zustandswechsel", 8, zustandsWechselListe.size());

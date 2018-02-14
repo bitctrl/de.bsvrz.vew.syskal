@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 import java.time.Year;
 
 import de.bsvrz.vew.syskal.SystemKalender;
+import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
@@ -42,7 +43,7 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class DatumsEintrag extends KalenderEintrag {
+public class DatumsEintrag extends KalenderEintragImpl {
 
 	/** das letzte Jahr für das der Eintrag gültig ist. */
 	private int endJahr = Year.MAX_VALUE;
@@ -255,5 +256,10 @@ public class DatumsEintrag extends KalenderEintrag {
 		}
 
 		return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+	}
+
+	@Override
+	boolean benutzt(SystemKalenderEintrag referenz) {
+		return false;
 	}
 }

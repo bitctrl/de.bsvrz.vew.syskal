@@ -26,9 +26,25 @@
 
 package de.bsvrz.vew.syskal.internal;
 
-import de.bsvrz.vew.syskal.KalenderEintrag;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-public interface KalenderEintragProvider {
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
+
+public class Undefiniert extends VorDefinierterEintrag {
+
+	Undefiniert() {
+		super("Undefiniert", DayOfWeek.SUNDAY);
+	}
+
+	@Override
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
+		return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+	}
 	
-	KalenderEintrag getKalenderEintrag(String name);
+	@Override
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
+		return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+	}
 }

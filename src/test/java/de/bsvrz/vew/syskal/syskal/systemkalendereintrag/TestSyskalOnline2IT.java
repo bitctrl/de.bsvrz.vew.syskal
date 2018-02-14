@@ -37,7 +37,7 @@ import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.SystemKalender;
-import de.bsvrz.vew.syskal.SystemkalenderEintrag;
+import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class TestSyskalOnline2IT implements StandardApplication {
@@ -110,23 +110,23 @@ public class TestSyskalOnline2IT implements StandardApplication {
 		SystemKalender systemKalender = new SystemKalender(connection,
 				(ConfigurationObject) connection.getDataModel().getObject(strKonfigObjekt));
 
-		Collection<SystemkalenderEintrag> eintraege = systemKalender.getEintraege();
+		Collection<SystemKalenderEintrag> eintraege = systemKalender.getEintraege();
 		System.out.println("TestSyskalOnline2.initialize(LIST) " + eintraege.size());
-		for (SystemkalenderEintrag eintrag : eintraege) {
+		for (SystemKalenderEintrag eintrag : eintraege) {
 			System.out.println("-----------> " + eintrag);
 		}
 
-		SystemkalenderEintrag eintrag = systemKalender
+		SystemKalenderEintrag eintrag = systemKalender
 				.getEintrag(connection.getDataModel().getObject("ske.nw.vrz-nrw.es.sts.tagvoreinemfeiertag"));
 		LocalDateTime startTime = LocalDateTime.of(2016, 1, 1, 0, 0, 0);
 		LocalDateTime endTime = LocalDateTime.of(2016, 12, 31, 0, 0, 0);
-		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getKalenderEintrag().getZustandsWechsel(startTime, endTime);
 		System.out
 				.println("Abfrage1: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
 
 		eintrag = systemKalender
 				.getEintrag(connection.getDataModel().getObject("ske.nw.vrz-nrw.es.sts.feiertag"));
-		zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+		zustandsWechsel = eintrag.getKalenderEintrag().getZustandsWechsel(startTime, endTime);
 		System.out
 				.println("Abfrage2: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
 	}

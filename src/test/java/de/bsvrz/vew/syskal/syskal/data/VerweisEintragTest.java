@@ -97,7 +97,7 @@ public class VerweisEintragTest {
 		LocalDateTime start = LocalDateTime.of(2015, 1, 1, 0, 0);
 		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 0);
 
-		List<ZustandsWechsel> zustandsWechselImBereich = karfreitag.getZustandsWechselImBereich(start, ende);
+		List<ZustandsWechsel> zustandsWechselImBereich = karfreitag.getZustandsWechsel(start, ende);
 
 		assertEquals("Erwartete Zustandswechsel", 7, zustandsWechselImBereich.size());
 		for (int index = 0; index < zustandsWechselImBereich.size(); index++) {
@@ -187,7 +187,7 @@ public class VerweisEintragTest {
 		LocalDateTime start = LocalDateTime.of(2015, 1, 1, 0, 0);
 		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 0);
 
-		List<ZustandsWechsel> zustandsWechselImBereich = osterMontag.getZustandsWechselImBereich(start, ende);
+		List<ZustandsWechsel> zustandsWechselImBereich = osterMontag.getZustandsWechsel(start, ende);
 
 		assertEquals("Erwartete Zustandswechsel", 7, zustandsWechselImBereich.size());
 		for (int index = 0; index < zustandsWechselImBereich.size(); index++) {

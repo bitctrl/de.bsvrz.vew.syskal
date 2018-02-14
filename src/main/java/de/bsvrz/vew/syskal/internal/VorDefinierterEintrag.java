@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
@@ -51,32 +52,35 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class VorDefinierterEintrag extends KalenderEintrag {
+public class VorDefinierterEintrag extends KalenderEintragImpl {
 
 	/** Vordefinierter Eintrag MONTAG. */
-	private static final VorDefinierterEintrag MONTAG = new VorDefinierterEintrag("Montag", DayOfWeek.MONDAY);
+	public static final VorDefinierterEintrag MONTAG = new VorDefinierterEintrag("Montag", DayOfWeek.MONDAY);
 
 	/** Vordefinierter Eintrag DIENSTAG. */
-	private static final VorDefinierterEintrag DIENSTAG = new VorDefinierterEintrag("Dienstag", DayOfWeek.TUESDAY);
+	public static final VorDefinierterEintrag DIENSTAG = new VorDefinierterEintrag("Dienstag", DayOfWeek.TUESDAY);
 
 	/** Vordefinierter Eintrag MITTWOCH. */
-	private static final VorDefinierterEintrag MITTWOCH = new VorDefinierterEintrag("Mittwoch", DayOfWeek.WEDNESDAY);
+	public static final VorDefinierterEintrag MITTWOCH = new VorDefinierterEintrag("Mittwoch", DayOfWeek.WEDNESDAY);
 
 	/** Vordefinierter Eintrag DONNERSTAG. */
-	private static final VorDefinierterEintrag DONNERSTAG = new VorDefinierterEintrag("Donnerstag", DayOfWeek.THURSDAY);
+	public static final VorDefinierterEintrag DONNERSTAG = new VorDefinierterEintrag("Donnerstag", DayOfWeek.THURSDAY);
 
 	/** Vordefinierter Eintrag FREITAG. */
-	private static final VorDefinierterEintrag FREITAG = new VorDefinierterEintrag("Freitag", DayOfWeek.FRIDAY);
+	public static final VorDefinierterEintrag FREITAG = new VorDefinierterEintrag("Freitag", DayOfWeek.FRIDAY);
 
 	/** Vordefinierter Eintrag SAMSTAG. */
-	private static final VorDefinierterEintrag SAMSTAG = new VorDefinierterEintrag("Samstag", DayOfWeek.SATURDAY);
+	public static final VorDefinierterEintrag SAMSTAG = new VorDefinierterEintrag("Samstag", DayOfWeek.SATURDAY);
 
 	/** Vordefinierter Eintrag SONNTAG. */
-	private static final VorDefinierterEintrag SONNTAG = new VorDefinierterEintrag("Sonntag", DayOfWeek.SUNDAY);
+	public static final VorDefinierterEintrag SONNTAG = new VorDefinierterEintrag("Sonntag", DayOfWeek.SUNDAY);
 
 	/** Vordefinierter Eintrag OSTERSONNTAG. */
-	private static final VorDefinierterEintrag OSTERSONNTAG = new Ostersonntag();
+	public static final VorDefinierterEintrag OSTERSONNTAG = new Ostersonntag();
 
+	/** Vordefinierter Eintrag OSTERSONNTAG. */
+	public static final VorDefinierterEintrag UNDEFINIERT = new Undefiniert();
+	
 	/** die Menge der vordefinierten Einträge. */
 	private static Map<String, VorDefinierterEintrag> eintraege;
 
@@ -124,6 +128,8 @@ public class VorDefinierterEintrag extends KalenderEintrag {
 					VorDefinierterEintrag.SONNTAG);
 			VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.OSTERSONNTAG.getName().toLowerCase(),
 					VorDefinierterEintrag.OSTERSONNTAG);
+			VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.UNDEFINIERT.getName().toLowerCase(),
+					VorDefinierterEintrag.UNDEFINIERT);
 		}
 	}
 
@@ -186,5 +192,10 @@ public class VorDefinierterEintrag extends KalenderEintrag {
 
 		return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(checkDate, true),
 				ZustandsWechsel.of(checkDate.plusDays(1), false));
+	}
+
+	@Override
+	boolean benutzt(SystemKalenderEintrag referenz) {
+		return false;
 	}
 }

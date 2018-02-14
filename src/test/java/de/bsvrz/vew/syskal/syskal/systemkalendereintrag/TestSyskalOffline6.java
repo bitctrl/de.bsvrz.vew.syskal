@@ -36,7 +36,7 @@ import org.junit.rules.Timeout;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.KalenderEintrag;
+import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline6 {
 
@@ -48,10 +48,10 @@ public class TestSyskalOffline6 {
 
 		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Montag", "Montag"));
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "TestSKE", "TestSKE:=Montag+1Tag"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Montag", "Montag"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "TestSKE", "TestSKE:=Montag+1Tag"));
 
-		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("TestSKE");
+		KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("TestSKE");
 		LocalDateTime startTime = LocalDateTime.of(2014, 1, 13, 14, 27, 17);
 		LocalDateTime endTime = LocalDateTime.of(2014, 3, 14, 14, 28, 17);
 
@@ -77,7 +77,7 @@ public class TestSyskalOffline6 {
 				TestWechsel.of("12.3.2014 00:00", false)
 		};
 
-		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 }

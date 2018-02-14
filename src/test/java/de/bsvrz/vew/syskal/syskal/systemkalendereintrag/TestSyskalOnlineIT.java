@@ -38,7 +38,7 @@ import de.bsvrz.sys.funclib.application.StandardApplicationRunner;
 import de.bsvrz.sys.funclib.commandLineArgs.ArgumentList;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.SystemKalender;
-import de.bsvrz.vew.syskal.SystemkalenderEintrag;
+import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class TestSyskalOnlineIT implements StandardApplication {
@@ -115,24 +115,24 @@ public class TestSyskalOnlineIT implements StandardApplication {
 				(ConfigurationObject) connection.getDataModel().getObject(pidKonfigObjekt));
 		systemKalender.getEintraege();
 
-		SystemkalenderEintrag eintrag = systemKalender
+		SystemKalenderEintrag eintrag = systemKalender
 				.getEintrag(connection.getDataModel().getObject("ske.montag_berufsverkehr"));
 		LocalDateTime startTime = LocalDateTime.of(2009, 8, 1, 10, 40, 35);
 		LocalDateTime endTime = LocalDateTime.of(2009, 9, 18, 10, 40, 35);
-		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getKalenderEintrag().getZustandsWechsel(startTime, endTime);
 		System.out
 				.println("Abfrage1: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
 
 		eintrag = systemKalender.getEintrag(connection.getDataModel().getObject("ske.geburtstag_hck"));
 		startTime = LocalDateTime.of(1970, 9, 25, 14, 59, 00);
 		endTime = LocalDateTime.of(1975, 9, 25, 14, 59, 9);
-		zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+		zustandsWechsel = eintrag.getKalenderEintrag().getZustandsWechsel(startTime, endTime);
 		System.out
 				.println("Abfrage2: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
 
 		startTime = LocalDateTime.of(1970, 1, 1, 0, 0, 0);
 		endTime = LocalDateTime.of(1970, 12, 31, 23, 59, 59);
-		zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+		zustandsWechsel = eintrag.getKalenderEintrag().getZustandsWechsel(startTime, endTime);
 		System.out
 				.println("Abfrage3: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
 
@@ -140,14 +140,14 @@ public class TestSyskalOnlineIT implements StandardApplication {
 		eintrag = systemKalender.getEintrag(connection.getDataModel().getObject("ske.dienstagalsverknüpfung"));
 		startTime = LocalDateTime.of(2009, 01, 01, 15, 15, 37);
 		endTime = LocalDateTime.of(2009, 12, 21, 15, 15, 37);
-		zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+		zustandsWechsel = eintrag.getKalenderEintrag().getZustandsWechsel(startTime, endTime);
 		System.out
 				.println("Abfrage4: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
 
 		eintrag = systemKalender.getEintrag(connection.getDataModel().getObject("ske.geburtstag_hck_kopie"));
 		startTime = LocalDateTime.of(2009, 01, 01, 15, 15, 37);
 		endTime = LocalDateTime.of(2009, 12, 21, 15, 15, 37);
-		zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+		zustandsWechsel = eintrag.getKalenderEintrag().getZustandsWechsel(startTime, endTime);
 		System.out
 				.println("Abfrage5: " + eintrag.getName() + " " + startTime + " - " + endTime + ": " + zustandsWechsel);
 

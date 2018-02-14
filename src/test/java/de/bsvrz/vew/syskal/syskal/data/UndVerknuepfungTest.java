@@ -166,7 +166,7 @@ public class UndVerknuepfungTest {
 			TestWechsel.of("28.5.2018 13:30", false),
 		};
 		
-		List<ZustandsWechsel> zustandsWechselImBereich = verknuepfung.getZustandsWechselImBereich(start, ende);
+		List<ZustandsWechsel> zustandsWechselImBereich = verknuepfung.getZustandsWechsel(start, ende);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechselImBereich);
 	}
 }

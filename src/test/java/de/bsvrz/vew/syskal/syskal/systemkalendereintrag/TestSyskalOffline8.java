@@ -37,7 +37,7 @@ import org.junit.rules.Timeout;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.KalenderEintrag;
+import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline8 {
 
@@ -49,24 +49,24 @@ public class TestSyskalOffline8 {
 
 		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Montag", "Montag"));
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Dienstag", "Dienstag"));
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Mittwoch", "Mittwoch"));
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Freitag", "Freitag"));
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Samstag", "Samstag"));
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Sonntag", "Sonntag"));
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Tag", "Tag"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Montag", "Montag"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Dienstag", "Dienstag"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Mittwoch", "Mittwoch"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Freitag", "Freitag"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Samstag", "Samstag"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Sonntag", "Sonntag"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Tag", "Tag"));
 		eintragsProvider
-				.addEintrag(KalenderEintrag.parse(eintragsProvider, "Ferien1", "Ferien1:=<30.07.2015-12.09.2015>"));
+				.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ferien1", "Ferien1:=<30.07.2015-12.09.2015>"));
 		eintragsProvider
-				.addEintrag(KalenderEintrag.parse(eintragsProvider, "Ferien2", "Ferien2:=<02.11.2015-06.11.2015>"));
+				.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ferien2", "Ferien2:=<02.11.2015-06.11.2015>"));
 		eintragsProvider
-				.addEintrag(KalenderEintrag.parse(eintragsProvider, "Ferien", "Ferien:=ODER{Ferien1,Ferien2}*,*"));
-		eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "FerienPlus", "FerienPlus:=Ferien+1Tag"));
+				.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ferien", "Ferien:=ODER{Ferien1,Ferien2}*,*"));
+		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "FerienPlus", "FerienPlus:=Ferien+1Tag"));
 
-		KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("FerienPlus");
+		KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("FerienPlus");
 		LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0, 0);
 		LocalDateTime endTime = LocalDateTime.of(2015, 12, 31, 23, 59, 59)
 				.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
@@ -79,7 +79,7 @@ public class TestSyskalOffline8 {
 				TestWechsel.of("7.11.2015 00:00", false)
 		};
 
-		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechselImBereich(startTime, endTime);
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 }

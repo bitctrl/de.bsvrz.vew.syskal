@@ -68,8 +68,8 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
 
 		boolean zustand = true;
-		Map<KalenderEintrag, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
-		Map<KalenderEintrag, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
+		Map<KalenderEintragImpl, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
+		Map<KalenderEintragImpl, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
 
 		for (VerweisEintrag verweis : getVerweise()) {
 			if (verweis.isFehler()) {
@@ -94,8 +94,8 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 	protected SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitPunkt) {
 
 		boolean zustand = true;
-		Map<KalenderEintrag, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
-		Map<KalenderEintrag, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
+		Map<KalenderEintragImpl, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
+		Map<KalenderEintragImpl, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
 
 		for (VerweisEintrag verweis : getVerweise()) {
 			if (verweis.isFehler()) {
@@ -117,19 +117,19 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 	}
 
 	private ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand,
-			Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
+			Map<KalenderEintragImpl, ZustandsWechsel> potentielleWechsel) {
 
 		ZustandsWechsel result = null;
 
 		if (zielZustand) {
 
-			Map<KalenderEintrag, ZustandsWechsel> zustandsWechsel = new LinkedHashMap<>(potentielleWechsel);
+			Map<KalenderEintragImpl, ZustandsWechsel> zustandsWechsel = new LinkedHashMap<>(potentielleWechsel);
 
 			do {
 
-				Entry<KalenderEintrag, ZustandsWechsel> fruehesterVerweis = null;
+				Entry<KalenderEintragImpl, ZustandsWechsel> fruehesterVerweis = null;
 
-				for (Entry<KalenderEintrag, ZustandsWechsel> entry : zustandsWechsel.entrySet()) {
+				for (Entry<KalenderEintragImpl, ZustandsWechsel> entry : zustandsWechsel.entrySet()) {
 					if (!entry.getValue().isWirdGueltig()) {
 						continue;
 					}
@@ -150,7 +150,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 					return ZustandsWechsel.MAX;
 				}
 				
-				for (KalenderEintrag eintrag : zustandsWechsel.keySet()) {
+				for (KalenderEintragImpl eintrag : zustandsWechsel.keySet()) {
 					if (eintrag.getZeitlicheGueltigkeit(moeglicherZeitPunkt).isZeitlichGueltig()) {
 						if (result == null) {
 							result = ZustandsWechsel.of(moeglicherZeitPunkt, true);
@@ -162,8 +162,8 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 				}
 
 				if (result == null) {
-					Map<KalenderEintrag, ZustandsWechsel> korrigierteZustandsWechsel = new LinkedHashMap<>();
-					for (Entry<KalenderEintrag, ZustandsWechsel> entry : zustandsWechsel.entrySet()) {
+					Map<KalenderEintragImpl, ZustandsWechsel> korrigierteZustandsWechsel = new LinkedHashMap<>();
+					for (Entry<KalenderEintragImpl, ZustandsWechsel> entry : zustandsWechsel.entrySet()) {
 						ZustandsWechsel wechsel = entry.getValue();
 						if (!wechsel.getZeitPunkt().isAfter(moeglicherZeitPunkt)) {
 							do {
@@ -194,7 +194,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 	}
 
 	private ZustandsWechsel berechneVorigenWechselAuf(boolean zielZustand,
-			Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
+			Map<KalenderEintragImpl, ZustandsWechsel> potentielleWechsel) {
 
 		ZustandsWechsel result = null;
 
@@ -221,16 +221,16 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 	}
 
 	private ZustandsWechsel berechneVorigenWechselAufUngueltig(
-			Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
+			Map<KalenderEintragImpl, ZustandsWechsel> potentielleWechsel) {
 
-		Map<KalenderEintrag, ZustandsWechsel> zustandsWechsel = new LinkedHashMap<>(potentielleWechsel);
+		Map<KalenderEintragImpl, ZustandsWechsel> zustandsWechsel = new LinkedHashMap<>(potentielleWechsel);
 		LocalDateTime wechselZeit = SystemKalender.MAX_DATETIME;
 		LocalDateTime letzteWechselZeit = SystemKalender.MAX_DATETIME;
 
 		do {
-			Iterator<Entry<KalenderEintrag, ZustandsWechsel>> iterator = zustandsWechsel.entrySet().iterator();
+			Iterator<Entry<KalenderEintragImpl, ZustandsWechsel>> iterator = zustandsWechsel.entrySet().iterator();
 			while (iterator.hasNext()) {
-				Entry<KalenderEintrag, ZustandsWechsel> entry = iterator.next();
+				Entry<KalenderEintragImpl, ZustandsWechsel> entry = iterator.next();
 				ZustandsWechsel wechsel = entry.getValue();
 				while (!wechsel.isWirdGueltig() && wechsel.getZeitPunkt().isAfter(SystemKalender.MIN_DATETIME)
 						|| !wechsel.getZeitPunkt().isBefore(letzteWechselZeit)) {
@@ -251,7 +251,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 
 			letzteWechselZeit = wechselZeit;
 
-			for (Entry<KalenderEintrag, ZustandsWechsel> entry : zustandsWechsel.entrySet()) {
+			for (Entry<KalenderEintragImpl, ZustandsWechsel> entry : zustandsWechsel.entrySet()) {
 				if (!entry.getKey().getZeitlicheGueltigkeit(wechselZeit).isZeitlichGueltig()) {
 					wechselZeit = SystemKalender.MAX_DATETIME;
 					break;
@@ -260,7 +260,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 		} while (!wechselZeit.isBefore(SystemKalender.MAX_DATETIME));
 
 		ZustandsWechsel result = null;
-		for (Entry<KalenderEintrag, ZustandsWechsel> entry : zustandsWechsel.entrySet()) {
+		for (Entry<KalenderEintragImpl, ZustandsWechsel> entry : zustandsWechsel.entrySet()) {
 			ZustandsWechsel wechsel = entry.getKey().getZeitlicheGueltigkeit(wechselZeit).getNaechsterWechsel();
 			if (!wechsel.isWirdGueltig()) {
 				if (result == null) {

@@ -42,7 +42,7 @@ import org.junit.rules.Timeout;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.KalenderEintrag;
+import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 import de.bsvrz.vew.syskal.internal.VorDefinierterEintrag;
 
 public class VordefinierterEintragTest {
@@ -54,7 +54,7 @@ public class VordefinierterEintragTest {
 	public void testeGueltigkeit() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintrag.parse(provider, "Mittwoch",
+		VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintragImpl.parse(provider, "Mittwoch",
 				"Mittwoch");
 
 		LocalDateTime now = LocalDateTime.now();
@@ -91,13 +91,13 @@ public class VordefinierterEintragTest {
 	public void testeZustandswechsel() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintrag.parse(provider, "Mittwoch",
+		VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintragImpl.parse(provider, "Mittwoch",
 				"Mittwoch");
 
 		LocalDateTime start = LocalDateTime.of(2018, 1, 24, 12, 10);
 		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 10);
 
-		List<ZustandsWechsel> zustandsWechselImBereich = mittwoch.getZustandsWechselImBereich(start, ende);
+		List<ZustandsWechsel> zustandsWechselImBereich = mittwoch.getZustandsWechsel(start, ende);
 
 		assertEquals("Erwartete Zustandswechsel", 11, zustandsWechselImBereich.size());
 		for (int index = 0; index < zustandsWechselImBereich.size(); index++) {

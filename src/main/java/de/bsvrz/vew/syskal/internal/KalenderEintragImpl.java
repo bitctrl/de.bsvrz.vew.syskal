@@ -29,16 +29,19 @@ package de.bsvrz.vew.syskal.internal;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.KalenderEintrag;
+import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
-public abstract class KalenderEintrag {
+public abstract class KalenderEintragImpl implements KalenderEintrag {
 
 	/** das Pattern eines Datumsbereiches im Definitionsstring. */
 	private static final Pattern DATUMSBEREICH_PATTERN = Pattern.compile("<.*>");
@@ -64,9 +67,9 @@ public abstract class KalenderEintrag {
 	 * @return das Ergebnis ist ein Systemkalendereintrag, dessen konkreter Typ vom
 	 *         Inhalt der Definition abhängt
 	 */
-	public static KalenderEintrag parse(KalenderEintragProvider provider, final String name, final String definition) {
+	public static KalenderEintragImpl parse(KalenderEintragProvider provider, final String name, final String definition) {
 
-		KalenderEintrag result = null;
+		KalenderEintragImpl result = null;
 
 		result = VorDefinierterEintrag.getEintrag(name);
 		if (result != null) {
@@ -77,7 +80,7 @@ public abstract class KalenderEintrag {
 
 		final List<ZeitGrenze> parseZeitBereiche = new ArrayList<>();
 
-		Matcher mat = KalenderEintrag.ZEITBEREICHSLISTE_PATTERN.matcher(rest);
+		Matcher mat = KalenderEintragImpl.ZEITBEREICHSLISTE_PATTERN.matcher(rest);
 
 		boolean zeitBereichsfehler = false;
 
@@ -85,7 +88,7 @@ public abstract class KalenderEintrag {
 			final String bereich = mat.group();
 			rest = rest.replace(bereich, "");
 			final String zeitBereich = bereich.substring(1, bereich.length() - 1);
-			final Matcher zeitMat = KalenderEintrag.ZEITBEREICH_PATTERN.matcher(zeitBereich);
+			final Matcher zeitMat = KalenderEintragImpl.ZEITBEREICH_PATTERN.matcher(zeitBereich);
 			while (zeitMat.find()) {
 				String zb = zeitMat.group();
 				zb = zb.substring(1, zb.length() - 1);
@@ -105,7 +108,7 @@ public abstract class KalenderEintrag {
 		} else if (rest.toLowerCase().startsWith("oder")) {
 			result = new OderVerknuepfung(provider, name, rest.substring("oder".length()));
 		} else {
-			mat = KalenderEintrag.DATUMSBEREICH_PATTERN.matcher(rest);
+			mat = KalenderEintragImpl.DATUMSBEREICH_PATTERN.matcher(rest);
 			if (mat.find()) {
 				result = new ZeitBereichsEintrag(name, mat.group().substring(1, mat.group().length() - 1));
 				final String bereich = mat.group();
@@ -183,7 +186,7 @@ public abstract class KalenderEintrag {
 	/** der Definitionseintrag konnte nicht korrekt eingelesen werden. */
 	private boolean fehler;
 
-	protected KalenderEintrag(String name, String definition) {
+	protected KalenderEintragImpl(String name, String definition) {
 		this.name = name;
 		this.definition = definition;
 	}
@@ -233,6 +236,12 @@ public abstract class KalenderEintrag {
 		return zeitGrenzen;
 	}
 
+	@Override
+	public boolean isGueltig(LocalDateTime zeitPunkt) {
+		return getZeitlicheGueltigkeit(zeitPunkt).isZeitlichGueltig();
+	}
+	
+	@Override
 	public final SystemkalenderGueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
 		if (fehler) {
 			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
@@ -241,6 +250,7 @@ public abstract class KalenderEintrag {
 		return berechneZeitlicheGueltigkeit(zeitpunkt);
 	}
 
+	@Override
 	public SystemkalenderGueltigkeit getZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt) {
 		if (fehler) {
 			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
@@ -249,8 +259,13 @@ public abstract class KalenderEintrag {
 		return berechneZeitlicheGueltigkeitsVor(zeitPunkt);
 	}
 
-	public final List<ZustandsWechsel> getZustandsWechselImBereich(LocalDateTime start, LocalDateTime ende) {
+	@Override
+	public final List<ZustandsWechsel> getZustandsWechsel(LocalDateTime start, LocalDateTime ende) {
 
+		if( isFehler()) {
+			return Collections.emptyList();
+		}
+		
 		List<ZustandsWechsel> result = new ArrayList<>();
 
 		SystemkalenderGueltigkeit gueltigkeit = getZeitlicheGueltigkeit(start);
@@ -289,5 +304,12 @@ public abstract class KalenderEintrag {
 	 */
 	protected void setFehler(final boolean state) {
 		fehler = state;
+	}
+	
+	abstract boolean benutzt(SystemKalenderEintrag referenz);
+	
+	@Override
+	public boolean isVerwendbar() {
+		return !isFehler();
 	}
 }

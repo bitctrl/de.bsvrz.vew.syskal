@@ -28,4 +28,7 @@ package de.bsvrz.vew.syskal;
 
 public class SystemKalenderException extends Exception {
 
+	public SystemKalenderException(String meldung) {
+		super(meldung);
+	}
 }
