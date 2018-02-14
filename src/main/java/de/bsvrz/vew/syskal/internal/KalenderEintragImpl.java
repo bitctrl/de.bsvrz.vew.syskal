@@ -28,6 +28,7 @@ package de.bsvrz.vew.syskal.internal;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -67,7 +68,8 @@ public abstract class KalenderEintragImpl implements KalenderEintrag {
 	 * @return das Ergebnis ist ein Systemkalendereintrag, dessen konkreter Typ vom
 	 *         Inhalt der Definition abhängt
 	 */
-	public static KalenderEintragImpl parse(KalenderEintragProvider provider, final String name, final String definition) {
+	public static KalenderEintragImpl parse(KalenderEintragProvider provider, final String name,
+			final String definition) {
 
 		KalenderEintragImpl result = null;
 
@@ -147,11 +149,13 @@ public abstract class KalenderEintragImpl implements KalenderEintrag {
 				continue;
 			}
 
-			if (!grenze.getStart().isAfter(aktuell.getEnde())) {
-				aktuell = new ZeitGrenze(aktuell.getStart(), grenze.getEnde());
-			} else {
+			if (grenze.getStart().isAfter(aktuell.getEnde())) {
 				zeitGrenzen.add(aktuell);
 				aktuell = grenze;
+			} else {
+				if (!grenze.getEnde().isBefore(aktuell.getEnde())) {
+					aktuell = new ZeitGrenze(aktuell.getStart(), grenze.getEnde());
+				}
 			}
 		}
 
@@ -202,6 +206,7 @@ public abstract class KalenderEintragImpl implements KalenderEintrag {
 	}
 
 	protected abstract SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt);
+
 	protected abstract SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt);
 
 	/**
@@ -240,7 +245,7 @@ public abstract class KalenderEintragImpl implements KalenderEintrag {
 	public boolean isGueltig(LocalDateTime zeitPunkt) {
 		return getZeitlicheGueltigkeit(zeitPunkt).isZeitlichGueltig();
 	}
-	
+
 	@Override
 	public final SystemkalenderGueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
 		if (fehler) {
@@ -262,10 +267,10 @@ public abstract class KalenderEintragImpl implements KalenderEintrag {
 	@Override
 	public final List<ZustandsWechsel> getZustandsWechsel(LocalDateTime start, LocalDateTime ende) {
 
-		if( isFehler()) {
+		if (isFehler()) {
 			return Collections.singletonList(ZustandsWechsel.of(start, false));
 		}
-		
+
 		List<ZustandsWechsel> result = new ArrayList<>();
 
 		SystemkalenderGueltigkeit gueltigkeit = getZeitlicheGueltigkeit(start);
@@ -305,9 +310,9 @@ public abstract class KalenderEintragImpl implements KalenderEintrag {
 	protected void setFehler(final boolean state) {
 		fehler = state;
 	}
-	
+
 	abstract boolean benutzt(SystemKalenderEintrag referenz);
-	
+
 	@Override
 	public boolean isVerwendbar() {
 		return !isFehler();

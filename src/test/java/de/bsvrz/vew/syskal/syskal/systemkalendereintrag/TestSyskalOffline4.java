@@ -42,8 +42,8 @@ import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline4 {
 
-	@Rule
-	public Timeout globalTimeout = Timeout.seconds(5);
+//	@Rule
+//	public Timeout globalTimeout = Timeout.seconds(5);
 
 	private static TestKalenderEintragProvider eintragsProvider;
 

@@ -41,6 +41,7 @@ import org.junit.rules.Timeout;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 import de.bsvrz.vew.syskal.internal.ZeitBereichsEintrag;
 
@@ -118,13 +119,12 @@ public class ZeitBereichsEintragTest {
 		SystemkalenderGueltigkeit gueltigKeit = bereich4.getZeitlicheGueltigkeit(LocalDateTime.of(2008, 1, 15, 13, 0));
 
 		assertFalse(gueltigKeit.isZeitlichGueltig());
-		assertEquals(LocalDateTime.of(2008, 1, 15, 11, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)), gueltigKeit.getErsterWechsel().getZeitPunkt());
+		assertEquals(LocalDateTime.of(2008, 1, 15, 11, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
+				gueltigKeit.getErsterWechsel().getZeitPunkt());
 		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 		assertEquals(LocalDateTime.of(2008, 1, 15, 15, 30), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
 	}
 
-	
-	
 	@Test
 	public void testeGueltigkeitnachDemBereich() {
 
@@ -197,5 +197,40 @@ public class ZeitBereichsEintragTest {
 				break;
 			}
 		}
+	}
+
+	@Test
+	public void testZustandsWechselMitUeberlappungen() {
+
+		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+		ZeitBereichsEintrag eintrag = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Aller5Minuten",
+				"Aller5Minuten:=<23.12.2000 00:00:00,000-25.12.2000 01:00:00,000>({11:05:00,000-11:10:00,000}{11:15:00,000-11:20:00,000}{11:25:00,000-11:30:00,000}{11:35:00,000-11:40:00,000}{11:45:00,000-11:49:00,000}{14:01:00,000-15:00:00,000}{14:35:00,000-14:40:00,000}{14:45:00,000-15:09:00,000}{14:55:00,000-15:00:00,000}{15:05:00,000-15:10:00,000}{15:15:00,000-15:20:00,000}{15:25:00,000-15:30:00,000})");
+		
+		LocalDateTime startTime = LocalDateTime.of(2000, 12, 24, 11, 0);
+		LocalDateTime endTime = LocalDateTime.of(2000, 12, 24, 23, 0);
+
+		TestWechsel[] erwarteteWechsel = { 
+				TestWechsel.of("24.12.2000 11:00", false),
+				TestWechsel.of("24.12.2000 11:05", true),
+				TestWechsel.of("24.12.2000 11:10", false),
+				TestWechsel.of("24.12.2000 11:15", true),
+				TestWechsel.of("24.12.2000 11:20", false),
+				TestWechsel.of("24.12.2000 11:25", true),
+				TestWechsel.of("24.12.2000 11:30", false),
+				TestWechsel.of("24.12.2000 11:35", true),
+				TestWechsel.of("24.12.2000 11:40", false),
+				TestWechsel.of("24.12.2000 11:45", true),
+				TestWechsel.of("24.12.2000 11:49", false),
+				TestWechsel.of("24.12.2000 14:01", true),
+				TestWechsel.of("24.12.2000 15:10", false),
+				TestWechsel.of("24.12.2000 15:15", true),
+				TestWechsel.of("24.12.2000 15:20", false),
+				TestWechsel.of("24.12.2000 15:25", true),
+				TestWechsel.of("24.12.2000 15:30", false)
+		};
+
+		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+
 	}
 }

@@ -83,7 +83,7 @@ public class ZeitGrenze implements Comparable<ZeitGrenze> {
 	public int compareTo(final ZeitGrenze o) {
 		int result = start.compareTo(o.start);
 		if (result == 0) {
-			result = ende.compareTo(o.ende);
+			result = o.ende.compareTo(ende);
 		}
 		return result;
 	}
