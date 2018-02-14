@@ -46,8 +46,8 @@ import de.bsvrz.vew.syskal.internal.ZeitBereichsEintrag;
 
 public class ZeitBereichsEintragTest {
 
-//	@Rule
-//	public Timeout globalTimeout = Timeout.seconds(5);
+	@Rule
+	public Timeout globalTimeout = Timeout.seconds(5);
 
 	@Test
 	public void testeGueltigkeit() {

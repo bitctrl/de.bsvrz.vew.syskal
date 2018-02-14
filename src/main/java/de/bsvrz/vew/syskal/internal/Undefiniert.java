@@ -27,7 +27,6 @@
 package de.bsvrz.vew.syskal.internal;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;

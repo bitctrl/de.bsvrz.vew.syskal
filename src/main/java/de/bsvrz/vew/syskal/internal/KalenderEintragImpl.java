@@ -263,7 +263,7 @@ public abstract class KalenderEintragImpl implements KalenderEintrag {
 	public final List<ZustandsWechsel> getZustandsWechsel(LocalDateTime start, LocalDateTime ende) {
 
 		if( isFehler()) {
-			return Collections.emptyList();
+			return Collections.singletonList(ZustandsWechsel.of(start, false));
 		}
 		
 		List<ZustandsWechsel> result = new ArrayList<>();

@@ -38,7 +38,7 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class SystemKalenderEintragImpl implements SystemKalenderEintrag {
 
-	private ObjectProperty<KalenderEintrag> kalenderEintragProperty = new SimpleObjectProperty<>(this, "kalendereintrag", VorDefinierterEintrag.UNDEFINIERT);
+	private final ObjectProperty<KalenderEintrag> kalenderEintragProperty = new SimpleObjectProperty<>(this, "kalendereintrag", VorDefinierterEintrag.UNDEFINIERT);
 	private KalenderEintragProvider provider;
 	private DynamicObject systemObject;
 	private String originalDefinition;
@@ -85,9 +85,7 @@ public class SystemKalenderEintragImpl implements SystemKalenderEintrag {
 		builder.append(systemObject.getName());
 		builder.append(':');
 
-		if (kalenderEintragProperty == null) {
-			builder.append("NULL  :");
-		} else if (((KalenderEintragImpl) kalenderEintragProperty.get()).isFehler()) {
+		if (((KalenderEintragImpl) kalenderEintragProperty.get()).isFehler()) {
 			builder.append("FEHLER :");
 		} else {
 			builder.append("OK    :");

@@ -74,9 +74,9 @@ public class TestSyskalOffline8 {
 		TestWechsel[] erwarteteWechsel = { 
 				TestWechsel.of("1.1.2015 00:00", false),
 				TestWechsel.of("31.7.2015 00:00", true), 
-				TestWechsel.of("13.9.2015 00:00", false),
+				TestWechsel.of("14.9.2015 00:00", false),
 				TestWechsel.of("3.11.2015 00:00", true),
-				TestWechsel.of("7.11.2015 00:00", false)
+				TestWechsel.of("8.11.2015 00:00", false)
 		};
 
 		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);

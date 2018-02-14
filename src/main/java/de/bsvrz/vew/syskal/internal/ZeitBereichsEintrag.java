@@ -74,6 +74,7 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 				try {
 					start = parseDatum(parts[0]);
 					ende = parseDatum(parts[1]);
+					ende = ende.plusDays(1);
 				} catch (final ParseException e) {
 					setFehler(true);
 				}
@@ -236,50 +237,18 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
 
 		List<ZeitGrenze> zeitGrenzen = getZeitGrenzen();
-
-		if (!zeitpunkt.isBefore(ende)) {
-			if (zeitGrenzen.isEmpty()) {
-				return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-			}
-
-			if (zeitpunkt.toLocalDate().equals(ende.toLocalDate())) {
-				for (ZeitGrenze grenze : zeitGrenzen) {
-					if (!grenze.getEnde().isAfter(ende.toLocalTime())) {
-						return SystemkalenderGueltigkeit.of(
-								ZustandsWechsel.of(LocalDateTime.of(ende.toLocalDate(), grenze.getEnde()), false),
-								ZustandsWechsel.MAX);
-					}
-				}
-			}
-
-			LocalDateTime wechselZeit = LocalDateTime.of(ende.toLocalDate(),
-					zeitGrenzen.get(zeitGrenzen.size() - 1).getEnde());
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(wechselZeit, false), ZustandsWechsel.MAX);
+		if (zeitGrenzen.isEmpty()) {
+			return berechneZeitlicheGueltigkeitFuerReinenZeitbereich(zeitpunkt);
 		}
 
 		if (zeitpunkt.isBefore(start)) {
-			if (zeitGrenzen.isEmpty()) {
-				return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(start, true), ZustandsWechsel.of(ende, false));
-			}
-
-			for (ZeitGrenze grenze : zeitGrenzen) {
-				if (!grenze.getStart().isBefore(start.toLocalTime())) {
-					return SystemkalenderGueltigkeit.of(ZustandsWechsel.MIN,
-							ZustandsWechsel.of(LocalDateTime.of(start.toLocalDate(), grenze.getStart()), true));
-				}
-			}
-
-			LocalDateTime wechselZeit = LocalDateTime.of(start.toLocalDate().plusDays(1),
-					zeitGrenzen.get(0).getStart());
-			if (wechselZeit.isBefore(ende)) {
-				return SystemkalenderGueltigkeit.of(ZustandsWechsel.MIN, ZustandsWechsel.of(wechselZeit, true));
-			}
-
-			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(SystemKalender.MIN_DATETIME, false),
+					ZustandsWechsel.of(sucheFruehestMoeglichenIntervallStart(), true));
 		}
 
-		if (zeitGrenzen.isEmpty()) {
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(start, true), ZustandsWechsel.of(ende, false));
+		if (!zeitpunkt.isBefore(ende)) {
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(sucheSpaetestMoeglichesIntervallEnde(), false),
+					ZustandsWechsel.MAX);
 		}
 
 		LocalDate datum = zeitpunkt.toLocalDate();
@@ -302,8 +271,8 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 					aktivierungsZeit = LocalDateTime.of(datum.minusDays(1),
 							zeitGrenzen.get(zeitGrenzen.size() - 1).getEnde());
 				}
-				
-				if( aktivierungsZeit.isBefore(start)) {
+
+				if (aktivierungsZeit.isBefore(start)) {
 					aktivierungsZeit = SystemKalender.MIN_DATETIME;
 				}
 				return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsZeit, false),
@@ -328,6 +297,62 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 		}
 		return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsZeit, false),
 				ZustandsWechsel.of(wechselZeit, true));
+	}
+
+	private LocalDateTime sucheSpaetestMoeglichesIntervallEnde() {
+		
+		LocalDate endeDatum = ende.toLocalDate();
+		LocalDateTime result = null;
+
+		do {
+			for (ZeitGrenze grenze : getZeitGrenzen()) {
+				LocalDateTime pruefZeit = LocalDateTime.of(endeDatum, grenze.getEnde());
+				if( pruefZeit.isBefore(ende)) {
+					result = pruefZeit;
+				} else {
+					break;
+				}
+			}
+			
+			endeDatum = endeDatum.minusDays(1);
+		} while (result == null);
+
+		return result;
+	}
+
+	private LocalDateTime sucheFruehestMoeglichenIntervallStart() {
+
+		LocalDate startDatum = start.toLocalDate();
+		LocalDateTime result = null;
+
+		do {
+			for (ZeitGrenze grenze : getZeitGrenzen()) {
+				result = LocalDateTime.of(startDatum, grenze.getStart());
+				if( result.isBefore(start)) {
+					result = null;
+				} else {
+					break;
+				}
+			}
+			
+			startDatum = startDatum.plusDays(1);
+		} while (result == null);
+
+		return result;
+	}
+
+	private SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitFuerReinenZeitbereich(LocalDateTime zeitpunkt) {
+
+		if (zeitpunkt.isBefore(start)) {
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(SystemKalender.MIN_DATETIME, false),
+					ZustandsWechsel.of(start, true));
+		}
+
+		if (!zeitpunkt.isBefore(ende)) {
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(ende, false), ZustandsWechsel.MAX);
+		}
+
+		return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(start, true), ZustandsWechsel.of(ende, false));
 	}
 
 	@Override
