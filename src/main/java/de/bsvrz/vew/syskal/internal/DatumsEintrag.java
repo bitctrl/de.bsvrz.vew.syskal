@@ -105,6 +105,10 @@ public class DatumsEintrag extends KalenderEintragImpl {
 			} catch (NumberFormatException e) {
 				setFehler(true);
 			}
+
+			if (endJahr < jahr) {
+				setFehler(true);
+			}
 		}
 	}
 
@@ -186,9 +190,9 @@ public class DatumsEintrag extends KalenderEintragImpl {
 			}
 
 			LocalDate wechselDatum = LocalDate.of(checkJahr, monat, tag);
-			
+
 			LocalDate aktivierungsDatum = wechselDatum.minusYears(1).plusDays(1);
-			if( tag == 29 && monat == 2) {
+			if (tag == 29 && monat == 2) {
 				while (!Year.isLeap(aktivierungsDatum.getYear())) {
 					aktivierungsDatum = aktivierungsDatum.minusYears(1);
 				}

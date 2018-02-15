@@ -39,6 +39,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
@@ -229,5 +230,72 @@ public class DatumsEintragsTest {
 
 		List<ZustandsWechsel> zustandsWechsel = datumsEintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+	}
+	
+	@Test
+	public void testeGueltigkeitVor() {
+		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
+		KalenderEintragImpl eintrag = KalenderEintragImpl.parse(eintragsProvider, "Testdatum", "11.01.1962,*");
+
+		LocalDateTime abfrageZeitpunkt = LocalDateTime.of(2000, 12, 24, 14, 27, 17);
+		SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeitVor(abfrageZeitpunkt);
+		assertTrue(gueltigkeit.getErsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2000, 1, 11), LocalTime.MIDNIGHT), gueltigkeit.getErsterWechsel().getZeitPunkt());
+		assertFalse(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2000, 1, 12), LocalTime.MIDNIGHT), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
+
+		abfrageZeitpunkt = LocalDateTime.of(2000, 1, 2, 14, 27, 17);
+		gueltigkeit = eintrag.getZeitlicheGueltigkeitVor(abfrageZeitpunkt);
+		assertTrue(gueltigkeit.getErsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(1999, 1, 11), LocalTime.MIDNIGHT), gueltigkeit.getErsterWechsel().getZeitPunkt());
+		assertFalse(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(1999, 1, 12), LocalTime.MIDNIGHT), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
+
+		abfrageZeitpunkt = LocalDateTime.of(2000, 1, 11, 0, 0);
+		gueltigkeit = eintrag.getZeitlicheGueltigkeitVor(abfrageZeitpunkt);
+		assertFalse(gueltigkeit.getErsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(1999, 1, 12), LocalTime.MIDNIGHT), gueltigkeit.getErsterWechsel().getZeitPunkt());
+		assertTrue(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2000, 1, 11), LocalTime.MIDNIGHT), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
+
+		abfrageZeitpunkt = LocalDateTime.of(2000, 1, 11, 13, 45);
+		gueltigkeit = eintrag.getZeitlicheGueltigkeitVor(abfrageZeitpunkt);
+		assertFalse(gueltigkeit.getErsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(1999, 1, 12), LocalTime.MIDNIGHT), gueltigkeit.getErsterWechsel().getZeitPunkt());
+		assertTrue(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2000, 1, 11), LocalTime.MIDNIGHT), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
+
+		abfrageZeitpunkt = LocalDateTime.of(2000, 1, 12, 0, 0);
+		gueltigkeit = eintrag.getZeitlicheGueltigkeitVor(abfrageZeitpunkt);
+		assertTrue(gueltigkeit.getErsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2000, 1, 11), LocalTime.MIDNIGHT), gueltigkeit.getErsterWechsel().getZeitPunkt());
+		assertFalse(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2000, 1, 12), LocalTime.MIDNIGHT), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
+
+		abfrageZeitpunkt = LocalDateTime.of(2000, 1, 15, 0, 0);
+		gueltigkeit = eintrag.getZeitlicheGueltigkeitVor(abfrageZeitpunkt);
+		assertTrue(gueltigkeit.getErsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2000, 1, 11), LocalTime.MIDNIGHT), gueltigkeit.getErsterWechsel().getZeitPunkt());
+		assertFalse(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2000, 1, 12), LocalTime.MIDNIGHT), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
+
+		abfrageZeitpunkt = LocalDateTime.of(1962, 1, 11, 10, 10);
+		gueltigkeit = eintrag.getZeitlicheGueltigkeitVor(abfrageZeitpunkt);
+		assertFalse(gueltigkeit.getErsterWechsel().isWirdGueltig());
+		assertEquals(SystemKalender.MIN_DATETIME, gueltigkeit.getErsterWechsel().getZeitPunkt());
+		assertTrue(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(1962, 1, 11), LocalTime.MIDNIGHT), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
+	}
+
+
+	@Test
+	public void testeGueltigkeitFalscherEintrag() {
+
+		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
+		KalenderEintragImpl eintrag = KalenderEintragImpl.parse(eintragsProvider, "Testdatum", "10.10.2020,2000");
+
+		LocalDateTime abfrageZeitpunkt = LocalDateTime.of(2010, 10, 10, 14, 27, 17);
+		SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(abfrageZeitpunkt);
+		assertEquals(SystemkalenderGueltigkeit.NICHT_GUELTIG, gueltigkeit);
 	}
 }

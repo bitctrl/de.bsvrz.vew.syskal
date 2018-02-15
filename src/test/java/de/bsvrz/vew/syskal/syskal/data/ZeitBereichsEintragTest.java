@@ -30,7 +30,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -60,8 +62,10 @@ public class ZeitBereichsEintragTest {
 		SystemkalenderGueltigkeit gueltigKeit = bereich4.getZeitlicheGueltigkeit(LocalDateTime.of(2008, 1, 30, 12, 10));
 
 		assertFalse(gueltigKeit.isZeitlichGueltig());
-		assertEquals(LocalDateTime.of(2008, 1, 30, 15, 30), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+		assertEquals(LocalDateTime.of(2008, 1, 30, 11, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
+				gueltigKeit.getErsterWechsel().getZeitPunkt());
 		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(2008, 1, 30, 15, 30), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
 	}
 
 	@Test
@@ -74,9 +78,10 @@ public class ZeitBereichsEintragTest {
 		SystemkalenderGueltigkeit gueltigKeit = bereich4.getZeitlicheGueltigkeit(LocalDateTime.of(2008, 1, 30, 10, 10));
 
 		assertTrue(gueltigKeit.isZeitlichGueltig());
+		assertEquals(LocalDateTime.of(2008, 1, 30, 9, 0), gueltigKeit.getErsterWechsel().getZeitPunkt());
+		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 		assertEquals(LocalDateTime.of(2008, 1, 30, 11, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
 				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 	}
 
 	@Test
@@ -205,32 +210,118 @@ public class ZeitBereichsEintragTest {
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
 		ZeitBereichsEintrag eintrag = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Aller5Minuten",
 				"Aller5Minuten:=<23.12.2000 00:00:00,000-25.12.2000 01:00:00,000>({11:05:00,000-11:10:00,000}{11:15:00,000-11:20:00,000}{11:25:00,000-11:30:00,000}{11:35:00,000-11:40:00,000}{11:45:00,000-11:49:00,000}{14:01:00,000-15:00:00,000}{14:35:00,000-14:40:00,000}{14:45:00,000-15:09:00,000}{14:55:00,000-15:00:00,000}{15:05:00,000-15:10:00,000}{15:15:00,000-15:20:00,000}{15:25:00,000-15:30:00,000})");
-		
+
 		LocalDateTime startTime = LocalDateTime.of(2000, 12, 24, 11, 0);
 		LocalDateTime endTime = LocalDateTime.of(2000, 12, 24, 23, 0);
 
-		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("24.12.2000 11:00", false),
-				TestWechsel.of("24.12.2000 11:05", true),
-				TestWechsel.of("24.12.2000 11:10", false),
-				TestWechsel.of("24.12.2000 11:15", true),
-				TestWechsel.of("24.12.2000 11:20", false),
-				TestWechsel.of("24.12.2000 11:25", true),
-				TestWechsel.of("24.12.2000 11:30", false),
-				TestWechsel.of("24.12.2000 11:35", true),
-				TestWechsel.of("24.12.2000 11:40", false),
-				TestWechsel.of("24.12.2000 11:45", true),
-				TestWechsel.of("24.12.2000 11:49", false),
-				TestWechsel.of("24.12.2000 14:01", true),
-				TestWechsel.of("24.12.2000 15:10", false),
-				TestWechsel.of("24.12.2000 15:15", true),
-				TestWechsel.of("24.12.2000 15:20", false),
-				TestWechsel.of("24.12.2000 15:25", true),
-				TestWechsel.of("24.12.2000 15:30", false)
-		};
+		TestWechsel[] erwarteteWechsel = { TestWechsel.of("24.12.2000 11:00", false),
+				TestWechsel.of("24.12.2000 11:05", true), TestWechsel.of("24.12.2000 11:10", false),
+				TestWechsel.of("24.12.2000 11:15", true), TestWechsel.of("24.12.2000 11:20", false),
+				TestWechsel.of("24.12.2000 11:25", true), TestWechsel.of("24.12.2000 11:30", false),
+				TestWechsel.of("24.12.2000 11:35", true), TestWechsel.of("24.12.2000 11:40", false),
+				TestWechsel.of("24.12.2000 11:45", true), TestWechsel.of("24.12.2000 11:49", false),
+				TestWechsel.of("24.12.2000 14:01", true), TestWechsel.of("24.12.2000 15:10", false),
+				TestWechsel.of("24.12.2000 15:15", true), TestWechsel.of("24.12.2000 15:20", false),
+				TestWechsel.of("24.12.2000 15:25", true), TestWechsel.of("24.12.2000 15:30", false) };
 
 		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 
 	}
+
+	@Test
+	public void testGueltigkeitVorEinfacherZeitbereichDavor() {
+
+		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+		ZeitBereichsEintrag eintrag = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Mittags",
+				"Mittags:=({11:30:00,000-13:30:00,000})");
+
+		SystemkalenderGueltigkeit gueltigKeit = eintrag
+				.getZeitlicheGueltigkeitVor(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(10, 10)));
+
+		assertTrue(gueltigKeit.isZeitlichGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 23), LocalTime.of(11, 30)),
+				gueltigKeit.getErsterWechsel().getZeitPunkt());
+		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 23), LocalTime.of(13, 30)),
+				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+
+	}
+
+	@Test
+	public void testGueltigkeitVorEinfacherZeitbereichGenauAmAnfang() {
+
+		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+		ZeitBereichsEintrag eintrag = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Mittags",
+				"Mittags:=({11:30:00,000-13:30:00,000})");
+
+		SystemkalenderGueltigkeit gueltigKeit = eintrag
+				.getZeitlicheGueltigkeitVor(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11, 30)));
+
+		assertFalse(gueltigKeit.isZeitlichGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 23), LocalTime.of(13, 30)),
+				gueltigKeit.getErsterWechsel().getZeitPunkt());
+		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11, 30)),
+				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+
+	}
+
+	@Test
+	public void testGueltigkeitVorEinfacherZeitbereichImBereich() {
+
+		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+		ZeitBereichsEintrag eintrag = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Mittags",
+				"Mittags:=({11:30:00,000-13:30:00,000})");
+
+		SystemkalenderGueltigkeit gueltigKeit = eintrag
+				.getZeitlicheGueltigkeitVor(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(12, 30)));
+
+		assertFalse(gueltigKeit.isZeitlichGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 23), LocalTime.of(13, 30)),
+				gueltigKeit.getErsterWechsel().getZeitPunkt());
+		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11, 30)),
+				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+
+	}
+
+	@Test
+	public void testGueltigkeitVorEinfacherZeitbereichGenauAmEnde() {
+
+		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+		ZeitBereichsEintrag eintrag = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Mittags",
+				"Mittags:=({11:30:00,000-13:30:00,000})");
+
+		SystemkalenderGueltigkeit gueltigKeit = eintrag
+				.getZeitlicheGueltigkeitVor(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(13, 30)));
+
+		assertTrue(gueltigKeit.isZeitlichGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11, 30)),
+				gueltigKeit.getErsterWechsel().getZeitPunkt());
+		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(13, 30)),
+				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+
+	}
+
+	@Test
+	public void testGueltigkeitVorEinfacherZeitbereichDanach() {
+
+		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+		ZeitBereichsEintrag eintrag = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Mittags",
+				"Mittags:=({11:30:00,000-13:30:00,000})");
+
+		SystemkalenderGueltigkeit gueltigKeit = eintrag
+				.getZeitlicheGueltigkeitVor(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(15, 30)));
+
+		assertTrue(gueltigKeit.isZeitlichGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11, 30)),
+				gueltigKeit.getErsterWechsel().getZeitPunkt());
+		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
+		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(13, 30)),
+				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
+
+	}
+
 }
