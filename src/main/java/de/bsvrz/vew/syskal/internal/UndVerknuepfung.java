@@ -27,11 +27,14 @@
 package de.bsvrz.vew.syskal.internal;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -94,8 +97,8 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 	protected SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitPunkt) {
 
 		SystemkalenderGueltigkeit zeitlicheGueltigkeit = berechneZeitlicheGueltigkeit(zeitPunkt);
+
 		boolean zustand = zeitlicheGueltigkeit.isZeitlichGueltig();
-		Map<KalenderEintragImpl, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
 		Map<KalenderEintragImpl, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
 
 		for (VerweisEintrag verweis : getVerweise()) {
@@ -105,13 +108,11 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 
 			SystemkalenderGueltigkeit gueltigKeit = verweis.getZeitlicheGueltigkeitVor(zeitlicheGueltigkeit.getErsterWechsel().getZeitPunkt());
 			potentielleStartWechsel.put(verweis, gueltigKeit.getErsterWechsel());
-			potentielleEndWechsel.put(verweis, gueltigKeit.getNaechsterWechsel());
 		}
 
-		ZustandsWechsel wechsel = berechneNaechstenWechselAuf(zustand, potentielleEndWechsel);
 		ZustandsWechsel beginn = berechneVorigenWechselAuf(!zustand, potentielleStartWechsel);
 
-		return SystemkalenderGueltigkeit.of(beginn, wechsel);
+		return SystemkalenderGueltigkeit.of(beginn, zeitlicheGueltigkeit.getErsterWechsel());
 	}
 
 	private ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand,
@@ -194,83 +195,51 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 	private ZustandsWechsel berechneVorigenWechselAuf(boolean zielZustand,
 			Map<KalenderEintragImpl, ZustandsWechsel> potentielleWechsel) {
 
-		ZustandsWechsel result = null;
-
-		if (zielZustand) {
-			for (ZustandsWechsel wechsel : potentielleWechsel.values()) {
-				if (!wechsel.isWirdGueltig()) {
-					continue;
-				}
-				if (result == null) {
-					result = wechsel;
-				} else if (result.getZeitPunkt().isBefore(wechsel.getZeitPunkt())) {
-					result = wechsel;
-				}
-			}
-
-		} else {
-			result = berechneVorigenWechselAufUngueltig(potentielleWechsel);
-		}
-
-		if (result == null) {
-			return ZustandsWechsel.MIN;
-		}
-		return result;
-	}
-
-	private ZustandsWechsel berechneVorigenWechselAufUngueltig(Map<KalenderEintragImpl, ZustandsWechsel> potentielleWechsel) {
-
-		Map<KalenderEintragImpl, ZustandsWechsel> zustandsWechsel = new LinkedHashMap<>(potentielleWechsel);
-		LocalDateTime wechselZeit = SystemKalender.MAX_DATETIME;
-		LocalDateTime letzteWechselZeit = SystemKalender.MAX_DATETIME;
-
-		ZustandsWechsel result = null;
+		LocalDateTime wechselZeit = null;
+		Map<KalenderEintragImpl, ZustandsWechsel> verweisWechsel = new LinkedHashMap<>(potentielleWechsel);
+		ZustandsWechsel potentiellerWechsel = null;
 		
 		do {
-			Iterator<Entry<KalenderEintragImpl, ZustandsWechsel>> iterator = zustandsWechsel.entrySet().iterator();
-			while (iterator.hasNext()) {
-				Entry<KalenderEintragImpl, ZustandsWechsel> entry = iterator.next();
-				ZustandsWechsel wechsel = entry.getValue();
-				while (/*wechsel.isWirdGueltig() && */ wechsel.getZeitPunkt().isAfter(SystemKalender.MIN_DATETIME)
-						&& !wechsel.getZeitPunkt().isBefore(letzteWechselZeit)) {
-					wechsel = entry.getKey().berechneZeitlicheGueltigkeitsVor(wechsel.getZeitPunkt())
-							.getErsterWechsel();
-				}
-
-				entry.setValue(wechsel);
-				if (wechsel.getZeitPunkt().isAfter(wechselZeit) || wechselZeit.equals(SystemKalender.MAX_DATETIME)) {
-					wechselZeit = wechsel.getZeitPunkt();
-				}
-			}
-
-			if (!wechselZeit.isBefore(SystemKalender.MAX_DATETIME)
-					|| !wechselZeit.isAfter(SystemKalender.MIN_DATETIME)) {
-				return ZustandsWechsel.of(SystemKalender.MIN_DATETIME, false);
-			}
-
-			letzteWechselZeit = wechselZeit;
-
-			int trueCounter = 0;
-			for (Entry<KalenderEintragImpl, ZustandsWechsel> entry : zustandsWechsel.entrySet()) {
-				if (entry.getKey().getZeitlicheGueltigkeit(wechselZeit).isZeitlichGueltig()) {
-					trueCounter++;
-				}
-			}
-			if (trueCounter >= zustandsWechsel.size()) {
-				if( result == null) {
-					wechselZeit = SystemKalender.MAX_DATETIME;
-				}
-			} else {
-				result = ZustandsWechsel.of(wechselZeit, false);
-				wechselZeit = SystemKalender.MAX_DATETIME;
+			ZustandsWechsel wechsel = verweisWechsel.values().stream().max(ZustandsWechsel.ZEIT_COMPARATOR).get();
+			if( wechsel == null) {
+				return ZustandsWechsel.MIN;
 			}
 			
-		} while (!wechselZeit.isBefore(SystemKalender.MAX_DATETIME));
+			wechselZeit = wechsel.getZeitPunkt();
+			if (pruefeGueltigKeit(wechselZeit, zielZustand)) {
+				if( zielZustand) {
+					return ZustandsWechsel.of(wechselZeit, zielZustand);
+				}
+				potentiellerWechsel = ZustandsWechsel.of(wechselZeit, zielZustand);
+			} else {
+				if( !zielZustand && potentiellerWechsel != null) {
+					return potentiellerWechsel;
+				}
+			}
+			
+			for( Entry<KalenderEintragImpl, ZustandsWechsel> entry : verweisWechsel.entrySet()) {
+				if( !entry.getValue().getZeitPunkt().isBefore(wechselZeit)) {
+					entry.setValue(entry.getKey().berechneZeitlicheGueltigkeitsVor(entry.getValue().getZeitPunkt()).getErsterWechsel());
+				}
+			}
+			
+		} while (wechselZeit.isAfter(SystemKalender.MIN_DATETIME));
+		
+		return ZustandsWechsel.MIN;
+	}
+	
+	private boolean pruefeGueltigKeit(LocalDateTime wechselZeit, boolean zielZustand) {
 
-		if ( result == null) {
-			return ZustandsWechsel.MIN;
+		int trueCounter = 0;
+		for( VerweisEintrag verweis : getVerweise()) {
+			if( verweis.berechneZeitlicheGueltigkeit(wechselZeit).isZeitlichGueltig()) {
+				trueCounter++;
+			}
 		}
 		
-		return result;
+		if( zielZustand ) {
+			return trueCounter == getVerweise().size();
+		}
+		return trueCounter < getVerweise().size();
 	}
 }

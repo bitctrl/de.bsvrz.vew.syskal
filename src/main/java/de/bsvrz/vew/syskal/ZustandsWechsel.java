@@ -29,10 +29,19 @@ package de.bsvrz.vew.syskal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.Objects;
 
-public class ZustandsWechsel {
+public class ZustandsWechsel  {
 
+	public static final Comparator<ZustandsWechsel> ZEIT_COMPARATOR = new Comparator<ZustandsWechsel>() {
+
+		@Override
+		public int compare(ZustandsWechsel o1, ZustandsWechsel o2) {
+			return o1.getZeitPunkt().compareTo(o2.getZeitPunkt());
+		}
+	};
+	
 	public static final ZustandsWechsel MIN = ZustandsWechsel.of(SystemKalender.MIN_DATETIME, false);
 	public static final ZustandsWechsel MAX = ZustandsWechsel.of(SystemKalender.MAX_DATETIME, false);
 	
