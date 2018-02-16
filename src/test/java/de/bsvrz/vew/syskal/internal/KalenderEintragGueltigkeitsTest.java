@@ -31,6 +31,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class KalenderEintragGueltigkeitsTest {
    		Class<?> clazz = KalenderEintragGueltigkeitsTest.class;
 		Collection<Object[]> testDaten;
 		
-		try (BufferedReader stream = new BufferedReader(new InputStreamReader(clazz.getResourceAsStream(clazz.getSimpleName() + ".testdaten")))) {
+		try (BufferedReader stream = new BufferedReader(new InputStreamReader(clazz.getResourceAsStream(clazz.getSimpleName() + ".testdaten"), Charset.forName("UTF-8")))) {
 			testDaten = liesTestDaten(stream);
 		}
     	
