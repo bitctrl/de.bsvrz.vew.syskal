@@ -24,7 +24,7 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.vew.syskal.syskal.data;
+package de.bsvrz.vew.syskal.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -41,6 +41,7 @@ import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
+import de.bsvrz.vew.syskal.TestGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -63,6 +64,8 @@ public class DatumsEintragsTest {
 		LocalDateTime checkDate = LocalDateTime.of(2018, 4, 15, 12, 0);
 		SystemkalenderGueltigkeit gueltigKeit = datumsEintrag.getZeitlicheGueltigkeit(checkDate);
 
+		TestGueltigkeit.pruefeGueltigkeit(gueltigKeit, false, "2.5.2017 00:00", true, "1.5.2018 00:00");
+		
 		assertFalse(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(LocalDate.of(2017, 5, 2), LocalTime.MIDNIGHT),
 				gueltigKeit.getErsterWechsel().getZeitPunkt());

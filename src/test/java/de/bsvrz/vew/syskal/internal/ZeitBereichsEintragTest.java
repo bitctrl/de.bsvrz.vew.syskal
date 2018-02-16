@@ -24,15 +24,13 @@
  * mailto: info@bitctrl.de
  */
 
-package de.bsvrz.vew.syskal.syskal.data;
+package de.bsvrz.vew.syskal.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -45,7 +43,6 @@ import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.ZeitBereichsEintrag;
 
 public class ZeitBereichsEintragTest {
 
@@ -131,22 +128,6 @@ public class ZeitBereichsEintragTest {
 	}
 
 	@Test
-	public void testeGueltigkeitnachDemBereich() {
-
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		ZeitBereichsEintrag bereich4 = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Bereich4",
-				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
-
-		SystemkalenderGueltigkeit gueltigKeit = bereich4.getZeitlicheGueltigkeit(LocalDateTime.of(2008, 3, 1, 14, 10));
-
-		assertFalse(gueltigKeit.isZeitlichGueltig());
-		assertEquals(LocalDateTime.of(2008, 2, 15, 17, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
-				gueltigKeit.getErsterWechsel().getZeitPunkt());
-		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(SystemKalender.MAX_DATETIME, gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-	}
-
-	@Test
 	public void testeZustandswechsel() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
@@ -228,100 +209,4 @@ public class ZeitBereichsEintragTest {
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 
 	}
-
-	@Test
-	public void testGueltigkeitVorEinfacherZeitbereichDavor() {
-
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		ZeitBereichsEintrag eintrag = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Mittags",
-				"Mittags:=({11:30:00,000-13:30:00,000})");
-
-		SystemkalenderGueltigkeit gueltigKeit = eintrag
-				.getZeitlicheGueltigkeitVor(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(10, 10)));
-
-		assertTrue(gueltigKeit.isZeitlichGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 23), LocalTime.of(11, 30)),
-				gueltigKeit.getErsterWechsel().getZeitPunkt());
-		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 23), LocalTime.of(13, 30)),
-				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-
-	}
-
-	@Test
-	public void testGueltigkeitVorEinfacherZeitbereichGenauAmAnfang() {
-
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		ZeitBereichsEintrag eintrag = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Mittags",
-				"Mittags:=({11:30:00,000-13:30:00,000})");
-
-		SystemkalenderGueltigkeit gueltigKeit = eintrag
-				.getZeitlicheGueltigkeitVor(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11, 30)));
-
-		assertFalse(gueltigKeit.isZeitlichGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 23), LocalTime.of(13, 30)),
-				gueltigKeit.getErsterWechsel().getZeitPunkt());
-		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11, 30)),
-				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-
-	}
-
-	@Test
-	public void testGueltigkeitVorEinfacherZeitbereichImBereich() {
-
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		ZeitBereichsEintrag eintrag = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Mittags",
-				"Mittags:=({11:30:00,000-13:30:00,000})");
-
-		SystemkalenderGueltigkeit gueltigKeit = eintrag
-				.getZeitlicheGueltigkeitVor(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(12, 30)));
-
-		assertFalse(gueltigKeit.isZeitlichGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 23), LocalTime.of(13, 30)),
-				gueltigKeit.getErsterWechsel().getZeitPunkt());
-		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11, 30)),
-				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-
-	}
-
-	@Test
-	public void testGueltigkeitVorEinfacherZeitbereichGenauAmEnde() {
-
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		ZeitBereichsEintrag eintrag = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Mittags",
-				"Mittags:=({11:30:00,000-13:30:00,000})");
-
-		SystemkalenderGueltigkeit gueltigKeit = eintrag
-				.getZeitlicheGueltigkeitVor(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(13, 30)));
-
-		assertTrue(gueltigKeit.isZeitlichGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11, 30)),
-				gueltigKeit.getErsterWechsel().getZeitPunkt());
-		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(13, 30)),
-				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-
-	}
-
-	@Test
-	public void testGueltigkeitVorEinfacherZeitbereichDanach() {
-
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		ZeitBereichsEintrag eintrag = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Mittags",
-				"Mittags:=({11:30:00,000-13:30:00,000})");
-
-		SystemkalenderGueltigkeit gueltigKeit = eintrag
-				.getZeitlicheGueltigkeitVor(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(15, 30)));
-
-		assertTrue(gueltigKeit.isZeitlichGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11, 30)),
-				gueltigKeit.getErsterWechsel().getZeitPunkt());
-		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(13, 30)),
-				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-
-	}
-
 }

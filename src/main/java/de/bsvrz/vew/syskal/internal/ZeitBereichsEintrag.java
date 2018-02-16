@@ -296,6 +296,28 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 		return SystemkalenderGueltigkeit.unGueltig(aktivierungsZeit, wechselZeit);
 	}
 
+
+	private LocalDateTime sucheSpaetestMoeglichenIntervallStart() {
+
+		LocalDate endeDatum = ende.toLocalDate();
+		LocalDateTime result = null;
+
+		do {
+			for (ZeitGrenze grenze : getZeitGrenzen()) {
+				LocalDateTime pruefZeit = LocalDateTime.of(endeDatum, grenze.getStart());
+				if (pruefZeit.isBefore(ende)) {
+					result = pruefZeit;
+				} else {
+					break;
+				}
+			}
+
+			endeDatum = endeDatum.minusDays(1);
+		} while (result == null);
+
+		return result;
+	}
+
 	private LocalDateTime sucheSpaetestMoeglichesIntervallEnde() {
 
 		LocalDate endeDatum = ende.toLocalDate();
@@ -362,6 +384,14 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 
 		if (zeitpunkt.isBefore(ende) && zeitGrenzen.isEmpty()) {
 			return SystemkalenderGueltigkeit.unGueltig(SystemKalender.MIN_DATETIME, start);
+		}
+
+		if (!zeitpunkt.isBefore(ende)) {
+			if( zeitGrenzen.isEmpty()) {
+				return SystemkalenderGueltigkeit.gueltig(start,  ende);
+			}
+				
+			return SystemkalenderGueltigkeit.gueltig(sucheSpaetestMoeglichenIntervallStart(), sucheSpaetestMoeglichesIntervallEnde());
 		}
 
 		LocalDate datum = zeitpunkt.toLocalDate();
