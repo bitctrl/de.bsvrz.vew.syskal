@@ -49,8 +49,8 @@ import de.bsvrz.vew.syskal.internal.UndVerknuepfung;
 
 public class UndVerknuepfungTest {
 
-//	@Rule
-//	public Timeout globalTimeout = Timeout.seconds(5);
+	@Rule
+	public Timeout globalTimeout = Timeout.seconds(5);
 
 	private static TestKalenderEintragProvider provider;
 	private static UndVerknuepfung verknuepfung;
