@@ -42,8 +42,8 @@ public class ZustandsWechsel  {
 		}
 	};
 	
-	public static final ZustandsWechsel MIN = ZustandsWechsel.of(SystemKalender.MIN_DATETIME, false);
-	public static final ZustandsWechsel MAX = ZustandsWechsel.of(SystemKalender.MAX_DATETIME, false);
+//	public static final ZustandsWechsel MIN = ZustandsWechsel.of(SystemKalender.MIN_DATETIME, false);
+//	public static final ZustandsWechsel MAX = ZustandsWechsel.of(SystemKalender.MAX_DATETIME, false);
 	
 	private LocalDateTime zeitPunkt;
 	private boolean wirdGueltig;

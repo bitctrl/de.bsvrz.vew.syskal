@@ -28,6 +28,7 @@ package de.bsvrz.vew.syskal.internal;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Year;
 
 import de.bsvrz.vew.syskal.SystemKalender;
@@ -166,13 +167,12 @@ public class DatumsEintrag extends KalenderEintragImpl {
 		gueltig &= tag == zeitpunkt.getDayOfMonth();
 
 		if (gueltig) {
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuGueltig(zeitpunkt.toLocalDate()),
-					ZustandsWechsel.zuUnGueltig(zeitpunkt.toLocalDate().plusDays(1)));
+			return SystemkalenderGueltigkeit.gueltig(zeitpunkt.toLocalDate(), zeitpunkt.toLocalDate().plusDays(1));
 		}
 
 		LocalDate fruehestesDatum = LocalDate.of(jahr, monat, tag);
 		if (zeitpunkt.toLocalDate().isBefore(fruehestesDatum)) {
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.MIN, ZustandsWechsel.zuGueltig(fruehestesDatum));
+			return SystemkalenderGueltigkeit.unGueltig(SystemKalender.MIN_DATETIME, LocalDateTime.of(fruehestesDatum, LocalTime.MIDNIGHT));
 		}
 
 		LocalDate spaetestesDatum = LocalDate.of(endJahr, monat, tag).plusDays(1);
@@ -201,8 +201,7 @@ public class DatumsEintrag extends KalenderEintragImpl {
 				aktivierungsDatum = SystemKalender.MIN_DATETIME.toLocalDate();
 			}
 
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(aktivierungsDatum),
-					ZustandsWechsel.zuGueltig(wechselDatum));
+			return SystemkalenderGueltigkeit.unGueltig(aktivierungsDatum, wechselDatum);
 		}
 
 		return SystemkalenderGueltigkeit.NICHT_GUELTIG;
@@ -226,8 +225,7 @@ public class DatumsEintrag extends KalenderEintragImpl {
 				aktivierungsDatum = SystemKalender.MIN_DATETIME.toLocalDate();
 			}
 
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(aktivierungsDatum),
-					ZustandsWechsel.zuGueltig(wechselDatum));
+			return SystemkalenderGueltigkeit.unGueltig(aktivierungsDatum, wechselDatum);
 		}
 
 		if (zeitpunkt.toLocalDate().isBefore(fruehestesDatum)) {
@@ -252,11 +250,10 @@ public class DatumsEintrag extends KalenderEintragImpl {
 			LocalDate aktivierungsDatum = wechselDatum.minusDays(1);
 			if (aktivierungsDatum.isBefore(fruehestesDatum)) {
 				aktivierungsDatum = SystemKalender.MIN_DATETIME.toLocalDate();
-				return SystemkalenderGueltigkeit.of(ZustandsWechsel.MIN, ZustandsWechsel.zuUnGueltig(wechselDatum));
+				return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME), ZustandsWechsel.zuUnGueltig(wechselDatum));
 			}
 
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuGueltig(aktivierungsDatum),
-					ZustandsWechsel.zuUnGueltig(wechselDatum));
+			return SystemkalenderGueltigkeit.gueltig(aktivierungsDatum, wechselDatum);
 		}
 
 		return SystemkalenderGueltigkeit.NICHT_GUELTIG;

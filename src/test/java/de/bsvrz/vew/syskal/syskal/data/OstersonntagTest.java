@@ -45,7 +45,6 @@ import org.junit.rules.Timeout;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 import de.bsvrz.vew.syskal.internal.Ostersonntag;
 
 public class OstersonntagTest {

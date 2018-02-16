@@ -27,7 +27,6 @@
 package de.bsvrz.vew.syskal.internal;
 
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -118,7 +117,7 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 		do {
 			ZustandsWechsel wechsel = verweisWechsel.values().stream().min(ZustandsWechsel.ZEIT_COMPARATOR).get();
 			if( wechsel == null) {
-				return ZustandsWechsel.MAX;
+				return ZustandsWechsel.of(SystemKalender.MAX_DATETIME, !zielZustand);
 			}
 			
 			wechselZeit = wechsel.getZeitPunkt();
@@ -146,7 +145,7 @@ public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 		do {
 			ZustandsWechsel wechsel = verweisWechsel.values().stream().max(ZustandsWechsel.ZEIT_COMPARATOR).get();
 			if( wechsel == null) {
-				return ZustandsWechsel.MIN;
+				return ZustandsWechsel.of(SystemKalender.MIN_DATETIME, zielZustand);
 			}
 			
 			wechselZeit = wechsel.getZeitPunkt();

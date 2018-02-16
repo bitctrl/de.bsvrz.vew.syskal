@@ -120,7 +120,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 		do {
 			ZustandsWechsel wechsel = verweisWechsel.values().stream().min(ZustandsWechsel.ZEIT_COMPARATOR).get();
 			if( wechsel == null) {
-				return ZustandsWechsel.MAX;
+				return ZustandsWechsel.of(SystemKalender.MAX_DATETIME, !zielZustand);
 			}
 			
 			wechselZeit = wechsel.getZeitPunkt();
@@ -136,7 +136,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 			
 		} while (wechselZeit.isBefore(SystemKalender.MAX_DATETIME));
 		
-		return ZustandsWechsel.MAX;
+		return ZustandsWechsel.of(SystemKalender.MAX_DATETIME, !zielZustand);
 	}
 
 	private ZustandsWechsel berechneVorigenWechselAuf(boolean zielZustand,
@@ -149,7 +149,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 		do {
 			ZustandsWechsel wechsel = verweisWechsel.values().stream().max(ZustandsWechsel.ZEIT_COMPARATOR).get();
 			if( wechsel == null) {
-				return ZustandsWechsel.MIN;
+				return ZustandsWechsel.of(SystemKalender.MIN_DATETIME, zielZustand);
 			}
 			
 			wechselZeit = wechsel.getZeitPunkt();

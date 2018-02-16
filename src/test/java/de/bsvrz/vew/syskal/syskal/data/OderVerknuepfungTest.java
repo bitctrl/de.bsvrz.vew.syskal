@@ -45,12 +45,11 @@ import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 import de.bsvrz.vew.syskal.internal.OderVerknuepfung;
-import de.bsvrz.vew.syskal.internal.UndVerknuepfung;
 
 public class OderVerknuepfungTest {
 
-//	@Rule
-//	public Timeout globalTimeout = Timeout.seconds(5);
+	@Rule
+	public Timeout globalTimeout = Timeout.seconds(5);
 
 	private static TestKalenderEintragProvider provider;
 	private static OderVerknuepfung verknuepfung;
