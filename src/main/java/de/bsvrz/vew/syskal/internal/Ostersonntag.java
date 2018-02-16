@@ -69,20 +69,20 @@ public class Ostersonntag extends VorDefinierterEintrag {
 
 		if (gueltig) {
 			return SystemkalenderGueltigkeit.of(
-					ZustandsWechsel.of(zeitPunkt.toLocalDate(), true),
-					ZustandsWechsel.of(zeitPunkt.toLocalDate().plusDays(1), false));
+					ZustandsWechsel.zuGueltig(zeitPunkt.toLocalDate()),
+					ZustandsWechsel.zuUnGueltig(zeitPunkt.toLocalDate().plusDays(1)));
 		}
 
 		
 		if (checkDate.isBefore(osterDate)) {
 			return SystemkalenderGueltigkeit.of(
-					ZustandsWechsel.of(Ostersonntag.getDatumImJahr(checkDate.getYear() - 1).plusDays(1), false),
-					ZustandsWechsel.of(osterDate, true));
+					ZustandsWechsel.zuUnGueltig(Ostersonntag.getDatumImJahr(checkDate.getYear() - 1).plusDays(1)),
+					ZustandsWechsel.zuGueltig(osterDate));
 		}
 		
 		return SystemkalenderGueltigkeit.of(
-				ZustandsWechsel.of(osterDate.plusDays(1), false), 
-				ZustandsWechsel.of(Ostersonntag.getDatumImJahr(checkDate.getYear() + 1), true));
+				ZustandsWechsel.zuUnGueltig(osterDate.plusDays(1)), 
+				ZustandsWechsel.zuGueltig(Ostersonntag.getDatumImJahr(checkDate.getYear() + 1)));
 	}
 
 	@Override
@@ -100,18 +100,18 @@ public class Ostersonntag extends VorDefinierterEintrag {
 
 		if (gueltig) {
 			return SystemkalenderGueltigkeit.of(
-					ZustandsWechsel.of(osterDatumVorjahr.plusDays(1), false),
-					ZustandsWechsel.of(osterDatum, true));
+					ZustandsWechsel.zuUnGueltig(osterDatumVorjahr.plusDays(1)),
+					ZustandsWechsel.zuGueltig(osterDatum));
 		}
 
 		if (zeitPunkt.toLocalDate().isBefore(osterDatum)) {
 			return SystemkalenderGueltigkeit.of(
-					ZustandsWechsel.of(osterDatumVorjahr, true),
-					ZustandsWechsel.of(osterDatumVorjahr.plusDays(1), false));
+					ZustandsWechsel.zuGueltig(osterDatumVorjahr),
+					ZustandsWechsel.zuUnGueltig(osterDatumVorjahr.plusDays(1)));
 		}
 		
 		return SystemkalenderGueltigkeit.of(
-				ZustandsWechsel.of(osterDatum, true), 
-				ZustandsWechsel.of(osterDatum.plusDays(1), false));
+				ZustandsWechsel.zuGueltig(osterDatum), 
+				ZustandsWechsel.zuUnGueltig(osterDatum.plusDays(1)));
 	}
 }

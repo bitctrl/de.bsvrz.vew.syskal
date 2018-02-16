@@ -49,15 +49,6 @@ public class TestSyskalOffline8 {
 
 		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Montag", "Montag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Dienstag", "Dienstag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Mittwoch", "Mittwoch"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Freitag", "Freitag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Samstag", "Samstag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Sonntag", "Sonntag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Tag", "Tag"));
 		eintragsProvider
 				.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ferien1", "Ferien1:=<30.07.2015-12.09.2015>"));
 		eintragsProvider

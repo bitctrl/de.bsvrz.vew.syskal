@@ -163,16 +163,16 @@ public class VorDefinierterEintrag extends KalenderEintragImpl {
 
 		LocalDate checkDate = zeitPunkt.toLocalDate();
 		if (gueltig) {
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(checkDate, true),
-					ZustandsWechsel.of(checkDate.plusDays(1), false));
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuGueltig(checkDate),
+					ZustandsWechsel.zuUnGueltig(checkDate.plusDays(1)));
 		}
 
 		while (checkDate.getDayOfWeek() != dayOfWeek) {
 			checkDate = checkDate.plusDays(1);
 		}
 
-		return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(checkDate.minusDays(6), false),
-				ZustandsWechsel.of(checkDate, true));
+		return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(checkDate.minusDays(6)),
+				ZustandsWechsel.zuGueltig(checkDate));
 	}
 
 	@Override
@@ -182,16 +182,16 @@ public class VorDefinierterEintrag extends KalenderEintragImpl {
 
 		LocalDate checkDate = zeitPunkt.toLocalDate();
 		if (gueltig) {
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(checkDate.minusDays(6), false),
-					ZustandsWechsel.of(checkDate, true));
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(checkDate.minusDays(6)),
+					ZustandsWechsel.zuGueltig(checkDate));
 		}
 
 		while (checkDate.getDayOfWeek() != dayOfWeek) {
 			checkDate = checkDate.minusDays(1);
 		}
 
-		return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(checkDate, true),
-				ZustandsWechsel.of(checkDate.plusDays(1), false));
+		return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuGueltig(checkDate),
+				ZustandsWechsel.zuUnGueltig(checkDate.plusDays(1)));
 	}
 
 	@Override

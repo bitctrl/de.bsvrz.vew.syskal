@@ -172,7 +172,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 			
 		} while (wechselZeit.isAfter(SystemKalender.MIN_DATETIME));
 		
-		return ZustandsWechsel.MIN;
+		return ZustandsWechsel.of(SystemKalender.MIN_DATETIME, zielZustand);
 	}
 	
 	private boolean pruefeGueltigKeit(LocalDateTime wechselZeit, boolean zielZustand) {

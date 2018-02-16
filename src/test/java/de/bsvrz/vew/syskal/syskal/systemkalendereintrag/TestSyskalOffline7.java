@@ -48,15 +48,6 @@ public class TestSyskalOffline7 {
 
 		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Montag", "Montag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Dienstag", "Dienstag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Mittwoch", "Mittwoch"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Freitag", "Freitag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Samstag", "Samstag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Sonntag", "Sonntag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Tag", "Tag"));
 		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Neujahr", "Neujahr:=01.01.*,*"));
 		eintragsProvider.addEintrag(
 				KalenderEintragImpl.parse(eintragsProvider, "Karfreitag", "Karfreitag:=Ostersonntag-2Tage"));

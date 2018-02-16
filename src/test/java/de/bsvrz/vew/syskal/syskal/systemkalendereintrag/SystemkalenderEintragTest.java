@@ -56,15 +56,6 @@ public class SystemkalenderEintragTest {
 	public static void setUpBeforeClass() throws Exception {
 		eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Montag", "Montag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Dienstag", "Dienstag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Mittwoch", "Mittwoch"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Freitag", "Freitag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Samstag", "Samstag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Sonntag", "Sonntag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Tag", "Tag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
 		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Bereich1",
 				"Bereich1:=<01.01.2008 00:00:00,000-31.01.2008 23:59:59,999>"));
 		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Bereich2",

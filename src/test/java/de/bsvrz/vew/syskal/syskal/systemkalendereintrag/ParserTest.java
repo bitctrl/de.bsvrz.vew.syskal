@@ -55,15 +55,6 @@ public class ParserTest {
 
 		eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Montag", "Montag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Dienstag", "Dienstag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Mittwoch", "Mittwoch"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Freitag", "Freitag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Samstag", "Samstag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Sonntag", "Sonntag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Tag", "Tag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
 		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Bereich1",
 				"Bereich1:=<01.01.2008 00:00:00,000-31.01.2008 23:59:59,999>"));
 		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Bereich2",
@@ -72,7 +63,6 @@ public class ParserTest {
 				KalenderEintragImpl.parse(eintragsProvider, "Bereich3", "Bereich3:=<15.01.2008-15.02.2008>"));
 		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Bereich4",
 				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})"));
-
 	}
 
 	private KalenderEintragImpl ergaenzeEintrag(String name, String definition) {

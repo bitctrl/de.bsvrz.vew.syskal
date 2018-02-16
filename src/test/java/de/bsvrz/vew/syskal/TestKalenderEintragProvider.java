@@ -35,6 +35,17 @@ import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 public final class TestKalenderEintragProvider implements KalenderEintragProvider {
 	Map<String, KalenderEintragImpl> eintraege = new LinkedHashMap<>();
 
+	public TestKalenderEintragProvider() {
+		addEintrag(KalenderEintragImpl.parse(this, "Montag", "Montag"));
+		addEintrag(KalenderEintragImpl.parse(this, "Dienstag", "Dienstag"));
+		addEintrag(KalenderEintragImpl.parse(this, "Mittwoch", "Mittwoch"));
+		addEintrag(KalenderEintragImpl.parse(this, "Donnerstag", "Donnerstag"));
+		addEintrag(KalenderEintragImpl.parse(this, "Freitag", "Freitag"));
+		addEintrag(KalenderEintragImpl.parse(this, "Samstag", "Samstag"));
+		addEintrag(KalenderEintragImpl.parse(this, "Sonntag", "Sonntag"));
+		addEintrag(KalenderEintragImpl.parse(this, "Ostersonntag", "Ostersonntag"));
+	}
+	
 	@Override
 	public KalenderEintragImpl getKalenderEintrag(String name) {
 		return eintraege.get(name);

@@ -59,8 +59,6 @@ public class OderVerknuepfungTest {
 	@BeforeClass
 	public static void init() {
 		provider = new TestKalenderEintragProvider();
-		provider.parseAndAdd(provider, "Montag", "Montag");
-		provider.parseAndAdd(provider, "Mittwoch", "Mittwoch");
 		verknuepfung = (OderVerknuepfung) provider.parseAndAdd(provider, "MontagOderMittwoch", "ODER{Montag, Mittwoch}");
 
 		testMontag = LocalDate.of(2018, 12, 24);
@@ -183,7 +181,6 @@ public class OderVerknuepfungTest {
 				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
 	}
 
-
 	@Test
 	public void testeGueltigkeitDonnerstag() {
 
@@ -207,13 +204,13 @@ public class OderVerknuepfungTest {
 	public void testeGueltigkeitVorSonntag() {
 
 		LocalDateTime testDatum = LocalDateTime.of(testMontag.minusDays(1), LocalTime.NOON);
-		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeit(testDatum);
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeitVor(testDatum);
 
 		assertTrue(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(testMontag.minusDays(5), LocalTime.MIDNIGHT),
 				gueltigKeit.getErsterWechsel().getZeitPunkt());
 		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(testMontag.minusDays(2), LocalTime.MIDNIGHT),
+		assertEquals(LocalDateTime.of(testMontag.minusDays(4), LocalTime.MIDNIGHT),
 				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
 	}
 
@@ -221,7 +218,7 @@ public class OderVerknuepfungTest {
 	public void testeGueltigkeitVorMontagBeginn() {
 
 		LocalDateTime testDatum = LocalDateTime.of(testMontag, LocalTime.MIDNIGHT);
-		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeit(testDatum);
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeitVor(testDatum);
 
 		assertFalse(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(testMontag.minusDays(4), LocalTime.MIDNIGHT),
@@ -235,7 +232,7 @@ public class OderVerknuepfungTest {
 	public void testeGueltigkeitVorMontagMittag() {
 
 		LocalDateTime testDatum = LocalDateTime.of(testMontag, LocalTime.NOON);
-		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeit(testDatum);
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeitVor(testDatum);
 
 		assertFalse(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(testMontag.minusDays(4), LocalTime.MIDNIGHT),
@@ -249,7 +246,7 @@ public class OderVerknuepfungTest {
 	public void testeGueltigkeitVorMontagEnde() {
 
 		LocalDateTime testDatum = LocalDateTime.of(testMontag.plusDays(1), LocalTime.MIDNIGHT);
-		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeit(testDatum);
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeitVor(testDatum);
 
 		assertTrue(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(testMontag, LocalTime.MIDNIGHT),
@@ -263,7 +260,7 @@ public class OderVerknuepfungTest {
 	public void testeGueltigkeitVorDienstag() {
 
 		LocalDateTime testDatum = LocalDateTime.of(testMontag.plusDays(1), LocalTime.NOON);
-		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeit(testDatum);
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeitVor(testDatum);
 
 		assertTrue(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(testMontag, LocalTime.MIDNIGHT),
@@ -278,7 +275,7 @@ public class OderVerknuepfungTest {
 	public void testeGueltigkeitVorMittwochBeginn() {
 
 		LocalDateTime testDatum = LocalDateTime.of(testMontag.plusDays(2), LocalTime.MIDNIGHT);
-		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeit(testDatum);
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeitVor(testDatum);
 
 		assertFalse(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(testMontag.plusDays(1), LocalTime.MIDNIGHT),
@@ -292,7 +289,7 @@ public class OderVerknuepfungTest {
 	public void testeGueltigkeitVorMittwochMittag() {
 
 		LocalDateTime testDatum = LocalDateTime.of(testMontag.plusDays(2), LocalTime.NOON);
-		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeit(testDatum);
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeitVor(testDatum);
 
 		assertFalse(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(testMontag.plusDays(1), LocalTime.MIDNIGHT),
@@ -306,7 +303,7 @@ public class OderVerknuepfungTest {
 	public void testeGueltigkeitVorMittwochEnde() {
 
 		LocalDateTime testDatum = LocalDateTime.of(testMontag.plusDays(3), LocalTime.MIDNIGHT);
-		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeit(testDatum);
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeitVor(testDatum);
 
 		assertTrue(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(testMontag.plusDays(2), LocalTime.MIDNIGHT),
@@ -321,7 +318,7 @@ public class OderVerknuepfungTest {
 	public void testeGueltigkeitVorDonnerstag() {
 
 		LocalDateTime testDatum = LocalDateTime.of(testMontag.plusDays(3), LocalTime.NOON);
-		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeit(testDatum);
+		SystemkalenderGueltigkeit gueltigKeit = verknuepfung.getZeitlicheGueltigkeitVor(testDatum);
 
 		assertTrue(gueltigKeit.isZeitlichGueltig());
 		assertEquals(LocalDateTime.of(testMontag.plusDays(2), LocalTime.MIDNIGHT),
@@ -366,45 +363,4 @@ public class OderVerknuepfungTest {
 		List<ZustandsWechsel> zustandsWechselImBereich = verknuepfung.getZustandsWechsel(start, ende);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechselImBereich);
 	}
-	
-	@Test
-	public void testeGueltigkeitVor() {
-
-		LocalDateTime abfrageZeitpunkt = LocalDateTime.of(testMontag, LocalTime.MIDNIGHT);
-		SystemkalenderGueltigkeit gueltigkeit = verknuepfung.getZeitlicheGueltigkeitVor(abfrageZeitpunkt);
-		assertTrue(gueltigkeit.getErsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 17), LocalTime.of(11,30)), gueltigkeit.getErsterWechsel().getZeitPunkt());
-		assertFalse(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 17), LocalTime.of(13,30)), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
-
-		abfrageZeitpunkt = LocalDateTime.of(testMontag, LocalTime.of(11,30));
-		gueltigkeit = verknuepfung.getZeitlicheGueltigkeitVor(abfrageZeitpunkt);
-		assertFalse(gueltigkeit.getErsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 17), LocalTime.of(13,30)), gueltigkeit.getErsterWechsel().getZeitPunkt());
-		assertTrue(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11,30)), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
-
-		abfrageZeitpunkt = LocalDateTime.of(testMontag, LocalTime.NOON);
-		gueltigkeit = verknuepfung.getZeitlicheGueltigkeitVor(abfrageZeitpunkt);
-		assertFalse(gueltigkeit.getErsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 17), LocalTime.of(13,30)), gueltigkeit.getErsterWechsel().getZeitPunkt());
-		assertTrue(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11,30)), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
-
-		abfrageZeitpunkt = LocalDateTime.of(testMontag, LocalTime.of(13,30));
-		gueltigkeit = verknuepfung.getZeitlicheGueltigkeitVor(abfrageZeitpunkt);
-		assertTrue(gueltigkeit.getErsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11,30)), gueltigkeit.getErsterWechsel().getZeitPunkt());
-		assertFalse(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(13,30)), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
-
-		abfrageZeitpunkt = LocalDateTime.of(2018, 12, 24, 15, 0);
-		gueltigkeit = verknuepfung.getZeitlicheGueltigkeitVor(abfrageZeitpunkt);
-		assertTrue(gueltigkeit.getErsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(11,30)), gueltigkeit.getErsterWechsel().getZeitPunkt());
-		assertFalse(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(LocalDate.of(2018, 12, 24), LocalTime.of(13,30)), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
-	}
-
-	
 }

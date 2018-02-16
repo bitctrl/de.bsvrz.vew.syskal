@@ -50,7 +50,6 @@ public class TestSyskalOffline {
 
 		eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Montag", "Montag"));
 		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Berufsverkehr",
 				"Berufsverkehr:=({07:00:00,000-11:00:00,000}{15:00:00,000-18:00:00,000})"));
 
@@ -61,7 +60,6 @@ public class TestSyskalOffline {
 		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "GeburtstagHCKFeierKopie",
 				"GeburtstagHCKFeierKopie:=GeburtstagHCK-3Tage"));
 
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Dienstag", "Dienstag"));
 		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "DienstagAlsVerknüpfung",
 				"DienstagAlsVerknüpfung:=UND{Dienstag}*,*"));
 	}

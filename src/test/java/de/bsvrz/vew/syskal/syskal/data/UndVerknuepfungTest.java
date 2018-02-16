@@ -59,7 +59,6 @@ public class UndVerknuepfungTest {
 	@BeforeClass
 	public static void init() {
 		provider = new TestKalenderEintragProvider();
-		provider.parseAndAdd(provider, "Montag", "Montag");
 		provider.parseAndAdd(provider, "Mittags", "Mittags:=({11:30:00,000-13:30:00,000})");
 		verknuepfung = (UndVerknuepfung) provider.parseAndAdd(provider, "MontagMittag", "UND{Montag, Mittags}");
 

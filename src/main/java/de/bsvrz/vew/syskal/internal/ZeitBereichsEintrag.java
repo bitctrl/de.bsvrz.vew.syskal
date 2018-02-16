@@ -242,12 +242,12 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 		}
 
 		if (zeitpunkt.isBefore(start)) {
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(SystemKalender.MIN_DATETIME, false),
-					ZustandsWechsel.of(sucheFruehestMoeglichenIntervallStart(), true));
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME),
+					ZustandsWechsel.zuGueltig(sucheFruehestMoeglichenIntervallStart()));
 		}
 
 		if (!zeitpunkt.isBefore(ende)) {
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(sucheSpaetestMoeglichesIntervallEnde(), false),
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(sucheSpaetestMoeglichesIntervallEnde()),
 					ZustandsWechsel.MAX);
 		}
 
@@ -260,8 +260,8 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 
 			if (abfrageZeit.equals(grenze.getStart())) {
 				return SystemkalenderGueltigkeit.of(
-						ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getStart()), true),
-						ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getEnde()), false));
+						ZustandsWechsel.zuGueltig(LocalDateTime.of(datum, grenze.getStart())),
+						ZustandsWechsel.zuUnGueltig(LocalDateTime.of(datum, grenze.getEnde())));
 			}
 			if (abfrageZeit.isBefore(grenze.getStart())) {
 				LocalDateTime aktivierungsZeit;
@@ -275,14 +275,14 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 				if (aktivierungsZeit.isBefore(start)) {
 					aktivierungsZeit = SystemKalender.MIN_DATETIME;
 				}
-				return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsZeit, false),
-						ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getStart()), true));
+				return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(aktivierungsZeit),
+						ZustandsWechsel.zuGueltig(LocalDateTime.of(datum, grenze.getStart())));
 			}
 
 			if (abfrageZeit.isBefore(grenze.getEnde())) {
 				return SystemkalenderGueltigkeit.of(
-						ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getStart()), true),
-						ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getEnde()), false));
+						ZustandsWechsel.zuGueltig(LocalDateTime.of(datum, grenze.getStart())),
+						ZustandsWechsel.zuUnGueltig(LocalDateTime.of(datum, grenze.getEnde())));
 			}
 
 			letzteGrenze = grenze;
@@ -295,8 +295,8 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 		if (ende != null && wechselZeit.isAfter(ende)) {
 			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
 		}
-		return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsZeit, false),
-				ZustandsWechsel.of(wechselZeit, true));
+		return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(aktivierungsZeit),
+				ZustandsWechsel.zuGueltig(wechselZeit));
 	}
 
 	private LocalDateTime sucheSpaetestMoeglichesIntervallEnde() {
@@ -344,15 +344,15 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 	private SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitFuerReinenZeitbereich(LocalDateTime zeitpunkt) {
 
 		if (zeitpunkt.isBefore(start)) {
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(SystemKalender.MIN_DATETIME, false),
-					ZustandsWechsel.of(start, true));
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME),
+					ZustandsWechsel.zuGueltig(start));
 		}
 
 		if (!zeitpunkt.isBefore(ende)) {
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(ende, false), ZustandsWechsel.MAX);
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(ende), ZustandsWechsel.MAX);
 		}
 
-		return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(start, true), ZustandsWechsel.of(ende, false));
+		return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuGueltig(start), ZustandsWechsel.zuUnGueltig(ende));
 	}
 
 	@Override
@@ -365,7 +365,7 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 		}
 
 		if (zeitpunkt.isBefore(ende) && zeitGrenzen.isEmpty()) {
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.MIN, ZustandsWechsel.of(start, true));
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.MIN, ZustandsWechsel.zuGueltig(start));
 		}
 
 		LocalDate datum = zeitpunkt.toLocalDate();
@@ -390,8 +390,8 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 				if (wechselZeit.isBefore(start)) {
 					return SystemkalenderGueltigkeit.NICHT_GUELTIG;
 				}
-				return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsZeit, false),
-						ZustandsWechsel.of(wechselZeit, true));
+				return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(aktivierungsZeit),
+						ZustandsWechsel.zuGueltig(wechselZeit));
 			}
 
 			if (abfrageZeit.isBefore(grenze.getStart())) {
@@ -409,8 +409,8 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 					aktivierungsZeit = LocalDateTime.of(datum.minusDays(1),
 							zeitGrenzen.get(zeitGrenzen.size() - 1).getStart());
 				}
-				return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsZeit, true),
-						ZustandsWechsel.of(wechselZeit, false));
+				return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuGueltig(aktivierungsZeit),
+						ZustandsWechsel.zuUnGueltig(wechselZeit));
 			}
 
 			if (abfrageZeit.isBefore(grenze.getEnde())) {
@@ -421,8 +421,8 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 					aktivierungsZeit = LocalDateTime.of(datum.minusDays(1),
 							zeitGrenzen.get(zeitGrenzen.size() - 1).getEnde());
 				}
-				return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsZeit, false),
-						ZustandsWechsel.of(LocalDateTime.of(datum, grenze.getStart()), true));
+				return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(aktivierungsZeit),
+						ZustandsWechsel.zuGueltig(LocalDateTime.of(datum, grenze.getStart())));
 			}
 
 			letzteGrenze = grenze;
@@ -449,8 +449,8 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 			}
 		}
 		
-		return SystemkalenderGueltigkeit.of(ZustandsWechsel.of(aktivierungsZeit, true),
-				ZustandsWechsel.of(wechselZeit, false));
+		return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuGueltig(aktivierungsZeit),
+				ZustandsWechsel.zuUnGueltig(wechselZeit));
 	}
 
 	@Override

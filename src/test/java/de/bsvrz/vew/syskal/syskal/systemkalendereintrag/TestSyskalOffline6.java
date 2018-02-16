@@ -48,7 +48,6 @@ public class TestSyskalOffline6 {
 
 		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Montag", "Montag"));
 		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "TestSKE", "TestSKE:=Montag+1Tag"));
 
 		KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("TestSKE");

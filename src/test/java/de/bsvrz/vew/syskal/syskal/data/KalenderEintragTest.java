@@ -44,8 +44,8 @@ import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class KalenderEintragTest {
 
-	@Rule
-	public Timeout globalTimeout = Timeout.seconds(5);
+//	@Rule
+//	public Timeout globalTimeout = Timeout.seconds(5);
 	
 	private static TestKalenderEintragProvider provider;
 
@@ -53,15 +53,6 @@ public class KalenderEintragTest {
 	public static void setUpBeforeClass() throws Exception {
 		provider = new TestKalenderEintragProvider();
 
-		provider.addEintrag(KalenderEintragImpl.parse(provider, "Montag", "Montag"));
-		provider.addEintrag(KalenderEintragImpl.parse(provider, "Dienstag", "Dienstag"));
-		provider.addEintrag(KalenderEintragImpl.parse(provider, "Mittwoch", "Mittwoch"));
-		provider.addEintrag(KalenderEintragImpl.parse(provider, "Donnerstag", "Donnerstag"));
-		provider.addEintrag(KalenderEintragImpl.parse(provider, "Freitag", "Freitag"));
-		provider.addEintrag(KalenderEintragImpl.parse(provider, "Samstag", "Samstag"));
-		provider.addEintrag(KalenderEintragImpl.parse(provider, "Sonntag", "Sonntag"));
-		provider.addEintrag(KalenderEintragImpl.parse(provider, "Tag", "Tag"));
-		provider.addEintrag(KalenderEintragImpl.parse(provider, "Ostersonntag", "Ostersonntag"));
 		provider.addEintrag(KalenderEintragImpl.parse(provider, "Bereich1",
 				"Bereich1:=<01.01.2008 00:00:00,000-31.01.2008 23:59:59,999>"));
 		provider.addEintrag(KalenderEintragImpl.parse(provider, "Bereich2",
@@ -139,8 +130,5 @@ public class KalenderEintragTest {
 		assertEquals(LocalDateTime.of(2018,2,12,0,0), gueltigkeit.getErsterWechsel().getZeitPunkt());
 		assertFalse(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
 		assertEquals(LocalDateTime.of(2018,2,17,0,0), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
-		
 	}
-
-	
 }

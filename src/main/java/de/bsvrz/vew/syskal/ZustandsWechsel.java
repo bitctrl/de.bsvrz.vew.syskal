@@ -48,22 +48,34 @@ public class ZustandsWechsel  {
 	private LocalDateTime zeitPunkt;
 	private boolean wirdGueltig;
 
-	public static ZustandsWechsel of(LocalDate datum, boolean wirdGueltig) {
-		ZustandsWechsel zustandsWechsel = new ZustandsWechsel();
-		zustandsWechsel.zeitPunkt = LocalDateTime.of(datum, LocalTime.MIDNIGHT);
-		zustandsWechsel.wirdGueltig = wirdGueltig;
-		return zustandsWechsel;
+	public static ZustandsWechsel zuGueltig(LocalDate datum) {
+		return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), true);
+	}
+
+	public static ZustandsWechsel zuGueltig(LocalDateTime zeitPunkt) {
+		return new ZustandsWechsel(zeitPunkt, true);
+	}
+
+	public static ZustandsWechsel zuUnGueltig(LocalDate datum) {
+		return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), false);
+	}
+
+	public static ZustandsWechsel zuUnGueltig(LocalDateTime zeitPunkt) {
+		return new ZustandsWechsel(zeitPunkt, false);
 	}
 	
 	public static ZustandsWechsel of(LocalDateTime zeitPunkt, boolean wirdGueltig) {
-		ZustandsWechsel zustandsWechsel = new ZustandsWechsel();
-		zustandsWechsel.zeitPunkt = zeitPunkt;
-		zustandsWechsel.wirdGueltig = wirdGueltig;
-		return zustandsWechsel;
+		return new ZustandsWechsel(zeitPunkt, wirdGueltig);
 	}
 	
-	private ZustandsWechsel() {
-		// Objekt wird nur per 'of' erzeugt
+	public static ZustandsWechsel oof(LocalDate datum, boolean wirdGueltig) {
+		return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), wirdGueltig);
+	}
+	
+	
+	private ZustandsWechsel(LocalDateTime zeitPunkt, boolean wirdGueltig) {
+		this.zeitPunkt = zeitPunkt;
+		this.wirdGueltig = wirdGueltig;
 	}
 	
 	public LocalDateTime getZeitPunkt() {
