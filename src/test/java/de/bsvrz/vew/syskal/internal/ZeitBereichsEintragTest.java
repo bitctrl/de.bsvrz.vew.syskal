@@ -38,94 +38,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
-import de.bsvrz.vew.syskal.SystemKalender;
-import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class ZeitBereichsEintragTest {
-
+	
 	@Rule
 	public Timeout globalTimeout = Timeout.seconds(5);
-
-	@Test
-	public void testeGueltigkeit() {
-
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		ZeitBereichsEintrag bereich4 = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Bereich4",
-				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
-
-		SystemkalenderGueltigkeit gueltigKeit = bereich4.getZeitlicheGueltigkeit(LocalDateTime.of(2008, 1, 30, 12, 10));
-
-		assertFalse(gueltigKeit.isZeitlichGueltig());
-		assertEquals(LocalDateTime.of(2008, 1, 30, 11, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
-				gueltigKeit.getErsterWechsel().getZeitPunkt());
-		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(2008, 1, 30, 15, 30), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-	}
-
-	@Test
-	public void testeGueltigkeitImBereich() {
-
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		ZeitBereichsEintrag bereich4 = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Bereich4",
-				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
-
-		SystemkalenderGueltigkeit gueltigKeit = bereich4.getZeitlicheGueltigkeit(LocalDateTime.of(2008, 1, 30, 10, 10));
-
-		assertTrue(gueltigKeit.isZeitlichGueltig());
-		assertEquals(LocalDateTime.of(2008, 1, 30, 9, 0), gueltigKeit.getErsterWechsel().getZeitPunkt());
-		assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(2008, 1, 30, 11, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
-				gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-	}
-
-	@Test
-	public void testeGueltigkeitVorDemBereich() {
-
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		ZeitBereichsEintrag bereich4 = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Bereich4",
-				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
-
-		SystemkalenderGueltigkeit gueltigKeit = bereich4.getZeitlicheGueltigkeit(LocalDateTime.of(2008, 1, 1, 14, 10));
-
-		assertFalse(gueltigKeit.isZeitlichGueltig());
-		assertEquals(SystemKalender.MIN_DATETIME, gueltigKeit.getErsterWechsel().getZeitPunkt());
-		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(2008, 1, 15, 9, 0), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-	}
-
-	@Test
-	public void testeGueltigkeitVorDemBereichAmAnfangsTag() {
-
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		ZeitBereichsEintrag bereich4 = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Bereich4",
-				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
-
-		SystemkalenderGueltigkeit gueltigKeit = bereich4.getZeitlicheGueltigkeit(LocalDateTime.of(2008, 1, 15, 8, 0));
-
-		assertFalse(gueltigKeit.isZeitlichGueltig());
-		assertEquals(SystemKalender.MIN_DATETIME, gueltigKeit.getErsterWechsel().getZeitPunkt());
-		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(2008, 1, 15, 9, 0), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-	}
-
-	@Test
-	public void testeGueltigkeitAmAnfangsTagZwischenBereichen() {
-
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		ZeitBereichsEintrag bereich4 = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Bereich4",
-				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
-
-		SystemkalenderGueltigkeit gueltigKeit = bereich4.getZeitlicheGueltigkeit(LocalDateTime.of(2008, 1, 15, 13, 0));
-
-		assertFalse(gueltigKeit.isZeitlichGueltig());
-		assertEquals(LocalDateTime.of(2008, 1, 15, 11, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
-				gueltigKeit.getErsterWechsel().getZeitPunkt());
-		assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(2008, 1, 15, 15, 30), gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-	}
 
 	@Test
 	public void testeZustandswechsel() {

@@ -296,7 +296,6 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 		return SystemkalenderGueltigkeit.unGueltig(aktivierungsZeit, wechselZeit);
 	}
 
-
 	private LocalDateTime sucheSpaetestMoeglichenIntervallStart() {
 
 		LocalDate endeDatum = ende.toLocalDate();
@@ -344,8 +343,13 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 		LocalDate startDatum = start.toLocalDate();
 		LocalDateTime result = null;
 
+		List<ZeitGrenze> zeitGrenzen = getZeitGrenzen();
+		if( zeitGrenzen.isEmpty()) {
+			return start;
+		}
+		
 		do {
-			for (ZeitGrenze grenze : getZeitGrenzen()) {
+			for (ZeitGrenze grenze : zeitGrenzen) {
 				result = LocalDateTime.of(startDatum, grenze.getStart());
 				if (result.isBefore(start)) {
 					result = null;
@@ -367,7 +371,8 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 		}
 
 		if (!zeitpunkt.isBefore(ende)) {
-			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(ende), ZustandsWechsel.zuUnGueltig(SystemKalender.MAX_DATETIME));
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(ende),
+					ZustandsWechsel.zuUnGueltig(SystemKalender.MAX_DATETIME));
 		}
 
 		return SystemkalenderGueltigkeit.gueltig(start, ende);
@@ -377,9 +382,11 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 	protected SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
 
 		List<ZeitGrenze> zeitGrenzen = getZeitGrenzen();
-
-		if (zeitpunkt.isBefore(start)) {
-			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+		LocalDateTime fruehesterStart = sucheFruehestMoeglichenIntervallStart();
+		
+		if (zeitpunkt.isBefore(fruehesterStart)) {
+			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME),
+					ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME));
 		}
 
 		if (zeitpunkt.isBefore(ende) && zeitGrenzen.isEmpty()) {
@@ -387,11 +394,12 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 		}
 
 		if (!zeitpunkt.isBefore(ende)) {
-			if( zeitGrenzen.isEmpty()) {
-				return SystemkalenderGueltigkeit.gueltig(start,  ende);
+			if (zeitGrenzen.isEmpty()) {
+				return SystemkalenderGueltigkeit.gueltig(start, ende);
 			}
-				
-			return SystemkalenderGueltigkeit.gueltig(sucheSpaetestMoeglichenIntervallStart(), sucheSpaetestMoeglichesIntervallEnde());
+
+			return SystemkalenderGueltigkeit.gueltig(sucheSpaetestMoeglichenIntervallStart(),
+					sucheSpaetestMoeglichesIntervallEnde());
 		}
 
 		LocalDate datum = zeitpunkt.toLocalDate();

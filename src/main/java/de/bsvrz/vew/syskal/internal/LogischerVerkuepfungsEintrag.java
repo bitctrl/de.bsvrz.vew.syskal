@@ -27,21 +27,22 @@
 package de.bsvrz.vew.syskal.internal;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 
 /**
- * Repräsentation der Daten eines {@link KalenderEintragImpl}, der durch die
+ * Repräsentation der Daten eines {@link KalenderEintrag}, der durch die
  * logische Verknüpfung mehrerer anderer Einträge definiert wird.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public abstract class LogischerVerkuepfungsEintrag extends
-		KalenderEintragImpl {
+public abstract class LogischerVerkuepfungsEintrag extends KalenderEintragImpl {
 
 	/** die Liste der Verweise, die den Eintrag definieren. */
 	private final List<VerweisEintrag> verweise = new ArrayList<>();
@@ -72,8 +73,7 @@ public abstract class LogischerVerkuepfungsEintrag extends
 		if (definition != null) {
 			String rest = definition;
 
-			final Matcher mat = KalenderEintragImpl.ZEITBEREICH_PATTERN
-					.matcher(rest);
+			final Matcher mat = KalenderEintragImpl.ZEITBEREICH_PATTERN.matcher(rest);
 			while (mat.find()) {
 				String elemente = mat.group();
 				rest = rest.replace(elemente, "").trim();
@@ -85,6 +85,8 @@ public abstract class LogischerVerkuepfungsEintrag extends
 						setFehler(verweis.isUngueltig() | isFehler());
 						verweise.add(new VerweisEintrag(verweis));
 					} catch (final ParseException e) {
+						Debug.getLogger().warning(
+								"Fehler beim Parsen des Kalendereintrags: " + name + ": " + e.getLocalizedMessage());
 						setFehler(true);
 					}
 				}
@@ -94,13 +96,20 @@ public abstract class LogischerVerkuepfungsEintrag extends
 				setFehler(true);
 			}
 
+			scanJahresBereich(name, rest);
+		}
+	}
+
+	private void scanJahresBereich(final String name, String rest) {
+		if (!rest.isEmpty()) {
 			final String[] parts = rest.split(",");
 			if (parts.length > 0) {
 				if (!"*".equals(parts[0].trim())) {
 					try {
 						startJahr = Integer.parseInt(parts[0]);
 					} catch (final NumberFormatException e) {
-						Debug.getLogger().finest(e.getLocalizedMessage());
+						Debug.getLogger().warning("Fehler beim Parsen des Kalendereintrags: " + name + ": "
+								+ e.getLocalizedMessage());
 						// Jahr wird als nicht gesetzt angenommen
 					}
 				}
@@ -110,7 +119,8 @@ public abstract class LogischerVerkuepfungsEintrag extends
 					try {
 						endJahr = Integer.parseInt(parts[1]);
 					} catch (final NumberFormatException e) {
-						Debug.getLogger().finest(e.getLocalizedMessage());
+						Debug.getLogger().warning("Fehler beim Parsen des Kalendereintrags: " + name + ": "
+								+ e.getLocalizedMessage());
 						// Jahr wird als nicht gesetzt angenommen
 					}
 				}
@@ -124,8 +134,8 @@ public abstract class LogischerVerkuepfungsEintrag extends
 	}
 
 	/**
-	 * liefert das optional beschränkende Endjahr. 0 steht für ein
-	 * unbeschränktes Ende.
+	 * liefert das optional beschränkende Endjahr. 0 steht für ein unbeschränktes
+	 * Ende.
 	 * 
 	 * @return das Jahr
 	 */
@@ -209,14 +219,26 @@ public abstract class LogischerVerkuepfungsEintrag extends
 
 		return buffer.toString();
 	}
-	
+
 	@Override
 	boolean benutzt(SystemKalenderEintrag referenz) {
-		for( VerweisEintrag verweis : verweise) {
-			if( verweis.getVerweis().getName().equals(referenz.getName())) {
+		for (VerweisEintrag verweis : verweise) {
+			if (verweis.getVerweis().getName().equals(referenz.getName())) {
 				return true;
 			}
 		}
 		return false;
 	}
+	
+	
+	boolean isErlaubteWechselZeit(LocalDateTime wechselZeit) {
+		if( startJahr > 0 && wechselZeit.getYear() < startJahr) {
+			return false;
+		}
+		if( endJahr > 0 && wechselZeit.getYear() > endJahr) {
+			return false;
+		}
+		return true;
+	}
+
 }

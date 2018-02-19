@@ -66,7 +66,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 	@Override
 	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
 
-		boolean zustand = true;
+		boolean zustand = (getStartJahr() == 0 || getStartJahr() <= zeitPunkt.getYear()) && (getEndJahr() == 0 || getEndJahr() >= zeitPunkt.getYear());
 		Map<KalenderEintragImpl, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
 		Map<KalenderEintragImpl, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
 
@@ -134,7 +134,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 				}
 			}
 			
-		} while (wechselZeit.isBefore(SystemKalender.MAX_DATETIME));
+		} while (wechselZeit.isBefore(SystemKalender.MAX_DATETIME) && ( getEndJahr() == 0 || getEndJahr() >= wechselZeit.getYear()));
 		
 		return ZustandsWechsel.of(SystemKalender.MAX_DATETIME, !zielZustand);
 	}
@@ -170,13 +170,17 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 				}
 			}
 			
-		} while (wechselZeit.isAfter(SystemKalender.MIN_DATETIME));
+		} while (wechselZeit.isAfter(SystemKalender.MIN_DATETIME) && (getStartJahr() == 0 || getStartJahr() <= wechselZeit.getYear()));
 		
-		return ZustandsWechsel.of(SystemKalender.MIN_DATETIME, zielZustand);
+		return ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME);
 	}
 	
 	private boolean pruefeGueltigKeit(LocalDateTime wechselZeit, boolean zielZustand) {
 
+		if( !isErlaubteWechselZeit(wechselZeit)) {
+			return !zielZustand;
+		}
+		
 		int trueCounter = 0;
 		for( VerweisEintrag verweis : getVerweise()) {
 			if( verweis.berechneZeitlicheGueltigkeit(wechselZeit).isZeitlichGueltig()) {
@@ -189,4 +193,5 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 		}
 		return trueCounter < getVerweise().size();
 	}
+
 }

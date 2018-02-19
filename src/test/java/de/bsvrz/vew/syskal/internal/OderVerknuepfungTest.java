@@ -39,7 +39,7 @@ import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 
-public class OderVerknuepfungZustandsWechselTest {
+public class OderVerknuepfungTest {
 
 	@Rule
 	public Timeout globalTimeout = Timeout.seconds(5);

@@ -53,109 +53,113 @@ import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 @RunWith(Parameterized.class)
 public class KalenderEintragGueltigkeitsTest {
 
-	@Rule
-	public Timeout globalTimeout = Timeout.seconds(5);
-	
+//	@Rule
+//	public Timeout globalTimeout = Timeout.seconds(5);
+
 	protected static final TestKalenderEintragProvider PROVIDER = new TestKalenderEintragProvider();
 
-    @Parameter(0)
-    public String eintragsName;
- 
-    @Parameter(1)
-    public LocalDateTime abfrageZeitPunkt;
+	@Parameter(0)
+	public String eintragsName;
 
-    @Parameter(2)
-    public boolean vorherigeGueltigkeit;
+	@Parameter(1)
+	public LocalDateTime abfrageZeitPunkt;
 
-    @Parameter(3)
-    public LocalDateTime vorherigerZeitPunkt;
+	@Parameter(2)
+	public boolean vorherigeGueltigkeit;
 
-    @Parameter(4)
-    public boolean aktuelleGueltigkeit;
-    
-    @Parameter(5)
-    public LocalDateTime initialerZeitPunkt;
-    
-    @Parameter(6)
-    public boolean zielGueltigkeit;
-    
-    @Parameter(7)
-    public LocalDateTime wechselZeitPunkt;
-    
-    @Parameters(name = "{0}-{1}")
-   	public static Collection<Object[]> getData() throws IOException {
-   		
-   		Class<?> clazz = KalenderEintragGueltigkeitsTest.class;
+	@Parameter(3)
+	public LocalDateTime vorherigerZeitPunkt;
+
+	@Parameter(4)
+	public boolean aktuelleGueltigkeit;
+
+	@Parameter(5)
+	public LocalDateTime initialerZeitPunkt;
+
+	@Parameter(6)
+	public boolean zielGueltigkeit;
+
+	@Parameter(7)
+	public LocalDateTime wechselZeitPunkt;
+
+	@Parameters(name = "{0}-{1}")
+	public static Collection<Object[]> getData() throws IOException {
+
+		Class<?> clazz = KalenderEintragGueltigkeitsTest.class;
 		Collection<Object[]> testDaten;
-		
-		try (BufferedReader stream = new BufferedReader(new InputStreamReader(clazz.getResourceAsStream(clazz.getSimpleName() + ".testdaten"), Charset.forName("UTF-8")))) {
+
+		try (BufferedReader stream = new BufferedReader(new InputStreamReader(
+				clazz.getResourceAsStream(clazz.getSimpleName() + ".testdaten"), Charset.forName("UTF-8")))) {
 			testDaten = liesTestDaten(stream);
 		}
-    	
-    	return testDaten;
-   	}
-    	
-    
-    protected static Collection<Object[]> liesTestDaten(BufferedReader reader) throws IOException {
-    	
-    	List<Object[]> result = new ArrayList<>();
-    	
-    	String line = null;
-    	do {
-    		line = reader.readLine();
-    		if( line != null) {
-    			line = line.trim();
-    			if( line.startsWith("|")) {
 
-    				line = line.substring("|".length());
-    				
-    		    	List<Object> lineResult = new ArrayList<>();
-    		    	
-    		    	String[] splits = line.split("\\|");
-    		    	
-    		    	int idx = 0;
-    		    	lineResult.add(splits[idx++].trim());
-    		    	lineResult.add(LocalDateTime.parse(splits[idx++].trim(), DateTimeFormatter.ofPattern("d.M.y H[:m[:s[.SSS]]]")));
-    		    	lineResult.add(splits[idx++].trim().equalsIgnoreCase("true"));
-    		    	lineResult.add(LocalDateTime.parse(splits[idx++].trim(), DateTimeFormatter.ofPattern("d.M.y H[:m[:s[.SSS]]]")));
-    		    	lineResult.add(splits[idx++].trim().equalsIgnoreCase("true"));
-    		    	lineResult.add(LocalDateTime.parse(splits[idx++].trim(), DateTimeFormatter.ofPattern("d.M.y H[:m[:s[.SSS]]]")));
-    		    	lineResult.add(splits[idx++].trim().equalsIgnoreCase("true"));
-    		    	lineResult.add(LocalDateTime.parse(splits[idx++].trim(), DateTimeFormatter.ofPattern("d.M.y H[:m[:s[.SSS]]]")));
-    		    	
-    		    	result.add(lineResult.toArray());
-    			} else if (!line.startsWith("#") && !line.isEmpty()) {
-    		    	String[] splits = line.split("=");
-    		    	PROVIDER.parseAndAdd(PROVIDER, splits[0].trim(), splits[1].trim());
-    			}
-    		}
-    	} while( line != null);
-    	
-    	return result;
-    }
-    
+		return testDaten;
+	}
+
+	protected static Collection<Object[]> liesTestDaten(BufferedReader reader) throws IOException {
+
+		List<Object[]> result = new ArrayList<>();
+
+		String line = null;
+		do {
+			line = reader.readLine();
+			if (line != null) {
+				line = line.trim();
+				if (line.startsWith("|")) {
+
+					line = line.substring("|".length());
+
+					List<Object> lineResult = new ArrayList<>();
+
+					String[] splits = line.split("\\|");
+
+					int idx = 0;
+					lineResult.add(splits[idx++].trim());
+					lineResult.add(LocalDateTime.parse(splits[idx++].trim(),
+							DateTimeFormatter.ofPattern("d.M.y H[:m[:s[.SSS]]]")));
+					lineResult.add(splits[idx++].trim().equalsIgnoreCase("true"));
+					lineResult.add(LocalDateTime.parse(splits[idx++].trim(),
+							DateTimeFormatter.ofPattern("d.M.y H[:m[:s[.SSS]]]")));
+					lineResult.add(splits[idx++].trim().equalsIgnoreCase("true"));
+					lineResult.add(LocalDateTime.parse(splits[idx++].trim(),
+							DateTimeFormatter.ofPattern("d.M.y H[:m[:s[.SSS]]]")));
+					lineResult.add(splits[idx++].trim().equalsIgnoreCase("true"));
+					lineResult.add(LocalDateTime.parse(splits[idx++].trim(),
+							DateTimeFormatter.ofPattern("d.M.y H[:m[:s[.SSS]]]")));
+
+					result.add(lineResult.toArray());
+				} else if (!line.startsWith("#") && !line.isEmpty()) {
+					String[] splits = line.split("=");
+					PROVIDER.parseAndAdd(PROVIDER, splits[0].trim(), splits[1].trim());
+				}
+			}
+		} while (line != null);
+
+		return result;
+	}
+
 	@Test
-    public void testeGueltigkeit() {
-    	
-    	KalenderEintrag eintrag = PROVIDER.getKalenderEintrag(eintragsName);
+	public void testeGueltigkeit() {
+
+		KalenderEintrag eintrag = PROVIDER.getKalenderEintrag(eintragsName);
 		SystemkalenderGueltigkeit gueltigKeit = eintrag.getZeitlicheGueltigkeit(abfrageZeitPunkt);
 
 		assertEquals("Aktuelle Gueltigkeit", aktuelleGueltigkeit, gueltigKeit.isZeitlichGueltig());
 		assertEquals("Initialer Zeitpunkt", initialerZeitPunkt, gueltigKeit.getErsterWechsel().getZeitPunkt());
 		assertEquals("Zielgültigkeit", zielGueltigkeit, gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 		assertEquals("Wechselzeitpunkt", wechselZeitPunkt, gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-    }
+	}
 
 	@Test
-    public void testeVorherigeGueltigkeit() {
-    	
-    	KalenderEintrag eintrag = PROVIDER.getKalenderEintrag(eintragsName);
+	public void testeVorherigeGueltigkeit() {
+
+		KalenderEintrag eintrag = PROVIDER.getKalenderEintrag(eintragsName);
 		SystemkalenderGueltigkeit gueltigKeit = eintrag.getZeitlicheGueltigkeitVor(abfrageZeitPunkt);
 
 		assertEquals("Vorherige Gueltigkeit", vorherigeGueltigkeit, gueltigKeit.isZeitlichGueltig());
 		assertEquals("Vorheriger Zeitpunkt", vorherigerZeitPunkt, gueltigKeit.getErsterWechsel().getZeitPunkt());
 		assertEquals("Aktuelle Gültigkeit", aktuelleGueltigkeit, gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 		assertEquals("Initialer Zeitpunkt", initialerZeitPunkt, gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-    }
-	
+	}
+
 }

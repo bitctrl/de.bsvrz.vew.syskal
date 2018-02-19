@@ -117,18 +117,4 @@ public class KalenderEintragTest {
 		assertEquals(SystemKalender.MAX_DATETIME, gueltigkeit.getNaechsterWechsel().getZeitPunkt());
 		
 	}
-
-	@Test
-	public void testeWochentag() { 
-		provider.addEintrag(KalenderEintragImpl.parse(provider, "Wochentag",
-				"Wochentag:=ODER{Montag,Dienstag,Mittwoch,Donnerstag,Freitag}*,*"));
-
-		KalenderEintragImpl eintrag = provider.getKalenderEintrag("Wochentag");
-		SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(LocalDateTime.of(2018,2,12,13,24));
-		
-		assertTrue(gueltigkeit.isZeitlichGueltig());
-		assertEquals(LocalDateTime.of(2018,2,12,0,0), gueltigkeit.getErsterWechsel().getZeitPunkt());
-		assertFalse(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals(LocalDateTime.of(2018,2,17,0,0), gueltigkeit.getNaechsterWechsel().getZeitPunkt());
-	}
 }

@@ -30,60 +30,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
-import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.Ostersonntag;
-import de.bsvrz.vew.syskal.internal.VerweisEintrag;
 
 public class VerweisEintragTest {
 
 	@Rule
 	public Timeout globalTimeout = Timeout.seconds(5);
-	
-	@Test
-	public void testeGueltigkeitOsterMontag() {
-
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		provider.parseAndAdd(provider, "Ostersonntag",
-				"Ostersonntag");
-		VerweisEintrag osterMontag = (VerweisEintrag) provider.parseAndAdd(provider, "Ostermontag",
-				"Ostersonntag+1Tag");
-
-		LocalDate now = LocalDate.now();
-
-		for (int jahr = 2000; jahr < 2020; jahr++) {
-			LocalDate checkDate = LocalDate.of(jahr, now.getMonth(), now.getDayOfMonth());
-			SystemkalenderGueltigkeit gueltigKeit = osterMontag.getZeitlicheGueltigkeit(LocalDateTime.of(checkDate, LocalTime.NOON));
-			LocalDate osterMontagDate = Ostersonntag.getDatumImJahr(jahr).plusDays(1);
-
-			if (checkDate.equals(osterMontagDate)) {
-				assertTrue(gueltigKeit.isZeitlichGueltig());
-				assertEquals(LocalDateTime.of(osterMontagDate, LocalTime.MIDNIGHT).plusDays(1),
-						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-				assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-			} else if (checkDate.isBefore(osterMontagDate)) {
-				assertFalse(gueltigKeit.isZeitlichGueltig());
-				assertEquals(LocalDateTime.of(osterMontagDate, LocalTime.MIDNIGHT),
-						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-				assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-			} else {
-				assertFalse(gueltigKeit.isZeitlichGueltig());
-				assertEquals(LocalDateTime.of(Ostersonntag.getDatumImJahr(jahr + 1).plusDays(1), LocalTime.MIDNIGHT),
-						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-				assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-			}
-		}
-	}
 
 	@Test
 	public void testeZustandswechselKarfreitag() {
@@ -135,42 +95,6 @@ public class VerweisEintragTest {
 				break;
 			default:
 				break;
-			}
-		}
-	}
-
-
-	@Test
-	public void testeGueltigkeitKarfreitag() {
-
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		provider.parseAndAdd(provider, "Ostersonntag",
-				"Ostersonntag");
-		VerweisEintrag karFreitag = (VerweisEintrag) provider.parseAndAdd(provider, "Karfreitag",
-				"Ostersonntag-2Tage");
-
-		LocalDate now = LocalDate.now();
-
-		for (int jahr = 2000; jahr < 2020; jahr++) {
-			LocalDate checkDate = LocalDate.of(jahr, now.getMonth(), now.getDayOfMonth());
-			SystemkalenderGueltigkeit gueltigKeit = karFreitag.getZeitlicheGueltigkeit(LocalDateTime.of(checkDate, LocalTime.NOON));
-			LocalDate karfreitagDatum = Ostersonntag.getDatumImJahr(jahr).minusDays(2);
-
-			if (checkDate.equals(karfreitagDatum)) {
-				assertTrue(gueltigKeit.isZeitlichGueltig());
-				assertEquals(LocalDateTime.of(karfreitagDatum, LocalTime.MIDNIGHT).plusDays(1),
-						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-				assertFalse(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-			} else if (checkDate.isBefore(karfreitagDatum)) {
-				assertFalse(gueltigKeit.isZeitlichGueltig());
-				assertEquals(LocalDateTime.of(karfreitagDatum, LocalTime.MIDNIGHT),
-						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-				assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
-			} else {
-				assertFalse(gueltigKeit.isZeitlichGueltig());
-				assertEquals(LocalDateTime.of(Ostersonntag.getDatumImJahr(jahr + 1).minusDays(2), LocalTime.MIDNIGHT),
-						gueltigKeit.getNaechsterWechsel().getZeitPunkt());
-				assertTrue(gueltigKeit.getNaechsterWechsel().isWirdGueltig());
 			}
 		}
 	}
@@ -228,6 +152,4 @@ public class VerweisEintragTest {
 			}
 		}
 	}
-
-
 }
