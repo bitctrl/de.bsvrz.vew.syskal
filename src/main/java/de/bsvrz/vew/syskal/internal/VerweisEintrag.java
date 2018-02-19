@@ -29,6 +29,7 @@ package de.bsvrz.vew.syskal.internal;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 
+import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemKalenderEintrag;
@@ -43,6 +44,8 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
  */
 public class VerweisEintrag extends KalenderEintragImpl {
 
+	private static final Debug LOGGER = Debug.getLogger();
+	
 	/** der definierende Eintrag mit zusätzlichen Erweiterungen. */
 	private Verweis verweis;
 
@@ -65,6 +68,7 @@ public class VerweisEintrag extends KalenderEintragImpl {
 				setFehler(true);
 			}
 		} catch (final ParseException e) {
+			LOGGER.warning("Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage());
 			verweis = null;
 			setFehler(true);
 		}

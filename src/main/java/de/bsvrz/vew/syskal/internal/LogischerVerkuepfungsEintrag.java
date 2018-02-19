@@ -44,6 +44,8 @@ import de.bsvrz.vew.syskal.SystemKalenderEintrag;
  */
 public abstract class LogischerVerkuepfungsEintrag extends KalenderEintragImpl {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/** die Liste der Verweise, die den Eintrag definieren. */
 	private final List<VerweisEintrag> verweise = new ArrayList<>();
 
@@ -85,7 +87,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintragImpl {
 						setFehler(verweis.isUngueltig() | isFehler());
 						verweise.add(new VerweisEintrag(verweis));
 					} catch (final ParseException e) {
-						Debug.getLogger().warning(
+						LOGGER.warning(
 								"Fehler beim Parsen des Kalendereintrags: " + name + ": " + e.getLocalizedMessage());
 						setFehler(true);
 					}
@@ -108,7 +110,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintragImpl {
 					try {
 						startJahr = Integer.parseInt(parts[0]);
 					} catch (final NumberFormatException e) {
-						Debug.getLogger().warning("Fehler beim Parsen des Kalendereintrags: " + name + ": "
+						LOGGER.warning("Fehler beim Parsen des Kalendereintrags: " + name + ": "
 								+ e.getLocalizedMessage());
 						// Jahr wird als nicht gesetzt angenommen
 					}
@@ -119,7 +121,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintragImpl {
 					try {
 						endJahr = Integer.parseInt(parts[1]);
 					} catch (final NumberFormatException e) {
-						Debug.getLogger().warning("Fehler beim Parsen des Kalendereintrags: " + name + ": "
+						LOGGER.warning("Fehler beim Parsen des Kalendereintrags: " + name + ": "
 								+ e.getLocalizedMessage());
 						// Jahr wird als nicht gesetzt angenommen
 					}

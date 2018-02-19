@@ -43,6 +43,8 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public abstract class KalenderEintragImpl implements KalenderEintrag {
 
+	private static final Debug LOGGER = Debug.getLogger();
+
 	/** das Pattern eines Datumsbereiches im Definitionsstring. */
 	private static final Pattern DATUMSBEREICH_PATTERN = Pattern.compile("<.*>");
 
@@ -96,7 +98,7 @@ public abstract class KalenderEintragImpl implements KalenderEintrag {
 				try {
 					parseZeitBereiche.add(new ZeitGrenze(zb));
 				} catch (final ParseException e) {
-					Debug.getLogger().warning(e.getLocalizedMessage());
+					LOGGER.warning(e.getLocalizedMessage());
 					zeitBereichsfehler = true;
 				}
 			}
@@ -173,7 +175,7 @@ public abstract class KalenderEintragImpl implements KalenderEintrag {
 
 		final String defName = parts[0].trim();
 		if (!defName.equals(name)) {
-			Debug.getLogger().warning("Für den Systemkalendereintrag " + name + " ist der abweichende Name: \""
+			LOGGER.warning("Für den Systemkalendereintrag " + name + " ist der abweichende Name: \""
 					+ defName + "\" definiert!");
 		}
 		return parts[1].trim();

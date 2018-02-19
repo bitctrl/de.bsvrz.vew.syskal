@@ -33,6 +33,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
@@ -46,6 +47,7 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
  */
 public class ZeitBereichsEintrag extends KalenderEintragImpl {
 
+	private static final Debug LOGGER = Debug.getLogger();
 	private LocalDateTime start;
 	private LocalDateTime ende;
 
@@ -76,6 +78,7 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 					ende = parseDatum(parts[1]);
 					ende = ende.plusDays(1);
 				} catch (final ParseException e) {
+					LOGGER.warning("Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage());
 					setFehler(true);
 				}
 			} else {
@@ -160,7 +163,8 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 				try {
 					value = Integer.parseInt(parts[idx].trim());
 				} catch (final NumberFormatException e) {
-					throw new ParseException("Text kann nicht als Zeiteintrag interpretiert werden", 0);
+					throw new ParseException(
+							"Text kann nicht als Zeiteintrag interpretiert werden: " + e.getLocalizedMessage(), 0);
 				}
 			} else {
 				value = 0;
@@ -344,10 +348,10 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 		LocalDateTime result = null;
 
 		List<ZeitGrenze> zeitGrenzen = getZeitGrenzen();
-		if( zeitGrenzen.isEmpty()) {
+		if (zeitGrenzen.isEmpty()) {
 			return start;
 		}
-		
+
 		do {
 			for (ZeitGrenze grenze : zeitGrenzen) {
 				result = LocalDateTime.of(startDatum, grenze.getStart());
@@ -383,7 +387,7 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 
 		List<ZeitGrenze> zeitGrenzen = getZeitGrenzen();
 		LocalDateTime fruehesterStart = sucheFruehestMoeglichenIntervallStart();
-		
+
 		if (zeitpunkt.isBefore(fruehesterStart)) {
 			return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME),
 					ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME));
