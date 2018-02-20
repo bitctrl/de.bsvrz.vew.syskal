@@ -53,7 +53,7 @@ public class TestSyskalOffline2 {
 		LocalDateTime startTime = LocalDateTime.of(2009, 10, 1, 14, 0, 0);
 		LocalDateTime endTime = LocalDateTime.of(2009, 10, 5, 14, 0, 0);
 
-		TestWechsel[] erwarteteWechsel = { TestWechsel.of("1.10.2009 14:00", false) };
+		TestWechsel[] erwarteteWechsel = { TestWechsel.of("1.1.1000 00:00", false) };
 
 		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);

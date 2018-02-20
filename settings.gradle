@@ -1,1 +1,3 @@
 rootProject.name = 'de.bsvrz.vew.syskal'
+
+include ':documentation:SwEnt'

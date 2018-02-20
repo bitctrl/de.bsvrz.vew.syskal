@@ -66,7 +66,7 @@ public class VerweisEintragTest {
 
 			switch (index) {
 			case 0:
-				assertEquals(start, zustandsWechsel.getZeitPunkt());
+				assertEquals(LocalDateTime.of(2014, 4, 19, 0, 0), zustandsWechsel.getZeitPunkt());
 				assertFalse(zustandsWechsel.isWirdGueltig());
 				break;
 			case 1:
@@ -120,7 +120,7 @@ public class VerweisEintragTest {
 
 			switch (index) {
 			case 0:
-				assertEquals(start, zustandsWechsel.getZeitPunkt());
+				assertEquals(LocalDateTime.of(2014, 4, 22, 0, 0), zustandsWechsel.getZeitPunkt());
 				assertFalse(zustandsWechsel.isWirdGueltig());
 				break;
 			case 1:

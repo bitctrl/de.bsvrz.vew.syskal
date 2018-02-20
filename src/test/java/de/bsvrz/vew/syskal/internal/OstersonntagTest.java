@@ -96,7 +96,7 @@ public class OstersonntagTest {
 		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 0);
 
 		TestWechsel[] erwarteteWechsel = {
-				TestWechsel.of("1.1.2015 00:00", false),
+				TestWechsel.of("21.4.2014 00:00", false),
 				TestWechsel.of("5.4.2015 00:00", true),
 				TestWechsel.of("6.4.2015 00:00", false),
 				TestWechsel.of("27.3.2016 00:00", true),

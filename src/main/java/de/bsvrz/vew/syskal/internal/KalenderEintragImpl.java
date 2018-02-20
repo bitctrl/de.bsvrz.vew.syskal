@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.KalenderEintrag;
+import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -269,13 +270,13 @@ public abstract class KalenderEintragImpl implements KalenderEintrag {
 	public final List<ZustandsWechsel> getZustandsWechsel(LocalDateTime start, LocalDateTime ende) {
 
 		if (isFehler()) {
-			return Collections.singletonList(ZustandsWechsel.zuUnGueltig(start));
+			return Collections.singletonList(ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME));
 		}
 
 		List<ZustandsWechsel> result = new ArrayList<>();
 
 		SystemkalenderGueltigkeit gueltigkeit = getZeitlicheGueltigkeit(start);
-		result.add(ZustandsWechsel.of(start, gueltigkeit.isZeitlichGueltig()));
+		result.add(ZustandsWechsel.of(gueltigkeit.getErsterWechsel().getZeitPunkt(), gueltigkeit.isZeitlichGueltig()));
 
 		LocalDateTime aktuellerZeitPunkt = start;
 		do {

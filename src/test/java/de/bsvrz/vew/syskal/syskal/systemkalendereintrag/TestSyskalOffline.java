@@ -72,7 +72,7 @@ public class TestSyskalOffline {
 		LocalDateTime endTime = LocalDateTime.of(2009, 9, 18, 10, 40, 35);
 
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("1.8.2009 10:40:35", false),
+				TestWechsel.of("27.7.2009 18:00", false),
 				TestWechsel.of("3.8.2009 07:00", true), 
 				TestWechsel.of("3.8.2009 11:00", false),
 				TestWechsel.of("3.8.2009 15:00", true), 
@@ -115,7 +115,7 @@ public class TestSyskalOffline {
 		LocalDateTime endTime = LocalDateTime.of(1975, 9, 25, 14, 59, 9);
 
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("25.9.1970 14:59:09", false),
+				TestWechsel.of("28.11.1969 00:00", false),
 				TestWechsel.of("27.11.1970 00:00", true), 
 				TestWechsel.of("28.11.1970 00:00", false),
 				TestWechsel.of("27.11.1971 00:00", true), 
@@ -141,7 +141,7 @@ public class TestSyskalOffline {
 		LocalDateTime endTime = LocalDateTime.of(1970, 12, 31, 23, 59, 59);
 
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("1.1.1970 00:00", false),
+				TestWechsel.of("28.11.1969 00:00", false),
 				TestWechsel.of("27.11.1970 00:00", true), 
 				TestWechsel.of("28.11.1970 00:00", false)
 			};
@@ -159,7 +159,7 @@ public class TestSyskalOffline {
 		LocalDateTime endTime = LocalDateTime.of(2009, 12, 21, 15, 15, 37);
 
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("1.1.2009 15:15:37", false),
+				TestWechsel.of("31.12.2008 00:00", false),
 				TestWechsel.of("6.1.2009 00:00", true), 
 				TestWechsel.of("7.1.2009 00:00", false),
 				TestWechsel.of("13.1.2009 00:00", true), 
@@ -275,7 +275,7 @@ public class TestSyskalOffline {
 		LocalDateTime endTime = LocalDateTime.of(2009, 12, 21, 15, 15, 37);
 
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("1.1.2009 15:15:37", false),
+				TestWechsel.of("25.11.2008 00:00", false),
 				TestWechsel.of("24.11.2009 00:00", true), 
 				TestWechsel.of("25.11.2009 00:00", false)
 

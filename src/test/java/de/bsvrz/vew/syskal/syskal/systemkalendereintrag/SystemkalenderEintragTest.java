@@ -173,7 +173,7 @@ public class SystemkalenderEintragTest {
 
 		TestWechsel[] erwarteteWechsel = {
 
-				TestWechsel.of("15.1.2008 00:00", false), TestWechsel.of("15.1.2008 09:00", true),
+				TestWechsel.of("1.1.1000 00:00", false), TestWechsel.of("15.1.2008 09:00", true),
 				TestWechsel.of("15.1.2008 11:59:59.999", false), TestWechsel.of("15.1.2008 15:30", true),
 				TestWechsel.of("15.1.2008 17:59:59.999", false), TestWechsel.of("16.1.2008 09:00", true),
 				TestWechsel.of("16.1.2008 11:59:59.999", false), TestWechsel.of("16.1.2008 15:30", true),
@@ -194,7 +194,7 @@ public class SystemkalenderEintragTest {
 
 		TestWechsel[] erwarteteWechsel = {
 
-				TestWechsel.of("17.6.1960 23:59:59", false), TestWechsel.of("17.6.1963 00:00", true),
+				TestWechsel.of("1.1.1000 00:00", false), TestWechsel.of("17.6.1963 00:00", true),
 				TestWechsel.of("18.6.1963 00:00", false), TestWechsel.of("17.6.1964 00:00", true),
 				TestWechsel.of("18.6.1964 00:00", false), TestWechsel.of("17.6.1965 00:00", true),
 				TestWechsel.of("18.6.1965 00:00", false), TestWechsel.of("17.6.1966 00:00", true),

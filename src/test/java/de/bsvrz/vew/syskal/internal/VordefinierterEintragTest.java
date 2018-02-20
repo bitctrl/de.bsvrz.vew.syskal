@@ -53,7 +53,7 @@ public class VordefinierterEintragTest {
 		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 10);
 
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("24.01.2018 12:10", true),
+				TestWechsel.of("24.01.2018 00:00", true),
 				TestWechsel.of("25.01.2018 00:00", false), 
 				TestWechsel.of("31.01.2018 00:00", true),
 				TestWechsel.of("01.02.2018 00:00", false), 

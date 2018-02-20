@@ -63,7 +63,7 @@ public class TestSyskalOffline8 {
 				.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("1.1.2015 00:00", false),
+				TestWechsel.of("1.1.1000 00:00", false),
 				TestWechsel.of("31.7.2015 00:00", true), 
 				TestWechsel.of("14.9.2015 00:00", false),
 				TestWechsel.of("3.11.2015 00:00", true),

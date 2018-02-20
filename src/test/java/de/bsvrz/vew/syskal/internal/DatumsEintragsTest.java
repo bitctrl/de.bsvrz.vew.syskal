@@ -55,7 +55,7 @@ public class DatumsEintragsTest {
 		LocalDateTime endTime = LocalDateTime.of(2020, 3, 14, 14, 28, 17);
 
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("24.12.2000 14:27:17", false),
+				TestWechsel.of("2.5.2000 00:00", false),
 				TestWechsel.of("1.5.2001 00:00", true), 
 				TestWechsel.of("2.5.2001 00:00", false),
 				TestWechsel.of("1.5.2002 00:00", true), 
@@ -110,7 +110,7 @@ public class DatumsEintragsTest {
 		LocalDateTime endTime = LocalDateTime.of(2020, 3, 14, 14, 28, 17);
 
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("24.12.2000 14:27:17", false),
+				TestWechsel.of("1.3.2000 00:00", false),
 				TestWechsel.of("29.2.2004 00:00", true), 
 				TestWechsel.of("1.3.2004 00:00", false),
 				TestWechsel.of("29.2.2008 00:00", true), 

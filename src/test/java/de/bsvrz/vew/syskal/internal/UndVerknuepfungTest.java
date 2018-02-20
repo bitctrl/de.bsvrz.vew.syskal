@@ -61,7 +61,7 @@ public class UndVerknuepfungTest {
 		LocalDateTime ende = LocalDateTime.of(2018, 6, 1, 0, 0);
 
 		TestWechsel[] erwarteteWechsel = {
-			TestWechsel.of("1.5.2018 00:00", false),
+			TestWechsel.of("30.4.2018 13:30", false),
 			TestWechsel.of("7.5.2018 11:30", true),
 			TestWechsel.of("7.5.2018 13:30", false),
 			TestWechsel.of("14.5.2018 11:30", true),

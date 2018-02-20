@@ -81,7 +81,7 @@ public class TestSyskalOffline4 {
 		endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("1.1.2000 00:00", false), 
+				TestWechsel.of("1.1.1000 00:00", false), 
 				TestWechsel.of("29.2.2004 00:00", true), 
 				TestWechsel.of("1.3.2004 00:00", false), 
 				TestWechsel.of("29.2.2008 00:00", true), 
@@ -99,7 +99,7 @@ public class TestSyskalOffline4 {
 		LocalDateTime endTime = LocalDateTime.of(2010, 12, 31, 23, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("1.1.2004 00:00", false), 
+				TestWechsel.of("1.1.1000 00:00", false), 
 				TestWechsel.of("29.2.2004 00:00", true), 
 				TestWechsel.of("1.3.2004 00:00", false), 
 				TestWechsel.of("29.2.2008 00:00", true), 
@@ -117,7 +117,7 @@ public class TestSyskalOffline4 {
 		LocalDateTime endTime = LocalDateTime.of(2004, 3, 10, 15, 29, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("10.3.2004 13:30", true)
+				TestWechsel.of("10.3.2004 13:00", true)
 		};
 
 		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
@@ -131,7 +131,7 @@ public class TestSyskalOffline4 {
 		LocalDateTime endTime = LocalDateTime.of(2004, 3, 11, 15, 29, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("10.3.2004 00:00", false),
+				TestWechsel.of("09.3.2004 15:00", false),
 				TestWechsel.of("10.3.2004 13:00", true),
 				TestWechsel.of("10.3.2004 15:00", false),
 				TestWechsel.of("11.3.2004 13:00", true),
@@ -149,7 +149,7 @@ public class TestSyskalOffline4 {
 		LocalDateTime endTime = LocalDateTime.of(2010, 12, 31, 23, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("11.1.2000 00:00", false), 
+				TestWechsel.of("5.4.1999 00:00", false), 
 				TestWechsel.of("23.4.2000 00:00", true), 
 				TestWechsel.of("24.4.2000 00:00", false), 
 				TestWechsel.of("15.4.2001 00:00", true), 
@@ -185,7 +185,7 @@ public class TestSyskalOffline4 {
 		LocalDateTime endTime = LocalDateTime.of(2003, 12, 31, 23, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("1.1.2000 00:00", false), 
+				TestWechsel.of("6.4.1999 00:00", false), 
 				TestWechsel.of("24.4.2000 00:00", true), 
 				TestWechsel.of("25.4.2000 00:00", false), 
 				TestWechsel.of("16.4.2001 00:00", true), 
@@ -207,7 +207,7 @@ public class TestSyskalOffline4 {
 		LocalDateTime endTime = LocalDateTime.of(2003, 12, 31, 23, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("1.1.2000 00:00", false), 
+				TestWechsel.of("1.4.1999 00:00", false), 
 				TestWechsel.of("19.4.2000 00:00", true), 
 				TestWechsel.of("20.4.2000 00:00", false), 
 				TestWechsel.of("11.4.2001 00:00", true), 
@@ -229,7 +229,7 @@ public class TestSyskalOffline4 {
 		LocalDateTime endTime = LocalDateTime.of(2003, 12, 31, 23, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("1.1.2000 00:00", false), 
+				TestWechsel.of("3.4.1999 00:00", false), 
 				TestWechsel.of("21.4.2000 00:00", true), 
 				TestWechsel.of("22.4.2000 00:00", false), 
 				TestWechsel.of("13.4.2001 00:00", true), 
@@ -251,7 +251,7 @@ public class TestSyskalOffline4 {
 		LocalDateTime endTime = LocalDateTime.of(2001, 5, 1, 23, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 		
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("1.4.2001 00:00", true), 
+				TestWechsel.of("24.4.2000 00:00", true), 
 				TestWechsel.of("15.4.2001 00:00", false), 
 				TestWechsel.of("16.4.2001 00:00", true), 
 		};
@@ -267,7 +267,7 @@ public class TestSyskalOffline4 {
 		LocalDateTime endTime = LocalDateTime.of(2011, 9, 23, 23, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 	
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("19.9.2011 00:00", false), 
+				TestWechsel.of("18.9.2011 16:00", false), 
 				TestWechsel.of("19.9.2011 13:00", true), 
 				TestWechsel.of("19.9.2011 14:00", false), 
 				TestWechsel.of("19.9.2011 15:00", true), 

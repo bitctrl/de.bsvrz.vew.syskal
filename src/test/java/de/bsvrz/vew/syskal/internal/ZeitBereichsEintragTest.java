@@ -65,7 +65,7 @@ public class ZeitBereichsEintragTest {
 
 			switch (index) {
 			case 0:
-				assertEquals(start, zustandsWechsel.getZeitPunkt());
+				assertEquals(LocalDateTime.of(2008, 1, 30, 11, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)), zustandsWechsel.getZeitPunkt());
 				assertFalse(zustandsWechsel.isWirdGueltig());
 				break;
 			case 1:
@@ -115,15 +115,24 @@ public class ZeitBereichsEintragTest {
 		LocalDateTime startTime = LocalDateTime.of(2000, 12, 24, 11, 0);
 		LocalDateTime endTime = LocalDateTime.of(2000, 12, 24, 23, 0);
 
-		TestWechsel[] erwarteteWechsel = { TestWechsel.of("24.12.2000 11:00", false),
-				TestWechsel.of("24.12.2000 11:05", true), TestWechsel.of("24.12.2000 11:10", false),
-				TestWechsel.of("24.12.2000 11:15", true), TestWechsel.of("24.12.2000 11:20", false),
-				TestWechsel.of("24.12.2000 11:25", true), TestWechsel.of("24.12.2000 11:30", false),
-				TestWechsel.of("24.12.2000 11:35", true), TestWechsel.of("24.12.2000 11:40", false),
-				TestWechsel.of("24.12.2000 11:45", true), TestWechsel.of("24.12.2000 11:49", false),
-				TestWechsel.of("24.12.2000 14:01", true), TestWechsel.of("24.12.2000 15:10", false),
-				TestWechsel.of("24.12.2000 15:15", true), TestWechsel.of("24.12.2000 15:20", false),
-				TestWechsel.of("24.12.2000 15:25", true), TestWechsel.of("24.12.2000 15:30", false) };
+		TestWechsel[] erwarteteWechsel = { 
+				TestWechsel.of("23.12.2000 15:30", false),
+				TestWechsel.of("24.12.2000 11:05", true), 
+				TestWechsel.of("24.12.2000 11:10", false),
+				TestWechsel.of("24.12.2000 11:15", true), 
+				TestWechsel.of("24.12.2000 11:20", false),
+				TestWechsel.of("24.12.2000 11:25", true), 
+				TestWechsel.of("24.12.2000 11:30", false),
+				TestWechsel.of("24.12.2000 11:35", true), 
+				TestWechsel.of("24.12.2000 11:40", false),
+				TestWechsel.of("24.12.2000 11:45", true), 
+				TestWechsel.of("24.12.2000 11:49", false),
+				TestWechsel.of("24.12.2000 14:01", true), 
+				TestWechsel.of("24.12.2000 15:10", false),
+				TestWechsel.of("24.12.2000 15:15", true), 
+				TestWechsel.of("24.12.2000 15:20", false),
+				TestWechsel.of("24.12.2000 15:25", true), 
+				TestWechsel.of("24.12.2000 15:30", false) };
 
 		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);

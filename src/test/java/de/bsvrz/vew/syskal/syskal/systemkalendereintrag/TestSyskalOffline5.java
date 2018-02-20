@@ -69,7 +69,7 @@ public class TestSyskalOffline5 {
 		LocalDateTime endTime = LocalDateTime.of(2012, 12, 31, 0, 0, 0);
 
 		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("20.12.2012 00:00", false),
+				TestWechsel.of("01.01.1000 00:00", false),
 				TestWechsel.of("27.12.2012 00:00", true), 
 				TestWechsel.of("28.12.2012 00:00", false) 
 		};
