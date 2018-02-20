@@ -26,13 +26,8 @@
 
 package de.bsvrz.vew.syskal.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -54,55 +49,22 @@ public class ZeitBereichsEintragTest {
 		ZeitBereichsEintrag bereich4 = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Bereich4",
 				"Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
 
-		LocalDateTime start = LocalDateTime.of(2008, 1, 30, 12, 10);
-		List<ZustandsWechsel> zustandsWechselListe = bereich4.getZustandsWechsel(start,
-				LocalDateTime.of(2008, 2, 1, 11, 11));
+		LocalDateTime startTime = LocalDateTime.of(2008, 1, 30, 12, 10);
+		LocalDateTime endTime = LocalDateTime.of(2008, 2, 1, 11, 11);
+		
+		TestWechsel[] erwarteteWechsel = { 
+				TestWechsel.of("30.01.2008 11:59:59.999", false),
+				TestWechsel.of("30.01.2008 15:30", true), 
+				TestWechsel.of("30.01.2008 17:59:59.999", false),
+				TestWechsel.of("31.01.2008 09:00", true), 
+				TestWechsel.of("31.01.2008 11:59:59.999", false),
+				TestWechsel.of("31.01.2008 15:30", true), 
+				TestWechsel.of("31.01.2008 17:59:59.999", false),
+				TestWechsel.of("01.02.2008 09:00", true)
+			};
 
-		assertEquals("Erwartete Zustandswechsel", 8, zustandsWechselListe.size());
-		for (int index = 0; index < zustandsWechselListe.size(); index++) {
-
-			ZustandsWechsel zustandsWechsel = zustandsWechselListe.get(index);
-
-			switch (index) {
-			case 0:
-				assertEquals(LocalDateTime.of(2008, 1, 30, 11, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)), zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			case 1:
-				assertEquals(LocalDateTime.of(2008, 1, 30, 15, 30), zustandsWechsel.getZeitPunkt());
-				assertTrue(zustandsWechsel.isWirdGueltig());
-				break;
-			case 2:
-				assertEquals(LocalDateTime.of(2008, 1, 30, 17, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
-						zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			case 3:
-				assertEquals(LocalDateTime.of(2008, 1, 31, 9, 0), zustandsWechsel.getZeitPunkt());
-				assertTrue(zustandsWechsel.isWirdGueltig());
-				break;
-			case 4:
-				assertEquals(LocalDateTime.of(2008, 1, 31, 11, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
-						zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			case 5:
-				assertEquals(LocalDateTime.of(2008, 1, 31, 15, 30), zustandsWechsel.getZeitPunkt());
-				assertTrue(zustandsWechsel.isWirdGueltig());
-				break;
-			case 6:
-				assertEquals(LocalDateTime.of(2008, 1, 31, 17, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999)),
-						zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			case 7:
-				assertEquals(LocalDateTime.of(2008, 2, 1, 9, 0), zustandsWechsel.getZeitPunkt());
-				assertTrue(zustandsWechsel.isWirdGueltig());
-				break;
-			default:
-				break;
-			}
-		}
+		List<ZustandsWechsel> zustandsWechsel = bereich4.getZustandsWechsel(startTime, endTime);
+		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 
 	@Test

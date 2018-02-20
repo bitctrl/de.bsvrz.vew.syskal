@@ -38,6 +38,7 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class VerweisEintragTest {
@@ -54,49 +55,21 @@ public class VerweisEintragTest {
 		VerweisEintrag karfreitag = (VerweisEintrag) provider.parseAndAdd(provider, "Karfreitag",
 				"Ostersonntag - 2 Tage");
 
-		LocalDateTime start = LocalDateTime.of(2015, 1, 1, 0, 0);
-		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 0);
+		LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0);
+		LocalDateTime endTime = LocalDateTime.of(2018, 2, 28, 12, 0);
 
-		List<ZustandsWechsel> zustandsWechselImBereich = karfreitag.getZustandsWechsel(start, ende);
+		TestWechsel[] erwarteteWechsel = { 
+				TestWechsel.of("19.04.2014 00:00", false),
+				TestWechsel.of("03.04.2015 00:00", true), 
+				TestWechsel.of("04.04.2015 00:00", false),
+				TestWechsel.of("25.03.2016 00:00", true), 
+				TestWechsel.of("26.03.2016 00:00", false),
+				TestWechsel.of("14.04.2017 00:00", true), 
+				TestWechsel.of("15.04.2017 00:00", false)
+			};
 
-		assertEquals("Erwartete Zustandswechsel", 7, zustandsWechselImBereich.size());
-		for (int index = 0; index < zustandsWechselImBereich.size(); index++) {
-
-			ZustandsWechsel zustandsWechsel = zustandsWechselImBereich.get(index);
-
-			switch (index) {
-			case 0:
-				assertEquals(LocalDateTime.of(2014, 4, 19, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			case 1:
-				assertEquals(LocalDateTime.of(2015, 4, 3, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertTrue(zustandsWechsel.isWirdGueltig());
-				break;
-			case 2:
-				assertEquals(LocalDateTime.of(2015, 4, 4, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			case 3:
-				assertEquals(LocalDateTime.of(2016, 3, 25, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertTrue(zustandsWechsel.isWirdGueltig());
-				break;
-			case 4:
-				assertEquals(LocalDateTime.of(2016, 3, 26, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			case 5:
-				assertEquals(LocalDateTime.of(2017, 4, 14, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertTrue(zustandsWechsel.isWirdGueltig());
-				break;
-			case 6:
-				assertEquals(LocalDateTime.of(2017, 4, 15, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			default:
-				break;
-			}
-		}
+		List<ZustandsWechsel> zustandsWechsel = karfreitag.getZustandsWechsel(startTime, endTime);
+		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 
 	@Test
@@ -108,48 +81,20 @@ public class VerweisEintragTest {
 		VerweisEintrag osterMontag = (VerweisEintrag) provider.parseAndAdd(provider, "Ostermontag",
 				"Ostersonntag+1Tag");
 
-		LocalDateTime start = LocalDateTime.of(2015, 1, 1, 0, 0);
-		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 0);
+		LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0);
+		LocalDateTime endTime = LocalDateTime.of(2018, 2, 28, 12, 0);
 
-		List<ZustandsWechsel> zustandsWechselImBereich = osterMontag.getZustandsWechsel(start, ende);
+		TestWechsel[] erwarteteWechsel = { 
+				TestWechsel.of("22.04.2014 00:00", false),
+				TestWechsel.of("06.04.2015 00:00", true), 
+				TestWechsel.of("07.04.2015 00:00", false),
+				TestWechsel.of("28.03.2016 00:00", true), 
+				TestWechsel.of("29.03.2016 00:00", false),
+				TestWechsel.of("17.04.2017 00:00", true), 
+				TestWechsel.of("18.04.2017 00:00", false)
+			};
 
-		assertEquals("Erwartete Zustandswechsel", 7, zustandsWechselImBereich.size());
-		for (int index = 0; index < zustandsWechselImBereich.size(); index++) {
-
-			ZustandsWechsel zustandsWechsel = zustandsWechselImBereich.get(index);
-
-			switch (index) {
-			case 0:
-				assertEquals(LocalDateTime.of(2014, 4, 22, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			case 1:
-				assertEquals(LocalDateTime.of(2015, 4, 6, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertTrue(zustandsWechsel.isWirdGueltig());
-				break;
-			case 2:
-				assertEquals(LocalDateTime.of(2015, 4, 7, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			case 3:
-				assertEquals(LocalDateTime.of(2016, 3, 28, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertTrue(zustandsWechsel.isWirdGueltig());
-				break;
-			case 4:
-				assertEquals(LocalDateTime.of(2016, 3, 29, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			case 5:
-				assertEquals(LocalDateTime.of(2017, 4, 17, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertTrue(zustandsWechsel.isWirdGueltig());
-				break;
-			case 6:
-				assertEquals(LocalDateTime.of(2017, 4, 18, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			default:
-				break;
-			}
-		}
+		List<ZustandsWechsel> zustandsWechsel = osterMontag.getZustandsWechsel(startTime, endTime);
+		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 }
