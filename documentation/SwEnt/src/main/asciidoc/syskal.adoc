@@ -1,0 +1,66 @@
+== Systemkalender-Bibliothek
+
+Die Systemkalender-Bibliothek wird als Instanz vom Typ "Systemkalender" in eine beliebige andere SWE eingebunden.
+
+Die Systemkalender-Instanz verwaltet die Objekte vom Typ "SystemkalenderEintrag" in einem
+übergebenen Kalender-Objekt.
+
+[ditaa, "systemkalender_module"]
+----
+        /-----------------------------------------------------------------------\
+        | /----------------------------------\    /---------------------------\ |
+        | | Modul Kalendereintragsverwaltung |    | Modul Nutzerschnittstelle |<--->api
+        | | /-------------------\            |<-->|                           | |
+<---------->| DAV-Kommunikation |            |    |                           | |
+DAF-API | | \-------------------/            |    | (Informationen)           | |
+        | | /--------------------\           |<-->| (Beobachter)              | |
+        | | | Eintragsverwaltung |           |    |                           | |
+        | | \--------------------/           |    |                           | |
+        | \----------------------------------/    \---------------------------/ |
+        \-----------------------------------------------------------------------/
+----
+
+* *Kalendereintragsverwaltung:* verwaltet die im zugeordneten Kalender enthaltenen Definitionen von Systemkalendereinträge. 
+* *DAV-Kommunikation:* realisiert die Kopplung mit dem Datenverteilersystem und beobachtet die Datenverteiler-Menge, die die Definitionen von Systemkalendereinträgen enthält, um Systemkalendereinträge anzulegen, zu verändern oder zu entfernen.
+* *Eintragsverwaltung:* das Modul parst die per Textzeile definierten Systemkalendereinträge und setzt diese in entsprechende Kalendereinträge um, aus denen dann die erforderlichen Informationen zur zeitlichen Gültigkeit ermittelt werden können.
+* *Nutzerschnittstelle:* erlaubt den Zugriff auf die verwalteten Systemkalendereinträge und bietet Funktionen, um die Gültigkeit zu bestimmten Zeitpunkten oder einem Zeitraum zu bestimmen.
+
+=== Startparameter
+
+Die SWE selbst hat keine Startparameter, da sie nur als Bibliothek eingebunden wird.
+In der Regel wird aber ein vorgegebenes KalenderObjekt (Standard: AOE) verwendet, welches optional über einen Parameter der verwendenden SWE festgelegt werden könnte.
+
+[plantuml, "init_systemkalender"]
+----
+
+skinparam componentstyle uml2
+skinparam monochrome true 
+
+title Initialisierung einer Systemkalender-Instanz\n
+
+start
+
+:Parameter auswerten;
+
+note right
+Parameter sind das zu verwendende Kalenderobjekt und die verwendete Datenverteilerverbindung.
+end note
+
+:Eintragsverwaltung initialisieren;
+
+note right
+Die Definitionen der vorhandenen Systemkalendereinträge werden ermittelt und ausgewertet.
+end note
+
+if (Nutzerschnittstelle initialisieren) then (JA)
+    repeat
+    repeat while (Warte auf Anfrage zu Kalendereinträgen?)
+
+    stop
+
+else (NEIN)
+
+    stop
+endif
+
+----

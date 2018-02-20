@@ -1,0 +1,26 @@
+== Übersicht
+
+=== Aufgaben der SWE
+
+Die SWE Systemkalender ist eine Bibliothek, die es dem Anwender ermöglicht,
+zeitbezogene Definitionen zu erstellen und auszuwerten.
+
+Über den Systemkalender werden durch den Benutzer frei definierbare Zeitbereiche 
+unter vorgegebenen Namen verwaltet und abgespeichert. 
+
+Über diesen Systemkalender können beispielsweise Feiertage, Tage mit hoher Staugefahr, Urlaubs- und Ferienzeiten verwaltet werden, die nicht über normale Zeitfunktionen 
+ermittelbar sind. 
+
+Die SWE stellt eine Verbindung mit einem Datenverteilersystem, um definierte 
+Zeiteinträge ermitteln und zu verwalten. Die eigentliche Logik der Auswertung der Kalendereinträge erfolgt unabhängig vom Datenverteiler.
+
+=== Anforderungen
+
+Die folgende Tabelle zeigt die von der SWE zu erfüllenden
+Anforderungen.
+
+[cols="2*", options="header,autowidth"]
+|===
+| Anforderung | Beschreibung                                       
+| VeW-4       | Systemkalender
+|===
