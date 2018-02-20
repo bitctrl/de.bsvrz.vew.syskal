@@ -2,7 +2,7 @@
 // NERZ-SWE-Plugin
 //--------------------------------------------------------------------
 plugins {
-  id "de.bsvrz.gradle.nerzswe" version "0.7.1"
+  id "de.bsvrz.gradle.nerzswe" version "0.7.2"
   id "biz.aQute.bnd.builder" version "3.3.0"
 }
 
