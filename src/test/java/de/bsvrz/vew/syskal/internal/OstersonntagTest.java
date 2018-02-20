@@ -27,13 +27,10 @@
 package de.bsvrz.vew.syskal.internal;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -42,6 +39,7 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class OstersonntagTest {
@@ -61,98 +59,33 @@ public class OstersonntagTest {
 	@Test
 	public void testeGetDatumImJahr() {
 
+		String[] osterDatumAb2000 = {
+				"23.4.2000",
+				"15.4.2001",
+				"31.3.2002",
+				"20.4.2003",
+				"11.4.2004",
+				"27.3.2005",
+				"16.4.2006",
+				"8.4.2007",
+				"23.3.2008",
+				"12.4.2009",
+				"4.4.2010",
+				"24.4.2011",
+				"8.4.2012",
+				"31.3.2013",
+				"20.4.2014",
+				"5.4.2015",
+				"27.3.2016",
+				"16.4.2017",
+				"1.4.2018",
+				"21.4.2019",
+				"12.4.2020" };
+
 		for (int jahr = 2000; jahr < 2020; jahr++) {
 			LocalDate date = Ostersonntag.getDatumImJahr(jahr);
-			assertEquals(date.getYear(), jahr);
-			switch (jahr) {
-			case 2000:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 23);
-				break;
-			case 2001:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 15);
-				break;
-			case 2002:
-				assertEquals(date.getMonth(), Month.MARCH);
-				assertEquals(date.getDayOfMonth(), 31);
-				break;
-			case 2003:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 20);
-				break;
-			case 2004:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 11);
-				break;
-			case 2005:
-				assertEquals(date.getMonth(), Month.MARCH);
-				assertEquals(date.getDayOfMonth(), 27);
-				break;
-			case 2006:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 16);
-				break;
-			case 2007:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 8);
-				break;
-			case 2008:
-				assertEquals(date.getMonth(), Month.MARCH);
-				assertEquals(date.getDayOfMonth(), 23);
-				break;
-			case 2009:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 12);
-				break;
-			case 2010:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 4);
-				break;
-			case 2011:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 24);
-				break;
-			case 2012:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 8);
-				break;
-			case 2013:
-				assertEquals(date.getMonth(), Month.MARCH);
-				assertEquals(date.getDayOfMonth(), 31);
-				break;
-			case 2014:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 20);
-				break;
-			case 2015:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 5);
-				break;
-			case 2016:
-				assertEquals(date.getMonth(), Month.MARCH);
-				assertEquals(date.getDayOfMonth(), 27);
-				break;
-			case 2017:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 16);
-				break;
-			case 2018:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 1);
-				break;
-			case 2019:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 21);
-				break;
-			case 2020:
-				assertEquals(date.getMonth(), Month.APRIL);
-				assertEquals(date.getDayOfMonth(), 12);
-				break;
-			default:
-				fail("Unerwartetes Testjahr: " + jahr);
-				break;
-			}
+			LocalDate pruefDatum = LocalDate.parse(osterDatumAb2000[jahr - 2000], DateTimeFormatter.ofPattern("d.M.u"));
+			assertEquals("Osterdatum " + jahr, pruefDatum, date);
 		}
 	}
 
@@ -162,45 +95,17 @@ public class OstersonntagTest {
 		LocalDateTime start = LocalDateTime.of(2015, 1, 1, 0, 0);
 		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 0);
 
+		TestWechsel[] erwarteteWechsel = {
+				TestWechsel.of("1.1.2015 00:00", false),
+				TestWechsel.of("5.4.2015 00:00", true),
+				TestWechsel.of("6.4.2015 00:00", false),
+				TestWechsel.of("27.3.2016 00:00", true),
+				TestWechsel.of("28.3.2016 00:00", false),
+				TestWechsel.of("16.4.2017 00:00", true),
+				TestWechsel.of("17.4.2017 00:00", false)
+		};
+
 		List<ZustandsWechsel> zustandsWechselImBereich = osterSonntag.getZustandsWechsel(start, ende);
-
-		assertEquals("Erwartete Zustandswechsel", 7, zustandsWechselImBereich.size());
-		for (int index = 0; index < zustandsWechselImBereich.size(); index++) {
-
-			ZustandsWechsel zustandsWechsel = zustandsWechselImBereich.get(index);
-
-			switch (index) {
-			case 0:
-				assertEquals(start, zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			case 1:
-				assertEquals(LocalDateTime.of(2015, 4, 5, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertTrue(zustandsWechsel.isWirdGueltig());
-				break;
-			case 2:
-				assertEquals(LocalDateTime.of(2015, 4, 6, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			case 3:
-				assertEquals(LocalDateTime.of(2016, 3, 27, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertTrue(zustandsWechsel.isWirdGueltig());
-				break;
-			case 4:
-				assertEquals(LocalDateTime.of(2016, 3, 28, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			case 5:
-				assertEquals(LocalDateTime.of(2017, 4, 16, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertTrue(zustandsWechsel.isWirdGueltig());
-				break;
-			case 6:
-				assertEquals(LocalDateTime.of(2017, 4, 17, 0, 0), zustandsWechsel.getZeitPunkt());
-				assertFalse(zustandsWechsel.isWirdGueltig());
-				break;
-			default:
-				break;
-			}
-		}
+		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechselImBereich);
 	}
 }

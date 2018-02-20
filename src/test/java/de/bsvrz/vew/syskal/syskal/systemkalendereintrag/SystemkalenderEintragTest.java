@@ -161,7 +161,6 @@ public class SystemkalenderEintragTest {
 			
 			zeitpunkt = zeitpunkt.plusDays(1);
 		}
-
 	}
 
 	@Test
