@@ -35,7 +35,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.Intervall;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
+import de.bsvrz.vew.syskal.TestIntervall;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -100,6 +102,43 @@ public class DatumsEintragsTest {
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
 
+	
+	@Test
+	public void testeIntervalleErsterMai() {
+
+		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
+		KalenderEintragImpl datumsEintrag = KalenderEintragImpl.parse(eintragsProvider, "Mai1", "1.5.*,*");
+
+		LocalDateTime startTime = LocalDateTime.of(2000, 12, 24, 14, 27, 17);
+		LocalDateTime endTime = LocalDateTime.of(2020, 3, 14, 14, 28, 17);
+
+		Intervall[] erwarteteIntervalle = { 
+				TestIntervall.of("01.05.2001 00:00", "02.05.2001 00:00"),
+				TestIntervall.of("01.05.2002 00:00", "02.05.2002 00:00"),
+				TestIntervall.of("01.05.2003 00:00", "02.05.2003 00:00"),
+				TestIntervall.of("01.05.2004 00:00", "02.05.2004 00:00"),
+				TestIntervall.of("01.05.2005 00:00", "02.05.2005 00:00"),
+				TestIntervall.of("01.05.2006 00:00", "02.05.2006 00:00"),
+				TestIntervall.of("01.05.2007 00:00", "02.05.2007 00:00"),
+				TestIntervall.of("01.05.2008 00:00", "02.05.2008 00:00"),
+				TestIntervall.of("01.05.2009 00:00", "02.05.2009 00:00"),
+				TestIntervall.of("01.05.2010 00:00", "02.05.2010 00:00"),
+				TestIntervall.of("01.05.2011 00:00", "02.05.2011 00:00"),
+				TestIntervall.of("01.05.2012 00:00", "02.05.2012 00:00"),
+				TestIntervall.of("01.05.2013 00:00", "02.05.2013 00:00"),
+				TestIntervall.of("01.05.2014 00:00", "02.05.2014 00:00"),
+				TestIntervall.of("01.05.2015 00:00", "02.05.2015 00:00"),
+				TestIntervall.of("01.05.2016 00:00", "02.05.2016 00:00"),
+				TestIntervall.of("01.05.2017 00:00", "02.05.2017 00:00"),
+				TestIntervall.of("01.05.2018 00:00", "02.05.2018 00:00"),
+				TestIntervall.of("01.05.2019 00:00", "02.05.2019 00:00")
+			};
+
+		List<Intervall> intervalle = datumsEintrag.getIntervalle(startTime, endTime);
+		TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+	}
+	
+	
 	@Test
 	public void testeZustandswechselFebruar29() {
 		
@@ -126,6 +165,28 @@ public class DatumsEintragsTest {
 		List<ZustandsWechsel> zustandsWechsel = datumsEintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
+
+	@Test
+	public void testeIntervalleFebruar29() {
+
+		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
+		KalenderEintragImpl datumsEintrag = KalenderEintragImpl.parse(eintragsProvider, "Februar29", "29.2.*,*");
+
+		LocalDateTime startTime = LocalDateTime.of(2000, 12, 24, 14, 27, 17);
+		LocalDateTime endTime = LocalDateTime.of(2020, 3, 14, 14, 28, 17);
+
+		Intervall[] erwarteteIntervalle = { 
+				TestIntervall.of("29.02.2004 00:00", "01.03.2004 00:00"),
+				TestIntervall.of("29.02.2008 00:00", "01.03.2008 00:00"),
+				TestIntervall.of("29.02.2012 00:00", "01.03.2012 00:00"),
+				TestIntervall.of("29.02.2016 00:00", "01.03.2016 00:00"),
+				TestIntervall.of("29.02.2020 00:00", "01.03.2020 00:00")
+			};
+
+		List<Intervall> intervalle = datumsEintrag.getIntervalle(startTime, endTime);
+		TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+	}
+
 	
 
 	@Test

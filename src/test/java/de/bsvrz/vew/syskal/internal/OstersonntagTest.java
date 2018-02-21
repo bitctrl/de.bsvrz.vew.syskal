@@ -38,6 +38,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.Intervall;
+import de.bsvrz.vew.syskal.TestIntervall;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -108,4 +110,21 @@ public class OstersonntagTest {
 		List<ZustandsWechsel> zustandsWechselImBereich = osterSonntag.getZustandsWechsel(start, ende);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechselImBereich);
 	}
+	
+	@Test
+	public void testeIntervalle() {
+
+		LocalDateTime start = LocalDateTime.of(2015, 1, 1, 0, 0);
+		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 0);
+
+		Intervall[] erwarteteIntervalle = { 
+				TestIntervall.of("05.04.2015 00:00", "06.04.2015 00:00"),
+				TestIntervall.of("27.03.2016 00:00", "28.03.2016 00:00"),
+				TestIntervall.of("16.04.2017 00:00", "17.04.2017 00:00")
+			};
+
+		List<Intervall> intervalle = osterSonntag.getIntervalle(start, ende);
+		TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+	}
+	
 }

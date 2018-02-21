@@ -74,9 +74,11 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
 			if (definition.contains("-")) {
 				final String[] parts = definition.split("-");
 				try {
-					start = parseDatum(parts[0]);
-					ende = parseDatum(parts[1]);
-					ende = ende.plusDays(1);
+					start = parseDatum(parts[0].trim());
+					ende = parseDatum(parts[1].trim());
+					if (!ende.toLocalTime().isAfter(LocalTime.MIDNIGHT)) {
+						ende = ende.plusDays(1);
+					}
 				} catch (final ParseException e) {
 					LOGGER.warning("Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage());
 					setFehler(true);

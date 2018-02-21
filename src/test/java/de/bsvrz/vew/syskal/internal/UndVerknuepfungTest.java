@@ -34,6 +34,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.Intervall;
+import de.bsvrz.vew.syskal.TestIntervall;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -75,4 +77,22 @@ public class UndVerknuepfungTest {
 		List<ZustandsWechsel> zustandsWechselImBereich = verknuepfung.getZustandsWechsel(start, ende);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechselImBereich);
 	}
+	
+	@Test
+	public void testeIntervalle() {
+
+		LocalDateTime start = LocalDateTime.of(2018, 5, 7, 12, 0);
+		LocalDateTime ende = LocalDateTime.of(2018, 5, 28, 12, 0);
+
+		Intervall[] erwarteteIntervalle = { 
+				TestIntervall.of("07.05.2018 12:00", "07.05.2018 13:30"),
+				TestIntervall.of("14.05.2018 11:30", "14.05.2018 13:30"),
+				TestIntervall.of("21.05.2018 11:30", "21.05.2018 13:30"),
+				TestIntervall.of("28.05.2018 11:30", "28.05.2018 12:00")
+			};
+
+		List<Intervall> intervalle = verknuepfung.getIntervalle(start, ende);
+		TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+	}
+	
 }

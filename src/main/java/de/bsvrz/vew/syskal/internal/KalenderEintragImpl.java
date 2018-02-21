@@ -322,6 +322,7 @@ public abstract class KalenderEintragImpl implements KalenderEintrag {
 
 			ZustandsWechsel wechsel = gueltigkeit.getNaechsterWechsel();
 			aktuellerZeitPunkt = wechsel.getZeitPunkt();
+			gueltigkeit = getZeitlicheGueltigkeit(aktuellerZeitPunkt);
 
 		} while (!aktuellerZeitPunkt.isAfter(endTime));
 

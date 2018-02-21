@@ -33,6 +33,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.Intervall;
+import de.bsvrz.vew.syskal.TestIntervall;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -69,4 +71,28 @@ public class VordefinierterEintragTest {
 		List<ZustandsWechsel> zustandsWechsel = mittwoch.getZustandsWechsel(start, ende);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
+	
+	@Test
+	public void testeIntervalle() {
+
+		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+		VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintragImpl.parse(provider, "Mittwoch",
+				"Mittwoch");
+
+		LocalDateTime start = LocalDateTime.of(2018, 1, 24, 12, 10);
+		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 10);
+		
+		Intervall[] erwarteteIntervalle = { 
+				TestIntervall.of("24.01.2018 12:10", "25.01.2018 00:00"),
+				TestIntervall.of("31.01.2018 00:00", "01.02.2018 00:00"),
+				TestIntervall.of("07.02.2018 00:00", "08.02.2018 00:00"),
+				TestIntervall.of("14.02.2018 00:00", "15.02.2018 00:00"),
+				TestIntervall.of("21.02.2018 00:00", "22.02.2018 00:00"),
+				TestIntervall.of("28.02.2018 00:00", "28.02.2018 12:10")
+			};
+
+		List<Intervall> intervalle = mittwoch.getIntervalle(start, ende);
+		TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+	}
+	
 }

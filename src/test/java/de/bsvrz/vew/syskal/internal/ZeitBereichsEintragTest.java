@@ -29,18 +29,18 @@ package de.bsvrz.vew.syskal.internal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.Intervall;
+import de.bsvrz.vew.syskal.TestIntervall;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class ZeitBereichsEintragTest {
 	
-	@Rule
-	public Timeout globalTimeout = Timeout.seconds(5);
+//	@Rule
+//	public Timeout globalTimeout = Timeout.seconds(5);
 
 	@Test
 	public void testeZustandswechsel() {
@@ -99,5 +99,28 @@ public class ZeitBereichsEintragTest {
 		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 
+	}
+
+	@Test
+	public void testeIntervalle() {
+
+		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+		ZeitBereichsEintrag bereich4 = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Bereich4",
+				"Bereich4:=<15.01.2008 12:00:30 - 15.02.2008 14:12:45.555>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})");
+
+		LocalDateTime startTime = LocalDateTime.of(2008, 1, 14, 12, 10);
+		LocalDateTime endTime = LocalDateTime.of(2008, 1, 18, 11, 11);
+		
+		Intervall[] erwarteteIntervalle = { 
+				TestIntervall.of("15.01.2008 15:30", "15.01.2008 17:59:59.999"),
+				TestIntervall.of("16.01.2008 09:00", "16.01.2008 11:59:59.999"),
+				TestIntervall.of("16.01.2008 15:30", "16.01.2008 17:59:59.999"),
+				TestIntervall.of("17.01.2008 09:00", "17.01.2008 11:59:59.999"),
+				TestIntervall.of("17.01.2008 15:30", "17.01.2008 17:59:59.999"),
+				TestIntervall.of("18.01.2008 09:00", "18.01.2008 11:11")
+			};
+
+		List<Intervall> intervalle = bereich4.getIntervalle(startTime, endTime);
+		TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
 	}
 }

@@ -37,6 +37,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.Intervall;
+import de.bsvrz.vew.syskal.TestIntervall;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -73,6 +75,28 @@ public class VerweisEintragTest {
 	}
 
 	@Test
+	public void testeIntervalleKarfreitag() {
+
+		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+		provider.parseAndAdd(provider, "Ostersonntag",
+				"Ostersonntag");
+		VerweisEintrag karfreitag = (VerweisEintrag) provider.parseAndAdd(provider, "Karfreitag",
+				"Ostersonntag - 2 Tage");
+
+		LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0);
+		LocalDateTime endTime = LocalDateTime.of(2018, 2, 28, 12, 0);
+
+		Intervall[] erwarteteIntervalle = { 
+				TestIntervall.of("03.04.2015 00:00", "04.04.2015 00:00"),
+				TestIntervall.of("25.03.2016 00:00", "26.03.2016 00:00"),
+				TestIntervall.of("14.04.2017 00:00", "15.04.2017 00:00")
+			};
+
+		List<Intervall> intervalle = karfreitag.getIntervalle(startTime, endTime);
+		TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+	}
+	
+	@Test
 	public void testeZustandswechselOstermontag() {
 
 		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
@@ -97,4 +121,27 @@ public class VerweisEintragTest {
 		List<ZustandsWechsel> zustandsWechsel = osterMontag.getZustandsWechsel(startTime, endTime);
 		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
 	}
+
+	@Test
+	public void testeIntervalleOstermontag() {
+
+		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+		provider.parseAndAdd(provider, "Ostersonntag",
+				"Ostersonntag");
+		VerweisEintrag osterMontag = (VerweisEintrag) provider.parseAndAdd(provider, "Ostermontag",
+				"Ostersonntag+1Tag");
+
+		LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0);
+		LocalDateTime endTime = LocalDateTime.of(2018, 2, 28, 12, 0);
+
+		Intervall[] erwarteteIntervalle = { 
+				TestIntervall.of("06.04.2015 00:00", "07.04.2015 00:00"),
+				TestIntervall.of("28.03.2016 00:00", "29.03.2016 00:00"),
+				TestIntervall.of("17.04.2017 00:00", "18.04.2017 00:00")
+			};
+
+		List<Intervall> intervalle = osterMontag.getIntervalle(startTime, endTime);
+		TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+	}
+
 }
