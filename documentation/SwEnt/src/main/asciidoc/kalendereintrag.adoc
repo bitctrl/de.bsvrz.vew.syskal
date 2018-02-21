@@ -67,9 +67,9 @@ Der Kalendereintrag ist genau an diesem Tag im Bereich der angegebenen Jahre gü
 
 In Erweiterung des Datumseintrags erlaubt dieser Eintrag, einen Bereich mit Anfangsdatum und Enddatum in folgender Form zu definieren:
 
-    <dd.MM.yyyy-dd.MM.yyyy>({HH:mm:ss,SSS-HH:mm:ss,SSS}{HH:mm:ss,SSS-HH:mm:ss,SSS})
+    <dd.MM.yyyy HH:mm:ss,SSS-dd.MM.yyyy HH:mm:ss,SSS>({HH:mm:ss,SSS-HH:mm:ss,SSS}{HH:mm:ss,SSS-HH:mm:ss,SSS})
 
-Die Definition setzt sich aus zwei Teilen zusammen. Im ersten Abschnitt in spitzen Klammern wird der Gültigkeitsbereich per Datum angegeben. Platzhalter sind hier nicht erlaubt, das heißt es muss ein konkretes Dateum für Anfang und Ende angegeben werden.
+Die Definition setzt sich aus zwei Teilen zusammen. Im ersten Abschnitt in spitzen Klammern wird der Gültigkeitsbereich per Datum angegeben. Platzhalter sind hier nicht erlaubt, das heißt es muss ein konkretes Datum für Anfang und Ende angegeben werden. Die Angabe der Zeit für den Beginn und das Ende des Bereiches ist optional.
 
 Im zweiten Teil kann in runden Klammern eine Liste von Zeitbereichen definiert werden, in denen der Eintrag gültig werden soll. Ein Zeitbereich ist jeweils in geschweifte Klammern eingebettet.
 
@@ -104,13 +104,4 @@ Ein derartiger Kalendereintrag kombiniert zwei oder mehrere Systemkalendereintr�
     UND/ODER{<eintrag1>,<eintrag2>}anfangsjahr,endjahr
     
 Die zu verknüpfenden Einträge werden über ihre Namen referenziert. Die Einschränkung des Bereiches durch Anfangs und Endjahr ist optional und kann einseitig erfolgen, indem für das jeweilige Jahr der Platzhalter '*' angegeben wird.
-
-
-
-
-
-
-
-
-
 
