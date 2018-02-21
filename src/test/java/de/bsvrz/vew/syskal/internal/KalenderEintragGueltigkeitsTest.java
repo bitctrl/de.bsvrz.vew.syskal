@@ -53,8 +53,8 @@ import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 @RunWith(Parameterized.class)
 public class KalenderEintragGueltigkeitsTest {
 
-//	@Rule
-//	public Timeout globalTimeout = Timeout.seconds(5);
+	@Rule
+	public Timeout globalTimeout = Timeout.seconds(5);
 
 	protected static final TestKalenderEintragProvider PROVIDER = new TestKalenderEintragProvider();
 
