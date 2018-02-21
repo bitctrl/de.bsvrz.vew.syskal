@@ -36,6 +36,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.Intervall;
 import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemKalenderEintrag;
@@ -292,6 +293,41 @@ public abstract class KalenderEintragImpl implements KalenderEintrag {
 
 		return result;
 	}
+	
+	@Override
+	public List<Intervall> getIntervalle(LocalDateTime startTime, LocalDateTime endTime) {
+
+		if (isFehler()) {
+			return Collections.emptyList();
+		}
+		
+		List<Intervall> result = new ArrayList<>();
+
+		
+		SystemkalenderGueltigkeit gueltigkeit = getZeitlicheGueltigkeit(startTime);
+		LocalDateTime aktuellerZeitPunkt = startTime;
+
+		do {
+			if( gueltigkeit.isZeitlichGueltig()) {
+				LocalDateTime start = gueltigkeit.getErsterWechsel().getZeitPunkt();
+				if( start.isBefore(startTime)) {
+					start = startTime;
+				}
+				LocalDateTime ende = gueltigkeit.getNaechsterWechsel().getZeitPunkt();
+				if( ende.isAfter(endTime)) {
+					ende = endTime;
+				}
+				result.add(Intervall.of(start, ende));
+			}
+
+			ZustandsWechsel wechsel = gueltigkeit.getNaechsterWechsel();
+			aktuellerZeitPunkt = wechsel.getZeitPunkt();
+
+		} while (!aktuellerZeitPunkt.isAfter(endTime));
+
+		return result;
+	}
+	
 
 	/**
 	 * ermittelt, ob der Eintrag fehlerhaft eingelesen wurde.

@@ -27,17 +27,27 @@
 package de.bsvrz.vew.syskal;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-public interface KalenderEintrag {
+public class Intervall {
+	
+	public static Intervall of (LocalDateTime von, LocalDateTime bis) {
+		return new Intervall(von, bis);
+	}
+	
+	private LocalDateTime start;
+	private LocalDateTime ende;
+	
+	private Intervall(LocalDateTime start, LocalDateTime ende) {
+		super();
+		this.start = start;
+		this.ende = ende;
+	}
 
-	boolean isVerwendbar();
-	boolean isGueltig(LocalDateTime zeitPunkt);
+	public LocalDateTime getStart() {
+		return start;
+	}
 
-	SystemkalenderGueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitPunkt);
-	SystemkalenderGueltigkeit getZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt);
-
-	List<ZustandsWechsel> getZustandsWechsel(LocalDateTime startTime, LocalDateTime endTime); 
-	List<Intervall> getIntervalle(LocalDateTime startTime, LocalDateTime endTime);
-
+	public LocalDateTime getEnde() {
+		return ende;
+	}
 }

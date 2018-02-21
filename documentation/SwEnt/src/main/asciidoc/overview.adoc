@@ -23,4 +23,7 @@ Anforderungen.
 |===
 | Anforderung | Beschreibung                                       
 | VeW-4       | Systemkalender
+| TVeW-20     | Definition von Systemkalendereinträgen
+| TVeW-21     | Methoden der Funktionsbibliothek Systemkalender
+| TVeW-22     | Systemkalender – SWE
 |===

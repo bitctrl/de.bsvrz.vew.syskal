@@ -57,12 +57,15 @@ Der KalenderEintrag repräsentiert die Logik eines SystemKalenderEintrags und wi
 SystemkalenderGueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitPunkt);
 SystemkalenderGueltigkeit getZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt);
 List<ZustandsWechsel> getZustandsWechsel(LocalDateTime startTime, LocalDateTime endTime);
+List<Intervall> getIntervalle(LocalDateTime startTime, LocalDateTime endTime);
 ----
 
 Über den KalenderEintrag kann die Gültigkeit zu einem Zeitpunkt oder die Gültigkeit, die vor dem übergebenen Zeitpunkt ermittelt wurde bestimmt. Da die gelieferte Gültigkeit jeweils den nächsten Zustandsübergang einschließt, kann der Client sich mit diesen beiden Funktionen in beiden Zeitrichtungen
 bewegen und die Zustandsübergänge bestimmen.
 
 Die Funktion "getZustandsWechsel" implementiert das in der Bibliothek.
+
+Die Funktion "getIntervalle" liefert eine Liste gültiger Intervalle für den Kalendereintrag im angefragten Zeitraum. Die Intervalle werden dabei potentiell auf den Anfangs- bzw. Endzeitpunkt der Abfrage beschnitten.
 
 === SystemkalenderGueltigkeit
 
