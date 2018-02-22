@@ -53,122 +53,124 @@ import de.bsvrz.vew.syskal.SystemKalenderException;
 
 public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiverInterface, MutableSetChangeListener {
 
-	// private ObservableSet<SystemKalenderEintrag> eintraege =
-	// FXCollections.observableSet(new LinkedHashSet<>());
-	private Map<SystemObject, SystemKalenderEintragImpl> eintraege = new LinkedHashMap<>();
+    // private ObservableSet<SystemKalenderEintrag> eintraege =
+    // FXCollections.observableSet(new LinkedHashSet<>());
+    private Map<SystemObject, SystemKalenderEintragImpl> eintraege = new LinkedHashMap<>();
 
-	private ClientDavInterface dav;
-	private DataDescription dataDescription;
-	private MutableSet eintragsSet;
-	private boolean connectionLost = false;
+    private ClientDavInterface dav;
+    private DataDescription dataDescription;
+    private MutableSet eintragsSet;
+    private boolean connectionLost = false;
 
-	public Collection<SystemKalenderEintrag> getSystemKalenderEintraege() throws SystemKalenderException {
-		if (connectionLost) {
-			throw new SystemKalenderException("Die für den Systemkalender verwendete Datenverteilerverbindung wurde geschlossen");
-		}
-		return Collections.unmodifiableCollection(eintraege.values());
-	}
+    public Collection<SystemKalenderEintrag> getSystemKalenderEintraege() throws SystemKalenderException {
+        if (connectionLost) {
+            throw new SystemKalenderException(
+                    "Die für den Systemkalender verwendete Datenverteilerverbindung wurde geschlossen");
+        }
+        return Collections.unmodifiableCollection(eintraege.values());
+    }
 
-	public EintragsVerwaltung(ClientDavInterface dav, ConfigurationObject kalenderObject) {
-		if (!kalenderObject.isOfType("typ.kalender")) {
-			throw new IllegalStateException("Das Objekt " + kalenderObject + " ist nicht vom Typ \"typ.kalender\"!");
-		}
+    public EintragsVerwaltung(ClientDavInterface dav, ConfigurationObject kalenderObject) {
+        if (!kalenderObject.isOfType("typ.kalender")) {
+            throw new IllegalStateException("Das Objekt " + kalenderObject + " ist nicht vom Typ \"typ.kalender\"!");
+        }
 
-		this.dav = dav;
-		this.dav.addConnectionListener(connection -> invalidate());
+        this.dav = dav;
+        this.dav.addConnectionListener(connection -> invalidate());
 
-		AttributeGroup attributeGroup = dav.getDataModel().getAttributeGroup("atg.systemKalenderEintrag");
-		Aspect aspect = dav.getDataModel().getAspect("asp.parameterSoll");
-		dataDescription = new DataDescription(attributeGroup, aspect);
+        AttributeGroup attributeGroup = dav.getDataModel().getAttributeGroup("atg.systemKalenderEintrag");
+        Aspect aspect = dav.getDataModel().getAspect("asp.parameterSoll");
+        dataDescription = new DataDescription(attributeGroup, aspect);
 
-		eintragsSet = kalenderObject.getMutableSet("SystemKalenderEinträge");
-		eintragsSet.addChangeListener(this);
+        eintragsSet = kalenderObject.getMutableSet("SystemKalenderEinträge");
+        eintragsSet.addChangeListener(this);
 
-		addEintraege(eintragsSet.getElements());
-	}
+        addEintraege(eintragsSet.getElements());
+    }
 
-	@Override
-	public KalenderEintrag getKalenderEintrag(String name) {
-		Optional<SystemKalenderEintragImpl> systemKalenderEintrag = eintraege.values().stream()
-				.filter(s -> name.equals(s.getName())).findFirst();
-		if (systemKalenderEintrag.isPresent()) {
-			return systemKalenderEintrag.get().getKalenderEintrag();
-		}
-		return null;
-	}
+    @Override
+    public KalenderEintrag getKalenderEintrag(String name) {
+        Optional<SystemKalenderEintragImpl> systemKalenderEintrag = eintraege.values().stream()
+                .filter(s -> name.equals(s.getName())).findFirst();
+        if (systemKalenderEintrag.isPresent()) {
+            return systemKalenderEintrag.get().getKalenderEintrag();
+        }
+        return null;
+    }
 
-	private void addEintraege(Collection<SystemObject> list) {
+    private void addEintraege(Collection<SystemObject> list) {
 
-		Collection<SystemKalenderEintrag> neueEintrage = new ArrayList<>();
-		for (SystemObject obj : list) {
+        Collection<SystemKalenderEintrag> neueEintrage = new ArrayList<>();
+        for (SystemObject obj : list) {
 
-			SystemKalenderEintragImpl neuerEintrag = new SystemKalenderEintragImpl(this, (DynamicObject) obj);
-			neueEintrage.add(neuerEintrag);
-			SystemKalenderEintragImpl alterEintrag = eintraege.put(obj, neuerEintrag);
-			if (alterEintrag != null) {
-				dav.unsubscribeReceiver(this, alterEintrag.getSystemObject(), dataDescription);
-			}
-			dav.subscribeReceiver(this, obj, dataDescription, ReceiveOptions.normal(), ReceiverRole.receiver());
-		}
-	}
+            SystemKalenderEintragImpl neuerEintrag = new SystemKalenderEintragImpl(this, (DynamicObject) obj);
+            neueEintrage.add(neuerEintrag);
+            SystemKalenderEintragImpl alterEintrag = eintraege.put(obj, neuerEintrag);
+            if (alterEintrag != null) {
+                dav.unsubscribeReceiver(this, alterEintrag.getSystemObject(), dataDescription);
+            }
+            dav.subscribeReceiver(this, obj, dataDescription, ReceiveOptions.normal(), ReceiverRole.receiver());
+        }
+    }
 
-	private void berechneAbhaengigeKalenderEintraegeNeu(Collection<SystemKalenderEintrag> referenzen) {
+    private void berechneAbhaengigeKalenderEintraegeNeu(Collection<SystemKalenderEintrag> referenzen) {
 
-		Collection<SystemKalenderEintrag> berechnungsListe = new ArrayList<>(eintraege.values());
-		for (SystemKalenderEintrag eintrag : berechnungsListe) {
-			if (referenzen.contains(eintrag)) {
-				continue;
-			}
+        Collection<SystemKalenderEintrag> berechnungsListe = new ArrayList<>(eintraege.values());
+        for (SystemKalenderEintrag eintrag : berechnungsListe) {
+            if (referenzen.contains(eintrag)) {
+                continue;
+            }
 
-			((SystemKalenderEintragImpl) eintrag).aktualisiereVonReferenzen(referenzen);
-		}
-	}
+            ((SystemKalenderEintragImpl) eintrag).aktualisiereVonReferenzen(referenzen);
+        }
+    }
 
-	private void invalidate() {
-		eintraege.clear();
-		if (eintragsSet != null) {
-			eintragsSet.removeChangeListener(this);
-		}
-		connectionLost = true;
-	}
+    private void invalidate() {
+        eintraege.clear();
+        if (eintragsSet != null) {
+            eintragsSet.removeChangeListener(this);
+        }
+        connectionLost = true;
+    }
 
-	private void removeEintraege(Collection<SystemObject> list) {
+    private void removeEintraege(Collection<SystemObject> list) {
 
-		Collection<SystemKalenderEintrag> alteEintrage = new ArrayList<>();
-		for (SystemObject object : list) {
-			SystemKalenderEintrag alterEintrag = eintraege.remove(object);
-			if (alterEintrag != null) {
-				alteEintrage.add(alterEintrag);
-				dav.unsubscribeReceiver(this, object, dataDescription);
-			}
-		}
-		berechneAbhaengigeKalenderEintraegeNeu(alteEintrage);
-	}
+        Collection<SystemKalenderEintrag> alteEintrage = new ArrayList<>();
+        for (SystemObject object : list) {
+            SystemKalenderEintrag alterEintrag = eintraege.remove(object);
+            if (alterEintrag != null) {
+                alteEintrage.add(alterEintrag);
+                dav.unsubscribeReceiver(this, object, dataDescription);
+            }
+        }
+        berechneAbhaengigeKalenderEintraegeNeu(alteEintrage);
+    }
 
-	@Override
-	public void update(ResultData[] results) {
+    @Override
+    public void update(ResultData[] results) {
 
-		for (ResultData result : results) {
-			if (result.hasData()) {
-				SystemKalenderEintragImpl systemKalenderEintrag = eintraege.get(result.getObject());
-				if (systemKalenderEintrag != null) {
-					systemKalenderEintrag.setDefinition(result.getData().getTextValue("Definition").getText());
-					berechneAbhaengigeKalenderEintraegeNeu(Collections.singleton(systemKalenderEintrag));
-				}
-			}
-		}
-	}
+        for (ResultData result : results) {
+            if (result.hasData()) {
+                SystemKalenderEintragImpl systemKalenderEintrag = eintraege.get(result.getObject());
+                if (systemKalenderEintrag != null) {
+                    systemKalenderEintrag.setDefinition(result.getData().getTextValue("Definition").getText());
+                    berechneAbhaengigeKalenderEintraegeNeu(Collections.singleton(systemKalenderEintrag));
+                }
+            }
+        }
+    }
 
-	@Override
-	public void update(MutableSet set, SystemObject[] addedObjects, SystemObject[] removedObjects) {
-		removeEintraege(Arrays.asList(removedObjects));
-		addEintraege(Arrays.asList(addedObjects));
-	}
+    @Override
+    public void update(MutableSet set, SystemObject[] addedObjects, SystemObject[] removedObjects) {
+        removeEintraege(Arrays.asList(removedObjects));
+        addEintraege(Arrays.asList(addedObjects));
+    }
 
-	public SystemKalenderEintrag getSystemKalenderEintrag(SystemObject object) throws SystemKalenderException {
-		if (connectionLost) {
-			throw new SystemKalenderException("Die für den Systemkalender verwendete Datenverteilerverbindung wurde geschlossen");
-		}
-		return eintraege.get(object);
-	}
+    public SystemKalenderEintrag getSystemKalenderEintrag(SystemObject object) throws SystemKalenderException {
+        if (connectionLost) {
+            throw new SystemKalenderException(
+                    "Die für den Systemkalender verwendete Datenverteilerverbindung wurde geschlossen");
+        }
+        return eintraege.get(object);
+    }
 }

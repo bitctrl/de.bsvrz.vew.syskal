@@ -31,13 +31,16 @@ import java.util.List;
 
 public interface KalenderEintrag {
 
-	boolean isVerwendbar();
-	boolean isGueltig(LocalDateTime zeitPunkt);
+    boolean isVerwendbar();
 
-	SystemkalenderGueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitPunkt);
-	SystemkalenderGueltigkeit getZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt);
+    boolean isGueltig(LocalDateTime zeitPunkt);
 
-	List<ZustandsWechsel> getZustandsWechsel(LocalDateTime startTime, LocalDateTime endTime); 
-	List<Intervall> getIntervalle(LocalDateTime startTime, LocalDateTime endTime);
+    SystemkalenderGueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitPunkt);
+
+    SystemkalenderGueltigkeit getZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt);
+
+    List<ZustandsWechsel> getZustandsWechsel(LocalDateTime startTime, LocalDateTime endTime);
+
+    List<Intervall> getIntervalle(LocalDateTime startTime, LocalDateTime endTime);
 
 }

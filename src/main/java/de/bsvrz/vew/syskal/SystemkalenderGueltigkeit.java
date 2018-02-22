@@ -31,65 +31,65 @@ import java.time.LocalDateTime;
 
 public class SystemkalenderGueltigkeit {
 
-	public static final SystemkalenderGueltigkeit NICHT_GUELTIG = SystemkalenderGueltigkeit.of(
-			ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME),
-			ZustandsWechsel.zuUnGueltig(SystemKalender.MAX_DATETIME));
+    public static final SystemkalenderGueltigkeit NICHT_GUELTIG = SystemkalenderGueltigkeit.of(
+            ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME),
+            ZustandsWechsel.zuUnGueltig(SystemKalender.MAX_DATETIME));
 
-	ZustandsWechsel ersterWechsel = ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME);
-	ZustandsWechsel naechsterWechsel = ZustandsWechsel.zuUnGueltig(SystemKalender.MAX_DATETIME);
+    ZustandsWechsel ersterWechsel = ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME);
+    ZustandsWechsel naechsterWechsel = ZustandsWechsel.zuUnGueltig(SystemKalender.MAX_DATETIME);
 
-	private SystemkalenderGueltigkeit() {
-	}
+    private SystemkalenderGueltigkeit() {
+    }
 
-	public static SystemkalenderGueltigkeit of(ZustandsWechsel beginn, ZustandsWechsel wechsel) {
-		SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
-		gueltigkeit.ersterWechsel = beginn;
-		gueltigkeit.naechsterWechsel = wechsel;
-		return gueltigkeit;
-	}
+    public static SystemkalenderGueltigkeit of(ZustandsWechsel beginn, ZustandsWechsel wechsel) {
+        SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
+        gueltigkeit.ersterWechsel = beginn;
+        gueltigkeit.naechsterWechsel = wechsel;
+        return gueltigkeit;
+    }
 
-	public static SystemkalenderGueltigkeit gueltig(LocalDateTime beginn, LocalDateTime wechsel) {
-		SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
-		gueltigkeit.ersterWechsel = ZustandsWechsel.zuGueltig(beginn);
-		gueltigkeit.naechsterWechsel = ZustandsWechsel.zuUnGueltig(wechsel);
-		return gueltigkeit;
-	}
+    public static SystemkalenderGueltigkeit gueltig(LocalDateTime beginn, LocalDateTime wechsel) {
+        SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
+        gueltigkeit.ersterWechsel = ZustandsWechsel.zuGueltig(beginn);
+        gueltigkeit.naechsterWechsel = ZustandsWechsel.zuUnGueltig(wechsel);
+        return gueltigkeit;
+    }
 
-	public static SystemkalenderGueltigkeit gueltig(LocalDate beginn, LocalDate wechsel) {
-		SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
-		gueltigkeit.ersterWechsel = ZustandsWechsel.zuGueltig(beginn);
-		gueltigkeit.naechsterWechsel = ZustandsWechsel.zuUnGueltig(wechsel);
-		return gueltigkeit;
-	}
+    public static SystemkalenderGueltigkeit gueltig(LocalDate beginn, LocalDate wechsel) {
+        SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
+        gueltigkeit.ersterWechsel = ZustandsWechsel.zuGueltig(beginn);
+        gueltigkeit.naechsterWechsel = ZustandsWechsel.zuUnGueltig(wechsel);
+        return gueltigkeit;
+    }
 
-	public static SystemkalenderGueltigkeit unGueltig(LocalDateTime beginn, LocalDateTime wechsel) {
-		SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
-		gueltigkeit.ersterWechsel = ZustandsWechsel.zuUnGueltig(beginn);
-		gueltigkeit.naechsterWechsel = ZustandsWechsel.zuGueltig(wechsel);
-		return gueltigkeit;
-	}
+    public static SystemkalenderGueltigkeit unGueltig(LocalDateTime beginn, LocalDateTime wechsel) {
+        SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
+        gueltigkeit.ersterWechsel = ZustandsWechsel.zuUnGueltig(beginn);
+        gueltigkeit.naechsterWechsel = ZustandsWechsel.zuGueltig(wechsel);
+        return gueltigkeit;
+    }
 
-	public static SystemkalenderGueltigkeit unGueltig(LocalDate beginn, LocalDate wechsel) {
-		SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
-		gueltigkeit.ersterWechsel = ZustandsWechsel.zuUnGueltig(beginn);
-		gueltigkeit.naechsterWechsel = ZustandsWechsel.zuGueltig(wechsel);
-		return gueltigkeit;
-	}
+    public static SystemkalenderGueltigkeit unGueltig(LocalDate beginn, LocalDate wechsel) {
+        SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
+        gueltigkeit.ersterWechsel = ZustandsWechsel.zuUnGueltig(beginn);
+        gueltigkeit.naechsterWechsel = ZustandsWechsel.zuGueltig(wechsel);
+        return gueltigkeit;
+    }
 
-	public ZustandsWechsel getErsterWechsel() {
-		return ersterWechsel;
-	}
+    public ZustandsWechsel getErsterWechsel() {
+        return ersterWechsel;
+    }
 
-	public ZustandsWechsel getNaechsterWechsel() {
-		return naechsterWechsel;
-	}
+    public ZustandsWechsel getNaechsterWechsel() {
+        return naechsterWechsel;
+    }
 
-	public boolean isZeitlichGueltig() {
-		return ersterWechsel.isWirdGueltig();
-	}
+    public boolean isZeitlichGueltig() {
+        return ersterWechsel.isWirdGueltig();
+    }
 
-	@Override
-	public String toString() {
-		return ersterWechsel + " --> " + naechsterWechsel;
-	}
+    @Override
+    public String toString() {
+        return ersterWechsel + " --> " + naechsterWechsel;
+    }
 }

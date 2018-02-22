@@ -29,6 +29,6 @@ package de.bsvrz.vew.syskal.internal;
 import de.bsvrz.vew.syskal.KalenderEintrag;
 
 public interface KalenderEintragProvider {
-	
-	KalenderEintrag getKalenderEintrag(String name);
+
+    KalenderEintrag getKalenderEintrag(String name);
 }

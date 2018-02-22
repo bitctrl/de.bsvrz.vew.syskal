@@ -41,103 +41,103 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class VerweisEintragTest {
 
-	@Rule
-	public Timeout globalTimeout = Timeout.seconds(5);
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(5);
 
-	@Test
-	public void testeZustandswechselKarfreitag() {
+    @Test
+    public void testeZustandswechselKarfreitag() {
 
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		provider.parseAndAdd(provider, "Ostersonntag",
-				"Ostersonntag");
-		VerweisEintrag karfreitag = (VerweisEintrag) provider.parseAndAdd(provider, "Karfreitag",
-				"Ostersonntag - 2 Tage");
+        TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+        provider.parseAndAdd(provider, "Ostersonntag",
+                "Ostersonntag");
+        VerweisEintrag karfreitag = (VerweisEintrag) provider.parseAndAdd(provider, "Karfreitag",
+                "Ostersonntag - 2 Tage");
 
-		LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0);
-		LocalDateTime endTime = LocalDateTime.of(2018, 2, 28, 12, 0);
+        LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2018, 2, 28, 12, 0);
 
-		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("19.04.2014 00:00", false),
-				TestWechsel.of("03.04.2015 00:00", true), 
-				TestWechsel.of("04.04.2015 00:00", false),
-				TestWechsel.of("25.03.2016 00:00", true), 
-				TestWechsel.of("26.03.2016 00:00", false),
-				TestWechsel.of("14.04.2017 00:00", true), 
-				TestWechsel.of("15.04.2017 00:00", false)
-			};
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("19.04.2014 00:00", false),
+                TestWechsel.of("03.04.2015 00:00", true),
+                TestWechsel.of("04.04.2015 00:00", false),
+                TestWechsel.of("25.03.2016 00:00", true),
+                TestWechsel.of("26.03.2016 00:00", false),
+                TestWechsel.of("14.04.2017 00:00", true),
+                TestWechsel.of("15.04.2017 00:00", false)
+        };
 
-		List<ZustandsWechsel> zustandsWechsel = karfreitag.getZustandsWechsel(startTime, endTime);
-		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
-	}
+        List<ZustandsWechsel> zustandsWechsel = karfreitag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
 
-	@Test
-	public void testeIntervalleKarfreitag() {
+    @Test
+    public void testeIntervalleKarfreitag() {
 
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		provider.parseAndAdd(provider, "Ostersonntag",
-				"Ostersonntag");
-		VerweisEintrag karfreitag = (VerweisEintrag) provider.parseAndAdd(provider, "Karfreitag",
-				"Ostersonntag - 2 Tage");
+        TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+        provider.parseAndAdd(provider, "Ostersonntag",
+                "Ostersonntag");
+        VerweisEintrag karfreitag = (VerweisEintrag) provider.parseAndAdd(provider, "Karfreitag",
+                "Ostersonntag - 2 Tage");
 
-		LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0);
-		LocalDateTime endTime = LocalDateTime.of(2018, 2, 28, 12, 0);
+        LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2018, 2, 28, 12, 0);
 
-		Intervall[] erwarteteIntervalle = { 
-				TestIntervall.of("03.04.2015 00:00", "04.04.2015 00:00"),
-				TestIntervall.of("25.03.2016 00:00", "26.03.2016 00:00"),
-				TestIntervall.of("14.04.2017 00:00", "15.04.2017 00:00")
-			};
+        Intervall[] erwarteteIntervalle = {
+                TestIntervall.of("03.04.2015 00:00", "04.04.2015 00:00"),
+                TestIntervall.of("25.03.2016 00:00", "26.03.2016 00:00"),
+                TestIntervall.of("14.04.2017 00:00", "15.04.2017 00:00")
+        };
 
-		List<Intervall> intervalle = karfreitag.getIntervalle(startTime, endTime);
-		TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
-	}
-	
-	@Test
-	public void testeZustandswechselOstermontag() {
+        List<Intervall> intervalle = karfreitag.getIntervalle(startTime, endTime);
+        TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+    }
 
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		provider.parseAndAdd(provider, "Ostersonntag",
-				"Ostersonntag");
-		VerweisEintrag osterMontag = (VerweisEintrag) provider.parseAndAdd(provider, "Ostermontag",
-				"Ostersonntag+1Tag");
+    @Test
+    public void testeZustandswechselOstermontag() {
 
-		LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0);
-		LocalDateTime endTime = LocalDateTime.of(2018, 2, 28, 12, 0);
+        TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+        provider.parseAndAdd(provider, "Ostersonntag",
+                "Ostersonntag");
+        VerweisEintrag osterMontag = (VerweisEintrag) provider.parseAndAdd(provider, "Ostermontag",
+                "Ostersonntag+1Tag");
 
-		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("22.04.2014 00:00", false),
-				TestWechsel.of("06.04.2015 00:00", true), 
-				TestWechsel.of("07.04.2015 00:00", false),
-				TestWechsel.of("28.03.2016 00:00", true), 
-				TestWechsel.of("29.03.2016 00:00", false),
-				TestWechsel.of("17.04.2017 00:00", true), 
-				TestWechsel.of("18.04.2017 00:00", false)
-			};
+        LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2018, 2, 28, 12, 0);
 
-		List<ZustandsWechsel> zustandsWechsel = osterMontag.getZustandsWechsel(startTime, endTime);
-		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
-	}
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("22.04.2014 00:00", false),
+                TestWechsel.of("06.04.2015 00:00", true),
+                TestWechsel.of("07.04.2015 00:00", false),
+                TestWechsel.of("28.03.2016 00:00", true),
+                TestWechsel.of("29.03.2016 00:00", false),
+                TestWechsel.of("17.04.2017 00:00", true),
+                TestWechsel.of("18.04.2017 00:00", false)
+        };
 
-	@Test
-	public void testeIntervalleOstermontag() {
+        List<ZustandsWechsel> zustandsWechsel = osterMontag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
 
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		provider.parseAndAdd(provider, "Ostersonntag",
-				"Ostersonntag");
-		VerweisEintrag osterMontag = (VerweisEintrag) provider.parseAndAdd(provider, "Ostermontag",
-				"Ostersonntag+1Tag");
+    @Test
+    public void testeIntervalleOstermontag() {
 
-		LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0);
-		LocalDateTime endTime = LocalDateTime.of(2018, 2, 28, 12, 0);
+        TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+        provider.parseAndAdd(provider, "Ostersonntag",
+                "Ostersonntag");
+        VerweisEintrag osterMontag = (VerweisEintrag) provider.parseAndAdd(provider, "Ostermontag",
+                "Ostersonntag+1Tag");
 
-		Intervall[] erwarteteIntervalle = { 
-				TestIntervall.of("06.04.2015 00:00", "07.04.2015 00:00"),
-				TestIntervall.of("28.03.2016 00:00", "29.03.2016 00:00"),
-				TestIntervall.of("17.04.2017 00:00", "18.04.2017 00:00")
-			};
+        LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2018, 2, 28, 12, 0);
 
-		List<Intervall> intervalle = osterMontag.getIntervalle(startTime, endTime);
-		TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
-	}
+        Intervall[] erwarteteIntervalle = {
+                TestIntervall.of("06.04.2015 00:00", "07.04.2015 00:00"),
+                TestIntervall.of("28.03.2016 00:00", "29.03.2016 00:00"),
+                TestIntervall.of("17.04.2017 00:00", "18.04.2017 00:00")
+        };
+
+        List<Intervall> intervalle = osterMontag.getIntervalle(startTime, endTime);
+        TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+    }
 
 }

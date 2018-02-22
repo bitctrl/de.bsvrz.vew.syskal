@@ -29,25 +29,25 @@ package de.bsvrz.vew.syskal;
 import java.time.LocalDateTime;
 
 public class Intervall {
-	
-	public static Intervall of (LocalDateTime von, LocalDateTime bis) {
-		return new Intervall(von, bis);
-	}
-	
-	private LocalDateTime start;
-	private LocalDateTime ende;
-	
-	private Intervall(LocalDateTime start, LocalDateTime ende) {
-		super();
-		this.start = start;
-		this.ende = ende;
-	}
 
-	public LocalDateTime getStart() {
-		return start;
-	}
+    public static Intervall of(LocalDateTime von, LocalDateTime bis) {
+        return new Intervall(von, bis);
+    }
 
-	public LocalDateTime getEnde() {
-		return ende;
-	}
+    private LocalDateTime start;
+    private LocalDateTime ende;
+
+    private Intervall(LocalDateTime start, LocalDateTime ende) {
+        super();
+        this.start = start;
+        this.ende = ende;
+    }
+
+    public LocalDateTime getStart() {
+        return start;
+    }
+
+    public LocalDateTime getEnde() {
+        return ende;
+    }
 }

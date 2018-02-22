@@ -32,81 +32,82 @@ import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.Objects;
 
-public class ZustandsWechsel  {
+public class ZustandsWechsel {
 
-	public static final Comparator<ZustandsWechsel> ZEIT_COMPARATOR = new Comparator<ZustandsWechsel>() {
+    public static final Comparator<ZustandsWechsel> ZEIT_COMPARATOR = new Comparator<ZustandsWechsel>() {
 
-		@Override
-		public int compare(ZustandsWechsel o1, ZustandsWechsel o2) {
-			return o1.getZeitPunkt().compareTo(o2.getZeitPunkt());
-		}
-	};
-	
-//	public static final ZustandsWechsel MIN = ZustandsWechsel.of(SystemKalender.MIN_DATETIME, false);
-//	public static final ZustandsWechsel MAX = ZustandsWechsel.of(SystemKalender.MAX_DATETIME, false);
-	
-	private LocalDateTime zeitPunkt;
-	private boolean wirdGueltig;
+        @Override
+        public int compare(ZustandsWechsel o1, ZustandsWechsel o2) {
+            return o1.getZeitPunkt().compareTo(o2.getZeitPunkt());
+        }
+    };
 
-	public static ZustandsWechsel zuGueltig(LocalDate datum) {
-		return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), true);
-	}
+    // public static final ZustandsWechsel MIN =
+    // ZustandsWechsel.of(SystemKalender.MIN_DATETIME, false);
+    // public static final ZustandsWechsel MAX =
+    // ZustandsWechsel.of(SystemKalender.MAX_DATETIME, false);
 
-	public static ZustandsWechsel zuGueltig(LocalDateTime zeitPunkt) {
-		return new ZustandsWechsel(zeitPunkt, true);
-	}
+    private LocalDateTime zeitPunkt;
+    private boolean wirdGueltig;
 
-	public static ZustandsWechsel zuUnGueltig(LocalDate datum) {
-		return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), false);
-	}
+    public static ZustandsWechsel zuGueltig(LocalDate datum) {
+        return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), true);
+    }
 
-	public static ZustandsWechsel zuUnGueltig(LocalDateTime zeitPunkt) {
-		return new ZustandsWechsel(zeitPunkt, false);
-	}
-	
-	public static ZustandsWechsel of(LocalDateTime zeitPunkt, boolean wirdGueltig) {
-		return new ZustandsWechsel(zeitPunkt, wirdGueltig);
-	}
-	
-	public static ZustandsWechsel oof(LocalDate datum, boolean wirdGueltig) {
-		return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), wirdGueltig);
-	}
-	
-	
-	private ZustandsWechsel(LocalDateTime zeitPunkt, boolean wirdGueltig) {
-		this.zeitPunkt = zeitPunkt;
-		this.wirdGueltig = wirdGueltig;
-	}
-	
-	public LocalDateTime getZeitPunkt() {
-		return zeitPunkt;
-	}
-	
-	public boolean isWirdGueltig() {
-		return wirdGueltig;
-	}
+    public static ZustandsWechsel zuGueltig(LocalDateTime zeitPunkt) {
+        return new ZustandsWechsel(zeitPunkt, true);
+    }
 
-	@Override
-	public String toString() {
-		return "ZustandsWechsel [" + zeitPunkt + ": " + wirdGueltig + "]";
-	}
+    public static ZustandsWechsel zuUnGueltig(LocalDate datum) {
+        return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), false);
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(zeitPunkt, wirdGueltig);
-	}
+    public static ZustandsWechsel zuUnGueltig(LocalDateTime zeitPunkt) {
+        return new ZustandsWechsel(zeitPunkt, false);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		
-		ZustandsWechsel other = (ZustandsWechsel) obj;
-		return Objects.equals(zeitPunkt, other.zeitPunkt) && wirdGueltig == other.wirdGueltig;
-	}
+    public static ZustandsWechsel of(LocalDateTime zeitPunkt, boolean wirdGueltig) {
+        return new ZustandsWechsel(zeitPunkt, wirdGueltig);
+    }
+
+    public static ZustandsWechsel oof(LocalDate datum, boolean wirdGueltig) {
+        return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), wirdGueltig);
+    }
+
+    private ZustandsWechsel(LocalDateTime zeitPunkt, boolean wirdGueltig) {
+        this.zeitPunkt = zeitPunkt;
+        this.wirdGueltig = wirdGueltig;
+    }
+
+    public LocalDateTime getZeitPunkt() {
+        return zeitPunkt;
+    }
+
+    public boolean isWirdGueltig() {
+        return wirdGueltig;
+    }
+
+    @Override
+    public String toString() {
+        return "ZustandsWechsel [" + zeitPunkt + ": " + wirdGueltig + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(zeitPunkt, wirdGueltig);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        ZustandsWechsel other = (ZustandsWechsel) obj;
+        return Objects.equals(zeitPunkt, other.zeitPunkt) && wirdGueltig == other.wirdGueltig;
+    }
 }

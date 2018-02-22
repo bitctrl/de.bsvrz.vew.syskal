@@ -38,77 +38,78 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class SystemKalenderEintragImpl implements SystemKalenderEintrag {
 
-	private final ObjectProperty<KalenderEintrag> kalenderEintragProperty = new SimpleObjectProperty<>(this, "kalendereintrag", VorDefinierterEintrag.UNDEFINIERT);
-	private KalenderEintragProvider provider;
-	private DynamicObject systemObject;
-	private String originalDefinition;
+    private final ObjectProperty<KalenderEintrag> kalenderEintragProperty = new SimpleObjectProperty<>(this,
+            "kalendereintrag", VorDefinierterEintrag.UNDEFINIERT);
+    private KalenderEintragProvider provider;
+    private DynamicObject systemObject;
+    private String originalDefinition;
 
-	public SystemKalenderEintragImpl(KalenderEintragProvider provider, DynamicObject obj) {
-		this.provider = provider;
-		this.systemObject = obj;
-	}
+    public SystemKalenderEintragImpl(KalenderEintragProvider provider, DynamicObject obj) {
+        this.provider = provider;
+        this.systemObject = obj;
+    }
 
-	void bestimmeKalendereintrag() {
-		String name = systemObject.getName();
-		if (originalDefinition == null) {
-			kalenderEintragProperty.set(VorDefinierterEintrag.UNDEFINIERT);
-		} else {
-			kalenderEintragProperty.set(KalenderEintragImpl.parse(provider, name, originalDefinition));
-		}
-	}
+    void bestimmeKalendereintrag() {
+        String name = systemObject.getName();
+        if (originalDefinition == null) {
+            kalenderEintragProperty.set(VorDefinierterEintrag.UNDEFINIERT);
+        } else {
+            kalenderEintragProperty.set(KalenderEintragImpl.parse(provider, name, originalDefinition));
+        }
+    }
 
-	@Override
-	public KalenderEintrag getKalenderEintrag() {
-		return kalenderEintragProperty.get();
-	}
-	
-	@Override
-	public SystemObject getSystemObject() {
-		return systemObject;
-	}
+    @Override
+    public KalenderEintrag getKalenderEintrag() {
+        return kalenderEintragProperty.get();
+    }
 
-	public void setDefinition(String text) {
-		if (!Objects.equals(originalDefinition, text)) {
-			originalDefinition = text;
-			bestimmeKalendereintrag();
-		}
-	}
+    @Override
+    public SystemObject getSystemObject() {
+        return systemObject;
+    }
 
-	@Override
-	public String getName() {
-		return systemObject.getName();
-	}
+    public void setDefinition(String text) {
+        if (!Objects.equals(originalDefinition, text)) {
+            originalDefinition = text;
+            bestimmeKalendereintrag();
+        }
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder(100);
-		builder.append(systemObject.getName());
-		builder.append(':');
+    @Override
+    public String getName() {
+        return systemObject.getName();
+    }
 
-		if (((KalenderEintragImpl) kalenderEintragProperty.get()).isFehler()) {
-			builder.append("FEHLER :");
-		} else {
-			builder.append("OK    :");
-		}
-		builder.append(kalenderEintragProperty.get());
-		return builder.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder(100);
+        builder.append(systemObject.getName());
+        builder.append(':');
 
-	@Override
-	public ObjectProperty<KalenderEintrag> getKalenderEintragProperty() {
-		return kalenderEintragProperty;
-	}
+        if (((KalenderEintragImpl) kalenderEintragProperty.get()).isFehler()) {
+            builder.append("FEHLER :");
+        } else {
+            builder.append("OK    :");
+        }
+        builder.append(kalenderEintragProperty.get());
+        return builder.toString();
+    }
 
-	public void aktualisiereVonReferenzen(Collection<SystemKalenderEintrag> referenzen) {
-		for( SystemKalenderEintrag referenz  : referenzen) {
-			if (referenz.equals(this)) {
-				continue;
-			}
-			
-			if( ((KalenderEintragImpl) getKalenderEintrag()).benutzt(referenz)) {
-				bestimmeKalendereintrag();
-				return;
-			}
-		}
-	}
+    @Override
+    public ObjectProperty<KalenderEintrag> getKalenderEintragProperty() {
+        return kalenderEintragProperty;
+    }
+
+    public void aktualisiereVonReferenzen(Collection<SystemKalenderEintrag> referenzen) {
+        for (SystemKalenderEintrag referenz : referenzen) {
+            if (referenz.equals(this)) {
+                continue;
+            }
+
+            if (((KalenderEintragImpl) getKalenderEintrag()).benutzt(referenz)) {
+                bestimmeKalendereintrag();
+                return;
+            }
+        }
+    }
 }

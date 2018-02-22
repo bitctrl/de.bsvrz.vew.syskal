@@ -34,20 +34,20 @@ import java.util.List;
 
 public class TestIntervall {
 
-	private static final DateTimeFormatter DATE_PARSER = DateTimeFormatter.ofPattern("d.M.y H[:m[:s[.SSS]]]");
+    private static final DateTimeFormatter DATE_PARSER = DateTimeFormatter.ofPattern("d.M.y H[:m[:s[.SSS]]]");
 
-	public static Intervall of(String start, String ende) {
-		return Intervall.of(LocalDateTime.parse(start, DATE_PARSER), LocalDateTime.parse(ende, DATE_PARSER));
-	}
+    public static Intervall of(String start, String ende) {
+        return Intervall.of(LocalDateTime.parse(start, DATE_PARSER), LocalDateTime.parse(ende, DATE_PARSER));
+    }
 
-	public static void pruefeIntervalle(Intervall[] erwarteteIntervalle, List<Intervall> intervalle) {
-		assertEquals("Erwartete Intervalle", erwarteteIntervalle.length, intervalle.size());
+    public static void pruefeIntervalle(Intervall[] erwarteteIntervalle, List<Intervall> intervalle) {
+        assertEquals("Erwartete Intervalle", erwarteteIntervalle.length, intervalle.size());
 
-		for (int index = 0; index < intervalle.size(); index++) {
-			assertEquals(index + ": Intervall-Anfang", erwarteteIntervalle[index].getStart(),
-					intervalle.get(index).getStart());
-			assertEquals(index + ": Intervall-Ende", erwarteteIntervalle[index].getEnde(),
-					intervalle.get(index).getEnde());
-		}
-	}
+        for (int index = 0; index < intervalle.size(); index++) {
+            assertEquals(index + ": Intervall-Anfang", erwarteteIntervalle[index].getStart(),
+                    intervalle.get(index).getStart());
+            assertEquals(index + ": Intervall-Ende", erwarteteIntervalle[index].getEnde(),
+                    intervalle.get(index).getEnde());
+        }
+    }
 }

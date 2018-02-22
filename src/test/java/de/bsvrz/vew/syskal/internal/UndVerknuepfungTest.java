@@ -42,57 +42,56 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class UndVerknuepfungTest {
 
-	@Rule
-	public Timeout globalTimeout = Timeout.seconds(5);
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(5);
 
-	private static TestKalenderEintragProvider provider;
-	private static UndVerknuepfung verknuepfung;
+    private static TestKalenderEintragProvider provider;
+    private static UndVerknuepfung verknuepfung;
 
-	@BeforeClass
-	public static void init() {
-		provider = new TestKalenderEintragProvider();
-		provider.parseAndAdd(provider, "Mittags", "Mittags:=({11:30:00,000-13:30:00,000})");
-		verknuepfung = (UndVerknuepfung) provider.parseAndAdd(provider, "MontagMittag", "UND{Montag, Mittags}");
-	}
+    @BeforeClass
+    public static void init() {
+        provider = new TestKalenderEintragProvider();
+        provider.parseAndAdd(provider, "Mittags", "Mittags:=({11:30:00,000-13:30:00,000})");
+        verknuepfung = (UndVerknuepfung) provider.parseAndAdd(provider, "MontagMittag", "UND{Montag, Mittags}");
+    }
 
+    @Test
+    public void testeZustandswechsel() {
 
-	@Test
-	public void testeZustandswechsel() {
+        LocalDateTime start = LocalDateTime.of(2018, 5, 1, 0, 0);
+        LocalDateTime ende = LocalDateTime.of(2018, 6, 1, 0, 0);
 
-		LocalDateTime start = LocalDateTime.of(2018, 5, 1, 0, 0);
-		LocalDateTime ende = LocalDateTime.of(2018, 6, 1, 0, 0);
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("30.4.2018 13:30", false),
+                TestWechsel.of("7.5.2018 11:30", true),
+                TestWechsel.of("7.5.2018 13:30", false),
+                TestWechsel.of("14.5.2018 11:30", true),
+                TestWechsel.of("14.5.2018 13:30", false),
+                TestWechsel.of("21.5.2018 11:30", true),
+                TestWechsel.of("21.5.2018 13:30", false),
+                TestWechsel.of("28.5.2018 11:30", true),
+                TestWechsel.of("28.5.2018 13:30", false),
+        };
 
-		TestWechsel[] erwarteteWechsel = {
-			TestWechsel.of("30.4.2018 13:30", false),
-			TestWechsel.of("7.5.2018 11:30", true),
-			TestWechsel.of("7.5.2018 13:30", false),
-			TestWechsel.of("14.5.2018 11:30", true),
-			TestWechsel.of("14.5.2018 13:30", false),
-			TestWechsel.of("21.5.2018 11:30", true),
-			TestWechsel.of("21.5.2018 13:30", false),
-			TestWechsel.of("28.5.2018 11:30", true),
-			TestWechsel.of("28.5.2018 13:30", false),
-		};
-		
-		List<ZustandsWechsel> zustandsWechselImBereich = verknuepfung.getZustandsWechsel(start, ende);
-		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechselImBereich);
-	}
-	
-	@Test
-	public void testeIntervalle() {
+        List<ZustandsWechsel> zustandsWechselImBereich = verknuepfung.getZustandsWechsel(start, ende);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechselImBereich);
+    }
 
-		LocalDateTime start = LocalDateTime.of(2018, 5, 7, 12, 0);
-		LocalDateTime ende = LocalDateTime.of(2018, 5, 28, 12, 0);
+    @Test
+    public void testeIntervalle() {
 
-		Intervall[] erwarteteIntervalle = { 
-				TestIntervall.of("07.05.2018 12:00", "07.05.2018 13:30"),
-				TestIntervall.of("14.05.2018 11:30", "14.05.2018 13:30"),
-				TestIntervall.of("21.05.2018 11:30", "21.05.2018 13:30"),
-				TestIntervall.of("28.05.2018 11:30", "28.05.2018 12:00")
-			};
+        LocalDateTime start = LocalDateTime.of(2018, 5, 7, 12, 0);
+        LocalDateTime ende = LocalDateTime.of(2018, 5, 28, 12, 0);
 
-		List<Intervall> intervalle = verknuepfung.getIntervalle(start, ende);
-		TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
-	}
-	
+        Intervall[] erwarteteIntervalle = {
+                TestIntervall.of("07.05.2018 12:00", "07.05.2018 13:30"),
+                TestIntervall.of("14.05.2018 11:30", "14.05.2018 13:30"),
+                TestIntervall.of("21.05.2018 11:30", "21.05.2018 13:30"),
+                TestIntervall.of("28.05.2018 11:30", "28.05.2018 12:00")
+        };
+
+        List<Intervall> intervalle = verknuepfung.getIntervalle(start, ende);
+        TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+    }
+
 }

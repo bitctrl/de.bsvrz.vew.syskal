@@ -41,58 +41,58 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class VordefinierterEintragTest {
 
-	@Rule
-	public Timeout globalTimeout = Timeout.seconds(5);
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(5);
 
-	@Test
-	public void testeZustandswechsel() {
+    @Test
+    public void testeZustandswechsel() {
 
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintragImpl.parse(provider, "Mittwoch",
-				"Mittwoch");
+        TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+        VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintragImpl.parse(provider, "Mittwoch",
+                "Mittwoch");
 
-		LocalDateTime start = LocalDateTime.of(2018, 1, 24, 12, 10);
-		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 10);
+        LocalDateTime start = LocalDateTime.of(2018, 1, 24, 12, 10);
+        LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 10);
 
-		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("24.01.2018 00:00", true),
-				TestWechsel.of("25.01.2018 00:00", false), 
-				TestWechsel.of("31.01.2018 00:00", true),
-				TestWechsel.of("01.02.2018 00:00", false), 
-				TestWechsel.of("07.02.2018 00:00", true),
-				TestWechsel.of("08.02.2018 00:00", false), 
-				TestWechsel.of("14.02.2018 00:00", true),
-				TestWechsel.of("15.02.2018 00:00", false), 
-				TestWechsel.of("21.02.2018 00:00", true),
-				TestWechsel.of("22.02.2018 00:00", false), 
-				TestWechsel.of("28.02.2018 00:00", true) 
-		};
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("24.01.2018 00:00", true),
+                TestWechsel.of("25.01.2018 00:00", false),
+                TestWechsel.of("31.01.2018 00:00", true),
+                TestWechsel.of("01.02.2018 00:00", false),
+                TestWechsel.of("07.02.2018 00:00", true),
+                TestWechsel.of("08.02.2018 00:00", false),
+                TestWechsel.of("14.02.2018 00:00", true),
+                TestWechsel.of("15.02.2018 00:00", false),
+                TestWechsel.of("21.02.2018 00:00", true),
+                TestWechsel.of("22.02.2018 00:00", false),
+                TestWechsel.of("28.02.2018 00:00", true)
+        };
 
-		List<ZustandsWechsel> zustandsWechsel = mittwoch.getZustandsWechsel(start, ende);
-		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
-	}
-	
-	@Test
-	public void testeIntervalle() {
+        List<ZustandsWechsel> zustandsWechsel = mittwoch.getZustandsWechsel(start, ende);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
 
-		TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-		VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintragImpl.parse(provider, "Mittwoch",
-				"Mittwoch");
+    @Test
+    public void testeIntervalle() {
 
-		LocalDateTime start = LocalDateTime.of(2018, 1, 24, 12, 10);
-		LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 10);
-		
-		Intervall[] erwarteteIntervalle = { 
-				TestIntervall.of("24.01.2018 12:10", "25.01.2018 00:00"),
-				TestIntervall.of("31.01.2018 00:00", "01.02.2018 00:00"),
-				TestIntervall.of("07.02.2018 00:00", "08.02.2018 00:00"),
-				TestIntervall.of("14.02.2018 00:00", "15.02.2018 00:00"),
-				TestIntervall.of("21.02.2018 00:00", "22.02.2018 00:00"),
-				TestIntervall.of("28.02.2018 00:00", "28.02.2018 12:10")
-			};
+        TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+        VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintragImpl.parse(provider, "Mittwoch",
+                "Mittwoch");
 
-		List<Intervall> intervalle = mittwoch.getIntervalle(start, ende);
-		TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
-	}
-	
+        LocalDateTime start = LocalDateTime.of(2018, 1, 24, 12, 10);
+        LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 10);
+
+        Intervall[] erwarteteIntervalle = {
+                TestIntervall.of("24.01.2018 12:10", "25.01.2018 00:00"),
+                TestIntervall.of("31.01.2018 00:00", "01.02.2018 00:00"),
+                TestIntervall.of("07.02.2018 00:00", "08.02.2018 00:00"),
+                TestIntervall.of("14.02.2018 00:00", "15.02.2018 00:00"),
+                TestIntervall.of("21.02.2018 00:00", "22.02.2018 00:00"),
+                TestIntervall.of("28.02.2018 00:00", "28.02.2018 12:10")
+        };
+
+        List<Intervall> intervalle = mittwoch.getIntervalle(start, ende);
+        TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+    }
+
 }

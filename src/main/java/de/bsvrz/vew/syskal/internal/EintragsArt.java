@@ -34,48 +34,48 @@ package de.bsvrz.vew.syskal.internal;
  */
 public enum EintragsArt {
 
-	/**
-	 * Platzhalter für Einträge bei denen der Definitionsstring nicht ermittelt
-	 * werden konnte.
-	 */
-	UNDEFINIERT("Undefiniert"),
+    /**
+     * Platzhalter für Einträge bei denen der Definitionsstring nicht ermittelt
+     * werden konnte.
+     */
+    UNDEFINIERT("Undefiniert"),
 
-	/** Typ für vordefinierte Einträge. */
-	VORDEFINIERT("Vordefiniert"),
+    /** Typ für vordefinierte Einträge. */
+    VORDEFINIERT("Vordefiniert"),
 
-	/** Typ für Einträge die durch ein einzelnes Datun definiert werden. */
-	NURDATUM("Datum"),
+    /** Typ für Einträge die durch ein einzelnes Datun definiert werden. */
+    NURDATUM("Datum"),
 
-	/** Typ für Einträge die durch einen Zeitbereich definiert werden. */
-	DATUMSBEREICH("Zeitbereich"),
+    /** Typ für Einträge die durch einen Zeitbereich definiert werden. */
+    DATUMSBEREICH("Zeitbereich"),
 
-	/**
-	 * Typ für Einträge die durch Erweiterung eines bestehenden definiert
-	 * werden.
-	 */
-	ABGELEITET("Referenz"),
+    /**
+     * Typ für Einträge die durch Erweiterung eines bestehenden definiert
+     * werden.
+     */
+    ABGELEITET("Referenz"),
 
-	/**
-	 * Typ für Einträge die durch logische Verknüpfung mehrerer anderer Einträge
-	 * definiert werden.
-	 */
-	VERKNUEPFT("Verknüpfung");
+    /**
+     * Typ für Einträge die durch logische Verknüpfung mehrerer anderer Einträge
+     * definiert werden.
+     */
+    VERKNUEPFT("Verknüpfung");
 
-	/** der Name der Eintragsart. */
-	private final String name;
+    /** der Name der Eintragsart. */
+    private final String name;
 
-	/**
-	 * Konstruktor.
-	 * 
-	 * @param name
-	 *            der Name des Typs
-	 */
-	EintragsArt(final String name) {
-		this.name = name;
-	}
+    /**
+     * Konstruktor.
+     * 
+     * @param name
+     *            der Name des Typs
+     */
+    EintragsArt(final String name) {
+        this.name = name;
+    }
 
-	@Override
-	public String toString() {
-		return name;
-	}
+    @Override
+    public String toString() {
+        return name;
+    }
 }

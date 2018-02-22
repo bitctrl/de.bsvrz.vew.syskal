@@ -41,36 +41,37 @@ import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline8 {
 
-	@Rule
-	public Timeout globalTimeout = Timeout.seconds(5);
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(5);
 
-	@Test
-	public void beispiele8() {
+    @Test
+    public void beispiele8() {
 
-		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
+        TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider
-				.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ferien1", "Ferien1:=<30.07.2015-12.09.2015>"));
-		eintragsProvider
-				.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ferien2", "Ferien2:=<02.11.2015-06.11.2015>"));
-		eintragsProvider
-				.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ferien", "Ferien:=ODER{Ferien1,Ferien2}*,*"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "FerienPlus", "FerienPlus:=Ferien+1Tag"));
+        eintragsProvider
+                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ferien1", "Ferien1:=<30.07.2015-12.09.2015>"));
+        eintragsProvider
+                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ferien2", "Ferien2:=<02.11.2015-06.11.2015>"));
+        eintragsProvider
+                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ferien", "Ferien:=ODER{Ferien1,Ferien2}*,*"));
+        eintragsProvider
+                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "FerienPlus", "FerienPlus:=Ferien+1Tag"));
 
-		KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("FerienPlus");
-		LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0, 0);
-		LocalDateTime endTime = LocalDateTime.of(2015, 12, 31, 23, 59, 59)
-				.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
+        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("FerienPlus");
+        LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2015, 12, 31, 23, 59, 59)
+                .plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 
-		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("1.1.1000 00:00", false),
-				TestWechsel.of("31.7.2015 00:00", true), 
-				TestWechsel.of("14.9.2015 00:00", false),
-				TestWechsel.of("3.11.2015 00:00", true),
-				TestWechsel.of("8.11.2015 00:00", false)
-		};
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("1.1.1000 00:00", false),
+                TestWechsel.of("31.7.2015 00:00", true),
+                TestWechsel.of("14.9.2015 00:00", false),
+                TestWechsel.of("3.11.2015 00:00", true),
+                TestWechsel.of("8.11.2015 00:00", false)
+        };
 
-		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
-		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
-	}
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
 }

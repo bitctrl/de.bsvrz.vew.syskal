@@ -40,73 +40,72 @@ import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
-
 public class OderVerknuepfungTest {
 
-	@Rule
-	public Timeout globalTimeout = Timeout.seconds(5);
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(5);
 
-	private static TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-	private static OderVerknuepfung verknuepfung;
+    private static TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
+    private static OderVerknuepfung verknuepfung;
 
-	@BeforeClass
-	public static void init() {
-		verknuepfung = (OderVerknuepfung) provider.parseAndAdd(provider, "MontagOderMittwoch", "ODER{Montag, Mittwoch}");
-	}
+    @BeforeClass
+    public static void init() {
+        verknuepfung = (OderVerknuepfung) provider.parseAndAdd(provider, "MontagOderMittwoch",
+                "ODER{Montag, Mittwoch}");
+    }
 
-	@Test
-	public void testeZustandswechsel() {
+    @Test
+    public void testeZustandswechsel() {
 
-		LocalDateTime start = LocalDateTime.of(2018, 5, 1, 0, 0);
-		LocalDateTime ende = LocalDateTime.of(2018, 6, 1, 0, 0);
+        LocalDateTime start = LocalDateTime.of(2018, 5, 1, 0, 0);
+        LocalDateTime ende = LocalDateTime.of(2018, 6, 1, 0, 0);
 
-		TestWechsel[] erwarteteWechsel = {
-			TestWechsel.of("1.5.2018 00:00", false),
-			TestWechsel.of("2.5.2018 00:00", true),
-			TestWechsel.of("3.5.2018 00:00", false),
-			TestWechsel.of("7.5.2018 00:00", true),
-			TestWechsel.of("8.5.2018 00:00", false),
-			TestWechsel.of("9.5.2018 00:00", true),
-			TestWechsel.of("10.5.2018 00:00", false),
-			TestWechsel.of("14.5.2018 00:00", true),
-			TestWechsel.of("15.5.2018 00:00", false),
-			TestWechsel.of("16.5.2018 00:00", true),
-			TestWechsel.of("17.5.2018 00:00", false),
-			TestWechsel.of("21.5.2018 00:00", true),
-			TestWechsel.of("22.5.2018 00:00", false),
-			TestWechsel.of("23.5.2018 00:00", true),
-			TestWechsel.of("24.5.2018 00:00", false),
-			TestWechsel.of("28.5.2018 00:00", true),
-			TestWechsel.of("29.5.2018 00:00", false),
-			TestWechsel.of("30.5.2018 00:00", true),
-			TestWechsel.of("31.5.2018 00:00", false)
-		};
-		
-		List<ZustandsWechsel> zustandsWechselImBereich = verknuepfung.getZustandsWechsel(start, ende);
-		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechselImBereich);
-	}
-	
-	@Test
-	public void testeIntervalle() {
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("1.5.2018 00:00", false),
+                TestWechsel.of("2.5.2018 00:00", true),
+                TestWechsel.of("3.5.2018 00:00", false),
+                TestWechsel.of("7.5.2018 00:00", true),
+                TestWechsel.of("8.5.2018 00:00", false),
+                TestWechsel.of("9.5.2018 00:00", true),
+                TestWechsel.of("10.5.2018 00:00", false),
+                TestWechsel.of("14.5.2018 00:00", true),
+                TestWechsel.of("15.5.2018 00:00", false),
+                TestWechsel.of("16.5.2018 00:00", true),
+                TestWechsel.of("17.5.2018 00:00", false),
+                TestWechsel.of("21.5.2018 00:00", true),
+                TestWechsel.of("22.5.2018 00:00", false),
+                TestWechsel.of("23.5.2018 00:00", true),
+                TestWechsel.of("24.5.2018 00:00", false),
+                TestWechsel.of("28.5.2018 00:00", true),
+                TestWechsel.of("29.5.2018 00:00", false),
+                TestWechsel.of("30.5.2018 00:00", true),
+                TestWechsel.of("31.5.2018 00:00", false)
+        };
 
+        List<ZustandsWechsel> zustandsWechselImBereich = verknuepfung.getZustandsWechsel(start, ende);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechselImBereich);
+    }
 
-		LocalDateTime start = LocalDateTime.of(2018, 5, 2, 11, 11);
-		LocalDateTime ende = LocalDateTime.of(2018, 6, 1, 0, 0);
+    @Test
+    public void testeIntervalle() {
 
-		Intervall[] erwarteteIntervalle = { 
-				TestIntervall.of("02.05.2018 11:11", "03.05.2018 00:00"),
-				TestIntervall.of("07.05.2018 00:00", "08.05.2018 00:00"),
-				TestIntervall.of("09.05.2018 00:00", "10.05.2018 00:00"),
-				TestIntervall.of("14.05.2018 00:00", "15.05.2018 00:00"),
-				TestIntervall.of("16.05.2018 00:00", "17.05.2018 00:00"),
-				TestIntervall.of("21.05.2018 00:00", "22.05.2018 00:00"),
-				TestIntervall.of("23.05.2018 00:00", "24.05.2018 00:00"),
-				TestIntervall.of("28.05.2018 00:00", "29.05.2018 00:00"),
-				TestIntervall.of("30.05.2018 00:00", "31.05.2018 00:00"),
-			};
+        LocalDateTime start = LocalDateTime.of(2018, 5, 2, 11, 11);
+        LocalDateTime ende = LocalDateTime.of(2018, 6, 1, 0, 0);
 
-		List<Intervall> intervalle = verknuepfung.getIntervalle(start, ende);
-		TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
-	}
-	
+        Intervall[] erwarteteIntervalle = {
+                TestIntervall.of("02.05.2018 11:11", "03.05.2018 00:00"),
+                TestIntervall.of("07.05.2018 00:00", "08.05.2018 00:00"),
+                TestIntervall.of("09.05.2018 00:00", "10.05.2018 00:00"),
+                TestIntervall.of("14.05.2018 00:00", "15.05.2018 00:00"),
+                TestIntervall.of("16.05.2018 00:00", "17.05.2018 00:00"),
+                TestIntervall.of("21.05.2018 00:00", "22.05.2018 00:00"),
+                TestIntervall.of("23.05.2018 00:00", "24.05.2018 00:00"),
+                TestIntervall.of("28.05.2018 00:00", "29.05.2018 00:00"),
+                TestIntervall.of("30.05.2018 00:00", "31.05.2018 00:00"),
+        };
+
+        List<Intervall> intervalle = verknuepfung.getIntervalle(start, ende);
+        TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+    }
+
 }

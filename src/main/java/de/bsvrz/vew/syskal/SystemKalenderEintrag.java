@@ -31,10 +31,11 @@ import javafx.beans.property.ObjectProperty;
 
 public interface SystemKalenderEintrag {
 
-	String getName();
-	SystemObject getSystemObject();
+    String getName();
 
-	ObjectProperty<KalenderEintrag> getKalenderEintragProperty();
-	KalenderEintrag getKalenderEintrag();
+    SystemObject getSystemObject();
+
+    ObjectProperty<KalenderEintrag> getKalenderEintragProperty();
+
+    KalenderEintrag getKalenderEintrag();
 }
-	

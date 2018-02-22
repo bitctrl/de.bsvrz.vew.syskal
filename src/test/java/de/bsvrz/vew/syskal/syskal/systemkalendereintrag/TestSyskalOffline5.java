@@ -46,48 +46,48 @@ import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline5 {
 
-	@Rule
-	public Timeout globalTimeout = Timeout.seconds(5);
-	
-	private static TestKalenderEintragProvider eintragsProvider;
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(5);
 
-	@BeforeClass
-	public static void init() {
+    private static TestKalenderEintragProvider eintragsProvider;
 
-		eintragsProvider = new TestKalenderEintragProvider();
+    @BeforeClass
+    public static void init() {
 
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "WF", "WF:=<24.12.2012-04.01.2013>"));
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "WFD", "WFD:=UND{Donnerstag,WF}*,*"));
-	}
+        eintragsProvider = new TestKalenderEintragProvider();
 
-	@Test
-	public void testeZustandsWechsel() {
+        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Donnerstag", "Donnerstag"));
+        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "WF", "WF:=<24.12.2012-04.01.2013>"));
+        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "WFD", "WFD:=UND{Donnerstag,WF}*,*"));
+    }
 
-		KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("WFD");
-		LocalDateTime startTime = LocalDateTime.of(2012, 12, 20, 0, 0, 0);
-		LocalDateTime endTime = LocalDateTime.of(2012, 12, 31, 0, 0, 0);
+    @Test
+    public void testeZustandsWechsel() {
 
-		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("01.01.1000 00:00", false),
-				TestWechsel.of("27.12.2012 00:00", true), 
-				TestWechsel.of("28.12.2012 00:00", false) 
-		};
+        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("WFD");
+        LocalDateTime startTime = LocalDateTime.of(2012, 12, 20, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2012, 12, 31, 0, 0, 0);
 
-		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
-		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
-	}
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("01.01.1000 00:00", false),
+                TestWechsel.of("27.12.2012 00:00", true),
+                TestWechsel.of("28.12.2012 00:00", false)
+        };
 
-	@Test
-	public void testeGueltigkeit() {
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
 
-		KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("WFD");
-		LocalDateTime startTime = LocalDateTime.of(2012, 12, 27, 10, 0, 0);
-		SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(startTime);
+    @Test
+    public void testeGueltigkeit() {
 
-		assertTrue("Gültigkeit", gueltigkeit.isZeitlichGueltig());
-		assertFalse("Statuswechsel", gueltigkeit.getNaechsterWechsel().isWirdGueltig());
-		assertEquals("Wechselzeitpunkt", LocalDateTime.of(2012, 12, 28, 0, 0),
-				gueltigkeit.getNaechsterWechsel().getZeitPunkt());
-	}
+        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("WFD");
+        LocalDateTime startTime = LocalDateTime.of(2012, 12, 27, 10, 0, 0);
+        SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(startTime);
+
+        assertTrue("Gültigkeit", gueltigkeit.isZeitlichGueltig());
+        assertFalse("Statuswechsel", gueltigkeit.getNaechsterWechsel().isWirdGueltig());
+        assertEquals("Wechselzeitpunkt", LocalDateTime.of(2012, 12, 28, 0, 0),
+                gueltigkeit.getNaechsterWechsel().getZeitPunkt());
+    }
 }

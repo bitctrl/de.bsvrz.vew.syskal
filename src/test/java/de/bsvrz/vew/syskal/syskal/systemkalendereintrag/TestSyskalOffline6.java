@@ -40,43 +40,43 @@ import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline6 {
 
-	@Rule
-	public Timeout globalTimeout = Timeout.seconds(5);
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(5);
 
-	@Test
-	public void beispiel6() {
+    @Test
+    public void beispiel6() {
 
-		TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
+        TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-		eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "TestSKE", "TestSKE:=Montag+1Tag"));
+        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "TestSKE", "TestSKE:=Montag+1Tag"));
 
-		KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("TestSKE");
-		LocalDateTime startTime = LocalDateTime.of(2014, 1, 13, 14, 27, 17);
-		LocalDateTime endTime = LocalDateTime.of(2014, 3, 14, 14, 28, 17);
+        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("TestSKE");
+        LocalDateTime startTime = LocalDateTime.of(2014, 1, 13, 14, 27, 17);
+        LocalDateTime endTime = LocalDateTime.of(2014, 3, 14, 14, 28, 17);
 
-		TestWechsel[] erwarteteWechsel = { 
-				TestWechsel.of("8.1.2014 00:00", false),
-				TestWechsel.of("14.1.2014 00:00", true), 
-				TestWechsel.of("15.1.2014 00:00", false),
-				TestWechsel.of("21.1.2014 00:00", true), 
-				TestWechsel.of("22.1.2014 00:00", false),
-				TestWechsel.of("28.1.2014 00:00", true), 
-				TestWechsel.of("29.1.2014 00:00", false),
-				TestWechsel.of("4.2.2014 00:00", true), 
-				TestWechsel.of("5.2.2014 00:00", false),
-				TestWechsel.of("11.2.2014 00:00", true), 
-				TestWechsel.of("12.2.2014 00:00", false),
-				TestWechsel.of("18.2.2014 00:00", true), 
-				TestWechsel.of("19.2.2014 00:00", false),
-				TestWechsel.of("25.2.2014 00:00", true), 
-				TestWechsel.of("26.2.2014 00:00", false),
-				TestWechsel.of("4.3.2014 00:00", true), 
-				TestWechsel.of("5.3.2014 00:00", false),
-				TestWechsel.of("11.3.2014 00:00", true), 
-				TestWechsel.of("12.3.2014 00:00", false)
-		};
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("8.1.2014 00:00", false),
+                TestWechsel.of("14.1.2014 00:00", true),
+                TestWechsel.of("15.1.2014 00:00", false),
+                TestWechsel.of("21.1.2014 00:00", true),
+                TestWechsel.of("22.1.2014 00:00", false),
+                TestWechsel.of("28.1.2014 00:00", true),
+                TestWechsel.of("29.1.2014 00:00", false),
+                TestWechsel.of("4.2.2014 00:00", true),
+                TestWechsel.of("5.2.2014 00:00", false),
+                TestWechsel.of("11.2.2014 00:00", true),
+                TestWechsel.of("12.2.2014 00:00", false),
+                TestWechsel.of("18.2.2014 00:00", true),
+                TestWechsel.of("19.2.2014 00:00", false),
+                TestWechsel.of("25.2.2014 00:00", true),
+                TestWechsel.of("26.2.2014 00:00", false),
+                TestWechsel.of("4.3.2014 00:00", true),
+                TestWechsel.of("5.3.2014 00:00", false),
+                TestWechsel.of("11.3.2014 00:00", true),
+                TestWechsel.of("12.3.2014 00:00", false)
+        };
 
-		List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
-		TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
-	}
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
 }
