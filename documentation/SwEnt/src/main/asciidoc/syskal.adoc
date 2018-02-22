@@ -28,7 +28,7 @@ DAF-API | | \-------------------/            |    | (Informationen)           | 
 === Startparameter
 
 Die SWE selbst hat keine Startparameter, da sie nur als Bibliothek eingebunden wird.
-In der Regel wird aber ein vorgegebenes KalenderObjekt (Standard: AOE) verwendet, welches optional über einen Parameter der verwendenden SWE festgelegt werden könnte.
+In der Regel wird aber ein vorgegebenes Kalenderobjekt (Standard: AOE) verwendet, welches optional über einen Parameter der verwendenden SWE festgelegt werden könnte.
 
 [plantuml, "init_systemkalender"]
 ----

@@ -12,7 +12,7 @@ Ein Kalendereintrag ist zu einem bestimmten Zeitpunkt gültig oder nicht. Über 
   -- der Zeitpunkt zu dem der aktuelle Gültigkeitszustand erreicht wurde
   -- der Zeitpunkt der nächsten Änderung 
   -- der Gültigkeitszustand, der sich aus der nächsten Änderung ergibt
-- **die Gültigkeit vor dem übergebenen Zeit abzufragen**. 
+- **die Gültigkeit vor dem übergebenen Zeitpunkt abzufragen**. 
   Das Ergebnis entspricht in der Struktur der ersten Abfrage, die Zeitpunkte und
   Zustände beziehen sich nur auf den jeweils vorigen Zustandsübergang.
   
@@ -20,7 +20,7 @@ Ein Kalendereintrag ist zu einem bestimmten Zeitpunkt gültig oder nicht. Über 
 Mit diesen beiden Zugriffsfunktionen können auch problemlos alle Zustandsübergänge in
 einem Bereich ermittelt werden und das in beiden zeitlichen Richtungen.
 
-Der mögliche Zeitbereich wird aus pragmatischer Sicht eingeschränkt auf den Zeitraum vom 1.1.1000 bis zum 1.1.3000 (exklusive). zustandsübergänge, die noch nie statgefunden haben bzw, nie mehr stattfinden werden, werden mit diesen beiden Zeitstempeln markiert.
+Der mögliche Zeitbereich wird aus pragmatischer Sicht eingeschränkt auf den Zeitraum vom 1.1.1000 bis zum 1.1.3000 (exklusive). Zustandsübergänge, die noch nie stattgefunden haben oder  nie mehr stattfinden werden, werden mit diesen beiden Zeitstempeln markiert.
 
 === Technische Realisierung und Persistenz
 
@@ -28,13 +28,13 @@ Systemkalendereinträge werden als dynamische Objekte vom Typ "typ.systemKalende
 
 Der Name eines Systemkalendereintrags entspricht dem Name des dynamischen Objekts, der Inhalt wird durch einen als Parameter abgelegten Textstring definiert.
 
-Eine Instanz vom Typ "Systemkalender" in der SWE beobachtet die Mange und setzt entsprechende dynamische Objekte in Kalendereinträge um. Potentiell stehen Konvinienz-Funktionen zum Anlegen, Editieren und Entfernen von Systemkalendereinträgen zur Verfügung. Prinzipiell können entsprechende Objekte aber extern über die gängigen Datenverteiler-API-Funktionen bearbeitet werden.
+Eine Instanz vom Typ "Systemkalender" in der SWE beobachtet die Mange und setzt entsprechende dynamische Objekte in Kalendereinträge um. Potentiell stehen Konvenienz-Funktionen zum Anlegen, Editieren und Entfernen von Systemkalendereinträgen zur Verfügung. Prinzipiell können entsprechende Objekte aber extern über die gängigen Datenverteiler-API-Funktionen bearbeitet werden.
 
 === Arten von Kalendereinträgen
 
-Für Kalendereinträge werden verschiedene Definitionsformen unterstützt, welche spezielle Anwendungsfälle unterscheiden. Über die Verknüpfungen können aber prinzipiell beliebig viele Einträge miteinander verknüpft werden. 
+Für Kalendereinträge werden verschiedene Definitionsformen unterstützt, welche die speziellen Anwendungsfälle unterscheiden. Über die Verknüpfungen können aber prinzipiell beliebig viele Einträge miteinander verknüpft werden. 
 
-**Es wird keine Prüfung auf zirkuläre Definitionen vorgenommen. Desweiteren muss die Eindeutigkeit der Namen vom Anwender selbst sichergestellt werden!**
+**Es wird keine Prüfung auf zirkuläre Definitionen vorgenommen. Des Weiteren muss die Eindeutigkeit der Namen vom Anwender selbst sichergestellt werden!**
 
 ==== Vordefinierte Einträge
 
@@ -93,7 +93,7 @@ Beispielsweise ergäbe sich für den Karfreitag eine mögliche Definition mit:
 
     Karfreitag := Ostersonntag - 2 Tage
     
-Der Zeitbereich "NichtMittags" könnte mit einem Zeitbereichseintrag wie oben oder mit der einfachen Negation des "Mittags-Eintraga" beschrieben werden:
+Der Zeitbereich "NichtMittags" könnte mit einem Zeitbereichseintrag wie oben oder mit der einfachen Negation des "Mittags-Eintrags" beschrieben werden:
 
 	NichtMittags := NICHT Mittags
 

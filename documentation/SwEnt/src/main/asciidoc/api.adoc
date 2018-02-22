@@ -3,7 +3,7 @@
 === Grundsätzliches
 
 Im folgenden Abschnitt sind die wesentlichen Klassen für den Zugriff auf die Elemente des
-Systemkalender beschrieben. Die komplette Beschreibung ergibt sich aus dem Javadoc der SWE.
+Systemkalender beschrieben. Die komplette Beschreibung ergibt sich aus dem JavaDoc der SWE.
 
 Die "öffentlichen" Klassen der SWE befinden sich im Paket "de.bsvrz.vew.syskal". Der Zugriff auf die internen Pakete ist für den Anwender nicht erforderlich.
 
