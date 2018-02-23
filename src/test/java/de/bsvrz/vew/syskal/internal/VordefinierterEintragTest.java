@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.Intervall;
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.TestIntervall;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
@@ -48,7 +49,7 @@ public class VordefinierterEintragTest {
     public void testeZustandswechsel() {
 
         TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-        VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintragImpl.parse(provider, "Mittwoch",
+        VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintrag.parse(provider, "Mittwoch",
                 "Mittwoch");
 
         LocalDateTime start = LocalDateTime.of(2018, 1, 24, 12, 10);
@@ -76,7 +77,7 @@ public class VordefinierterEintragTest {
     public void testeIntervalle() {
 
         TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
-        VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintragImpl.parse(provider, "Mittwoch",
+        VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintrag.parse(provider, "Mittwoch",
                 "Mittwoch");
 
         LocalDateTime start = LocalDateTime.of(2018, 1, 24, 12, 10);

@@ -37,18 +37,19 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
- * Repräsentation der Daten eines {@link KalenderEintragImpl}, der durch einen
+ * Repräsentation der Daten eines {@link KalenderEintrag}, der durch einen
  * Zeitbereich definiert wird.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class ZeitBereichsEintrag extends KalenderEintragImpl {
+public class ZeitBereichsEintrag extends KalenderEintrag {
 
     private static final Debug LOGGER = Debug.getLogger();
     private LocalDateTime start;
@@ -397,7 +398,7 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
     }
 
     @Override
-    protected SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
+    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
 
         List<ZeitGrenze> zeitGrenzen = getZeitGrenzen();
         LocalDateTime fruehesterStart = sucheFruehestMoeglichenIntervallStart(zeitGrenzen);
@@ -511,7 +512,7 @@ public class ZeitBereichsEintrag extends KalenderEintragImpl {
     }
 
     @Override
-    boolean benutzt(SystemKalenderEintrag referenz) {
+    public boolean benutzt(SystemKalenderEintrag referenz) {
         return false;
     }
 }

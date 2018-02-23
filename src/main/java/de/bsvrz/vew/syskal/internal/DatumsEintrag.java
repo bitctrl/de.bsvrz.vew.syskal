@@ -32,6 +32,7 @@ import java.time.LocalTime;
 import java.time.Year;
 
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
@@ -45,7 +46,7 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class DatumsEintrag extends KalenderEintragImpl {
+public class DatumsEintrag extends KalenderEintrag {
 
     private static final Debug LOGGER = Debug.getLogger();
 
@@ -213,7 +214,7 @@ public class DatumsEintrag extends KalenderEintragImpl {
     }
 
     @Override
-    protected SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
+    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
 
         SystemkalenderGueltigkeit aktuelleGueltigkeit = berechneZeitlicheGueltigkeit(zeitpunkt);
         LocalDate fruehestesDatum = LocalDate.of(jahr, monat, tag);
@@ -261,7 +262,7 @@ public class DatumsEintrag extends KalenderEintragImpl {
     }
 
     @Override
-    boolean benutzt(SystemKalenderEintrag referenz) {
+    public boolean benutzt(SystemKalenderEintrag referenz) {
         return false;
     }
 }

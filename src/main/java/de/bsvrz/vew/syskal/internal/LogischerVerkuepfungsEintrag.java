@@ -42,7 +42,7 @@ import de.bsvrz.vew.syskal.SystemKalenderEintrag;
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public abstract class LogischerVerkuepfungsEintrag extends KalenderEintragImpl {
+public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
 
     private static final Debug LOGGER = Debug.getLogger();
 
@@ -75,7 +75,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintragImpl {
         if (definition != null) {
             String rest = definition;
 
-            final Matcher mat = KalenderEintragImpl.ZEITBEREICH_PATTERN.matcher(rest);
+            final Matcher mat = KalenderEintrag.ZEITBEREICH_PATTERN.matcher(rest);
             while (mat.find()) {
                 String elemente = mat.group();
                 rest = rest.replace(elemente, "").trim();
@@ -223,7 +223,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintragImpl {
     }
 
     @Override
-    boolean benutzt(SystemKalenderEintrag referenz) {
+    public boolean benutzt(SystemKalenderEintrag referenz) {
         for (VerweisEintrag verweis : verweise) {
             if (verweis.getVerweis().getName().equals(referenz.getName())) {
                 return true;

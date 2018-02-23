@@ -29,34 +29,33 @@ package de.bsvrz.vew.syskal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 
 public final class TestKalenderEintragProvider implements KalenderEintragProvider {
-    Map<String, KalenderEintragImpl> eintraege = new LinkedHashMap<>();
+    Map<String, KalenderEintrag> eintraege = new LinkedHashMap<>();
 
     public TestKalenderEintragProvider() {
-        addEintrag(KalenderEintragImpl.parse(this, "Montag", "Montag"));
-        addEintrag(KalenderEintragImpl.parse(this, "Dienstag", "Dienstag"));
-        addEintrag(KalenderEintragImpl.parse(this, "Mittwoch", "Mittwoch"));
-        addEintrag(KalenderEintragImpl.parse(this, "Donnerstag", "Donnerstag"));
-        addEintrag(KalenderEintragImpl.parse(this, "Freitag", "Freitag"));
-        addEintrag(KalenderEintragImpl.parse(this, "Samstag", "Samstag"));
-        addEintrag(KalenderEintragImpl.parse(this, "Sonntag", "Sonntag"));
-        addEintrag(KalenderEintragImpl.parse(this, "Ostersonntag", "Ostersonntag"));
+        addEintrag(KalenderEintrag.parse(this, "Montag", "Montag"));
+        addEintrag(KalenderEintrag.parse(this, "Dienstag", "Dienstag"));
+        addEintrag(KalenderEintrag.parse(this, "Mittwoch", "Mittwoch"));
+        addEintrag(KalenderEintrag.parse(this, "Donnerstag", "Donnerstag"));
+        addEintrag(KalenderEintrag.parse(this, "Freitag", "Freitag"));
+        addEintrag(KalenderEintrag.parse(this, "Samstag", "Samstag"));
+        addEintrag(KalenderEintrag.parse(this, "Sonntag", "Sonntag"));
+        addEintrag(KalenderEintrag.parse(this, "Ostersonntag", "Ostersonntag"));
     }
 
     @Override
-    public KalenderEintragImpl getKalenderEintrag(String name) {
+    public KalenderEintrag getKalenderEintrag(String name) {
         return eintraege.get(name);
     }
 
-    public void addEintrag(KalenderEintragImpl eintrag) {
+    public void addEintrag(KalenderEintrag eintrag) {
         eintraege.put(eintrag.getName(), eintrag);
     }
 
-    public KalenderEintragImpl parseAndAdd(TestKalenderEintragProvider provider, String name, String definition) {
-        KalenderEintragImpl eintrag = KalenderEintragImpl.parse(provider, name, definition);
+    public KalenderEintrag parseAndAdd(TestKalenderEintragProvider provider, String name, String definition) {
+        KalenderEintrag eintrag = KalenderEintrag.parse(provider, name, definition);
         addEintrag(eintrag);
         return eintrag;
     }

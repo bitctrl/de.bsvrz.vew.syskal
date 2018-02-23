@@ -34,10 +34,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline8 {
 
@@ -50,15 +50,15 @@ public class TestSyskalOffline8 {
         TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
         eintragsProvider
-                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ferien1", "Ferien1:=<30.07.2015-12.09.2015>"));
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Ferien1", "Ferien1:=<30.07.2015-12.09.2015>"));
         eintragsProvider
-                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ferien2", "Ferien2:=<02.11.2015-06.11.2015>"));
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Ferien2", "Ferien2:=<02.11.2015-06.11.2015>"));
         eintragsProvider
-                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ferien", "Ferien:=ODER{Ferien1,Ferien2}*,*"));
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Ferien", "Ferien:=ODER{Ferien1,Ferien2}*,*"));
         eintragsProvider
-                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "FerienPlus", "FerienPlus:=Ferien+1Tag"));
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "FerienPlus", "FerienPlus:=Ferien+1Tag"));
 
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("FerienPlus");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("FerienPlus");
         LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2015, 12, 31, 23, 59, 59)
                 .plusNanos(TimeUnit.MILLISECONDS.toNanos(999));

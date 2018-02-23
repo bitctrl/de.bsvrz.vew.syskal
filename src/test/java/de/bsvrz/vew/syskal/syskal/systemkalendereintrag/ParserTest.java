@@ -34,8 +34,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class ParserTest {
 
@@ -55,18 +55,18 @@ public class ParserTest {
 
         eintragsProvider = new TestKalenderEintragProvider();
 
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Bereich1",
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Bereich1",
                 "Bereich1:=<01.01.2008 00:00:00,000-31.01.2008 23:59:59,999>"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Bereich2",
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Bereich2",
                 "Bereich2:=<15.01.2008 00:00:00,000-15.02.2008 23:59:59,999>"));
         eintragsProvider.addEintrag(
-                KalenderEintragImpl.parse(eintragsProvider, "Bereich3", "Bereich3:=<15.01.2008-15.02.2008>"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Bereich4",
+                KalenderEintrag.parse(eintragsProvider, "Bereich3", "Bereich3:=<15.01.2008-15.02.2008>"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Bereich4",
                 "Bereich4:=<15.01.2008-15.02.2008>({09:00:00,000-11:59:59,999}{15:30:00,000-17:59:59,999})"));
     }
 
-    private KalenderEintragImpl ergaenzeEintrag(String name, String definition) {
-        KalenderEintragImpl eintragDefinition = KalenderEintragImpl.parse(eintragsProvider, name,
+    private KalenderEintrag ergaenzeEintrag(String name, String definition) {
+        KalenderEintrag eintragDefinition = KalenderEintrag.parse(eintragsProvider, name,
                 definition);
         eintragsProvider.addEintrag(eintragDefinition);
         return eintragDefinition;

@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.Intervall;
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.TestIntervall;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
@@ -51,7 +52,7 @@ public class DatumsEintragsTest {
     public void testeZustandswechselTagDerArbeit() {
 
         TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
-        KalenderEintragImpl datumsEintrag = KalenderEintragImpl.parse(eintragsProvider, "Mai1", "1.5.*,*");
+        KalenderEintrag datumsEintrag = KalenderEintrag.parse(eintragsProvider, "Mai1", "1.5.*,*");
 
         LocalDateTime startTime = LocalDateTime.of(2000, 12, 24, 14, 27, 17);
         LocalDateTime endTime = LocalDateTime.of(2020, 3, 14, 14, 28, 17);
@@ -106,7 +107,7 @@ public class DatumsEintragsTest {
     public void testeIntervalleErsterMai() {
 
         TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
-        KalenderEintragImpl datumsEintrag = KalenderEintragImpl.parse(eintragsProvider, "Mai1", "1.5.*,*");
+        KalenderEintrag datumsEintrag = KalenderEintrag.parse(eintragsProvider, "Mai1", "1.5.*,*");
 
         LocalDateTime startTime = LocalDateTime.of(2000, 12, 24, 14, 27, 17);
         LocalDateTime endTime = LocalDateTime.of(2020, 3, 14, 14, 28, 17);
@@ -141,7 +142,7 @@ public class DatumsEintragsTest {
     public void testeZustandswechselFebruar29() {
 
         TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
-        KalenderEintragImpl datumsEintrag = KalenderEintragImpl.parse(eintragsProvider, "Februar29", "29.2.*,*");
+        KalenderEintrag datumsEintrag = KalenderEintrag.parse(eintragsProvider, "Februar29", "29.2.*,*");
 
         LocalDateTime startTime = LocalDateTime.of(2000, 12, 24, 14, 27, 17);
         LocalDateTime endTime = LocalDateTime.of(2020, 3, 14, 14, 28, 17);
@@ -168,7 +169,7 @@ public class DatumsEintragsTest {
     public void testeIntervalleFebruar29() {
 
         TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
-        KalenderEintragImpl datumsEintrag = KalenderEintragImpl.parse(eintragsProvider, "Februar29", "29.2.*,*");
+        KalenderEintrag datumsEintrag = KalenderEintrag.parse(eintragsProvider, "Februar29", "29.2.*,*");
 
         LocalDateTime startTime = LocalDateTime.of(2000, 12, 24, 14, 27, 17);
         LocalDateTime endTime = LocalDateTime.of(2020, 3, 14, 14, 28, 17);
@@ -189,7 +190,7 @@ public class DatumsEintragsTest {
     public void testeGueltigkeitFalscherEintrag() {
 
         TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
-        KalenderEintragImpl eintrag = KalenderEintragImpl.parse(eintragsProvider, "Testdatum", "10.10.2020,2000");
+        KalenderEintrag eintrag = KalenderEintrag.parse(eintragsProvider, "Testdatum", "10.10.2020,2000");
 
         LocalDateTime abfrageZeitpunkt = LocalDateTime.of(2010, 10, 10, 14, 27, 17);
         SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(abfrageZeitpunkt);

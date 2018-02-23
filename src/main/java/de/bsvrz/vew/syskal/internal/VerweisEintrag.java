@@ -42,7 +42,7 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class VerweisEintrag extends KalenderEintragImpl {
+public class VerweisEintrag extends KalenderEintrag {
 
     private static final Debug LOGGER = Debug.getLogger();
 
@@ -195,12 +195,12 @@ public class VerweisEintrag extends KalenderEintragImpl {
     }
 
     @Override
-    protected SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
+    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
         if (verweis.isUngueltig()) {
             return SystemkalenderGueltigkeit.NICHT_GUELTIG;
         }
 
-        KalenderEintragImpl referenzEintrag = verweis.getReferenzEintrag();
+        KalenderEintrag referenzEintrag = verweis.getReferenzEintrag();
         int tagesOffset = verweis.getOffset();
         SystemkalenderGueltigkeit gueltigKeit = referenzEintrag
                 .getZeitlicheGueltigkeitVor((zeitpunkt.minusDays(tagesOffset)));
@@ -230,6 +230,7 @@ public class VerweisEintrag extends KalenderEintragImpl {
     }
 
     @Override
+    public
     boolean benutzt(SystemKalenderEintrag referenz) {
         return verweis.getName().equals(referenz.getName());
     }

@@ -54,7 +54,7 @@ public class SystemKalenderEintragImpl implements SystemKalenderEintrag {
         if (originalDefinition == null) {
             kalenderEintragProperty.set(VorDefinierterEintrag.UNDEFINIERT);
         } else {
-            kalenderEintragProperty.set(KalenderEintragImpl.parse(provider, name, originalDefinition));
+            kalenderEintragProperty.set(KalenderEintrag.parse(provider, name, originalDefinition));
         }
     }
 
@@ -86,7 +86,7 @@ public class SystemKalenderEintragImpl implements SystemKalenderEintrag {
         builder.append(systemObject.getName());
         builder.append(':');
 
-        if (((KalenderEintragImpl) kalenderEintragProperty.get()).isFehler()) {
+        if (kalenderEintragProperty.get().isFehler()) {
             builder.append("FEHLER :");
         } else {
             builder.append("OK    :");
@@ -106,7 +106,7 @@ public class SystemKalenderEintragImpl implements SystemKalenderEintrag {
                 continue;
             }
 
-            if (((KalenderEintragImpl) getKalenderEintrag()).benutzt(referenz)) {
+            if (getKalenderEintrag().benutzt(referenz)) {
                 bestimmeKalendereintrag();
                 return;
             }

@@ -28,6 +28,8 @@ package de.bsvrz.vew.syskal.internal;
 
 import java.text.ParseException;
 
+import de.bsvrz.vew.syskal.KalenderEintrag;
+
 /**
  * Repräsentation eines Verweises auf einen anderen Systemkalendereintrag.
  * 
@@ -49,7 +51,7 @@ public class Verweis {
 
     private final boolean ungueltig;
 
-    private KalenderEintragImpl referenzEintrag;
+    private KalenderEintrag referenzEintrag;
 
     /**
      * Konstruktor.
@@ -86,7 +88,7 @@ public class Verweis {
                 throw new ParseException("Der String \"" + def + "\" kann nicht als Verweis interpretiert werden!", 0);
             }
 
-            referenzEintrag = (KalenderEintragImpl) provider.getKalenderEintrag(name);
+            referenzEintrag = provider.getKalenderEintrag(name);
             ungueltig = referenzEintrag == null;
 
         } else {
@@ -138,7 +140,7 @@ public class Verweis {
         return offset;
     }
 
-    public KalenderEintragImpl getReferenzEintrag() {
+    public KalenderEintrag getReferenzEintrag() {
         return referenzEintrag;
     }
 

@@ -33,10 +33,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline7 {
 
@@ -48,37 +48,37 @@ public class TestSyskalOffline7 {
 
         TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Neujahr", "Neujahr:=01.01.*,*"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Neujahr", "Neujahr:=01.01.*,*"));
         eintragsProvider.addEintrag(
-                KalenderEintragImpl.parse(eintragsProvider, "Karfreitag", "Karfreitag:=Ostersonntag-2Tage"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Einheit", "Einheit:=03.10.*,*"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Arbeit", "Arbeit:=01.05.*,*"));
+                KalenderEintrag.parse(eintragsProvider, "Karfreitag", "Karfreitag:=Ostersonntag-2Tage"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Einheit", "Einheit:=03.10.*,*"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Arbeit", "Arbeit:=01.05.*,*"));
         eintragsProvider
-                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Allerheil", "Allerheil:=01.11.*,*"));
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Allerheil", "Allerheil:=01.11.*,*"));
         eintragsProvider
-                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Weihnacht1", "Weihnacht1:=25.12.*,*"));
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Weihnacht1", "Weihnacht1:=25.12.*,*"));
         eintragsProvider
-                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Weihnacht2", "Weihnacht2:=26.12.*,*"));
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Weihnacht2", "Weihnacht2:=26.12.*,*"));
         eintragsProvider.addEintrag(
-                KalenderEintragImpl.parse(eintragsProvider, "Ostermontag", "Ostermontag:=Ostersonntag+1Tag"));
+                KalenderEintrag.parse(eintragsProvider, "Ostermontag", "Ostermontag:=Ostersonntag+1Tag"));
         eintragsProvider
-                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Himmel", "Himmel:=Ostersonntag+39Tage"));
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Himmel", "Himmel:=Ostersonntag+39Tage"));
         eintragsProvider.addEintrag(
-                KalenderEintragImpl.parse(eintragsProvider, "PfingstMo", "PfingstMo:=Ostersonntag+50Tage"));
+                KalenderEintrag.parse(eintragsProvider, "PfingstMo", "PfingstMo:=Ostersonntag+50Tage"));
         eintragsProvider.addEintrag(
-                KalenderEintragImpl.parse(eintragsProvider, "Fronleich", "Fronleich:=Ostersonntag+60Tage"));
+                KalenderEintrag.parse(eintragsProvider, "Fronleich", "Fronleich:=Ostersonntag+60Tage"));
 
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Feiertag",
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Feiertag",
                 "Feiertag:=ODER{Neujahr,Karfreitag,Ostersonntag,Ostermontag,Arbeit,Himmel,PfingstMo,Fronleich,Einheit,Allerheil,Weihnacht1,Weihnacht2}*,*"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "MoBisSa",
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "MoBisSa",
                 "MoBisSa:=ODER{Montag,Dienstag,Mittwoch,Donnerstag,Freitag,Samstag}*,*"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "MoBisFr",
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "MoBisFr",
                 "MoBisFr:=ODER{Montag,Dienstag,Mittwoch,Donnerstag,Freitag}*,*"));
 
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Werktag",
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Werktag",
                 "Werktag:=UND{MoBisFr,NICHT Feiertag}*,*"));
 
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Werktag");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Werktag");
         LocalDateTime startTime = LocalDateTime.of(2014, 8, 1, 14, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2014, 8, 31, 0, 0, 0);
 

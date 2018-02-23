@@ -33,10 +33,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline6 {
 
@@ -48,9 +48,9 @@ public class TestSyskalOffline6 {
 
         TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "TestSKE", "TestSKE:=Montag+1Tag"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "TestSKE", "TestSKE:=Montag+1Tag"));
 
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("TestSKE");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("TestSKE");
         LocalDateTime startTime = LocalDateTime.of(2014, 1, 13, 14, 27, 17);
         LocalDateTime endTime = LocalDateTime.of(2014, 3, 14, 14, 28, 17);
 

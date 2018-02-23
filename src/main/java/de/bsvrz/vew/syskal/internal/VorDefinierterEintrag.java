@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 
@@ -51,7 +52,7 @@ import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class VorDefinierterEintrag extends KalenderEintragImpl {
+public class VorDefinierterEintrag extends KalenderEintrag {
 
     /** Vordefinierter Eintrag MONTAG. */
     public static final VorDefinierterEintrag MONTAG = new VorDefinierterEintrag("Montag", DayOfWeek.MONDAY);
@@ -190,7 +191,7 @@ public class VorDefinierterEintrag extends KalenderEintragImpl {
     }
 
     @Override
-    boolean benutzt(SystemKalenderEintrag referenz) {
+    public boolean benutzt(SystemKalenderEintrag referenz) {
         return false;
     }
 }

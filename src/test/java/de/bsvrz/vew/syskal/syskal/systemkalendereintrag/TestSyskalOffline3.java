@@ -34,10 +34,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline3 {
 
@@ -49,10 +49,10 @@ public class TestSyskalOffline3 {
 
         TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "TestSKE",
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "TestSKE",
                 "TestSKE:=<01.09.2010-30.09.2010>({08:00:00,000-11:59:59,999}({15:30:00,000-17:59:59,999}))"));
 
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("TestSKE");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("TestSKE");
         LocalDateTime startTime = LocalDateTime.of(2010, 9, 2, 16, 30, 0);
         LocalDateTime endTime = LocalDateTime.of(2010, 9, 2, 17, 29, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 

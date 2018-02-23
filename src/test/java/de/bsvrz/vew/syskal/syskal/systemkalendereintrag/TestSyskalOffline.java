@@ -34,10 +34,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline {
 
@@ -50,25 +50,25 @@ public class TestSyskalOffline {
 
         eintragsProvider = new TestKalenderEintragProvider();
 
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Berufsverkehr",
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Berufsverkehr",
                 "Berufsverkehr:=({07:00:00,000-11:00:00,000}{15:00:00,000-18:00:00,000})"));
 
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Montag_Berufsverkehr",
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Montag_Berufsverkehr",
                 "Montag_Berufsverkehr:=UND{Montag,Berufsverkehr}*,*"));
         eintragsProvider
                 .addEintrag(
-                        KalenderEintragImpl.parse(eintragsProvider, "GeburtstagHCK", "GeburtstagHCK:=27.11.1963,*"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "GeburtstagHCKFeierKopie",
+                        KalenderEintrag.parse(eintragsProvider, "GeburtstagHCK", "GeburtstagHCK:=27.11.1963,*"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "GeburtstagHCKFeierKopie",
                 "GeburtstagHCKFeierKopie:=GeburtstagHCK-3Tage"));
 
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "DienstagAlsVerknüpfung",
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "DienstagAlsVerknüpfung",
                 "DienstagAlsVerknüpfung:=UND{Dienstag}*,*"));
     }
 
     @Test
     public void montagBerufsVerkehr() {
 
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Montag_Berufsverkehr");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Montag_Berufsverkehr");
         LocalDateTime startTime = LocalDateTime.of(2009, 8, 1, 10, 40, 35);
         LocalDateTime endTime = LocalDateTime.of(2009, 9, 18, 10, 40, 35);
 
@@ -111,7 +111,7 @@ public class TestSyskalOffline {
     @Test
     public void geburtstagHCK() {
 
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("GeburtstagHCK");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("GeburtstagHCK");
         LocalDateTime startTime = LocalDateTime.of(1970, 9, 25, 14, 59, 9);
         LocalDateTime endTime = LocalDateTime.of(1975, 9, 25, 14, 59, 9);
 
@@ -136,7 +136,7 @@ public class TestSyskalOffline {
     @Test
     public void geburtstagHCK2() {
 
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("GeburtstagHCK");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("GeburtstagHCK");
         LocalDateTime startTime = LocalDateTime.of(1970, 1, 1, 0, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(1970, 12, 31, 23, 59, 59);
 
@@ -153,7 +153,7 @@ public class TestSyskalOffline {
     @Test
     public void dienstagAlsVerknuepfung() {
 
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("DienstagAlsVerknüpfung");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("DienstagAlsVerknüpfung");
         LocalDateTime startTime = LocalDateTime.of(2009, 1, 1, 15, 15, 37);
         LocalDateTime endTime = LocalDateTime.of(2009, 12, 21, 15, 15, 37);
 
@@ -268,7 +268,7 @@ public class TestSyskalOffline {
     @Test
     public void geburtstagsFeierHCK() {
 
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("GeburtstagHCKFeierKopie");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("GeburtstagHCKFeierKopie");
         LocalDateTime startTime = LocalDateTime.of(2009, 1, 1, 15, 15, 37);
         LocalDateTime endTime = LocalDateTime.of(2009, 12, 21, 15, 15, 37);
 

@@ -35,10 +35,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
-import de.bsvrz.vew.syskal.internal.KalenderEintragImpl;
 
 public class TestSyskalOffline4 {
 
@@ -52,31 +52,31 @@ public class TestSyskalOffline4 {
 
         eintragsProvider = new TestKalenderEintragProvider();
 
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Test1", "Test1:=29.02.2001,2010"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Test2", "Test2:=29.02.2004,2010"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Test3",
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test1", "Test1:=29.02.2001,2010"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test2", "Test2:=29.02.2004,2010"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test3",
                 "Test3:=({13:00:00,000-15:00:00,000}{14:00:00,000-16:00:00,000})"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Test31",
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test31",
                 "Test31:=({13:00:00,000-14:00:00,000}{14:00:00,000-15:00:00,000})"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Test32",
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test32",
                 "Test32:=({13:00:00,000-14:00:00,000}{15:00:00,000-16:00:00,000})"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Test4", "Test4:=Ostersonntag+1Tag"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Test5", "Test5:=Ostersonntag-4Tage"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test4", "Test4:=Ostersonntag+1Tag"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test5", "Test5:=Ostersonntag-4Tage"));
         eintragsProvider
                 .addEintrag(
-                        KalenderEintragImpl.parse(eintragsProvider, "Ostermontag", "Ostermontag:=Ostersonntag+1Tag"));
+                        KalenderEintrag.parse(eintragsProvider, "Ostermontag", "Ostermontag:=Ostersonntag+1Tag"));
         eintragsProvider
-                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Karfreitag", "Karfreitag:=Ostermontag-3Tage"));
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Karfreitag", "Karfreitag:=Ostermontag-3Tage"));
         eintragsProvider
-                .addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Test6", "Test6:=UND{NICHT Ostersonntag}*,*"));
-        eintragsProvider.addEintrag(KalenderEintragImpl.parse(eintragsProvider, "Test7", "Test7:=UND{Test32}*,*"));
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Test6", "Test6:=UND{NICHT Ostersonntag}*,*"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test7", "Test7:=UND{Test32}*,*"));
     }
 
     @Test
     public void test1() {
 
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Test1");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test1");
         LocalDateTime startTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2010, 12, 31, 23, 59, 59);
         endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
@@ -95,7 +95,7 @@ public class TestSyskalOffline4 {
 
     @Test
     public void test2() {
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Test2");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test2");
         LocalDateTime startTime = LocalDateTime.of(2004, 1, 1, 0, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2010, 12, 31, 23, 59, 59)
                 .plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
@@ -114,7 +114,7 @@ public class TestSyskalOffline4 {
 
     @Test
     public void test3() {
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Test3");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test3");
         LocalDateTime startTime = LocalDateTime.of(2004, 3, 10, 13, 30, 0);
         LocalDateTime endTime = LocalDateTime.of(2004, 3, 10, 15, 29, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 
@@ -128,7 +128,7 @@ public class TestSyskalOffline4 {
 
     @Test
     public void test31() {
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Test31");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test31");
         LocalDateTime startTime = LocalDateTime.of(2004, 3, 10, 0, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2004, 3, 11, 15, 29, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 
@@ -146,7 +146,7 @@ public class TestSyskalOffline4 {
 
     @Test
     public void osterSonntag() {
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Ostersonntag");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Ostersonntag");
         LocalDateTime startTime = LocalDateTime.of(2000, 1, 11, 0, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2010, 12, 31, 23, 59, 59)
                 .plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
@@ -183,7 +183,7 @@ public class TestSyskalOffline4 {
 
     @Test
     public void test4() {
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Test4");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test4");
         LocalDateTime startTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2003, 12, 31, 23, 59, 59)
                 .plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
@@ -206,7 +206,7 @@ public class TestSyskalOffline4 {
 
     @Test
     public void test5() {
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Test5");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test5");
         LocalDateTime startTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2003, 12, 31, 23, 59, 59)
                 .plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
@@ -229,7 +229,7 @@ public class TestSyskalOffline4 {
 
     @Test
     public void karfreitag() {
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Karfreitag");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Karfreitag");
         LocalDateTime startTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2003, 12, 31, 23, 59, 59)
                 .plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
@@ -252,7 +252,7 @@ public class TestSyskalOffline4 {
 
     @Test
     public void test6() {
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Test6");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test6");
         LocalDateTime startTime = LocalDateTime.of(2001, 4, 1, 0, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2001, 5, 1, 23, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 
@@ -268,7 +268,7 @@ public class TestSyskalOffline4 {
 
     @Test
     public void test7() {
-        KalenderEintragImpl eintrag = eintragsProvider.getKalenderEintrag("Test7");
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test7");
         LocalDateTime startTime = LocalDateTime.of(2011, 9, 19, 0, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(2011, 9, 23, 23, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 

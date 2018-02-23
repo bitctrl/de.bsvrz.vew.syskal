@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -68,8 +69,8 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 
         boolean zustand = (getStartJahr() == 0 || getStartJahr() <= zeitPunkt.getYear())
                 && (getEndJahr() == 0 || getEndJahr() >= zeitPunkt.getYear());
-        Map<KalenderEintragImpl, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
-        Map<KalenderEintragImpl, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
+        Map<KalenderEintrag, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
+        Map<KalenderEintrag, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
 
         for (VerweisEintrag verweis : getVerweise()) {
             if (verweis.isFehler()) {
@@ -91,12 +92,12 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
     }
 
     @Override
-    protected SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitPunkt) {
+    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitPunkt) {
 
         SystemkalenderGueltigkeit zeitlicheGueltigkeit = berechneZeitlicheGueltigkeit(zeitPunkt);
 
         boolean zustand = zeitlicheGueltigkeit.isZeitlichGueltig();
-        Map<KalenderEintragImpl, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
+        Map<KalenderEintrag, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
 
         for (VerweisEintrag verweis : getVerweise()) {
             if (verweis.isFehler()) {
@@ -114,10 +115,10 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
     }
 
     private ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand,
-            Map<KalenderEintragImpl, ZustandsWechsel> potentielleWechsel) {
+            Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
 
         LocalDateTime wechselZeit = null;
-        Map<KalenderEintragImpl, ZustandsWechsel> verweisWechsel = new LinkedHashMap<>(potentielleWechsel);
+        Map<KalenderEintrag, ZustandsWechsel> verweisWechsel = new LinkedHashMap<>(potentielleWechsel);
 
         do {
             ZustandsWechsel wechsel = verweisWechsel.values().stream().min(ZustandsWechsel.ZEIT_COMPARATOR).get();
@@ -130,7 +131,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
                 return ZustandsWechsel.of(wechselZeit, zielZustand);
             }
 
-            for (Entry<KalenderEintragImpl, ZustandsWechsel> entry : verweisWechsel.entrySet()) {
+            for (Entry<KalenderEintrag, ZustandsWechsel> entry : verweisWechsel.entrySet()) {
                 if (!entry.getValue().getZeitPunkt().isBefore(wechselZeit)) {
                     entry.setValue(entry.getKey().berechneZeitlicheGueltigkeit(entry.getValue().getZeitPunkt())
                             .getNaechsterWechsel());
@@ -144,10 +145,10 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
     }
 
     private ZustandsWechsel berechneVorigenWechselAuf(boolean zielZustand,
-            Map<KalenderEintragImpl, ZustandsWechsel> potentielleWechsel) {
+            Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
 
         LocalDateTime wechselZeit = null;
-        Map<KalenderEintragImpl, ZustandsWechsel> verweisWechsel = new LinkedHashMap<>(potentielleWechsel);
+        Map<KalenderEintrag, ZustandsWechsel> verweisWechsel = new LinkedHashMap<>(potentielleWechsel);
         ZustandsWechsel potentiellerWechsel = null;
 
         do {
@@ -168,7 +169,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
                 }
             }
 
-            for (Entry<KalenderEintragImpl, ZustandsWechsel> entry : verweisWechsel.entrySet()) {
+            for (Entry<KalenderEintrag, ZustandsWechsel> entry : verweisWechsel.entrySet()) {
                 if (!entry.getValue().getZeitPunkt().isBefore(wechselZeit)) {
                     entry.setValue(entry.getKey().berechneZeitlicheGueltigkeitsVor(entry.getValue().getZeitPunkt())
                             .getErsterWechsel());
