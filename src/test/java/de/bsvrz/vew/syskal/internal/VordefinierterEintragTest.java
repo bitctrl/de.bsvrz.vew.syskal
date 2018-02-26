@@ -46,7 +46,7 @@ public class VordefinierterEintragTest {
     public Timeout globalTimeout = Timeout.seconds(5);
 
     @Test
-    public void testeZustandswechsel() {
+    public void testeZustandsWechsel() {
 
         TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
         VorDefinierterEintrag mittwoch = (VorDefinierterEintrag) KalenderEintrag.parse(provider, "Mittwoch",

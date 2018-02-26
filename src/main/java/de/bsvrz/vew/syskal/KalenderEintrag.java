@@ -98,7 +98,7 @@ public abstract class KalenderEintrag {
 
         if (rest.toLowerCase(Locale.getDefault()).startsWith("und")) {
             result = new UndVerknuepfung(provider, name, rest.substring("und".length()));
-        } else if (rest.toLowerCase().startsWith("oder")) {
+        } else if (rest.toLowerCase(Locale.getDefault()).startsWith("oder")) {
             result = new OderVerknuepfung(provider, name, rest.substring("oder".length()));
         } else {
             Matcher mat = KalenderEintrag.DATUMSBEREICH_PATTERN.matcher(rest);

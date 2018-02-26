@@ -98,14 +98,8 @@ public class DatumsEintrag extends KalenderEintrag {
                     }
                 }
 
-                if ((tag == 29) && (monat == 2)) {
-                    while (!Year.isLeap(jahr)) {
-                        jahr++;
-                    }
-                    while (!Year.isLeap(endJahr)) {
-                        endJahr--;
-                    }
-                }
+                jahr = korrigiereAufNaechstesSchaltjahr(jahr);
+                endJahr = korrigiereAufVorigesSchaltjahr(endJahr);
 
             } catch (NumberFormatException e) {
                 LOGGER.warning("Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage());
@@ -189,11 +183,7 @@ public class DatumsEintrag extends KalenderEintrag {
                 checkJahr++;
             }
 
-            if (tag == 29 && monat == 2) {
-                while (!Year.isLeap(checkJahr)) {
-                    checkJahr++;
-                }
-            }
+            checkJahr = korrigiereAufNaechstesSchaltjahr(checkJahr);
 
             LocalDate wechselDatum = LocalDate.of(checkJahr, monat, tag);
 
@@ -261,6 +251,17 @@ public class DatumsEintrag extends KalenderEintrag {
         return result;
     }
 
+    private int korrigiereAufNaechstesSchaltjahr(int aktivierungsJahr) {
+        int result = aktivierungsJahr;
+        if (tag == 29 && monat == 2) {
+            while (!Year.isLeap(result)) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    
     @Override
     public boolean benutzt(SystemKalenderEintrag referenz) {
         return false;

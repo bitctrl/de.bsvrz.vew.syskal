@@ -53,8 +53,6 @@ import de.bsvrz.vew.syskal.SystemKalenderException;
 
 public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiverInterface, MutableSetChangeListener {
 
-    // private ObservableSet<SystemKalenderEintrag> eintraege =
-    // FXCollections.observableSet(new LinkedHashSet<>());
     private Map<SystemObject, SystemKalenderEintrag> eintraege = new LinkedHashMap<>();
 
     private ClientDavInterface dav;

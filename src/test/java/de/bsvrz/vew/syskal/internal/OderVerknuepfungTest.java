@@ -55,7 +55,7 @@ public class OderVerknuepfungTest {
     }
 
     @Test
-    public void testeOderVerknuepfungZustandswechsel() {
+    public void testeZustandsWechsel() {
 
         LocalDateTime start = LocalDateTime.of(2018, 5, 1, 0, 0);
         LocalDateTime ende = LocalDateTime.of(2018, 6, 1, 0, 0);

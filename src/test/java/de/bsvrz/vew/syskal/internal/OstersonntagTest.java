@@ -92,7 +92,7 @@ public class OstersonntagTest {
     }
 
     @Test
-    public void testeZustandswechsel() {
+    public void testeZustandsWechsel() {
 
         LocalDateTime start = LocalDateTime.of(2015, 1, 1, 0, 0);
         LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 0);

@@ -85,6 +85,7 @@ public class SystemkalenderEintragTest {
         KalenderEintrag skeFr = eintragsProvider.getKalenderEintrag("Freitag");
         KalenderEintrag skeSa = eintragsProvider.getKalenderEintrag("Samstag");
         KalenderEintrag skeSo = eintragsProvider.getKalenderEintrag("Sonntag");
+        KalenderEintrag[] tageDerWoche = { skeMo, skeDi, skeMi, skeDo, skeFr, skeSa, skeSo };
 
         for (int idx = 0; idx < 7; idx++) {
 
@@ -92,67 +93,25 @@ public class SystemkalenderEintragTest {
 
             switch (dow) {
             case SATURDAY:
-                assertTrue("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+                pruefeWochenTag(zeitpunkt, tageDerWoche, skeSa);
                 break;
             case SUNDAY:
-                assertFalse("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertTrue("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+                pruefeWochenTag(zeitpunkt, tageDerWoche, skeSo);
                 break;
             case MONDAY:
-                assertFalse("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertTrue("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+                pruefeWochenTag(zeitpunkt, tageDerWoche, skeMo);
                 break;
             case TUESDAY:
-                assertFalse("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertTrue("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+                pruefeWochenTag(zeitpunkt, tageDerWoche, skeDi);
                 break;
             case WEDNESDAY:
-                assertFalse("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertTrue("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+                pruefeWochenTag(zeitpunkt, tageDerWoche, skeMi);
                 break;
             case THURSDAY:
-                assertFalse("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertTrue("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+                pruefeWochenTag(zeitpunkt, tageDerWoche, skeDo);
                 break;
             case FRIDAY:
-                assertFalse("Test 0", skeSa.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 1", skeSo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 2", skeMo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 3", skeDi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 4", skeMi.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertFalse("Test 5", skeDo.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
-                assertTrue("Test 6", skeFr.getZeitlicheGueltigkeit(zeitpunkt).isZeitlichGueltig());
+                pruefeWochenTag(zeitpunkt, tageDerWoche, skeFr);
                 break;
 
             default:
@@ -161,6 +120,18 @@ public class SystemkalenderEintragTest {
             }
 
             zeitpunkt = zeitpunkt.plusDays(1);
+        }
+    }
+
+    private void pruefeWochenTag(LocalDateTime zeitPunkt, KalenderEintrag[] tageDerWoche, KalenderEintrag ske) {
+        for (KalenderEintrag tagDerWoche : tageDerWoche) {
+            if (tagDerWoche.equals(ske)) {
+                assertTrue(zeitPunkt + " gültig für " + tagDerWoche,
+                        tagDerWoche.getZeitlicheGueltigkeit(zeitPunkt).isZeitlichGueltig());
+            } else {
+                assertFalse(zeitPunkt + " ungültig für " + tagDerWoche,
+                        tagDerWoche.getZeitlicheGueltigkeit(zeitPunkt).isZeitlichGueltig());
+            }
         }
     }
 

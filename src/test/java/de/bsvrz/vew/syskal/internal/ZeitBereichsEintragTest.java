@@ -43,7 +43,7 @@ public class ZeitBereichsEintragTest {
     // public Timeout globalTimeout = Timeout.seconds(5);
 
     @Test
-    public void testeZustandswechsel() {
+    public void testeZustandsWechsel() {
 
         TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
         ZeitBereichsEintrag bereich4 = (ZeitBereichsEintrag) provider.parseAndAdd(provider, "Bereich4",
