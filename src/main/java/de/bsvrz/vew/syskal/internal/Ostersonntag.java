@@ -71,11 +71,11 @@ public class Ostersonntag extends VorDefinierterEintrag {
         }
 
         if (checkDate.isBefore(osterDate)) {
-            return SystemkalenderGueltigkeit.unGueltig(Ostersonntag.getDatumImJahr(checkDate.getYear() - 1).plusDays(1),
+            return SystemkalenderGueltigkeit.ungueltig(Ostersonntag.getDatumImJahr(checkDate.getYear() - 1).plusDays(1),
                     osterDate);
         }
 
-        return SystemkalenderGueltigkeit.unGueltig(osterDate.plusDays(1),
+        return SystemkalenderGueltigkeit.ungueltig(osterDate.plusDays(1),
                 Ostersonntag.getDatumImJahr(checkDate.getYear() + 1));
     }
 
@@ -93,7 +93,7 @@ public class Ostersonntag extends VorDefinierterEintrag {
         boolean gueltig = osterDatum.equals(checkDate);
 
         if (gueltig) {
-            return SystemkalenderGueltigkeit.unGueltig(osterDatumVorjahr.plusDays(1), osterDatum);
+            return SystemkalenderGueltigkeit.ungueltig(osterDatumVorjahr.plusDays(1), osterDatum);
         }
 
         if (zeitPunkt.toLocalDate().isBefore(osterDatum)) {

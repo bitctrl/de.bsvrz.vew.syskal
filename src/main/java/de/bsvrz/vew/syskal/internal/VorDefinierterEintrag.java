@@ -171,7 +171,7 @@ public class VorDefinierterEintrag extends KalenderEintrag {
             checkDate = checkDate.plusDays(1);
         }
 
-        return SystemkalenderGueltigkeit.unGueltig(checkDate.minusDays(6), checkDate);
+        return SystemkalenderGueltigkeit.ungueltig(checkDate.minusDays(6), checkDate);
     }
 
     @Override
@@ -181,7 +181,7 @@ public class VorDefinierterEintrag extends KalenderEintrag {
 
         LocalDate checkDate = zeitPunkt.toLocalDate();
         if (gueltig) {
-            return SystemkalenderGueltigkeit.unGueltig(checkDate.minusDays(6), checkDate);
+            return SystemkalenderGueltigkeit.ungueltig(checkDate.minusDays(6), checkDate);
         }
 
         while (checkDate.getDayOfWeek() != dayOfWeek) {

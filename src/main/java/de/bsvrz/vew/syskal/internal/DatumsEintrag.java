@@ -207,7 +207,7 @@ public class DatumsEintrag extends KalenderEintrag {
                 aktivierungsDatum = SystemKalender.MIN_DATETIME.toLocalDate();
             }
 
-            return SystemkalenderGueltigkeit.unGueltig(aktivierungsDatum, wechselDatum);
+            return SystemkalenderGueltigkeit.ungueltig(aktivierungsDatum, wechselDatum);
         }
 
         return SystemkalenderGueltigkeit.NICHT_GUELTIG;
@@ -243,11 +243,11 @@ public class DatumsEintrag extends KalenderEintrag {
         }
 
         if (aktuelleGueltigkeit.isZeitlichGueltig()) {
-            return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(aktivierungsDatum),
+            return SystemkalenderGueltigkeit.of(ZustandsWechsel.aufUngueltig(aktivierungsDatum),
                     aktuelleGueltigkeit.getErsterWechsel());
         }
 
-        return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuGueltig(aktivierungsDatum),
+        return SystemkalenderGueltigkeit.of(ZustandsWechsel.aufGueltig(aktivierungsDatum),
                 aktuelleGueltigkeit.getErsterWechsel());
     }
 

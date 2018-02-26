@@ -256,8 +256,8 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
 
         if (!zeitpunkt.isBefore(ende)) {
             return SystemkalenderGueltigkeit.of(
-                    ZustandsWechsel.zuUnGueltig(sucheSpaetestMoeglichesIntervallEnde(zeitGrenzen)),
-                    ZustandsWechsel.zuUnGueltig(SystemKalender.MAX_DATETIME));
+                    ZustandsWechsel.aufUngueltig(sucheSpaetestMoeglichesIntervallEnde(zeitGrenzen)),
+                    ZustandsWechsel.aufUngueltig(SystemKalender.MAX_DATETIME));
         }
 
         if (zeitGrenzen.isEmpty()) {
@@ -404,8 +404,8 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
         LocalDateTime fruehesterStart = sucheFruehestMoeglichenIntervallStart(zeitGrenzen);
 
         if (zeitpunkt.isBefore(fruehesterStart)) {
-            return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME),
-                    ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME));
+            return SystemkalenderGueltigkeit.of(ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME),
+                    ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME));
         } 
 
         if (zeitpunkt.isBefore(ende) && zeitGrenzen.isEmpty()) {

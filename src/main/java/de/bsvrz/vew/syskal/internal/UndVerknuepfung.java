@@ -164,12 +164,12 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
         do {
             ZustandsWechsel wechsel = verweisWechsel.values().stream().max(ZustandsWechsel.ZEIT_COMPARATOR).get();
             if (wechsel == null) {
-                return ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME);
+                return ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME);
             }
 
             wechselZeit = wechsel.getZeitPunkt();
             if (pruefeGueltigKeit(wechselZeit, false)) {
-                potentiellerWechsel = ZustandsWechsel.zuUnGueltig(wechselZeit);
+                potentiellerWechsel = ZustandsWechsel.aufUngueltig(wechselZeit);
             } else {
                 if (potentiellerWechsel != null) {
                     return potentiellerWechsel;
@@ -186,7 +186,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
         } while (wechselZeit.isAfter(SystemKalender.MIN_DATETIME)
                 && (getStartJahr() == 0 || getStartJahr() <= wechselZeit.getYear()));
 
-        return ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME);
+        return ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME);
     }
 
     private ZustandsWechsel berechneVorigenWechselAufGueltig(Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
@@ -215,7 +215,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
         } while (wechselZeit.isAfter(SystemKalender.MIN_DATETIME)
                 && (getStartJahr() == 0 || getStartJahr() <= wechselZeit.getYear()));
 
-        return ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME);
+        return ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME);
     }
 
     private boolean pruefeGueltigKeit(LocalDateTime wechselZeit, boolean zielZustand) {

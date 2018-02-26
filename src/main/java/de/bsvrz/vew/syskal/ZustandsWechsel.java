@@ -50,19 +50,19 @@ public class ZustandsWechsel {
     private LocalDateTime zeitPunkt;
     private boolean wirdGueltig;
 
-    public static ZustandsWechsel zuGueltig(LocalDate datum) {
+    public static ZustandsWechsel aufGueltig(LocalDate datum) {
         return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), true);
     }
 
-    public static ZustandsWechsel zuGueltig(LocalDateTime zeitPunkt) {
+    public static ZustandsWechsel aufGueltig(LocalDateTime zeitPunkt) {
         return new ZustandsWechsel(zeitPunkt, true);
     }
 
-    public static ZustandsWechsel zuUnGueltig(LocalDate datum) {
+    public static ZustandsWechsel aufUngueltig(LocalDate datum) {
         return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), false);
     }
 
-    public static ZustandsWechsel zuUnGueltig(LocalDateTime zeitPunkt) {
+    public static ZustandsWechsel aufUngueltig(LocalDateTime zeitPunkt) {
         return new ZustandsWechsel(zeitPunkt, false);
     }
 
@@ -70,7 +70,7 @@ public class ZustandsWechsel {
         return new ZustandsWechsel(zeitPunkt, wirdGueltig);
     }
 
-    public static ZustandsWechsel oof(LocalDate datum, boolean wirdGueltig) {
+    public static ZustandsWechsel of(LocalDate datum, boolean wirdGueltig) {
         return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), wirdGueltig);
     }
 

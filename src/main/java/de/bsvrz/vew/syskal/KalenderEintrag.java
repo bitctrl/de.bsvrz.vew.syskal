@@ -274,7 +274,7 @@ public abstract class KalenderEintrag {
     public final List<ZustandsWechsel> getZustandsWechsel(LocalDateTime start, LocalDateTime ende) {
 
         if (isFehler()) {
-            return Collections.singletonList(ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME));
+            return Collections.singletonList(ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME));
         }
 
         List<ZustandsWechsel> result = new ArrayList<>();
