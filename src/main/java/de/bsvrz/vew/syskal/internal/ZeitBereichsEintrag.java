@@ -250,7 +250,7 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
         List<ZeitGrenze> zeitGrenzen = getZeitGrenzen();
 
         if (zeitpunkt.isBefore(start)) {
-            return SystemkalenderGueltigkeit.unGueltig(SystemKalender.MIN_DATETIME,
+            return SystemkalenderGueltigkeit.ungueltig(SystemKalender.MIN_DATETIME,
                     sucheFruehestMoeglichenIntervallStart(zeitGrenzen));
         }
 
@@ -287,7 +287,7 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
                 if (aktivierungsZeit.isBefore(start)) {
                     aktivierungsZeit = SystemKalender.MIN_DATETIME;
                 }
-                return SystemkalenderGueltigkeit.unGueltig(aktivierungsZeit,
+                return SystemkalenderGueltigkeit.ungueltig(aktivierungsZeit,
                         LocalDateTime.of(datum, grenze.getStart()));
             }
 
@@ -315,7 +315,7 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
         if (ende != null && wechselZeit.isAfter(ende)) {
             return SystemkalenderGueltigkeit.NICHT_GUELTIG;
         }
-        return SystemkalenderGueltigkeit.unGueltig(aktivierungsZeit, wechselZeit);
+        return SystemkalenderGueltigkeit.ungueltig(aktivierungsZeit, wechselZeit);
     }
 
     private LocalDateTime sucheSpaetestMoeglichenIntervallStart(List<ZeitGrenze> zeitGrenzen) {
@@ -406,10 +406,10 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
         if (zeitpunkt.isBefore(fruehesterStart)) {
             return SystemkalenderGueltigkeit.of(ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME),
                     ZustandsWechsel.zuUnGueltig(SystemKalender.MIN_DATETIME));
-        }
+        } 
 
         if (zeitpunkt.isBefore(ende) && zeitGrenzen.isEmpty()) {
-            return SystemkalenderGueltigkeit.unGueltig(SystemKalender.MIN_DATETIME, start);
+            return SystemkalenderGueltigkeit.ungueltig(SystemKalender.MIN_DATETIME, start);
         }
 
         if (!zeitpunkt.isBefore(ende)) {
@@ -443,7 +443,7 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
                 if (wechselZeit.isBefore(start)) {
                     return SystemkalenderGueltigkeit.NICHT_GUELTIG;
                 }
-                return SystemkalenderGueltigkeit.unGueltig(aktivierungsZeit, wechselZeit);
+                return SystemkalenderGueltigkeit.ungueltig(aktivierungsZeit, wechselZeit);
             }
 
             if (abfrageZeit.isBefore(grenze.getStart())) {
@@ -481,7 +481,7 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
                     wechselZeit = sucheFruehestMoeglichenIntervallStart(zeitGrenzen);
                 }
 
-                return SystemkalenderGueltigkeit.unGueltig(aktivierungsZeit,
+                return SystemkalenderGueltigkeit.ungueltig(aktivierungsZeit,
                         wechselZeit);
             }
 

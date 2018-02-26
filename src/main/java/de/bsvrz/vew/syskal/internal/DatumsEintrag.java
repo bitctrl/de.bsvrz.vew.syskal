@@ -177,7 +177,7 @@ public class DatumsEintrag extends KalenderEintrag {
 
         LocalDate fruehestesDatum = LocalDate.of(jahr, monat, tag);
         if (zeitpunkt.toLocalDate().isBefore(fruehestesDatum)) {
-            return SystemkalenderGueltigkeit.unGueltig(SystemKalender.MIN_DATETIME,
+            return SystemkalenderGueltigkeit.ungueltig(SystemKalender.MIN_DATETIME,
                     LocalDateTime.of(fruehestesDatum, LocalTime.MIDNIGHT));
         }
 

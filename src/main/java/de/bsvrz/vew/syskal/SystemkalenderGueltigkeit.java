@@ -62,7 +62,7 @@ public class SystemkalenderGueltigkeit {
         return gueltigkeit;
     }
 
-    public static SystemkalenderGueltigkeit unGueltig(LocalDateTime beginn, LocalDateTime wechsel) {
+    public static SystemkalenderGueltigkeit ungueltig(LocalDateTime beginn, LocalDateTime wechsel) {
         SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
         gueltigkeit.ersterWechsel = ZustandsWechsel.zuUnGueltig(beginn);
         gueltigkeit.naechsterWechsel = ZustandsWechsel.zuGueltig(wechsel);

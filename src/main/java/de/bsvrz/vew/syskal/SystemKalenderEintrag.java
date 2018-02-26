@@ -26,16 +26,87 @@
 
 package de.bsvrz.vew.syskal;
 
+import java.util.Collection;
+import java.util.Objects;
+
+import de.bsvrz.dav.daf.main.config.DynamicObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.vew.syskal.SystemKalenderEintrag;
+import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
+import de.bsvrz.vew.syskal.internal.VorDefinierterEintrag;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
-public interface SystemKalenderEintrag {
+public class SystemKalenderEintrag {
 
-    String getName();
+    private final ObjectProperty<KalenderEintrag> kalenderEintragProperty = new SimpleObjectProperty<>(this,
+            "kalendereintrag", VorDefinierterEintrag.UNDEFINIERT);
+    private KalenderEintragProvider provider;
+    private DynamicObject systemObject;
+    private String originalDefinition;
 
-    SystemObject getSystemObject();
+    public SystemKalenderEintrag(KalenderEintragProvider provider, DynamicObject obj) {
+        this.provider = provider;
+        this.systemObject = obj;
+    }
 
-    ObjectProperty<KalenderEintrag> getKalenderEintragProperty();
+    void bestimmeKalendereintrag() {
+        String name = systemObject.getName();
+        if (originalDefinition == null) {
+            kalenderEintragProperty.set(VorDefinierterEintrag.UNDEFINIERT);
+        } else {
+            kalenderEintragProperty.set(KalenderEintrag.parse(provider, name, originalDefinition));
+        }
+    }
 
-    KalenderEintrag getKalenderEintrag();
+    public KalenderEintrag getKalenderEintrag() {
+        return kalenderEintragProperty.get();
+    }
+
+    public SystemObject getSystemObject() {
+        return systemObject;
+    }
+
+    public void setDefinition(String text) {
+        if (!Objects.equals(originalDefinition, text)) {
+            originalDefinition = text;
+            bestimmeKalendereintrag();
+        }
+    }
+
+    public String getName() {
+        return systemObject.getName();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder(100);
+        builder.append(systemObject.getName());
+        builder.append(':');
+
+        if (kalenderEintragProperty.get().isFehler()) {
+            builder.append("FEHLER :");
+        } else {
+            builder.append("OK    :");
+        }
+        builder.append(kalenderEintragProperty.get());
+        return builder.toString();
+    }
+
+    public ObjectProperty<KalenderEintrag> getKalenderEintragProperty() {
+        return kalenderEintragProperty;
+    }
+
+    public void aktualisiereVonReferenzen(Collection<SystemKalenderEintrag> referenzen) {
+        for (SystemKalenderEintrag referenz : referenzen) {
+            if (referenz.equals(this)) {
+                continue;
+            }
+
+            if (getKalenderEintrag().benutzt(referenz)) {
+                bestimmeKalendereintrag();
+                return;
+            }
+        }
+    }
 }

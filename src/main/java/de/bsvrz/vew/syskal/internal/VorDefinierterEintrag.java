@@ -30,6 +30,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import de.bsvrz.vew.syskal.KalenderEintrag;
@@ -105,30 +106,30 @@ public class VorDefinierterEintrag extends KalenderEintrag {
      */
     public static VorDefinierterEintrag getEintrag(final String name) {
         VorDefinierterEintrag.initialisiereEintrage();
-        return VorDefinierterEintrag.eintraege.get(name.toLowerCase());
+        return VorDefinierterEintrag.eintraege.get(name.toLowerCase(Locale.getDefault()));
     }
 
     /** interne Funktion zur Initialisierung der vordefinierten Einträge. */
     private static synchronized void initialisiereEintrage() {
         if (VorDefinierterEintrag.eintraege == null) {
             VorDefinierterEintrag.eintraege = new HashMap<>();
-            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.MONTAG.getName().toLowerCase(),
+            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.MONTAG.getName().toLowerCase(Locale.getDefault()),
                     VorDefinierterEintrag.MONTAG);
-            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.DIENSTAG.getName().toLowerCase(),
+            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.DIENSTAG.getName().toLowerCase(Locale.getDefault()),
                     VorDefinierterEintrag.DIENSTAG);
-            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.MITTWOCH.getName().toLowerCase(),
+            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.MITTWOCH.getName().toLowerCase(Locale.getDefault()),
                     VorDefinierterEintrag.MITTWOCH);
-            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.DONNERSTAG.getName().toLowerCase(),
+            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.DONNERSTAG.getName().toLowerCase(Locale.getDefault()),
                     VorDefinierterEintrag.DONNERSTAG);
-            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.FREITAG.getName().toLowerCase(),
+            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.FREITAG.getName().toLowerCase(Locale.getDefault()),
                     VorDefinierterEintrag.FREITAG);
-            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.SAMSTAG.getName().toLowerCase(),
+            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.SAMSTAG.getName().toLowerCase(Locale.getDefault()),
                     VorDefinierterEintrag.SAMSTAG);
-            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.SONNTAG.getName().toLowerCase(),
+            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.SONNTAG.getName().toLowerCase(Locale.getDefault()),
                     VorDefinierterEintrag.SONNTAG);
-            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.OSTERSONNTAG.getName().toLowerCase(),
+            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.OSTERSONNTAG.getName().toLowerCase(Locale.getDefault()),
                     VorDefinierterEintrag.OSTERSONNTAG);
-            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.UNDEFINIERT.getName().toLowerCase(),
+            VorDefinierterEintrag.eintraege.put(VorDefinierterEintrag.UNDEFINIERT.getName().toLowerCase(Locale.getDefault()),
                     VorDefinierterEintrag.UNDEFINIERT);
         }
     }

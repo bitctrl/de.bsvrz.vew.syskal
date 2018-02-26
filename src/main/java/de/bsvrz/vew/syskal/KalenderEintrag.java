@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -61,19 +62,18 @@ public abstract class KalenderEintrag {
     protected static final Pattern ZEITBEREICH_PATTERN = Pattern.compile("\\{.[^\\{]*\\}");
 
     /**
-     * zerlegt den übergebenen Definitionsstring. Die Funktion initialisiert die
-     * Datenstrukturen der Klasse und wird nur vom Konstruktor aufgerufen, d.h.
-     * ein mehrfacher Aufruf könnte zu falschen Daten führen!
+     * zerlegt den übergebenen Definitionsstring und erzeugt einen
+     * entsprechenden {@link KalenderEintrag}.
      * 
      * @param provider
-     *            die Verwaltung aller bekannten Systemkalendereinträge zur
+     *            die Verwaltung aller bekannten Kalendereinträge zur
      *            Verifizierung von Referenzen
      * @param name
-     *            der Name des Dateneintrages
+     *            der Name des Eintrags
      * @param definition
      *            der Definitionsstring
-     * @return das Ergebnis ist ein Systemkalendereintrag, dessen konkreter Typ
-     *         vom Inhalt der Definition abhängt
+     * @return den aus der Definition ermittelten Kalendereintrag, dessen
+     *         konkreter Typ vom Inhalt der Definition abhängt
      */
     public static KalenderEintrag parse(KalenderEintragProvider provider, final String name,
             final String definition) {
@@ -87,41 +87,23 @@ public abstract class KalenderEintrag {
 
         String rest = entferneNamensPrefix(name, definition);
 
-        final List<ZeitGrenze> parseZeitBereiche = new ArrayList<>();
-
-        Matcher mat = KalenderEintrag.ZEITBEREICHSLISTE_PATTERN.matcher(rest);
-
         boolean zeitBereichsfehler = false;
-
-        while (mat.find()) {
-            final String bereich = mat.group();
-            rest = rest.replace(bereich, "");
-            final String zeitBereich = bereich.substring(1, bereich.length() - 1);
-            final Matcher zeitMat = KalenderEintrag.ZEITBEREICH_PATTERN.matcher(zeitBereich);
-            while (zeitMat.find()) {
-                String zb = zeitMat.group();
-                zb = zb.substring(1, zb.length() - 1);
-                try {
-                    parseZeitBereiche.add(new ZeitGrenze(zb));
-                } catch (final ParseException e) {
-                    LOGGER.warning(e.getLocalizedMessage());
-                    zeitBereichsfehler = true;
-                }
-            }
+        final List<ZeitGrenze> parsedZeitBereiche = new ArrayList<>();
+        try {
+            rest = ermittleZeitBereiche(rest, parsedZeitBereiche);
+        } catch (ParseException e) {
+            LOGGER.warning("Fehler beim Einlesen der Zeitbereiche: " + e.getLocalizedMessage());
+            zeitBereichsfehler = true;
         }
 
-        // und bzw. oder Einträge ermitteln
-
-        if (rest.toLowerCase().startsWith("und")) {
+        if (rest.toLowerCase(Locale.getDefault()).startsWith("und")) {
             result = new UndVerknuepfung(provider, name, rest.substring("und".length()));
         } else if (rest.toLowerCase().startsWith("oder")) {
             result = new OderVerknuepfung(provider, name, rest.substring("oder".length()));
         } else {
-            mat = KalenderEintrag.DATUMSBEREICH_PATTERN.matcher(rest);
+            Matcher mat = KalenderEintrag.DATUMSBEREICH_PATTERN.matcher(rest);
             if (mat.find()) {
                 result = new ZeitBereichsEintrag(name, mat.group().substring(1, mat.group().length() - 1));
-                final String bereich = mat.group();
-                rest = rest.replace(bereich, "");
             } else {
                 if (rest.trim().length() == 0) {
                     result = new ZeitBereichsEintrag(name, "");
@@ -134,16 +116,37 @@ public abstract class KalenderEintrag {
                 }
             }
 
-            result.komprimiereZeitBereiche(parseZeitBereiche.stream().sorted().collect(Collectors.toList()));
+        }
+
+        if (zeitBereichsfehler) {
+            result.setFehler(true);
+        } else {
+            result.komprimiereZeitBereiche(parsedZeitBereiche.stream().sorted().collect(Collectors.toList()));
         }
 
         result.definition = definition;
 
-        if (zeitBereichsfehler) {
-            result.setFehler(true);
-        }
-
         return result;
+    }
+
+    private static String ermittleZeitBereiche(String source, List<ZeitGrenze> parsedZeitBereiche) throws ParseException {
+
+        String definition = source;
+
+        Matcher mat = KalenderEintrag.ZEITBEREICHSLISTE_PATTERN.matcher(definition);
+        while (mat.find()) {
+            final String bereich = mat.group();
+            definition = definition.replace(bereich, "");
+            final String zeitBereich = bereich.substring(1, bereich.length() - 1);
+            final Matcher zeitMat = KalenderEintrag.ZEITBEREICH_PATTERN.matcher(zeitBereich);
+            while (zeitMat.find()) {
+                String zb = zeitMat.group();
+                zb = zb.substring(1, zb.length() - 1);
+                parsedZeitBereiche.add(new ZeitGrenze(zb));
+            }
+        }
+        
+        return definition;
     }
 
     private void komprimiereZeitBereiche(List<ZeitGrenze> grenzen) {
@@ -279,7 +282,7 @@ public abstract class KalenderEintrag {
         SystemkalenderGueltigkeit gueltigkeit = getZeitlicheGueltigkeit(start);
         result.add(ZustandsWechsel.of(gueltigkeit.getErsterWechsel().getZeitPunkt(), gueltigkeit.isZeitlichGueltig()));
 
-        LocalDateTime aktuellerZeitPunkt = start;
+        LocalDateTime aktuellerZeitPunkt = null;
         do {
             ZustandsWechsel wechsel = gueltigkeit.getNaechsterWechsel();
             aktuellerZeitPunkt = wechsel.getZeitPunkt();
@@ -303,7 +306,7 @@ public abstract class KalenderEintrag {
         List<Intervall> result = new ArrayList<>();
 
         SystemkalenderGueltigkeit gueltigkeit = getZeitlicheGueltigkeit(startTime);
-        LocalDateTime aktuellerZeitPunkt = startTime;
+        LocalDateTime aktuellerZeitPunkt = null;
 
         do {
             if (gueltigkeit.isZeitlichGueltig()) {

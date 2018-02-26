@@ -55,7 +55,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
 
     // private ObservableSet<SystemKalenderEintrag> eintraege =
     // FXCollections.observableSet(new LinkedHashSet<>());
-    private Map<SystemObject, SystemKalenderEintragImpl> eintraege = new LinkedHashMap<>();
+    private Map<SystemObject, SystemKalenderEintrag> eintraege = new LinkedHashMap<>();
 
     private ClientDavInterface dav;
     private DataDescription dataDescription;
@@ -90,7 +90,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
 
     @Override
     public KalenderEintrag getKalenderEintrag(String name) {
-        Optional<SystemKalenderEintragImpl> systemKalenderEintrag = eintraege.values().stream()
+        Optional<SystemKalenderEintrag> systemKalenderEintrag = eintraege.values().stream()
                 .filter(s -> name.equals(s.getName())).findFirst();
         if (systemKalenderEintrag.isPresent()) {
             return systemKalenderEintrag.get().getKalenderEintrag();
@@ -100,12 +100,10 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
 
     private void addEintraege(Collection<SystemObject> list) {
 
-        Collection<SystemKalenderEintrag> neueEintrage = new ArrayList<>();
         for (SystemObject obj : list) {
 
-            SystemKalenderEintragImpl neuerEintrag = new SystemKalenderEintragImpl(this, (DynamicObject) obj);
-            neueEintrage.add(neuerEintrag);
-            SystemKalenderEintragImpl alterEintrag = eintraege.put(obj, neuerEintrag);
+            SystemKalenderEintrag neuerEintrag = new SystemKalenderEintrag(this, (DynamicObject) obj);
+            SystemKalenderEintrag alterEintrag = eintraege.put(obj, neuerEintrag);
             if (alterEintrag != null) {
                 dav.unsubscribeReceiver(this, alterEintrag.getSystemObject(), dataDescription);
             }
@@ -121,7 +119,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
                 continue;
             }
 
-            ((SystemKalenderEintragImpl) eintrag).aktualisiereVonReferenzen(referenzen);
+            eintrag.aktualisiereVonReferenzen(referenzen);
         }
     }
 
@@ -151,7 +149,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
 
         for (ResultData result : results) {
             if (result.hasData()) {
-                SystemKalenderEintragImpl systemKalenderEintrag = eintraege.get(result.getObject());
+                SystemKalenderEintrag systemKalenderEintrag = eintraege.get(result.getObject());
                 if (systemKalenderEintrag != null) {
                     systemKalenderEintrag.setDefinition(result.getData().getTextValue("Definition").getText());
                     berechneAbhaengigeKalenderEintraegeNeu(Collections.singleton(systemKalenderEintrag));

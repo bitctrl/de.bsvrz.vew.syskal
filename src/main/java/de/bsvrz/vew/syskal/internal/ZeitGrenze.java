@@ -28,6 +28,7 @@ package de.bsvrz.vew.syskal.internal;
 
 import java.text.ParseException;
 import java.time.LocalTime;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -210,5 +211,23 @@ public class ZeitGrenze implements Comparable<ZeitGrenze> {
         result.append(longToStr(ende));
         result.append('}');
         return result.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, ende);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        
+        if (obj == null) {
+            return false;
+        }
+        
+        return Objects.equals(start, ende);
     }
 }

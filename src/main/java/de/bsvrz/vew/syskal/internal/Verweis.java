@@ -27,6 +27,7 @@
 package de.bsvrz.vew.syskal.internal;
 
 import java.text.ParseException;
+import java.util.Locale;
 
 import de.bsvrz.vew.syskal.KalenderEintrag;
 
@@ -68,7 +69,7 @@ public class Verweis {
         if (def != null) {
             String rest = def;
 
-            final String negationsFilter = rest.toLowerCase();
+            final String negationsFilter = rest.toLowerCase(Locale.getDefault());
             if (negationsFilter.contains("nicht")) {
                 negiert = true;
                 rest = rest.substring(negationsFilter.indexOf("nicht") + "nicht".length()).trim();
