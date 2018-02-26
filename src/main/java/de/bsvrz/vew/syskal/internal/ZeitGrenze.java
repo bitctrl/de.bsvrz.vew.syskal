@@ -228,6 +228,11 @@ public class ZeitGrenze implements Comparable<ZeitGrenze> {
             return false;
         }
         
-        return Objects.equals(start, ende);
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        
+        boolean result = Objects.equals(start,((ZeitGrenze) obj).start);
+        return result && Objects.equals(ende,((ZeitGrenze) obj).ende);
     }
 }
