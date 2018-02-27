@@ -42,7 +42,12 @@ public class SystemKalenderEintrag {
     private final ObjectProperty<KalenderEintrag> kalenderEintragProperty = new SimpleObjectProperty<>(this,
             "kalendereintrag", VorDefinierterEintrag.UNDEFINIERT);
     private KalenderEintragProvider provider;
+    
     private DynamicObject systemObject;
+
+    private String name;
+    private String pid;
+    
     private String originalDefinition;
 
     public SystemKalenderEintrag(KalenderEintragProvider provider, DynamicObject obj) {
@@ -75,9 +80,19 @@ public class SystemKalenderEintrag {
     }
 
     public String getName() {
+        if( systemObject == null) {
+            return name;
+        }
         return systemObject.getName();
     }
 
+    public String getPid() {
+        if( systemObject == null) {
+            return pid;
+        }
+        return systemObject.getPid();
+    }
+    
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(100);
@@ -108,5 +123,25 @@ public class SystemKalenderEintrag {
                 return;
             }
         }
+    }
+    
+    public static boolean isNameGueltig(String name) {
+        
+        boolean result = true;
+        String testName = name.trim();
+        
+        if (testName.length() <= 0) {
+            result = false;
+        } else {
+            for (final char ch : testName.toCharArray()) {
+                final int type = Character.getType(ch);
+                if ((type != Character.UPPERCASE_LETTER) && (type != Character.LOWERCASE_LETTER)
+                        && (type != Character.DECIMAL_DIGIT_NUMBER) && (ch != '_')) {
+                    result = false;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 }

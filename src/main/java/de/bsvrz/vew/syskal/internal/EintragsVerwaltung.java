@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.ClientReceiverInterface;
@@ -53,7 +54,7 @@ import de.bsvrz.vew.syskal.SystemKalenderException;
 
 public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiverInterface, MutableSetChangeListener {
 
-    private Map<SystemObject, SystemKalenderEintrag> eintraege = new LinkedHashMap<>();
+    private Map<SystemObject, SystemKalenderEintrag> eintraege = new ConcurrentHashMap<>();
 
     private ClientDavInterface dav;
     private DataDescription dataDescription;

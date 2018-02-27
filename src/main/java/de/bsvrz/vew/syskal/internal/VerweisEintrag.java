@@ -49,6 +49,10 @@ public class VerweisEintrag extends KalenderEintrag {
     /** der definierende Eintrag mit zusätzlichen Erweiterungen. */
     private Verweis verweis;
 
+    public static VerweisEintrag of(Verweis verweis) {
+        return new VerweisEintrag(verweis);
+    }
+    
     /**
      * Konstruktor.
      * 

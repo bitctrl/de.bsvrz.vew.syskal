@@ -28,6 +28,7 @@ package de.bsvrz.vew.syskal.internal;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -44,6 +45,21 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
  */
 public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 
+    public static UndVerknuepfung of(KalenderEintragProvider provider, String name) {
+        return new UndVerknuepfung(provider, name);
+    }
+    
+    public static UndVerknuepfung of(KalenderEintragProvider provider, String name, List<Verweis> verweise, int startJahr, int endJahr) {
+        UndVerknuepfung result = UndVerknuepfung.of(provider, name);
+        result.setStartJahr(startJahr);
+        result.setEndJahr(endJahr);
+        result.setVerweise(verweise);
+        return result;
+    }
+
+    
+    
+
     /**
      * Konstruktor.
      * 
@@ -57,6 +73,10 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
      */
     public UndVerknuepfung(KalenderEintragProvider provider, final String name, final String definition) {
         super(provider, name, definition);
+    }
+
+    private UndVerknuepfung(KalenderEintragProvider provider, String name) {
+        super(provider, name, null);
     }
 
     @Override

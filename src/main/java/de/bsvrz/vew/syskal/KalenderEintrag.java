@@ -355,4 +355,8 @@ public abstract class KalenderEintrag {
     public boolean isVerwendbar() {
         return !isFehler();
     }
+
+    protected void setDefinition(String definition) {
+        this.definition = definition;
+    }
 }

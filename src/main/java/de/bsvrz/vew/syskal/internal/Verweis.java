@@ -54,6 +54,16 @@ public class Verweis {
 
     private KalenderEintrag referenzEintrag;
 
+    public static Verweis of(KalenderEintragProvider provider, String name, int offset, boolean negiert) {
+        try {
+            return new Verweis(provider, name, offset, negiert);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    
     /**
      * Konstruktor.
      * 

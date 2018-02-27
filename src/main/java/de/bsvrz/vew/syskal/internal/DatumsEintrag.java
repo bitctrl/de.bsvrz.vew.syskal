@@ -62,6 +62,10 @@ public class DatumsEintrag extends KalenderEintrag {
     /** der Tag innerhalb des Monats für das definierte Datum. */
     private int tag;
 
+    public static DatumsEintrag of(String name, int tag, int monat, int jahr, int endJahr) {
+        return new DatumsEintrag(name, tag, monat, jahr, endJahr);
+    }
+
     /**
      * Konstruktor, erzeugt einen Eintrag mit dem übergebenen Namen, der Inhalt
      * wird durch den Definitionsstring beschrieben.
@@ -110,6 +114,15 @@ public class DatumsEintrag extends KalenderEintrag {
                 setFehler(true);
             }
         }
+    }
+
+    private DatumsEintrag(String name, int tag, int monat, int jahr, int endJahr) {
+        super(name, null);
+        this.tag = Math.max(0, tag);
+        this.monat = Math.max(0, monat);
+        this.jahr = Math.max(jahr, Year.MIN_VALUE);
+        this.endJahr = Math.min(endJahr, Year.MAX_VALUE);
+        setDefinition(toString());
     }
 
     @Override
@@ -261,7 +274,6 @@ public class DatumsEintrag extends KalenderEintrag {
         return result;
     }
 
-    
     @Override
     public boolean benutzt(SystemKalenderEintrag referenz) {
         return false;

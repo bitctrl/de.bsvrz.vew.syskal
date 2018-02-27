@@ -171,6 +171,13 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
         return verweise;
     }
 
+    protected void setVerweise(List<Verweis> verweisListe) {
+        verweise.clear();
+        for(Verweis verweis : verweisListe) {
+            verweise.add(new VerweisEintrag(verweis));
+        }
+    }
+
     /**
      * setzt das optionale Endjahr des Eintrags.
      * 

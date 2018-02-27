@@ -28,6 +28,7 @@ package de.bsvrz.vew.syskal.internal;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -44,6 +45,23 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
  */
 public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 
+    
+    public static OderVerknuepfung of(KalenderEintragProvider provider, String name) {
+        return new OderVerknuepfung(provider, name);
+    }
+    
+    public static OderVerknuepfung of(KalenderEintragProvider provider, String name, List<Verweis> verweise, int startJahr, int endJahr) {
+        OderVerknuepfung result = OderVerknuepfung.of(provider, name);
+        result.setStartJahr(startJahr);
+        result.setEndJahr(endJahr);
+        result.setVerweise(verweise);
+        return result;
+    }
+    
+    private OderVerknuepfung(KalenderEintragProvider provider, String name) {
+        super(provider, name, null);
+    }
+    
     /**
      * Konstruktor.
      * 

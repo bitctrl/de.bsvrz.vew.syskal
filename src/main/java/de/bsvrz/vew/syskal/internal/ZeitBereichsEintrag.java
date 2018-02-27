@@ -52,6 +52,7 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
 public class ZeitBereichsEintrag extends KalenderEintrag {
 
     private static final Debug LOGGER = Debug.getLogger();
+    
     private LocalDateTime start;
     private LocalDateTime ende;
 
@@ -61,6 +62,17 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
     /** verkürztes Datumsformat für 0 Uhr. */
     private static String formatOhneZeit = "dd.MM.yyyy";
 
+    public static ZeitBereichsEintrag of(String name, LocalDateTime start, LocalDateTime ende, List<ZeitGrenze> grenzen) {
+        ZeitBereichsEintrag eintrag = new ZeitBereichsEintrag(name, start, ende);
+        
+        for( ZeitGrenze grenze : grenzen) {
+            eintrag.addZeitGrenze(grenze);
+        }
+        
+        eintrag.setDefinition(eintrag.toString());
+        return eintrag;
+    }
+    
     /**
      * Konstruktor.
      * 
@@ -95,6 +107,12 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
                 ende = SystemKalender.MAX_DATETIME;
             }
         }
+    }
+
+    private  ZeitBereichsEintrag(String name, LocalDateTime start, LocalDateTime ende) {
+        super(name, null);
+        this.start = start;
+        this.ende = ende;
     }
 
     @Override
