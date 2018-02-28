@@ -26,13 +26,9 @@
 
 package de.bsvrz.vew.syskal;
 
-public class SystemKalenderException extends Exception {
-
-    public SystemKalenderException(String meldung) {
-        super(meldung);
-    }
-
-    public SystemKalenderException(String meldung, Exception e) {
-        super(meldung, e);
-    }
+public interface SystemKalenderListener {
+    void eintragAngelegt(SystemKalender kalender, SystemKalenderEintrag eintrag);
+    void eintragEntfernt(SystemKalender kalender, SystemKalenderEintrag eintrag);
+    void eintragGeandert(SystemKalender kalender, SystemKalenderEintrag eintrag);
+    void kalenderGetrennt(SystemKalender kalender);
 }

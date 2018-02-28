@@ -50,13 +50,26 @@ public class SystemKalenderEintrag {
     
     private String originalDefinition;
 
+    public static SystemKalenderEintrag of(String name, String pid, KalenderEintrag eintrag) {
+        SystemKalenderEintrag result = new SystemKalenderEintrag();
+        result.name= name;
+        result.pid = pid;
+        result.kalenderEintragProperty.set(eintrag);
+        return result;
+    }
+    
+    private SystemKalenderEintrag() {
+        
+    }
+    
     public SystemKalenderEintrag(KalenderEintragProvider provider, DynamicObject obj) {
         this.provider = provider;
         this.systemObject = obj;
     }
 
     void bestimmeKalendereintrag() {
-        String name = systemObject.getName();
+        name = systemObject.getName();
+        pid = systemObject.getPid();
         if (originalDefinition == null) {
             kalenderEintragProperty.set(VorDefinierterEintrag.UNDEFINIERT);
         } else {

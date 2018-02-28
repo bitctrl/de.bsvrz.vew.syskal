@@ -42,7 +42,7 @@ public class SystemKalender {
     private final EintragsVerwaltung verwaltung;
 
     public SystemKalender(ClientDavInterface dav, ConfigurationObject object) {
-        verwaltung = new EintragsVerwaltung(dav, object);
+        verwaltung = new EintragsVerwaltung(this, dav, object);
     }
 
     public SystemKalenderEintrag getEintrag(SystemObject object) throws SystemKalenderException {
@@ -52,4 +52,29 @@ public class SystemKalender {
     public Collection<SystemKalenderEintrag> getEintraege() throws SystemKalenderException {
         return verwaltung.getSystemKalenderEintraege();
     }
+    
+    public void sichereEintrag(SystemKalenderEintrag eintrag) throws SystemKalenderException {
+        verwaltung.sichereEintrag(eintrag);
+    }
+
+    public void loescheEintrag(SystemKalenderEintrag eintrag) throws SystemKalenderException {
+        verwaltung.loescheEintrag(eintrag);
+    }
+    
+    public void leereSystemKalender() throws SystemKalenderException {
+        verwaltung.leereSystemKalender();
+    }
+    
+    public void bereinigeSystemKalender() throws SystemKalenderException {
+        verwaltung.bereinigeSystemKalender();
+    }
+    
+    public void addSystemKalenderListener(SystemKalenderListener listener) {
+        verwaltung.addSystemKalenderListener(listener);
+    }
+
+    public void removeSystemKalenderListener(SystemKalenderListener listener) {
+        verwaltung.removeSystemKalenderListener(listener);
+    }
+    
 }
