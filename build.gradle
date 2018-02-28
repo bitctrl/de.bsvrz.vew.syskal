@@ -19,15 +19,21 @@ nerzswe {
 	sweDatum = ''
 }
 
+repositories {
+    maven {
+        url "https://dl.bintray.com/bitctrl/maven"
+    }
+}
+
 //--------------------------------------------------------------------
 // Abhängigkeiten
 //--------------------------------------------------------------------
-String kernsoftware_version = '3.9.7'
+String kernsoftware_version = '3.9.2'
 dependencies {
     compile group: 'de.bsvrz.dav', name: 'de.bsvrz.dav.daf', version: kernsoftware_version
     compile group: 'de.bsvrz.dav', name: 'de.bsvrz.dav.dav', version: kernsoftware_version
     compile group: 'de.bsvrz.sys', name: 'de.bsvrz.sys.funclib.application', version: kernsoftware_version
-    compile group: 'de.bsvrz.sys', name: 'de.bsvrz.sys.funclib.dynobj', version:'1.3.2'
+    compile group: 'de.bsvrz.sys', name: 'de.bsvrz.sys.funclib.dynobj', version:'1.3.1'
   
     compile group: 'junit', name: 'junit', version:'4.12'
 }
