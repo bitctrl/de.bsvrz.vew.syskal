@@ -53,7 +53,7 @@ public class VordefinierterEintragTest {
                 "Mittwoch");
 
         LocalDateTime start = LocalDateTime.of(2018, 1, 24, 12, 10);
-        LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 10);
+        LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 11, 10);
 
         TestWechsel[] erwarteteWechsel = {
                 TestWechsel.of("24.01.2018 00:00", true),
@@ -81,7 +81,7 @@ public class VordefinierterEintragTest {
                 "Mittwoch");
 
         LocalDateTime start = LocalDateTime.of(2018, 1, 24, 12, 10);
-        LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 12, 10);
+        LocalDateTime ende = LocalDateTime.of(2018, 2, 28, 11, 10);
 
         Intervall[] erwarteteIntervalle = {
                 TestIntervall.of("24.01.2018 12:10", "25.01.2018 00:00"),
@@ -89,7 +89,7 @@ public class VordefinierterEintragTest {
                 TestIntervall.of("07.02.2018 00:00", "08.02.2018 00:00"),
                 TestIntervall.of("14.02.2018 00:00", "15.02.2018 00:00"),
                 TestIntervall.of("21.02.2018 00:00", "22.02.2018 00:00"),
-                TestIntervall.of("28.02.2018 00:00", "28.02.2018 12:10")
+                TestIntervall.of("28.02.2018 00:00", "28.02.2018 11:10")
         };
 
         List<Intervall> intervalle = mittwoch.getIntervalle(start, ende);
