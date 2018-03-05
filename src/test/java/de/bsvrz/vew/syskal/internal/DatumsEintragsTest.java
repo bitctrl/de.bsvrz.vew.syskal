@@ -196,4 +196,60 @@ public class DatumsEintragsTest {
         SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(abfrageZeitpunkt);
         assertEquals(SystemkalenderGueltigkeit.NICHT_GUELTIG, gueltigkeit);
     }
+    
+    @Test
+    public void testZustandsWechselSilvester() {
+        TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
+        KalenderEintrag datumsEintrag = KalenderEintrag.parse(eintragsProvider, "Silvester", "31.12.*,*");
+
+        LocalDateTime startTime = LocalDateTime.of(2000, 12, 24, 14, 27, 17);
+        LocalDateTime endTime = LocalDateTime.of(2020, 3, 14, 14, 28, 17);
+
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("1.1.2000 00:00", false),
+                TestWechsel.of("31.12.2000 00:00", true),
+                TestWechsel.of("1.1.2001 00:00", false),
+                TestWechsel.of("31.12.2001 00:00", true),
+                TestWechsel.of("1.1.2002 00:00", false),
+                TestWechsel.of("31.12.2002 00:00", true),
+                TestWechsel.of("1.1.2003 00:00", false),
+                TestWechsel.of("31.12.2003 00:00", true),
+                TestWechsel.of("1.1.2004 00:00", false),
+                TestWechsel.of("31.12.2004 00:00", true),
+                TestWechsel.of("1.1.2005 00:00", false),
+                TestWechsel.of("31.12.2005 00:00", true),
+                TestWechsel.of("1.1.2006 00:00", false),
+                TestWechsel.of("31.12.2006 00:00", true),
+                TestWechsel.of("1.1.2007 00:00", false),
+                TestWechsel.of("31.12.2007 00:00", true),
+                TestWechsel.of("1.1.2008 00:00", false),
+                TestWechsel.of("31.12.2008 00:00", true),
+                TestWechsel.of("1.1.2009 00:00", false),
+                TestWechsel.of("31.12.2009 00:00", true),
+                TestWechsel.of("1.1.2010 00:00", false),
+                TestWechsel.of("31.12.2010 00:00", true),
+                TestWechsel.of("1.1.2011 00:00", false),
+                TestWechsel.of("31.12.2011 00:00", true),
+                TestWechsel.of("1.1.2012 00:00", false),
+                TestWechsel.of("31.12.2012 00:00", true),
+                TestWechsel.of("1.1.2013 00:00", false),
+                TestWechsel.of("31.12.2013 00:00", true),
+                TestWechsel.of("1.1.2014 00:00", false),
+                TestWechsel.of("31.12.2014 00:00", true),
+                TestWechsel.of("1.1.2015 00:00", false),
+                TestWechsel.of("31.12.2015 00:00", true),
+                TestWechsel.of("1.1.2016 00:00", false),
+                TestWechsel.of("31.12.2016 00:00", true),
+                TestWechsel.of("1.1.2017 00:00", false),
+                TestWechsel.of("31.12.2017 00:00", true),
+                TestWechsel.of("1.1.2018 00:00", false),
+                TestWechsel.of("31.12.2018 00:00", true),
+                TestWechsel.of("1.1.2019 00:00", false),
+                TestWechsel.of("31.12.2019 00:00", true),
+                TestWechsel.of("1.1.2020 00:00", false)
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = datumsEintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
 }

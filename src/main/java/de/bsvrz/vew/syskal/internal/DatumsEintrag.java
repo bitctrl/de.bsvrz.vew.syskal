@@ -51,10 +51,10 @@ public class DatumsEintrag extends KalenderEintrag {
     private static final Debug LOGGER = Debug.getLogger();
 
     /** das letzte Jahr für das der Eintrag gültig ist. */
-    private int endJahr = Year.MAX_VALUE;
+    private int endJahr = SystemKalender.MAX_DATETIME.getYear();
 
     /** das erste Jahr für das der Eintrag gültig ist. */
-    private int jahr = Year.MIN_VALUE;
+    private int jahr = SystemKalender.MIN_DATETIME.getYear();
 
     /** der Monat des definierten Datums. */
     private int monat;
@@ -120,8 +120,8 @@ public class DatumsEintrag extends KalenderEintrag {
         super(name, null);
         this.tag = Math.max(0, tag);
         this.monat = Math.max(0, monat);
-        this.jahr = Math.max(jahr, Year.MIN_VALUE);
-        this.endJahr = Math.min(endJahr, Year.MAX_VALUE);
+        this.jahr = Math.max(jahr, SystemKalender.MIN_DATETIME.getYear());
+        this.endJahr = Math.min(endJahr, SystemKalender.MAX_DATETIME.getYear());
         setDefinition(toString());
     }
 
@@ -155,13 +155,13 @@ public class DatumsEintrag extends KalenderEintrag {
         buffer.append(monat);
         buffer.append('.');
 
-        if (jahr == Year.MIN_VALUE) {
+        if (jahr == SystemKalender.MIN_DATETIME.getYear()) {
             buffer.append('*');
         } else {
             buffer.append(jahr);
         }
         buffer.append(',');
-        if (endJahr == Year.MAX_VALUE) {
+        if (endJahr == SystemKalender.MAX_DATETIME.getYear()) {
             buffer.append('*');
         } else {
             buffer.append(endJahr);
@@ -193,7 +193,9 @@ public class DatumsEintrag extends KalenderEintrag {
 
             int checkJahr = zeitpunkt.getYear();
             if (!zeitpunkt.toLocalDate().withYear(2000).isBefore(spaetestesDatum.withYear(2000))) {
-                checkJahr++;
+                if (tag != 31 || monat != 12) {
+                    checkJahr++;
+                }
             }
 
             checkJahr = korrigiereAufNaechstesSchaltjahr(checkJahr);
