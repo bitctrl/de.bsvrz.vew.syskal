@@ -126,14 +126,15 @@ public abstract class KalenderEintrag {
 
         result.definition = definition;
 
-        if( result.benutzt(result)) {
+        if (result.benutzt(result)) {
             result.addFehler("Rekursive Verwendung");
         }
-        
+
         return result;
     }
 
-    private static String ermittleZeitBereiche(String source, List<ZeitGrenze> parsedZeitBereiche) throws ParseException {
+    private static String ermittleZeitBereiche(String source, List<ZeitGrenze> parsedZeitBereiche)
+            throws ParseException {
 
         String definition = source;
 
@@ -149,7 +150,7 @@ public abstract class KalenderEintrag {
                 parsedZeitBereiche.add(new ZeitGrenze(zb));
             }
         }
-        
+
         return definition;
     }
 
@@ -345,15 +346,16 @@ public abstract class KalenderEintrag {
     }
 
     /**
-     * setzt den Fehlerstatus des Eintrags.
+     * fügt eine Fehlermeldung für den Eintrag hinzu und macht den Eintrag damit
+     * ungültig.
      * 
-     * @param state
-     *            der Status
+     * @param message
+     *            die Fehlermeldung
      */
     protected void addFehler(String message) {
         fehler.add(message);
     }
-    
+
     public Collection<String> getFehler() {
         return Collections.unmodifiableList(fehler);
     }
