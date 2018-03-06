@@ -117,4 +117,22 @@ public class KalenderEintragTest {
         assertEquals(SystemKalender.MAX_DATETIME, gueltigkeit.getNaechsterWechsel().getZeitPunkt());
 
     }
+    
+    @Test 
+    public void testeRekursion() {
+        provider.addEintrag(KalenderEintrag.parse(provider, "EintragA",
+                "Montag"));
+        provider.addEintrag(KalenderEintrag.parse(provider, "EintragB",
+                "Dienstag"));
+        provider.addEintrag(KalenderEintrag.parse(provider, "EintragB",
+                "UND{EintragA, EintragB}"));
+        
+        KalenderEintrag eintrag = provider.getKalenderEintrag("EintragB");
+        SystemkalenderGueltigkeit gueltigkeit = eintrag.getZeitlicheGueltigkeit(LocalDateTime.now());
+
+        assertFalse(gueltigkeit.isZeitlichGueltig());
+        assertEquals(SystemKalender.MIN_DATETIME, gueltigkeit.getErsterWechsel().getZeitPunkt());
+        assertFalse(gueltigkeit.getNaechsterWechsel().isWirdGueltig());
+        assertEquals(SystemKalender.MAX_DATETIME, gueltigkeit.getNaechsterWechsel().getZeitPunkt());
+    }
 }

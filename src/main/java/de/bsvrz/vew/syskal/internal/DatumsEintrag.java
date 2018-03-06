@@ -34,7 +34,6 @@ import java.time.Year;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
-import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
@@ -93,7 +92,7 @@ public class DatumsEintrag extends KalenderEintrag {
                         }
                     }
                 } else {
-                    setFehler(true);
+                    addFehler("Datum kann nicht geparst werden");
                 }
 
                 if (parts.length > 1) {
@@ -106,12 +105,13 @@ public class DatumsEintrag extends KalenderEintrag {
                 endJahr = korrigiereAufVorigesSchaltjahr(endJahr);
 
             } catch (NumberFormatException e) {
-                LOGGER.warning("Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage());
-                setFehler(true);
+                String message = "Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage();
+                LOGGER.warning(message);
+                addFehler(message);
             }
 
             if (endJahr < jahr) {
-                setFehler(true);
+                addFehler("Endjahr ist größer als das Anfangsjahr");
             }
         }
     }
@@ -277,7 +277,7 @@ public class DatumsEintrag extends KalenderEintrag {
     }
 
     @Override
-    public boolean benutzt(SystemKalenderEintrag referenz) {
+    public boolean benutzt(KalenderEintrag referenz) {
         return false;
     }
 }

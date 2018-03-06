@@ -131,7 +131,7 @@ public class SystemKalenderEintrag {
                 continue;
             }
 
-            if (getKalenderEintrag().benutzt(referenz)) {
+            if (getKalenderEintrag().benutzt(referenz.getKalenderEintrag())) {
                 bestimmeKalendereintrag();
                 return;
             }

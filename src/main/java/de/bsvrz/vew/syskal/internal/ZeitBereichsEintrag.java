@@ -39,7 +39,6 @@ import java.util.List;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
-import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
@@ -96,12 +95,13 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
                         ende = ende.plusDays(1);
                     }
                 } catch (final ParseException e) {
-                    LOGGER.warning("Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage());
-                    setFehler(true);
+                    String message = "Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage();
+                    LOGGER.warning(message);
+                    addFehler(message);
                 }
             } else {
                 if (definition.length() > 0) {
-                    setFehler(true);
+                    addFehler("Trenner '-' nicht im Definitionsstring enthalten");
                 }
                 start = SystemKalender.MIN_DATETIME;
                 ende = SystemKalender.MAX_DATETIME;
@@ -510,7 +510,7 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
     }
 
     @Override
-    public boolean benutzt(SystemKalenderEintrag referenz) {
+    public boolean benutzt(KalenderEintrag referenz) {
         return false;
     }
 }

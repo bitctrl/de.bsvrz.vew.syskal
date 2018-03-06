@@ -29,6 +29,7 @@ package de.bsvrz.vew.syskal;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -37,7 +38,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import de.bsvrz.sys.funclib.debug.Debug;
-import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.internal.DatumsEintrag;
 import de.bsvrz.vew.syskal.internal.EintragsArt;
 import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
@@ -119,13 +119,17 @@ public abstract class KalenderEintrag {
         }
 
         if (zeitBereichsfehler) {
-            result.setFehler(true);
+            result.addFehler("Zeitbereich konnte nicht geparst werden");
         } else {
             result.komprimiereZeitBereiche(parsedZeitBereiche.stream().sorted().collect(Collectors.toList()));
         }
 
         result.definition = definition;
 
+        if( result.benutzt(result)) {
+            result.addFehler("Rekursive Verwendung");
+        }
+        
         return result;
     }
 
@@ -200,7 +204,7 @@ public abstract class KalenderEintrag {
     private final List<ZeitGrenze> zeitGrenzen = new ArrayList<>();
 
     /** der Definitionseintrag konnte nicht korrekt eingelesen werden. */
-    private boolean fehler;
+    private List<String> fehler = new ArrayList<>();
 
     protected KalenderEintrag(String name, String definition) {
         this.name = name;
@@ -256,7 +260,7 @@ public abstract class KalenderEintrag {
     }
 
     public final SystemkalenderGueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
-        if (fehler) {
+        if (isFehler()) {
             return SystemkalenderGueltigkeit.NICHT_GUELTIG;
         }
 
@@ -264,7 +268,7 @@ public abstract class KalenderEintrag {
     }
 
     public SystemkalenderGueltigkeit getZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt) {
-        if (fehler) {
+        if (isFehler()) {
             return SystemkalenderGueltigkeit.NICHT_GUELTIG;
         }
 
@@ -337,7 +341,7 @@ public abstract class KalenderEintrag {
      *         werden konnte
      */
     public boolean isFehler() {
-        return fehler;
+        return !fehler.isEmpty();
     }
 
     /**
@@ -346,11 +350,15 @@ public abstract class KalenderEintrag {
      * @param state
      *            der Status
      */
-    protected void setFehler(final boolean state) {
-        fehler = state;
+    protected void addFehler(String message) {
+        fehler.add(message);
+    }
+    
+    public Collection<String> getFehler() {
+        return Collections.unmodifiableList(fehler);
     }
 
-    public abstract boolean benutzt(SystemKalenderEintrag referenz);
+    public abstract boolean benutzt(KalenderEintrag referenz);
 
     public boolean isVerwendbar() {
         return !isFehler();

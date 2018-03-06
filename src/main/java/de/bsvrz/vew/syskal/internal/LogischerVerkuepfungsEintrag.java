@@ -34,7 +34,6 @@ import java.util.regex.Matcher;
 
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.KalenderEintrag;
-import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 
 /**
  * Repräsentation der Daten eines {@link KalenderEintrag}, der durch die
@@ -84,18 +83,22 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
                 for (final String def : verweisDefinitionen) {
                     try {
                         Verweis verweis = new Verweis(provider, def);
-                        setFehler(verweis.isUngueltig() | isFehler());
+                        if (verweis.isUngueltig()) {
+                            addFehler(verweis.getName() + " ist ungültig");
+                        }
                         verweise.add(new VerweisEintrag(verweis));
                     } catch (final ParseException e) {
+                        String message = "Fehler beim Parsen des Kalendereintrags: " + name + ": "
+                                + e.getLocalizedMessage();
                         LOGGER.warning(
-                                "Fehler beim Parsen des Kalendereintrags: " + name + ": " + e.getLocalizedMessage());
-                        setFehler(true);
+                                message);
+                        addFehler(message);
                     }
                 }
             }
 
             if (verweise.size() <= 0) {
-                setFehler(true);
+                addFehler("Verknüpfung enthält keine Verweise");
             }
 
             scanJahresBereich(name, rest);
@@ -173,7 +176,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
 
     protected void setVerweise(List<Verweis> verweisListe) {
         verweise.clear();
-        for(Verweis verweis : verweisListe) {
+        for (Verweis verweis : verweisListe) {
             verweise.add(new VerweisEintrag(verweis));
         }
     }
@@ -230,7 +233,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
     }
 
     @Override
-    public boolean benutzt(SystemKalenderEintrag referenz) {
+    public boolean benutzt(KalenderEintrag referenz) {
         for (VerweisEintrag verweis : verweise) {
             if (verweis.getVerweis().getName().equals(referenz.getName())) {
                 return true;

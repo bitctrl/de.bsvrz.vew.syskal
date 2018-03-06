@@ -34,7 +34,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.bsvrz.vew.syskal.KalenderEintrag;
-import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 
 /**
@@ -192,7 +191,7 @@ public class VorDefinierterEintrag extends KalenderEintrag {
     }
 
     @Override
-    public boolean benutzt(SystemKalenderEintrag referenz) {
+    public boolean benutzt(KalenderEintrag referenz) {
         return false;
     }
 }

@@ -32,7 +32,6 @@ import java.time.LocalDateTime;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
-import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
@@ -69,12 +68,13 @@ public class VerweisEintrag extends KalenderEintrag {
         try {
             verweis = new Verweis(provider, definition);
             if (verweis.isUngueltig()) {
-                setFehler(true);
+                addFehler(verweis.getName() + " ist ungültig");
             }
         } catch (final ParseException e) {
-            LOGGER.warning("Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage());
+            String message = "Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage();
+            LOGGER.warning(message);
             verweis = null;
-            setFehler(true);
+            addFehler(message);
         }
     }
 
@@ -235,7 +235,7 @@ public class VerweisEintrag extends KalenderEintrag {
 
     @Override
     public
-    boolean benutzt(SystemKalenderEintrag referenz) {
+    boolean benutzt(KalenderEintrag referenz) {
         return verweis.getName().equals(referenz.getName());
     }
 }
