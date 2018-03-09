@@ -126,7 +126,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 
             SystemkalenderGueltigkeit gueltigKeit = verweis
                     .getZeitlicheGueltigkeitVor(zeitlicheGueltigkeit.getErsterWechsel().getZeitPunkt());
-            potentielleStartWechsel.put(verweis, gueltigKeit.getErsterWechsel());
+            potentielleStartWechsel.put(verweis, gueltigKeit.getNaechsterWechsel());
         }
 
         ZustandsWechsel beginn = berechneVorigenWechselAuf(!zustand, potentielleStartWechsel);

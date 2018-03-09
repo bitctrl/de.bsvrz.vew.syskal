@@ -40,6 +40,11 @@ import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
+/**
+ * Prüffall 1 - Gültigkeitsintervalle und Wechsel für Vordefinierte Einträge.
+ * 
+ * @author BitCtrl Systems GmbH, Uwe Peuker
+ */
 public class VordefinierterEintragTest {
 
     @Rule

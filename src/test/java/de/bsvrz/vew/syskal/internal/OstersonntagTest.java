@@ -44,6 +44,11 @@ import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
+/**
+ * Prüffall 2 - Gültigkeitsintervalle und Wechsel für Ostersonntag.
+ * 
+ * @author BitCtrl Systems GmbH, Uwe Peuker
+ */
 public class OstersonntagTest {
 
     @Rule

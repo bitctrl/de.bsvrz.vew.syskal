@@ -35,69 +35,64 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.Intervall;
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.TestIntervall;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
- * Prüffall 8 - UND-Verknüpfung - Gültigkeitsintervalle und Wechsel.
+ * Prüffall 11 - Unäres NICHT - Gültigkeitsintervalle und Wechsel.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class UndVerknuepfungTest {
+public class UnaeresNichtTest {
 
     @Rule
     public Timeout globalTimeout = Timeout.seconds(5);
 
-    private static TestKalenderEintragProvider provider;
-    private static UndVerknuepfung verknuepfung;
+    private static TestKalenderEintragProvider eintragsProvider;
 
-    private static LocalDateTime startZeit;
+    private static LocalDateTime startTime;
 
-    private static LocalDateTime endeZeit;
+    private static LocalDateTime endTime;
 
     @BeforeClass
     public static void init() {
-        provider = new TestKalenderEintragProvider();
-        provider.parseAndAdd(provider, "Mittags", "Mittags:=({11:30:00,000-13:30:00,000})");
-        verknuepfung = (UndVerknuepfung) provider.parseAndAdd(provider, "MontagMittag", "UND{Montag, Mittags}");
- 
-        startZeit = LocalDateTime.of(2018, 5, 7, 12, 0);
-        endeZeit = LocalDateTime.of(2018, 5, 28, 12, 0);
+        eintragsProvider = new TestKalenderEintragProvider();
+        eintragsProvider.parseAndAdd(eintragsProvider, "Werktag",
+                "NICHT Sonntag");
 
+        startTime = LocalDateTime.of(2018, 7, 6, 8, 0);
+        endTime = LocalDateTime.of(2018, 7, 10, 16, 0);
     }
 
     @Test
-    public void testeZustandsWechsel() {
+    public void testeZustandswechsel() {
 
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Werktag");
 
         TestWechsel[] erwarteteWechsel = {
-                TestWechsel.of("7.5.2018 11:30", true),
-                TestWechsel.of("7.5.2018 13:30", false),
-                TestWechsel.of("14.5.2018 11:30", true),
-                TestWechsel.of("14.5.2018 13:30", false),
-                TestWechsel.of("21.5.2018 11:30", true),
-                TestWechsel.of("21.5.2018 13:30", false),
-                TestWechsel.of("28.5.2018 11:30", true)
+                TestWechsel.of("02.07.2018 00:00", true),
+                TestWechsel.of("08.07.2018 00:00", false),
+                TestWechsel.of("09.07.2018 00:00", true)
         };
 
-        List<ZustandsWechsel> zustandsWechselImBereich = verknuepfung.getZustandsWechsel(startZeit, endeZeit);
-        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechselImBereich);
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
     }
 
     @Test
     public void testeIntervalle() {
 
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Werktag");
+
         Intervall[] erwarteteIntervalle = {
-                TestIntervall.of("07.05.2018 12:00", "07.05.2018 13:30"),
-                TestIntervall.of("14.05.2018 11:30", "14.05.2018 13:30"),
-                TestIntervall.of("21.05.2018 11:30", "21.05.2018 13:30"),
-                TestIntervall.of("28.05.2018 11:30", "28.05.2018 12:00")
+                TestIntervall.of("06.07.2018 08:00","08.07.2018 00:00"),
+                TestIntervall.of("09.07.2018 00:00","10.07.2018 16:00")
         };
 
-        List<Intervall> intervalle = verknuepfung.getIntervalle(startZeit, endeZeit);
+        List<Intervall> intervalle = eintrag.getIntervalle(startTime, endTime);
         TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
     }
-
 }

@@ -70,7 +70,7 @@ public class VerweisEintrag extends KalenderEintrag {
             if (verweis.isUngueltig()) {
                 addFehler(verweis.getName() + " ist ungültig");
             }
-        } catch (final ParseException e) {
+        } catch (final ParseException | NumberFormatException e) {
             String message = "Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage();
             LOGGER.warning(message);
             verweis = null;
@@ -236,6 +236,9 @@ public class VerweisEintrag extends KalenderEintrag {
     @Override
     public
     boolean benutzt(KalenderEintrag referenz) {
+        if( verweis == null) {
+            return false;
+        }
         return verweis.getName().equals(referenz.getName());
     }
 }

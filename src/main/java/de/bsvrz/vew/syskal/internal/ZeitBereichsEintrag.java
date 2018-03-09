@@ -429,7 +429,7 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
             return SystemkalenderGueltigkeit.gueltig(start, ende);
         }
 
-        return SystemkalenderGueltigkeit.ungueltig(ende, SystemKalender.MAX_DATETIME);
+        return SystemkalenderGueltigkeit.of(ZustandsWechsel.aufUngueltig(ende), ZustandsWechsel.aufUngueltig(SystemKalender.MAX_DATETIME));
     }
     
     private SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVorOhneZeitgrenzen(LocalDateTime zeitPunkt) {

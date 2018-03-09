@@ -264,7 +264,7 @@ public abstract class KalenderEintrag {
         if (isFehler()) {
             return SystemkalenderGueltigkeit.NICHT_GUELTIG;
         }
-
+        
         return berechneZeitlicheGueltigkeit(zeitpunkt);
     }
 

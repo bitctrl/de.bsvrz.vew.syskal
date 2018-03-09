@@ -40,6 +40,11 @@ import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
+/**
+ * Prüffall 8 - UND-Verknüpfung - Gültigkeitsintervalle und Wechsel.
+ * 
+ * @author BitCtrl Systems GmbH, Uwe Peuker
+ */
 public class OderVerknuepfungTest {
 
     @Rule
@@ -48,20 +53,25 @@ public class OderVerknuepfungTest {
     private static TestKalenderEintragProvider provider = new TestKalenderEintragProvider();
     private static OderVerknuepfung verknuepfung;
 
+    private static LocalDateTime startZeit;
+
+    private static LocalDateTime endeZeit;
+
     @BeforeClass
     public static void init() {
         verknuepfung = (OderVerknuepfung) provider.parseAndAdd(provider, "MontagOderMittwoch",
                 "ODER{Montag, Mittwoch}");
+        
+        startZeit = LocalDateTime.of(2018, 5, 2, 11, 11);
+        endeZeit = LocalDateTime.of(2018, 6, 1, 0, 0);
+
     }
 
     @Test
     public void testeZustandsWechsel() {
 
-        LocalDateTime start = LocalDateTime.of(2018, 5, 1, 0, 0);
-        LocalDateTime ende = LocalDateTime.of(2018, 6, 1, 0, 0);
 
         TestWechsel[] erwarteteWechsel = {
-                TestWechsel.of("1.5.2018 00:00", false),
                 TestWechsel.of("2.5.2018 00:00", true),
                 TestWechsel.of("3.5.2018 00:00", false),
                 TestWechsel.of("7.5.2018 00:00", true),
@@ -82,15 +92,12 @@ public class OderVerknuepfungTest {
                 TestWechsel.of("31.5.2018 00:00", false)
         };
 
-        List<ZustandsWechsel> zustandsWechselImBereich = verknuepfung.getZustandsWechsel(start, ende);
+        List<ZustandsWechsel> zustandsWechselImBereich = verknuepfung.getZustandsWechsel(startZeit, endeZeit);
         TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechselImBereich);
     }
 
     @Test
     public void testeIntervalle() {
-
-        LocalDateTime start = LocalDateTime.of(2018, 5, 2, 11, 11);
-        LocalDateTime ende = LocalDateTime.of(2018, 6, 1, 0, 0);
 
         Intervall[] erwarteteIntervalle = {
                 TestIntervall.of("02.05.2018 11:11", "03.05.2018 00:00"),
@@ -104,7 +111,7 @@ public class OderVerknuepfungTest {
                 TestIntervall.of("30.05.2018 00:00", "31.05.2018 00:00"),
         };
 
-        List<Intervall> intervalle = verknuepfung.getIntervalle(start, ende);
+        List<Intervall> intervalle = verknuepfung.getIntervalle(startZeit, endeZeit);
         TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
     }
 

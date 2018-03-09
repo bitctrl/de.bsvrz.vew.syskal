@@ -215,7 +215,7 @@ public class DatumsEintrag extends KalenderEintrag {
             return SystemkalenderGueltigkeit.ungueltig(aktivierungsDatum, wechselDatum);
         }
 
-        return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+        return SystemkalenderGueltigkeit.of(ZustandsWechsel.aufUngueltig(spaetestesDatum), ZustandsWechsel.aufUngueltig(SystemKalender.MAX_DATETIME));
     }
 
     @Override
@@ -225,10 +225,10 @@ public class DatumsEintrag extends KalenderEintrag {
         LocalDate fruehestesDatum = LocalDate.of(jahr, monat, tag);
 
         if (zeitpunkt.toLocalDate().isBefore(fruehestesDatum)) {
-            return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+            return SystemkalenderGueltigkeit.of(ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME), ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME));
         }
 
-        int aktivierungsJahr = zeitpunkt.getYear();
+        int aktivierungsJahr = aktuelleGueltigkeit.getErsterWechsel().getZeitPunkt().getYear();
         if (aktuelleGueltigkeit.isZeitlichGueltig()) {
             aktivierungsJahr = zeitpunkt.getYear() - 1;
         }

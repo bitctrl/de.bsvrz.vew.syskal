@@ -35,69 +35,69 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.Intervall;
+import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.TestIntervall;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
 import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
- * Prüffall 8 - UND-Verknüpfung - Gültigkeitsintervalle und Wechsel.
+ * Prüffall 13 - Relative Zeitangabe - Gültigkeitsintervalle und Wechsel.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
-public class UndVerknuepfungTest {
+public class RelativeZeitangabeTest {
 
     @Rule
     public Timeout globalTimeout = Timeout.seconds(5);
 
-    private static TestKalenderEintragProvider provider;
-    private static UndVerknuepfung verknuepfung;
+    private static TestKalenderEintragProvider eintragsProvider;
 
-    private static LocalDateTime startZeit;
+    private static LocalDateTime startTime;
 
-    private static LocalDateTime endeZeit;
+    private static LocalDateTime endTime;
 
     @BeforeClass
     public static void init() {
-        provider = new TestKalenderEintragProvider();
-        provider.parseAndAdd(provider, "Mittags", "Mittags:=({11:30:00,000-13:30:00,000})");
-        verknuepfung = (UndVerknuepfung) provider.parseAndAdd(provider, "MontagMittag", "UND{Montag, Mittags}");
- 
-        startZeit = LocalDateTime.of(2018, 5, 7, 12, 0);
-        endeZeit = LocalDateTime.of(2018, 5, 28, 12, 0);
-
+        eintragsProvider = new TestKalenderEintragProvider();
+        eintragsProvider.parseAndAdd(eintragsProvider, "Karfreitag",
+                "Ostersonntag - 2 Tage");
+        
+        startTime = LocalDateTime.of(2015, 1, 1, 0, 0);
+        endTime = LocalDateTime.of(2018, 2, 28, 12, 0);
     }
 
     @Test
-    public void testeZustandsWechsel() {
+    public void testeZustandswechsel() {
 
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Karfreitag");
 
         TestWechsel[] erwarteteWechsel = {
-                TestWechsel.of("7.5.2018 11:30", true),
-                TestWechsel.of("7.5.2018 13:30", false),
-                TestWechsel.of("14.5.2018 11:30", true),
-                TestWechsel.of("14.5.2018 13:30", false),
-                TestWechsel.of("21.5.2018 11:30", true),
-                TestWechsel.of("21.5.2018 13:30", false),
-                TestWechsel.of("28.5.2018 11:30", true)
+                TestWechsel.of("19.04.2014 00:00", false),
+                TestWechsel.of("03.04.2015 00:00", true),
+                TestWechsel.of("04.04.2015 00:00", false),
+                TestWechsel.of("25.03.2016 00:00", true),
+                TestWechsel.of("26.03.2016 00:00", false),
+                TestWechsel.of("14.04.2017 00:00", true),
+                TestWechsel.of("15.04.2017 00:00", false)
         };
 
-        List<ZustandsWechsel> zustandsWechselImBereich = verknuepfung.getZustandsWechsel(startZeit, endeZeit);
-        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechselImBereich);
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
     }
 
     @Test
     public void testeIntervalle() {
 
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Karfreitag");
+
         Intervall[] erwarteteIntervalle = {
-                TestIntervall.of("07.05.2018 12:00", "07.05.2018 13:30"),
-                TestIntervall.of("14.05.2018 11:30", "14.05.2018 13:30"),
-                TestIntervall.of("21.05.2018 11:30", "21.05.2018 13:30"),
-                TestIntervall.of("28.05.2018 11:30", "28.05.2018 12:00")
+                TestIntervall.of("03.04.2015 00:00","04.04.2015 00:00"),
+                TestIntervall.of("25.03.2016 00:00","26.03.2016 00:00"),
+                TestIntervall.of("14.04.2017 00:00","15.04.2017 00:00")
         };
 
-        List<Intervall> intervalle = verknuepfung.getIntervalle(startZeit, endeZeit);
+        List<Intervall> intervalle = eintrag.getIntervalle(startTime, endTime);
         TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
     }
-
 }
