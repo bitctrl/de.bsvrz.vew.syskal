@@ -34,72 +34,85 @@ import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 
 public class Ostersonntag extends VorDefinierterEintrag {
 
-    public static LocalDate getDatumImJahr(int jahr) {
+	public static LocalDate getDatumImJahr(int jahr) {
 
-        int i = jahr % 19;
-        int j = jahr / 100;
-        int k = jahr % 100;
+		int i = jahr % 19;
+		int j = jahr / 100;
+		int k = jahr % 100;
 
-        int l = (19 * i + j - (j / 4) - ((j - ((j + 8) / 25) + 1) / 3) + 15) % 30;
-        int m = (32 + 2 * (j % 4) + 2 * (k / 4) - l - (k % 4)) % 7;
-        int n = l + m - 7 * ((i + 11 * l + 22 * m) / 451) + 114;
+		int l = (19 * i + j - (j / 4) - ((j - ((j + 8) / 25) + 1) / 3) + 15) % 30;
+		int m = (32 + 2 * (j % 4) + 2 * (k / 4) - l - (k % 4)) % 7;
+		int n = l + m - 7 * ((i + 11 * l + 22 * m) / 451) + 114;
 
-        int monat = n / 31;
-        int tag = (n % 31) + 1;
+		int monat = n / 31;
+		int tag = (n % 31) + 1;
 
-        return LocalDate.of(jahr, monat, tag);
-    }
+		return LocalDate.of(jahr, monat, tag);
+	}
 
-    Ostersonntag() {
-        super("Ostersonntag", DayOfWeek.SUNDAY);
-    }
+	Ostersonntag() {
+		super("Ostersonntag", DayOfWeek.SUNDAY);
+	}
 
-    @Override
-    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
+	@Override
+	public boolean isGueltig(LocalDateTime zeitPunkt) {
 
-        LocalDate checkDate = zeitPunkt.toLocalDate();
-        if (checkDate.getYear() <= 0) {
-            return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-        }
+		LocalDate checkDate = zeitPunkt.toLocalDate();
+		if (checkDate.getYear() <= 0) {
+			return false;
+		}
 
-        LocalDate osterDate = Ostersonntag.getDatumImJahr(checkDate.getYear());
+		LocalDate osterDate = Ostersonntag.getDatumImJahr(checkDate.getYear());
 
-        boolean gueltig = osterDate.equals(checkDate);
+		return osterDate.equals(checkDate);
+	}
 
-        if (gueltig) {
-            return SystemkalenderGueltigkeit.gueltig(zeitPunkt.toLocalDate(), zeitPunkt.toLocalDate().plusDays(1));
-        }
+	@Override
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
 
-        if (checkDate.isBefore(osterDate)) {
-            return SystemkalenderGueltigkeit.ungueltig(Ostersonntag.getDatumImJahr(checkDate.getYear() - 1).plusDays(1),
-                    osterDate);
-        }
+		LocalDate checkDate = zeitPunkt.toLocalDate();
+		if (checkDate.getYear() <= 0) {
+			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+		}
 
-        return SystemkalenderGueltigkeit.ungueltig(osterDate.plusDays(1),
-                Ostersonntag.getDatumImJahr(checkDate.getYear() + 1));
-    }
+		LocalDate osterDate = Ostersonntag.getDatumImJahr(checkDate.getYear());
 
-    @Override
-    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitPunkt) {
+		boolean gueltig = osterDate.equals(checkDate);
 
-        LocalDate checkDate = zeitPunkt.toLocalDate();
-        if (checkDate.getYear() <= 0) {
-            return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-        }
+		if (gueltig) {
+			return SystemkalenderGueltigkeit.gueltig(zeitPunkt.toLocalDate(), zeitPunkt.toLocalDate().plusDays(1));
+		}
 
-        LocalDate osterDatum = Ostersonntag.getDatumImJahr(checkDate.getYear());
-        LocalDate osterDatumVorjahr = Ostersonntag.getDatumImJahr(checkDate.getYear() - 1);
+		if (checkDate.isBefore(osterDate)) {
+			return SystemkalenderGueltigkeit.ungueltig(Ostersonntag.getDatumImJahr(checkDate.getYear() - 1).plusDays(1),
+					osterDate);
+		}
 
-        boolean gueltig = osterDatum.equals(checkDate);
+		return SystemkalenderGueltigkeit.ungueltig(osterDate.plusDays(1),
+				Ostersonntag.getDatumImJahr(checkDate.getYear() + 1));
+	}
 
-        if (gueltig) {
-            return SystemkalenderGueltigkeit.ungueltig(osterDatumVorjahr.plusDays(1), osterDatum);
-        }
+	@Override
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitPunkt) {
 
-        if (zeitPunkt.toLocalDate().isBefore(osterDatum)) {
-            return SystemkalenderGueltigkeit.gueltig(osterDatumVorjahr, osterDatumVorjahr.plusDays(1));
-        }
+		LocalDate checkDate = zeitPunkt.toLocalDate();
+		if (checkDate.getYear() <= 0) {
+			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+		}
 
-        return SystemkalenderGueltigkeit.gueltig(osterDatum, osterDatum.plusDays(1));
-    }
+		LocalDate osterDatum = Ostersonntag.getDatumImJahr(checkDate.getYear());
+		LocalDate osterDatumVorjahr = Ostersonntag.getDatumImJahr(checkDate.getYear() - 1);
+
+		boolean gueltig = osterDatum.equals(checkDate);
+
+		if (gueltig) {
+			return SystemkalenderGueltigkeit.ungueltig(osterDatumVorjahr.plusDays(1), osterDatum);
+		}
+
+		if (zeitPunkt.toLocalDate().isBefore(osterDatum)) {
+			return SystemkalenderGueltigkeit.gueltig(osterDatumVorjahr, osterDatumVorjahr.plusDays(1));
+		}
+
+		return SystemkalenderGueltigkeit.gueltig(osterDatum, osterDatum.plusDays(1));
+	}
 }

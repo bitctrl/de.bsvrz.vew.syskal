@@ -29,9 +29,11 @@ package de.bsvrz.vew.syskal.internal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
@@ -157,9 +159,14 @@ public class VorDefinierterEintrag extends KalenderEintrag {
     }
 
     @Override
+    public boolean isGueltig(LocalDateTime zeitPunkt) {
+    		return zeitPunkt.getDayOfWeek().equals(dayOfWeek);
+    }
+    
+    @Override
     public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
 
-        boolean gueltig = zeitPunkt.getDayOfWeek().equals(dayOfWeek);
+        boolean gueltig = isGueltig(zeitPunkt);
 
         LocalDate checkDate = zeitPunkt.toLocalDate();
         if (gueltig) {
@@ -194,4 +201,9 @@ public class VorDefinierterEintrag extends KalenderEintrag {
     public boolean benutzt(KalenderEintrag referenz) {
         return false;
     }
+
+	@Override
+	public Set<KalenderEintrag> getAufgeloesteVerweise() {
+		return Collections.singleton(this);
+	}
 }

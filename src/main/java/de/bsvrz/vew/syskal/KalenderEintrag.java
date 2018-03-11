@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -369,4 +370,6 @@ public abstract class KalenderEintrag {
     protected void setDefinition(String definition) {
         this.definition = definition;
     }
+    
+	public abstract Set<KalenderEintrag> getAufgeloesteVerweise();
 }

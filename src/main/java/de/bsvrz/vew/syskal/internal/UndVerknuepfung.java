@@ -57,9 +57,6 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
         return result;
     }
 
-    
-    
-
     /**
      * Konstruktor.
      * 
@@ -83,6 +80,17 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
     public String getVerknuepfungsArt() {
         return "UND";
     }
+    
+	@Override
+	public boolean isGueltig(LocalDateTime zeitPunkt) {
+
+		for (VerweisEintrag verweis : getVerweise()) {
+			if (!verweis.isGueltig(zeitPunkt)) {
+				return false;
+			}
+		}
+		return true;
+	}
 
     @Override
     public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
@@ -246,7 +254,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 
         int trueCounter = 0;
         for (VerweisEintrag verweis : getVerweise()) {
-            if (verweis.berechneZeitlicheGueltigkeit(wechselZeit).isZeitlichGueltig()) {
+            if (verweis.isGueltig(wechselZeit)) {
                 trueCounter++;
             }
         }
