@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
@@ -48,8 +47,9 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
     public static UndVerknuepfung of(KalenderEintragProvider provider, String name) {
         return new UndVerknuepfung(provider, name);
     }
-    
-    public static UndVerknuepfung of(KalenderEintragProvider provider, String name, List<Verweis> verweise, int startJahr, int endJahr) {
+
+    public static UndVerknuepfung of(KalenderEintragProvider provider, String name, List<Verweis> verweise,
+            int startJahr, int endJahr) {
         UndVerknuepfung result = UndVerknuepfung.of(provider, name);
         result.setStartJahr(startJahr);
         result.setEndJahr(endJahr);
@@ -80,189 +80,47 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
     public String getVerknuepfungsArt() {
         return "UND";
     }
-    
-	@Override
-	public boolean isGueltig(LocalDateTime zeitPunkt) {
-
-		for (VerweisEintrag verweis : getVerweise()) {
-			if (!verweis.isGueltig(zeitPunkt)) {
-				return false;
-			}
-		}
-		return true;
-	}
 
     @Override
-    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
-
-        boolean zustand = (getStartJahr() == 0 || getStartJahr() <= zeitPunkt.getYear())
-                && (getEndJahr() == 0 || getEndJahr() >= zeitPunkt.getYear());
-        Map<KalenderEintrag, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
-        Map<KalenderEintrag, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
+    public boolean isGueltig(LocalDateTime zeitPunkt) {
 
         for (VerweisEintrag verweis : getVerweise()) {
-            if (verweis.isFehler()) {
-                return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-            }
-
-            SystemkalenderGueltigkeit gueltigKeit = verweis.getZeitlicheGueltigkeit(zeitPunkt);
-            if (!gueltigKeit.isZeitlichGueltig()) {
-                zustand = false;
-            }
-            potentielleStartWechsel.put(verweis, gueltigKeit.getErsterWechsel());
-            potentielleEndWechsel.put(verweis, gueltigKeit.getNaechsterWechsel());
-        }
-
-        ZustandsWechsel wechsel = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);
-        ZustandsWechsel beginn = berechneVorigenWechselAuf(zustand, potentielleStartWechsel);
-
-        return SystemkalenderGueltigkeit.of(beginn, wechsel);
-    }
-
-    @Override
-    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt) {
-
-        SystemkalenderGueltigkeit zeitlicheGueltigkeit = berechneZeitlicheGueltigkeit(zeitPunkt);
-
-        boolean zustand = zeitlicheGueltigkeit.isZeitlichGueltig();
-        Map<KalenderEintrag, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
-
-        for (VerweisEintrag verweis : getVerweise()) {
-            if (verweis.isFehler()) {
-                return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-            }
-
-            SystemkalenderGueltigkeit gueltigKeit = verweis
-                    .getZeitlicheGueltigkeitVor(zeitlicheGueltigkeit.getErsterWechsel().getZeitPunkt());
-            potentielleStartWechsel.put(verweis, gueltigKeit.getNaechsterWechsel());
-        }
-
-        ZustandsWechsel beginn = berechneVorigenWechselAuf(!zustand, potentielleStartWechsel);
-
-        return SystemkalenderGueltigkeit.of(beginn, zeitlicheGueltigkeit.getErsterWechsel());
-    }
-
-    private ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand,
-            Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
-
-        LocalDateTime wechselZeit = null;
-        Map<KalenderEintrag, ZustandsWechsel> verweisWechsel = new LinkedHashMap<>(potentielleWechsel);
-
-        do {
-            ZustandsWechsel wechsel = verweisWechsel.values().stream().min(ZustandsWechsel.ZEIT_COMPARATOR).get();
-            if (wechsel == null) {
-                return ZustandsWechsel.of(SystemKalender.MAX_DATETIME, !zielZustand);
-            }
-
-            wechselZeit = wechsel.getZeitPunkt();
-            if (pruefeGueltigKeit(wechselZeit, zielZustand)) {
-                return ZustandsWechsel.of(wechselZeit, zielZustand);
-            }
-
-            for (Entry<KalenderEintrag, ZustandsWechsel> entry : verweisWechsel.entrySet()) {
-                if (!entry.getValue().getZeitPunkt().isBefore(wechselZeit)) {
-                    entry.setValue(entry.getKey().berechneZeitlicheGueltigkeit(entry.getValue().getZeitPunkt())
-                            .getNaechsterWechsel());
-                }
-            }
-
-        } while (wechselZeit.isBefore(SystemKalender.MAX_DATETIME)
-                && (getEndJahr() == 0 || getEndJahr() >= wechselZeit.getYear()));
-
-        return ZustandsWechsel.of(SystemKalender.MAX_DATETIME, !zielZustand);
-    }
-
-    private ZustandsWechsel berechneVorigenWechselAuf(boolean zielZustand,
-            Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
-
-        if (zielZustand) {
-            return berechneVorigenWechselAufGueltig(potentielleWechsel);
-        }
-
-        return berechneVorigenWechselAufUngueltig(potentielleWechsel);
-    }
-
-    private ZustandsWechsel berechneVorigenWechselAufUngueltig(
-            Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
-
-        LocalDateTime wechselZeit = null;
-        Map<KalenderEintrag, ZustandsWechsel> verweisWechsel = new LinkedHashMap<>(potentielleWechsel);
-        ZustandsWechsel potentiellerWechsel = null;
-
-        do {
-            ZustandsWechsel wechsel = verweisWechsel.values().stream().max(ZustandsWechsel.ZEIT_COMPARATOR).get();
-            if (wechsel == null) {
-                return ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME);
-            }
-
-            wechselZeit = wechsel.getZeitPunkt();
-            if (pruefeGueltigKeit(wechselZeit, false)) {
-                potentiellerWechsel = ZustandsWechsel.aufUngueltig(wechselZeit);
-            } else {
-                if (potentiellerWechsel != null) {
-                    return potentiellerWechsel;
-                }
-            }
-
-            for (Entry<KalenderEintrag, ZustandsWechsel> entry : verweisWechsel.entrySet()) {
-                if (!entry.getValue().getZeitPunkt().isBefore(wechselZeit)) {
-                    entry.setValue(entry.getKey().berechneZeitlicheGueltigkeitVor(entry.getValue().getZeitPunkt())
-                            .getErsterWechsel());
-                }
-            }
-
-        } while (wechselZeit.isAfter(SystemKalender.MIN_DATETIME)
-                && (getStartJahr() == 0 || getStartJahr() <= wechselZeit.getYear()));
-
-        return ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME);
-    }
-
-    private ZustandsWechsel berechneVorigenWechselAufGueltig(Map<KalenderEintrag, ZustandsWechsel> potentielleWechsel) {
-
-        LocalDateTime wechselZeit = null;
-        Map<KalenderEintrag, ZustandsWechsel> verweisWechsel = new LinkedHashMap<>(potentielleWechsel);
-
-        do {
-            ZustandsWechsel wechsel = verweisWechsel.values().stream().max(ZustandsWechsel.ZEIT_COMPARATOR).get();
-            if (wechsel == null) {
-                return ZustandsWechsel.of(SystemKalender.MIN_DATETIME, true);
-            }
-
-            wechselZeit = wechsel.getZeitPunkt();
-            if (pruefeGueltigKeit(wechselZeit, true)) {
-                return ZustandsWechsel.of(wechselZeit, true);
-            }
-
-            for (Entry<KalenderEintrag, ZustandsWechsel> entry : verweisWechsel.entrySet()) {
-                if (!entry.getValue().getZeitPunkt().isBefore(wechselZeit)) {
-                    entry.setValue(entry.getKey().berechneZeitlicheGueltigkeitVor(entry.getValue().getZeitPunkt())
-                            .getErsterWechsel());
-                }
-            }
-
-        } while (wechselZeit.isAfter(SystemKalender.MIN_DATETIME)
-                && (getStartJahr() == 0 || getStartJahr() <= wechselZeit.getYear()));
-
-        return ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME);
-    }
-
-    private boolean pruefeGueltigKeit(LocalDateTime wechselZeit, boolean zielZustand) {
-
-        if (!isErlaubteWechselZeit(wechselZeit)) {
-            return !zielZustand;
-        }
-
-        int trueCounter = 0;
-        for (VerweisEintrag verweis : getVerweise()) {
-            if (verweis.isGueltig(wechselZeit)) {
-                trueCounter++;
+            if (!verweis.isGueltig(zeitPunkt)) {
+                return false;
             }
         }
-
-        if (zielZustand) {
-            return trueCounter == getVerweise().size();
-        }
-        return trueCounter < getVerweise().size();
+        return true;
     }
-
+//
+//    @Override
+//    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
+//
+//        boolean zustand = (getStartJahr() == 0 || getStartJahr() <= zeitPunkt.getYear())
+//                && (getEndJahr() == 0 || getEndJahr() >= zeitPunkt.getYear());
+//        Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
+//        Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
+//
+//        for (VerweisEintrag verweis : getVerweise()) {
+//            if (verweis.isFehler()) {
+//                return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+//            }
+//
+//            if (!verweis.isGueltig(zeitPunkt)) {
+//                zustand = false;
+//                break;
+//            }
+//        }
+//
+//        for (KalenderEintragMitOffset eintrag : getAufgeloesteVerweise()) {
+//            SystemkalenderGueltigkeit gueltigKeit = eintrag.berechneZeitlicheGueltigkeit(zeitPunkt);
+//            potentielleStartWechsel.put(eintrag, gueltigKeit.getErsterWechsel());
+//            potentielleEndWechsel.put(eintrag, gueltigKeit.getNaechsterWechsel());
+//
+//        }
+//
+//        ZustandsWechsel wechsel = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);
+//        ZustandsWechsel beginn = berechneVorigenWechselAuf(zustand, potentielleStartWechsel);
+//
+//        return SystemkalenderGueltigkeit.of(beginn, wechsel);
+//    }
 }

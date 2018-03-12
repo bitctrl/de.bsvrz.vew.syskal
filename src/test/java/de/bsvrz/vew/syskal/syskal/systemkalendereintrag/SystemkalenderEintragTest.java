@@ -47,8 +47,8 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class SystemkalenderEintragTest {
 
-    @Rule
-    public Timeout globalTimeout = Timeout.seconds(5);
+//    @Rule
+//    public Timeout globalTimeout = Timeout.seconds(5);
 
     private static TestKalenderEintragProvider eintragsProvider;
 
