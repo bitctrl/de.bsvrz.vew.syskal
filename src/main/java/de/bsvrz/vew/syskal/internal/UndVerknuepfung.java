@@ -120,7 +120,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
     }
 
     @Override
-    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitPunkt) {
+    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt) {
 
         SystemkalenderGueltigkeit zeitlicheGueltigkeit = berechneZeitlicheGueltigkeit(zeitPunkt);
 
@@ -206,7 +206,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 
             for (Entry<KalenderEintrag, ZustandsWechsel> entry : verweisWechsel.entrySet()) {
                 if (!entry.getValue().getZeitPunkt().isBefore(wechselZeit)) {
-                    entry.setValue(entry.getKey().berechneZeitlicheGueltigkeitsVor(entry.getValue().getZeitPunkt())
+                    entry.setValue(entry.getKey().berechneZeitlicheGueltigkeitVor(entry.getValue().getZeitPunkt())
                             .getErsterWechsel());
                 }
             }
@@ -235,7 +235,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
 
             for (Entry<KalenderEintrag, ZustandsWechsel> entry : verweisWechsel.entrySet()) {
                 if (!entry.getValue().getZeitPunkt().isBefore(wechselZeit)) {
-                    entry.setValue(entry.getKey().berechneZeitlicheGueltigkeitsVor(entry.getValue().getZeitPunkt())
+                    entry.setValue(entry.getKey().berechneZeitlicheGueltigkeitVor(entry.getValue().getZeitPunkt())
                             .getErsterWechsel());
                 }
             }

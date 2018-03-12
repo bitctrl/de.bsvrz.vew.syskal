@@ -254,8 +254,8 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public Set<KalenderEintrag> getAufgeloesteVerweise() {
-		Set<KalenderEintrag> result = new LinkedHashSet<>();
+	public Set<KalenderEintragMitOffset> getAufgeloesteVerweise() {
+		Set<KalenderEintragMitOffset> result = new LinkedHashSet<>();
 		for (VerweisEintrag verweisEintrag : getVerweise()) {
 			result.addAll(verweisEintrag.getAufgeloesteVerweise());
 		}

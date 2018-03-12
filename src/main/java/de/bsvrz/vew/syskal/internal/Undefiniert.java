@@ -48,7 +48,7 @@ public class Undefiniert extends VorDefinierterEintrag {
 	}
 
 	@Override
-	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitpunkt) {
 		return SystemkalenderGueltigkeit.NICHT_GUELTIG;
 	}
 }

@@ -26,6 +26,7 @@
 
 package de.bsvrz.vew.syskal.internal;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
@@ -69,9 +70,57 @@ public class TiefeSchachtelungTest {
         eintragsProvider.parseAndAdd(eintragsProvider, "MDF", "ODER{Freitag, MD}");
         eintragsProvider.parseAndAdd(eintragsProvider, "Werktag","ODER{MDF, Samstag}");
         eintragsProvider.parseAndAdd(eintragsProvider, "AlleTage","ODER{Werktag, Sonntag}");
+
+        
+        eintragsProvider.parseAndAdd(eintragsProvider, "DDay_Offset",
+                "ODER{Montag + 1, Montag + 3}");
+        eintragsProvider.parseAndAdd(eintragsProvider, "DMD_Offset", "ODER{Montag + 2, DDay_Offset}");
+        eintragsProvider.parseAndAdd(eintragsProvider, "MD_Offset", "ODER{DMD_Offset, Montag}");
+        eintragsProvider.parseAndAdd(eintragsProvider, "MDF_Offset", "ODER{Montag + 4, MD_Offset}");
+        eintragsProvider.parseAndAdd(eintragsProvider, "Werktag_Offset","ODER{MDF_Offset + 1, Montag}");
+        eintragsProvider.parseAndAdd(eintragsProvider, "AlleTage_Offset","ODER{Werktag_Offset + 1, Montag}");
+
         
         startTime = LocalDateTime.of(2018, 11, 14, 16, 0);
         endTime = LocalDateTime.of(2018, 11, 21, 7, 0);
+    }
+
+    @Test
+    public void testeZustandswechselWerktag() {
+
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Werktag");
+
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("12.11.2018 00:00", true),
+                TestWechsel.of("18.11.2018 00:00", false),
+                TestWechsel.of("19.11.2018 00:00", true)
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
+
+    @Test
+    public void testeIntervalleWerktag() {
+
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Werktag");
+
+        Intervall[] erwarteteIntervalle = {
+                TestIntervall.of("14.11.2018 16:00", "18.11.2018 00:00"),
+                TestIntervall.of("19.11.2018 00:00", "21.11.2018 07:00")
+        };
+
+        List<Intervall> intervalle = eintrag.getIntervalle(startTime, endTime);
+        TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+    }
+    
+    @Test 
+    public void pruefeGueltigkeitWerktag() {
+
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Werktag");
+        assertFalse(eintrag.getZeitlicheGueltigkeit(LocalDateTime.of(2018,2,18,4,0)).isZeitlichGueltig());
+        assertTrue(eintrag.getZeitlicheGueltigkeit(LocalDateTime.of(2018,2,22,4,0)).isZeitlichGueltig());
+        assertTrue(eintrag.getZeitlicheGueltigkeit(LocalDateTime.of(2018,2,26,4,0)).isZeitlichGueltig());
     }
 
     @Test
@@ -108,4 +157,42 @@ public class TiefeSchachtelungTest {
         assertTrue(eintrag.getZeitlicheGueltigkeit(LocalDateTime.of(2018,2,22,4,0)).isZeitlichGueltig());
         assertTrue(eintrag.getZeitlicheGueltigkeit(LocalDateTime.of(2018,2,26,4,0)).isZeitlichGueltig());
     }
+    
+    @Test
+    public void testeZustandswechselMitOffset() {
+
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("AlleTage_Offset");
+
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("01.01.1000 00:00", true)
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
+
+    @Test
+    public void testeIntervalleMitOffset() {
+
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("AlleTage_Offset");
+
+        Intervall[] erwarteteIntervalle = {
+                TestIntervall.of("14.11.2018 16:00", "21.11.2018 07:00")
+        };
+
+        List<Intervall> intervalle = eintrag.getIntervalle(startTime, endTime);
+        TestIntervall.pruefeIntervalle(erwarteteIntervalle, intervalle);
+    }
+    
+    @Test 
+    public void pruefeGueltigkeitMitOffset() {
+
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("AlleTage_Offset");
+        assertTrue(eintrag.getZeitlicheGueltigkeit(LocalDateTime.of(2018,2,18,4,0)).isZeitlichGueltig());
+        assertTrue(eintrag.getZeitlicheGueltigkeit(LocalDateTime.of(2018,2,22,4,0)).isZeitlichGueltig());
+        assertTrue(eintrag.getZeitlicheGueltigkeit(LocalDateTime.of(2018,2,26,4,0)).isZeitlichGueltig());
+    }
+
+    
+    
 }

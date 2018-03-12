@@ -28,7 +28,7 @@ package de.bsvrz.vew.syskal.internal;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import de.bsvrz.sys.funclib.debug.Debug;
@@ -218,7 +218,7 @@ public class VerweisEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitpunkt) {
 		if (verweis.isUngueltig()) {
 			return SystemkalenderGueltigkeit.NICHT_GUELTIG;
 		}
@@ -261,12 +261,20 @@ public class VerweisEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public  Set<KalenderEintrag> getAufgeloesteVerweise() {
-		if(!isNegiert() && getOffset() == 0) {
-			KalenderEintrag referenz = getVerweis().getReferenzEintrag();
-			return referenz.getAufgeloesteVerweise();
-			
+	public  Set<KalenderEintragMitOffset> getAufgeloesteVerweise() {
+
+        KalenderEintrag referenz = getVerweis().getReferenzEintrag();
+        Set<KalenderEintragMitOffset> aufgeloesteVerweise = referenz.getAufgeloesteVerweise();
+
+	    if(getOffset() == 0) {
+            return aufgeloesteVerweise;
 		}
-		return Collections.singleton(this);
+
+	    Set<KalenderEintragMitOffset> result = new LinkedHashSet<>();
+	    for( KalenderEintragMitOffset aufgeloesterVerweis : aufgeloesteVerweise) {
+	        result.add(aufgeloesterVerweis.withTagesOffset(getOffset()));
+	    }
+		
+		return result;
 	}
 }

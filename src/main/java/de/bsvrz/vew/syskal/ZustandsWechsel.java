@@ -109,4 +109,15 @@ public class ZustandsWechsel {
         ZustandsWechsel other = (ZustandsWechsel) obj;
         return Objects.equals(zeitPunkt, other.zeitPunkt) && wirdGueltig == other.wirdGueltig;
     }
+
+    public ZustandsWechsel withTagesOffset(int tagesOffset) {
+        LocalDateTime neuerZeitPunkt = zeitPunkt.plusDays(tagesOffset);
+        if( neuerZeitPunkt.isBefore(SystemKalender.MIN_DATETIME)) {
+            neuerZeitPunkt = SystemKalender.MIN_DATETIME;
+        } else if (neuerZeitPunkt.isAfter(SystemKalender.MAX_DATETIME)) {
+            neuerZeitPunkt = SystemKalender.MAX_DATETIME;
+        }
+        
+        return ZustandsWechsel.of(neuerZeitPunkt, wirdGueltig);
+    }
 }

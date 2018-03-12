@@ -387,7 +387,7 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitpunkt) {
 
 		List<ZeitGrenze> zeitGrenzen = getZeitGrenzen();
 		if (zeitGrenzen.isEmpty()) {
@@ -538,7 +538,7 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public Set<KalenderEintrag> getAufgeloesteVerweise() {
-		return Collections.singleton(this);
+	public Set<KalenderEintragMitOffset> getAufgeloesteVerweise() {
+		return Collections.singleton(new KalenderEintragMitOffset(this));
 	}
 }

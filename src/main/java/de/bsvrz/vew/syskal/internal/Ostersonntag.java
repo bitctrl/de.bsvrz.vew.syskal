@@ -93,7 +93,7 @@ public class Ostersonntag extends VorDefinierterEintrag {
 	}
 
 	@Override
-	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitPunkt) {
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt) {
 
 		LocalDate checkDate = zeitPunkt.toLocalDate();
 		if (checkDate.getYear() <= 0) {

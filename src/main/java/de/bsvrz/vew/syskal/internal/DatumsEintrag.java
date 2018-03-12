@@ -227,7 +227,7 @@ public class DatumsEintrag extends KalenderEintrag {
     }
 
     @Override
-    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
+    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitpunkt) {
 
         SystemkalenderGueltigkeit aktuelleGueltigkeit = berechneZeitlicheGueltigkeit(zeitpunkt);
         LocalDate fruehestesDatum = LocalDate.of(jahr, monat, tag);
@@ -290,7 +290,7 @@ public class DatumsEintrag extends KalenderEintrag {
     }
 
 	@Override
-	public Set<KalenderEintrag> getAufgeloesteVerweise() {
-		return Collections.singleton(this);
+	public Set<KalenderEintragMitOffset> getAufgeloesteVerweise() {
+		return Collections.singleton(new KalenderEintragMitOffset(this));
 	}
 }

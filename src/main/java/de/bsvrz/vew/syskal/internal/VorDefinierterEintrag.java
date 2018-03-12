@@ -181,7 +181,7 @@ public class VorDefinierterEintrag extends KalenderEintrag {
     }
 
     @Override
-    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitPunkt) {
+    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt) {
 
         boolean gueltig = zeitPunkt.getDayOfWeek().equals(dayOfWeek);
 
@@ -203,7 +203,7 @@ public class VorDefinierterEintrag extends KalenderEintrag {
     }
 
 	@Override
-	public Set<KalenderEintrag> getAufgeloesteVerweise() {
-		return Collections.singleton(this);
+	public Set<KalenderEintragMitOffset> getAufgeloesteVerweise() {
+		return Collections.singleton(new KalenderEintragMitOffset(this));
 	}
 }
