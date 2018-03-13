@@ -29,11 +29,19 @@ package de.bsvrz.vew.syskal.internal;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.KalenderEintrag;
+import de.bsvrz.vew.syskal.SystemKalender;
+import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Repräsentation der Daten eines {@link KalenderEintrag}, der durch die
@@ -90,8 +98,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
                     } catch (final ParseException e) {
                         String message = "Fehler beim Parsen des Kalendereintrags: " + name + ": "
                                 + e.getLocalizedMessage();
-                        LOGGER.warning(
-                                message);
+                        LOGGER.warning(message);
                         addFehler(message);
                     }
                 }
@@ -113,8 +120,8 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
                     try {
                         startJahr = Integer.parseInt(parts[0]);
                     } catch (final NumberFormatException e) {
-                        LOGGER.warning("Fehler beim Parsen des Kalendereintrags: " + name + ": "
-                                + e.getLocalizedMessage());
+                        LOGGER.warning(
+                                "Fehler beim Parsen des Kalendereintrags: " + name + ": " + e.getLocalizedMessage());
                         // Jahr wird als nicht gesetzt angenommen
                     }
                 }
@@ -124,8 +131,8 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
                     try {
                         endJahr = Integer.parseInt(parts[1]);
                     } catch (final NumberFormatException e) {
-                        LOGGER.warning("Fehler beim Parsen des Kalendereintrags: " + name + ": "
-                                + e.getLocalizedMessage());
+                        LOGGER.warning(
+                                "Fehler beim Parsen des Kalendereintrags: " + name + ": " + e.getLocalizedMessage());
                         // Jahr wird als nicht gesetzt angenommen
                     }
                 }
@@ -250,6 +257,156 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public Set<KalenderEintragMitOffset> getAufgeloesteVerweise() {
+        Set<KalenderEintragMitOffset> result = new LinkedHashSet<>();
+        for (VerweisEintrag verweisEintrag : getVerweise()) {
+            result.addAll(verweisEintrag.getAufgeloesteVerweise());
+        }
+        return result;
+    }
+
+    protected final boolean pruefeGueltigKeit(LocalDateTime wechselZeit, boolean zielZustand) {
+        return zielZustand == isGueltig(wechselZeit);
+    }
+
+    protected final ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand,
+            Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleEndWechsel) {
+
+        LocalDateTime wechselZeit = null;
+        Map<KalenderEintragMitOffset, ZustandsWechsel> verweisWechsel = new LinkedHashMap<>(potentielleEndWechsel);
+
+        do {
+            ZustandsWechsel wechsel = verweisWechsel.values().stream().min(ZustandsWechsel.ZEIT_COMPARATOR).get();
+            if (wechsel == null) {
+                return ZustandsWechsel.of(SystemKalender.MAX_DATETIME, !zielZustand);
+            }
+
+            wechselZeit = wechsel.getZeitPunkt();
+            if (isErlaubteWechselZeit(wechselZeit)) {
+                if (pruefeGueltigKeit(wechselZeit, zielZustand)) {
+                    return ZustandsWechsel.of(wechselZeit, zielZustand);
+                }
+            }
+
+            for (Entry<KalenderEintragMitOffset, ZustandsWechsel> entry : verweisWechsel.entrySet()) {
+                if (!entry.getValue().getZeitPunkt().isAfter(wechselZeit)) {
+                    entry.setValue(entry.getKey().berechneZeitlicheGueltigkeit(entry.getValue().getZeitPunkt())
+                            .getNaechsterWechsel());
+                }
+            }
+
+        } while (wechselZeit.isBefore(SystemKalender.MAX_DATETIME)
+                && (getEndJahr() == 0 || getEndJahr() >= wechselZeit.getYear()));
+
+        return ZustandsWechsel.of(SystemKalender.MAX_DATETIME, !zielZustand);
+    }
+    
+    protected final ZustandsWechsel berechneVorigenWechselAuf(boolean zielZustand,
+            Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleStartWechsel) {
+        LocalDateTime wechselZeit = null;
+        Map<KalenderEintragMitOffset, ZustandsWechsel> verweisWechsel = new LinkedHashMap<>(potentielleStartWechsel);
+        ZustandsWechsel potentiellerWechsel = null;
+
+        do {
+            ZustandsWechsel wechsel = verweisWechsel.values().stream().max(ZustandsWechsel.ZEIT_COMPARATOR).get();
+            if (wechsel == null) {
+                return ZustandsWechsel.of(SystemKalender.MIN_DATETIME, zielZustand);
+            }
+
+            wechselZeit = wechsel.getZeitPunkt();
+            if (isErlaubteWechselZeit(wechselZeit)) {
+                if (pruefeGueltigKeit(wechselZeit, zielZustand)) {
+                    potentiellerWechsel = ZustandsWechsel.of(wechselZeit, zielZustand);
+                } else if (potentiellerWechsel != null) {
+                    return potentiellerWechsel;
+                }
+            }
+
+            for (Entry<KalenderEintragMitOffset, ZustandsWechsel> entry : verweisWechsel.entrySet()) {
+                if (!entry.getValue().getZeitPunkt().isBefore(wechselZeit)) {
+                    entry.setValue(entry.getKey().berechneZeitlicheGueltigkeitVor(entry.getValue().getZeitPunkt())
+                            .getErsterWechsel());
+                }
+            }
+
+        } while (wechselZeit.isAfter(SystemKalender.MIN_DATETIME)
+                && (getStartJahr() == 0 || getStartJahr() <= wechselZeit.getYear()));
+
+        return ZustandsWechsel.of(SystemKalender.MIN_DATETIME, zielZustand);
+    }
+
+
+    @Override
+    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
+
+        boolean zustand = isGueltig(zeitPunkt);
+
+        Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
+        Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
+
+        for (KalenderEintragMitOffset eintrag : getAufgeloesteVerweise()) {
+            SystemkalenderGueltigkeit gueltigKeit = eintrag.berechneZeitlicheGueltigkeit(zeitPunkt);
+            potentielleStartWechsel.put(eintrag, gueltigKeit.getErsterWechsel());
+            potentielleEndWechsel.put(eintrag, gueltigKeit.getNaechsterWechsel());
+
+        }
+
+        ZustandsWechsel beginn = berechneVorigenWechselAuf(zustand, potentielleStartWechsel);
+        ZustandsWechsel wechsel = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);
+
+        return SystemkalenderGueltigkeit.of(beginn, wechsel);
+    }
+
+    
+    protected  abstract boolean getInitialenBerechnungsZustand();
+
+    @Override
+    public final SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt) {
+
+        SystemkalenderGueltigkeit zeitlicheGueltigkeit = berechneZeitlicheGueltigkeit(zeitPunkt);
+        if( !zeitlicheGueltigkeit.getErsterWechsel().getZeitPunkt().isAfter(SystemKalender.MIN_DATETIME)) {
+            return SystemkalenderGueltigkeit.of(zeitlicheGueltigkeit.getErsterWechsel(), zeitlicheGueltigkeit.getErsterWechsel());
+        }
+        
+        boolean zustand = zeitlicheGueltigkeit.isZeitlichGueltig();
+        Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
+
+        for (VerweisEintrag verweis : getVerweise()) {
+            if (verweis.isFehler()) {
+                return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+            }
+        }
+
+        for (KalenderEintragMitOffset eintrag : getAufgeloesteVerweise()) {
+            SystemkalenderGueltigkeit gueltigKeit = eintrag
+                    .berechneZeitlicheGueltigkeitVor(zeitlicheGueltigkeit.getErsterWechsel().getZeitPunkt());
+            potentielleStartWechsel.put(eintrag, gueltigKeit.getNaechsterWechsel());
+        }
+
+        ZustandsWechsel beginn = berechneVorigenWechselAuf(!zustand, potentielleStartWechsel);
+
+        return SystemkalenderGueltigkeit.of(beginn, zeitlicheGueltigkeit.getErsterWechsel());
+    }
+
+    @Override
+    public boolean isGueltig(LocalDateTime zeitPunkt) {
+
+        boolean zustand = (getStartJahr() == 0 || getStartJahr() <= zeitPunkt.getYear())
+                && (getEndJahr() == 0 || getEndJahr() >= zeitPunkt.getYear());
+        if( !zustand) {
+            return false;
+        }
+        
+        boolean initialerZustand = getInitialenBerechnungsZustand();
+        for (VerweisEintrag verweis : getVerweise()) {
+            if (verweis.isGueltig(zeitPunkt) != initialerZustand) {
+                return !initialerZustand; 
+            }
+        }
+        return initialerZustand;
     }
 
 }

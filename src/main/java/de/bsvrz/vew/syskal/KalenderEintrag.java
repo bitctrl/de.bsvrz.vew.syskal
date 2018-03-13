@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.internal.DatumsEintrag;
 import de.bsvrz.vew.syskal.internal.EintragsArt;
+import de.bsvrz.vew.syskal.internal.KalenderEintragMitOffset;
 import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 import de.bsvrz.vew.syskal.internal.OderVerknuepfung;
 import de.bsvrz.vew.syskal.internal.UndVerknuepfung;
@@ -224,7 +226,7 @@ public abstract class KalenderEintrag {
 
     public abstract SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt);
 
-    public abstract SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt);
+    public abstract SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitpunkt);
 
     /**
      * liefert die Zeichenkette mit der initialen Definitionszeichenkette des
@@ -273,7 +275,7 @@ public abstract class KalenderEintrag {
             return SystemkalenderGueltigkeit.NICHT_GUELTIG;
         }
 
-        return berechneZeitlicheGueltigkeitsVor(zeitPunkt);
+        return berechneZeitlicheGueltigkeitVor(zeitPunkt);
     }
 
     public final List<ZustandsWechsel> getZustandsWechsel(LocalDateTime start, LocalDateTime ende) {
@@ -369,4 +371,6 @@ public abstract class KalenderEintrag {
     protected void setDefinition(String definition) {
         this.definition = definition;
     }
+    
+	public abstract Set<KalenderEintragMitOffset> getAufgeloesteVerweise();
 }

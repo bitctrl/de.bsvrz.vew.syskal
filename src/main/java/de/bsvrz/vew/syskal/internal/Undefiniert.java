@@ -33,17 +33,22 @@ import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 
 public class Undefiniert extends VorDefinierterEintrag {
 
-    Undefiniert() {
-        super("Undefiniert", DayOfWeek.SUNDAY);
-    }
+	Undefiniert() {
+		super("Undefiniert", DayOfWeek.SUNDAY);
+	}
 
-    @Override
-    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
-        return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-    }
+	@Override
+	public boolean isGueltig(LocalDateTime zeitPunkt) {
+		return false;
+	}
 
-    @Override
-    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
-        return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-    }
+	@Override
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
+		return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+	}
+
+	@Override
+	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitpunkt) {
+		return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+	}
 }

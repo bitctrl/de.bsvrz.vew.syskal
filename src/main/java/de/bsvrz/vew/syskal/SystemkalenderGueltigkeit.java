@@ -92,4 +92,11 @@ public class SystemkalenderGueltigkeit {
     public String toString() {
         return ersterWechsel + " --> " + naechsterWechsel;
     }
+
+    public SystemkalenderGueltigkeit withTagesOffset(int tagesOffset) {
+        SystemkalenderGueltigkeit result = new SystemkalenderGueltigkeit();
+        result.ersterWechsel = ersterWechsel.withTagesOffset(tagesOffset);
+        result.naechsterWechsel = naechsterWechsel.withTagesOffset(tagesOffset);
+        return result;
+    }
 }

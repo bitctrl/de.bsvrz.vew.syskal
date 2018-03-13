@@ -30,6 +30,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Year;
+import java.util.Collections;
+import java.util.Set;
 
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.KalenderEintrag;
@@ -171,12 +173,18 @@ public class DatumsEintrag extends KalenderEintrag {
     }
 
     @Override
-    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
-
+    public boolean isGueltig(LocalDateTime zeitpunkt) {
         boolean gueltig = jahr <= zeitpunkt.getYear();
         gueltig &= endJahr >= zeitpunkt.getYear();
         gueltig &= monat == zeitpunkt.getMonthValue();
         gueltig &= tag == zeitpunkt.getDayOfMonth();
+        return gueltig;
+    }
+    
+    @Override
+    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
+
+        boolean gueltig = isGueltig(zeitpunkt);
 
         if (gueltig) {
             return SystemkalenderGueltigkeit.gueltig(zeitpunkt.toLocalDate(), zeitpunkt.toLocalDate().plusDays(1));
@@ -219,7 +227,7 @@ public class DatumsEintrag extends KalenderEintrag {
     }
 
     @Override
-    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitsVor(LocalDateTime zeitpunkt) {
+    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitpunkt) {
 
         SystemkalenderGueltigkeit aktuelleGueltigkeit = berechneZeitlicheGueltigkeit(zeitpunkt);
         LocalDate fruehestesDatum = LocalDate.of(jahr, monat, tag);
@@ -280,4 +288,9 @@ public class DatumsEintrag extends KalenderEintrag {
     public boolean benutzt(KalenderEintrag referenz) {
         return false;
     }
+
+	@Override
+	public Set<KalenderEintragMitOffset> getAufgeloesteVerweise() {
+		return Collections.singleton(new KalenderEintragMitOffset(this));
+	}
 }
