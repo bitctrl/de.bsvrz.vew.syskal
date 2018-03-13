@@ -320,9 +320,6 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
             if (isErlaubteWechselZeit(wechselZeit)) {
                 if (pruefeGueltigKeit(wechselZeit, zielZustand)) {
                     potentiellerWechsel = ZustandsWechsel.of(wechselZeit, zielZustand);
-                    if( isGueltigerVorigerWechselFuer(zielZustand)) {
-                        return potentiellerWechsel;
-                    }
                 } else if (potentiellerWechsel != null) {
                     return potentiellerWechsel;
                 }
@@ -345,21 +342,10 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
     @Override
     public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
 
-        boolean zustand = (getStartJahr() == 0 || getStartJahr() <= zeitPunkt.getYear())
-                && (getEndJahr() == 0 || getEndJahr() >= zeitPunkt.getYear());
+        boolean zustand = isGueltig(zeitPunkt);
+
         Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
         Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
-
-        for (VerweisEintrag verweis : getVerweise()) {
-            if (verweis.isFehler()) {
-                return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-            }
-
-            if (!verweis.isGueltig(zeitPunkt)) {
-                zustand = false;
-                break;
-            }
-        }
 
         for (KalenderEintragMitOffset eintrag : getAufgeloesteVerweise()) {
             SystemkalenderGueltigkeit gueltigKeit = eintrag.berechneZeitlicheGueltigkeit(zeitPunkt);
@@ -368,13 +354,15 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
 
         }
 
-        ZustandsWechsel wechsel = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);
         ZustandsWechsel beginn = berechneVorigenWechselAuf(zustand, potentielleStartWechsel);
+        ZustandsWechsel wechsel = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);
 
         return SystemkalenderGueltigkeit.of(beginn, wechsel);
     }
 
     
+    protected  abstract boolean getInitialenBerechnungsZustand();
+
     @Override
     public final SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt) {
 
@@ -403,10 +391,22 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
         return SystemkalenderGueltigkeit.of(beginn, zeitlicheGueltigkeit.getErsterWechsel());
     }
 
-    
-    protected boolean isGueltigerVorigerWechselFuer(boolean zielZustand) {
-        return false;
-    }
+    @Override
+    public boolean isGueltig(LocalDateTime zeitPunkt) {
 
+        boolean zustand = (getStartJahr() == 0 || getStartJahr() <= zeitPunkt.getYear())
+                && (getEndJahr() == 0 || getEndJahr() >= zeitPunkt.getYear());
+        if( !zustand) {
+            return false;
+        }
+        
+        boolean initialerZustand = getInitialenBerechnungsZustand();
+        for (VerweisEintrag verweis : getVerweise()) {
+            if (verweis.isGueltig(zeitPunkt) != initialerZustand) {
+                return !initialerZustand; 
+            }
+        }
+        return initialerZustand;
+    }
 
 }

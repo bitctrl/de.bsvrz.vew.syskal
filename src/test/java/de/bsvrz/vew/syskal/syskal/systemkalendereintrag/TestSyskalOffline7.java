@@ -40,8 +40,8 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class TestSyskalOffline7 {
 
-//    @Rule
-//    public Timeout globalTimeout = Timeout.seconds(5);
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(5);
 
     @Test
     public void beispiele7() {

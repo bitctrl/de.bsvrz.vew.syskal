@@ -26,15 +26,7 @@
 
 package de.bsvrz.vew.syskal.internal;
 
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import de.bsvrz.vew.syskal.SystemKalender;
-import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
-import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Repräsentation einer logischen Verknüpfung mehrere Systemkalendereinträge mit
@@ -82,45 +74,7 @@ public class UndVerknuepfung extends LogischerVerkuepfungsEintrag {
     }
 
     @Override
-    public boolean isGueltig(LocalDateTime zeitPunkt) {
-
-        for (VerweisEintrag verweis : getVerweise()) {
-            if (!verweis.isGueltig(zeitPunkt)) {
-                return false;
-            }
-        }
+    protected boolean getInitialenBerechnungsZustand() {
         return true;
     }
-//
-//    @Override
-//    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
-//
-//        boolean zustand = (getStartJahr() == 0 || getStartJahr() <= zeitPunkt.getYear())
-//                && (getEndJahr() == 0 || getEndJahr() >= zeitPunkt.getYear());
-//        Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
-//        Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
-//
-//        for (VerweisEintrag verweis : getVerweise()) {
-//            if (verweis.isFehler()) {
-//                return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-//            }
-//
-//            if (!verweis.isGueltig(zeitPunkt)) {
-//                zustand = false;
-//                break;
-//            }
-//        }
-//
-//        for (KalenderEintragMitOffset eintrag : getAufgeloesteVerweise()) {
-//            SystemkalenderGueltigkeit gueltigKeit = eintrag.berechneZeitlicheGueltigkeit(zeitPunkt);
-//            potentielleStartWechsel.put(eintrag, gueltigKeit.getErsterWechsel());
-//            potentielleEndWechsel.put(eintrag, gueltigKeit.getNaechsterWechsel());
-//
-//        }
-//
-//        ZustandsWechsel wechsel = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);
-//        ZustandsWechsel beginn = berechneVorigenWechselAuf(zustand, potentielleStartWechsel);
-//
-//        return SystemkalenderGueltigkeit.of(beginn, wechsel);
-//    }
 }

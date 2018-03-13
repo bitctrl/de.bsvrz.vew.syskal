@@ -26,15 +26,7 @@
 
 package de.bsvrz.vew.syskal.internal;
 
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import de.bsvrz.vew.syskal.SystemKalender;
-import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
-import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Repräsentiert die Daten eines Eintrags, der mehrere andere
@@ -44,88 +36,46 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
  */
 public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 
-	public static OderVerknuepfung of(KalenderEintragProvider provider, String name) {
-		return new OderVerknuepfung(provider, name);
-	}
+    public static OderVerknuepfung of(KalenderEintragProvider provider, String name) {
+        return new OderVerknuepfung(provider, name);
+    }
 
-	public static OderVerknuepfung of(KalenderEintragProvider provider, String name, List<Verweis> verweise,
-			int startJahr, int endJahr) {
-		OderVerknuepfung result = OderVerknuepfung.of(provider, name);
-		result.setStartJahr(startJahr);
-		result.setEndJahr(endJahr);
-		result.setVerweise(verweise);
-		return result;
-	}
+    public static OderVerknuepfung of(KalenderEintragProvider provider, String name, List<Verweis> verweise,
+            int startJahr, int endJahr) {
+        OderVerknuepfung result = OderVerknuepfung.of(provider, name);
+        result.setStartJahr(startJahr);
+        result.setEndJahr(endJahr);
+        result.setVerweise(verweise);
+        return result;
+    }
 
-	private OderVerknuepfung(KalenderEintragProvider provider, String name) {
-		super(provider, name, null);
-	}
+    private OderVerknuepfung(KalenderEintragProvider provider, String name) {
+        super(provider, name, null);
+    }
 
-	/**
-	 * Konstruktor.
-	 * 
-	 * @param provider
-	 *            die Verwaltung aller bekannten Systemkalendereinträge zur
-	 *            Verifizierung von Referenzen
-	 * @param name
-	 *            der Name des Eintrags
-	 * @param definition
-	 *            der definierende Text des Eintrags
-	 */
-	public OderVerknuepfung(KalenderEintragProvider provider, final String name, final String definition) {
-		super(provider, name, definition);
-	}
+    /**
+     * Konstruktor.
+     * 
+     * @param provider
+     *            die Verwaltung aller bekannten Systemkalendereinträge zur
+     *            Verifizierung von Referenzen
+     * @param name
+     *            der Name des Eintrags
+     * @param definition
+     *            der definierende Text des Eintrags
+     */
+    public OderVerknuepfung(KalenderEintragProvider provider, final String name, final String definition) {
+        super(provider, name, definition);
+    }
 
-	@Override
-	public String getVerknuepfungsArt() {
-		return "ODER";
-	}
+    @Override
+    public String getVerknuepfungsArt() {
+        return "ODER";
+    }
 
-	@Override
-	public boolean isGueltig(LocalDateTime zeitPunkt) {
+    @Override
+    protected boolean getInitialenBerechnungsZustand() {
+        return false;
+    }
 
-		for (VerweisEintrag verweis : getVerweise()) {
-			if (verweis.isGueltig(zeitPunkt)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
-
-//        boolean zustand = (getStartJahr() == 0 || getStartJahr() <= zeitpunkt.getYear())
-//                && (getEndJahr() == 0 || getEndJahr() >= zeitpunkt.getYear());
-	    
-	    boolean zustand = false;
-	    
-		Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
-		Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
-
-		for (VerweisEintrag verweis : getVerweise()) {
-
-			boolean gueltig = verweis.isGueltig(zeitpunkt);
-			if (gueltig) {
-				zustand = true;
-				break;
-			}
-		}
-
-		for(KalenderEintragMitOffset eintrag : getAufgeloesteVerweise()) {
-			SystemkalenderGueltigkeit gueltigKeit = eintrag.berechneZeitlicheGueltigkeit(zeitpunkt);
-			potentielleStartWechsel.put(eintrag, gueltigKeit.getErsterWechsel());
-			potentielleEndWechsel.put(eintrag, gueltigKeit.getNaechsterWechsel());
-		}
-		
-		ZustandsWechsel beginn = berechneVorigenWechselAuf(zustand, potentielleStartWechsel);
-		ZustandsWechsel wechsel = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);
-		return SystemkalenderGueltigkeit.of(beginn, wechsel);
-	}
-	
-	@Override
-	protected boolean isGueltigerVorigerWechselFuer(boolean zielZustand) {
-	    return !zielZustand;
-	}
-	
 }
