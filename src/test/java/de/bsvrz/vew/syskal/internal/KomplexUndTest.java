@@ -1,3 +1,29 @@
+/*
+ * SWE Systemkalender - Version 2
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Contact Information:
+ * BitCtrl Systems GmbH
+ * Weißenfelser Straße 67
+ * 04229 Leipzig
+ * Phone: +49-341-49067-0
+ * Fax: +49-341-49067-15
+ * mailto: info@bitctrl.de
+ */
+
 package de.bsvrz.vew.syskal.internal;
 
 import static org.junit.Assert.assertFalse;
@@ -14,23 +40,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
-import de.bsvrz.vew.syskal.Intervall;
 import de.bsvrz.vew.syskal.KalenderEintrag;
-import de.bsvrz.vew.syskal.TestIntervall;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.TestWechsel;
-import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 public class KomplexUndTest {
     
-//    @Rule
-//    public Timeout globalTimeout = Timeout.seconds(5);
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(5);
 
     private static TestKalenderEintragProvider eintragsProvider;
-
-    private static LocalDateTime startTime;
-
-    private static LocalDateTime endTime;
 
     @BeforeClass
     public static void init() {
@@ -70,7 +88,7 @@ public class KomplexUndTest {
     }
 
     @Test
-    public void testeAbfrage_07_02_2018() {
+    public void testeAbfrage20180207() {
 
         LocalDateTime zeitPunkt = LocalDateTime.of(LocalDate.of(2018, 2, 7), LocalTime.MIDNIGHT);
 
@@ -87,7 +105,7 @@ public class KomplexUndTest {
     }
 
     @Test
-    public void testeAbfrage_07_03_2018() {
+    public void testeAbfrage20180307() {
 
         LocalDateTime zeitPunkt = LocalDateTime.of(LocalDate.of(2018, 3, 7), LocalTime.MIDNIGHT);
 
@@ -104,7 +122,7 @@ public class KomplexUndTest {
     }
 
     @Test
-    public void testeAbfrage_17_03_2018() {
+    public void testeAbfrage20180317() {
 
         LocalDateTime zeitPunkt = LocalDateTime.of(LocalDate.of(2018, 3, 17), LocalTime.MIDNIGHT);
 
@@ -121,7 +139,7 @@ public class KomplexUndTest {
     }
     
     @Test
-    public void testeAbfrage_27_03_2018() {
+    public void testeAbfrage20180327() {
 
         LocalDateTime zeitPunkt = LocalDateTime.of(LocalDate.of(2018, 3, 27), LocalTime.MIDNIGHT);
 
@@ -138,7 +156,7 @@ public class KomplexUndTest {
     }
 
     @Test
-    public void testeAbfrage_07_04_2018() {
+    public void testeAbfrage20180407() {
 
         LocalDateTime zeitPunkt = LocalDateTime.of(LocalDate.of(2018, 4, 7), LocalTime.MIDNIGHT);
 
@@ -155,7 +173,7 @@ public class KomplexUndTest {
     }
     
     @Test
-    public void testeAbfrage_17_04_2018() {
+    public void testeAbfrage20180417() {
 
         LocalDateTime zeitPunkt = LocalDateTime.of(LocalDate.of(2018, 4, 17), LocalTime.MIDNIGHT);
 
@@ -172,7 +190,7 @@ public class KomplexUndTest {
     }
     
     @Test
-    public void testeAbfrage_27_05_2018() {
+    public void testeAbfrage20180527() {
 
         LocalDateTime zeitPunkt = LocalDateTime.of(LocalDate.of(2018, 5, 27), LocalTime.MIDNIGHT);
 
@@ -188,7 +206,7 @@ public class KomplexUndTest {
         }
     }
     @Test
-    public void testeAbfrage_01_06_2018() {
+    public void testeAbfrage20180601(){
 
         LocalDateTime zeitPunkt = LocalDateTime.of(LocalDate.of(2018, 6, 1), LocalTime.MIDNIGHT);
 
@@ -205,7 +223,7 @@ public class KomplexUndTest {
     }
 
     @Test
-    public void testeAbfrage_10_06_2018() {
+    public void testeAbfrage20180610() {
 
         LocalDateTime zeitPunkt = LocalDateTime.of(LocalDate.of(2018, 6, 10), LocalTime.MIDNIGHT);
 
@@ -222,7 +240,7 @@ public class KomplexUndTest {
     }
     
     @Test
-    public void testeAbfrage_14_07_2018() {
+    public void testeAbfrage20180714() {
 
         LocalDateTime zeitPunkt = LocalDateTime.of(LocalDate.of(2018, 7, 14), LocalTime.MIDNIGHT);
 
@@ -239,7 +257,7 @@ public class KomplexUndTest {
     }
 
     @Test
-    public void testeAbfrage_17_10_2018() {
+    public void testeAbfrage20181017() {
 
         LocalDateTime zeitPunkt = LocalDateTime.of(LocalDate.of(2018, 10, 17), LocalTime.MIDNIGHT);
 
