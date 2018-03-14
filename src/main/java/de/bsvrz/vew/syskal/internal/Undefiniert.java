@@ -38,7 +38,7 @@ public class Undefiniert extends VorDefinierterEintrag {
 	}
 
 	@Override
-	public boolean isGueltig(LocalDateTime zeitPunkt) {
+	public boolean bestimmeGueltigkeit(LocalDateTime zeitPunkt) {
 		return false;
 	}
 

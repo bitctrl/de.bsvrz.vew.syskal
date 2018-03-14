@@ -392,7 +392,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
     }
 
     @Override
-    public boolean isGueltig(LocalDateTime zeitPunkt) {
+    public boolean bestimmeGueltigkeit(LocalDateTime zeitPunkt) {
 
         boolean zustand = (getStartJahr() == 0 || getStartJahr() <= zeitPunkt.getYear())
                 && (getEndJahr() == 0 || getEndJahr() >= zeitPunkt.getYear());

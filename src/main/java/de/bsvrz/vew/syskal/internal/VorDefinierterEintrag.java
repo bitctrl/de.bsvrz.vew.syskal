@@ -159,7 +159,7 @@ public class VorDefinierterEintrag extends KalenderEintrag {
     }
 
     @Override
-    public boolean isGueltig(LocalDateTime zeitPunkt) {
+    public boolean bestimmeGueltigkeit(LocalDateTime zeitPunkt) {
     		return zeitPunkt.getDayOfWeek().equals(dayOfWeek);
     }
     

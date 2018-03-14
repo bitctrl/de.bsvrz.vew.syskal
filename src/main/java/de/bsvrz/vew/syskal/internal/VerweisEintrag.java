@@ -165,7 +165,7 @@ public class VerweisEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public boolean isGueltig(LocalDateTime zeitPunkt) {
+	public boolean bestimmeGueltigkeit(LocalDateTime zeitPunkt) {
 		if (verweis.isUngueltig()) {
 			return false;
 		}

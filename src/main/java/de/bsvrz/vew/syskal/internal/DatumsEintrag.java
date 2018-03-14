@@ -173,7 +173,7 @@ public class DatumsEintrag extends KalenderEintrag {
     }
 
     @Override
-    public boolean isGueltig(LocalDateTime zeitpunkt) {
+    public boolean bestimmeGueltigkeit(LocalDateTime zeitpunkt) {
         boolean gueltig = jahr <= zeitpunkt.getYear();
         gueltig &= endJahr >= zeitpunkt.getYear();
         gueltig &= monat == zeitpunkt.getMonthValue();

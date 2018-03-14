@@ -222,7 +222,7 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
 	}
 
 	@Override
-	public boolean isGueltig(LocalDateTime zeitPunkt) {
+	public boolean bestimmeGueltigkeit(LocalDateTime zeitPunkt) {
 		if (zeitPunkt.isBefore(start) || !zeitPunkt.isBefore(ende)) {
 			return false;
 		}

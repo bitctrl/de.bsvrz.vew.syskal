@@ -55,7 +55,7 @@ public class Ostersonntag extends VorDefinierterEintrag {
 	}
 
 	@Override
-	public boolean isGueltig(LocalDateTime zeitPunkt) {
+	public boolean bestimmeGueltigkeit(LocalDateTime zeitPunkt) {
 
 		LocalDate checkDate = zeitPunkt.toLocalDate();
 		if (checkDate.getYear() <= 0) {

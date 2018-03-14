@@ -258,9 +258,15 @@ public abstract class KalenderEintrag {
         return zeitGrenzen;
     }
 
-    public boolean isGueltig(LocalDateTime zeitPunkt) {
-        return getZeitlicheGueltigkeit(zeitPunkt).isZeitlichGueltig();
+    public final boolean isGueltig(LocalDateTime zeitPunkt) {
+        if( isFehler()) {
+            return false;
+        }
+        
+        return bestimmeGueltigkeit(zeitPunkt);
     }
+    
+    public abstract boolean bestimmeGueltigkeit(LocalDateTime zeitPunkt);
 
     public final SystemkalenderGueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
         if (isFehler()) {
