@@ -76,7 +76,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
     private boolean connectionLost = false;
 
     private final PropertyChangeListener kalenderEintragsChangeListener = e -> fireEintragGeandert(
-            (SystemKalenderEintrag) e.getNewValue());
+            (SystemKalenderEintrag) e.getSource());
 
     private List<SystemKalenderListener> kalenderListeners = new CopyOnWriteArrayList<>();
 
