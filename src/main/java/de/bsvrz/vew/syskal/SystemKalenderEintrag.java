@@ -26,42 +26,43 @@
 
 package de.bsvrz.vew.syskal;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Collection;
 import java.util.Objects;
 
 import de.bsvrz.dav.daf.main.config.DynamicObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
-import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 import de.bsvrz.vew.syskal.internal.VorDefinierterEintrag;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 
 public class SystemKalenderEintrag {
 
-    private final ObjectProperty<KalenderEintrag> kalenderEintragProperty = new SimpleObjectProperty<>(this,
-            "kalendereintrag", VorDefinierterEintrag.UNDEFINIERT);
+    public static final String PROP_KALENDEREINTRAG = SystemKalenderEintrag.class.getSimpleName() + ".kalenderEintrag";
+
+    private KalenderEintrag kalenderEintrag = VorDefinierterEintrag.UNDEFINIERT;
     private KalenderEintragProvider provider;
-    
+    PropertyChangeSupport propertySupport = new PropertyChangeSupport(this);
+
     private DynamicObject systemObject;
 
     private String name;
     private String pid;
-    
+
     private String originalDefinition;
 
     public static SystemKalenderEintrag of(String name, String pid, KalenderEintrag eintrag) {
         SystemKalenderEintrag result = new SystemKalenderEintrag();
-        result.name= name;
+        result.name = name;
         result.pid = pid;
-        result.kalenderEintragProperty.set(eintrag);
+        result.setKalenderEintrag(eintrag);
         return result;
     }
-    
+
     private SystemKalenderEintrag() {
-        
+
     }
-    
+
     public SystemKalenderEintrag(KalenderEintragProvider provider, DynamicObject obj) {
         this.provider = provider;
         this.systemObject = obj;
@@ -71,14 +72,20 @@ public class SystemKalenderEintrag {
         name = systemObject.getName();
         pid = systemObject.getPid();
         if (originalDefinition == null) {
-            kalenderEintragProperty.set(VorDefinierterEintrag.UNDEFINIERT);
+            setKalenderEintrag(VorDefinierterEintrag.UNDEFINIERT);
         } else {
-            kalenderEintragProperty.set(KalenderEintrag.parse(provider, name, originalDefinition));
+            setKalenderEintrag(KalenderEintrag.parse(provider, name, originalDefinition));
         }
     }
 
+    private void setKalenderEintrag(KalenderEintrag eintrag) {
+        KalenderEintrag alterEintrag = kalenderEintrag;
+        kalenderEintrag = eintrag;
+        propertySupport.firePropertyChange(PROP_KALENDEREINTRAG, alterEintrag, kalenderEintrag);
+    }
+
     public KalenderEintrag getKalenderEintrag() {
-        return kalenderEintragProperty.get();
+        return kalenderEintrag;
     }
 
     public SystemObject getSystemObject() {
@@ -93,36 +100,32 @@ public class SystemKalenderEintrag {
     }
 
     public String getName() {
-        if( systemObject == null) {
+        if (systemObject == null) {
             return name;
         }
         return systemObject.getName();
     }
 
     public String getPid() {
-        if( systemObject == null) {
+        if (systemObject == null) {
             return pid;
         }
         return systemObject.getPid();
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(100);
         builder.append(systemObject.getName());
         builder.append(':');
 
-        if (kalenderEintragProperty.get().isFehler()) {
+        if (kalenderEintrag.isFehler()) {
             builder.append("FEHLER :");
         } else {
             builder.append("OK    :");
         }
-        builder.append(kalenderEintragProperty.get());
+        builder.append(kalenderEintrag);
         return builder.toString();
-    }
-
-    public ObjectProperty<KalenderEintrag> getKalenderEintragProperty() {
-        return kalenderEintragProperty;
     }
 
     public void aktualisiereVonReferenzen(Collection<SystemKalenderEintrag> referenzen) {
@@ -137,12 +140,12 @@ public class SystemKalenderEintrag {
             }
         }
     }
-    
+
     public static boolean isNameGueltig(String name) {
-        
+
         boolean result = true;
         String testName = name.trim();
-        
+
         if (testName.length() <= 0) {
             result = false;
         } else {
@@ -156,5 +159,13 @@ public class SystemKalenderEintrag {
             }
         }
         return result;
+    }
+
+    public void addKalenderEintragChangeListener(PropertyChangeListener listener) {
+        propertySupport.addPropertyChangeListener(listener);
+    }
+
+    public void removeKalenderEintragChangeListener(PropertyChangeListener listener) {
+        propertySupport.removePropertyChangeListener(listener);
     }
 }

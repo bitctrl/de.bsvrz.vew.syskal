@@ -26,6 +26,7 @@
 
 package de.bsvrz.vew.syskal.internal;
 
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -63,18 +64,19 @@ import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalenderException;
 import de.bsvrz.vew.syskal.SystemKalenderListener;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiverInterface, MutableSetChangeListener {
 
     private Map<SystemObject, SystemKalenderEintrag> eintraege = new ConcurrentHashMap<>();
- 
+
     private ClientDavInterface dav;
     private DataDescription parameterSollDescription;
     private DataDescription parameterVorgabeDescription;
     private MutableSet eintragsSet;
     private boolean connectionLost = false;
+
+    private final PropertyChangeListener kalenderEintragsChangeListener = e -> fireEintragGeandert(
+            (SystemKalenderEintrag) e.getNewValue());
 
     private List<SystemKalenderListener> kalenderListeners = new CopyOnWriteArrayList<>();
 
@@ -104,7 +106,6 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
         aspect = dav.getDataModel().getAspect("asp.parameterVorgabe");
         parameterVorgabeDescription = new DataDescription(attributeGroup, aspect);
 
-        
         eintragsSet = kalenderObject.getMutableSet("SystemKalenderEinträge");
         eintragsSet.addChangeListener(this);
 
@@ -132,13 +133,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
                         parameterSollDescription);
             }
             fireEintragAngelegt(neuerEintrag);
-            neuerEintrag.getKalenderEintragProperty().addListener(new ChangeListener<KalenderEintrag>() {
-                @Override
-                public void changed(ObservableValue<? extends KalenderEintrag> observable, KalenderEintrag oldValue,
-                        KalenderEintrag newValue) {
-                    fireEintragGeandert(neuerEintrag);
-                }
-            });
+            neuerEintrag.addKalenderEintragChangeListener(kalenderEintragsChangeListener);
             dav.subscribeReceiver(this, obj, parameterSollDescription, ReceiveOptions.normal(),
                     ReceiverRole.receiver());
         }
@@ -171,6 +166,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
         for (SystemObject object : list) {
             SystemKalenderEintrag alterEintrag = eintraege.remove(object);
             if (alterEintrag != null) {
+                alterEintrag.removeKalenderEintragChangeListener(kalenderEintragsChangeListener);
                 fireEintragEntfernt(alterEintrag);
                 alteEintrage.add(alterEintrag);
                 dav.unsubscribeReceiver(this, object, parameterSollDescription);
@@ -226,7 +222,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
             throw new SystemKalenderException(
                     "Die für den Systemkalender verwendete Datenverteilerverbindung wurde geschlossen");
         }
-        
+
         final DynamicObject objekt = (DynamicObject) eintrag.getSystemObject();
         if (objekt == null) {
             throw new SystemKalenderException(
@@ -321,7 +317,8 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
 
         final DynamischeObjekte dynamischeVerwaltung = DynamischeObjekte.getInstanz(dav);
         try {
-            dynamischeVerwaltung.loescheAlleNichtZugeordnetenObjekte((DynamicObjectType) dav.getDataModel().getType("typ.systemKalenderEintrag"), eintragsSet);
+            dynamischeVerwaltung.loescheAlleNichtZugeordnetenObjekte(
+                    (DynamicObjectType) dav.getDataModel().getType("typ.systemKalenderEintrag"), eintragsSet);
         } catch (DynObjektException e) {
             throw new SystemKalenderException(
                     e.getLocalizedMessage(), e);
@@ -337,27 +334,27 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
     }
 
     private void fireEintragAngelegt(SystemKalenderEintrag eintrag) {
-        for( SystemKalenderListener listener : kalenderListeners) {
+        for (SystemKalenderListener listener : kalenderListeners) {
             listener.eintragAngelegt(kalender, eintrag);
         }
     }
 
     private void fireEintragGeandert(SystemKalenderEintrag eintrag) {
-        for( SystemKalenderListener listener : kalenderListeners) {
+        for (SystemKalenderListener listener : kalenderListeners) {
             listener.eintragGeandert(kalender, eintrag);
         }
     }
-    
+
     private void fireEintragEntfernt(SystemKalenderEintrag eintrag) {
-        for( SystemKalenderListener listener : kalenderListeners) {
+        for (SystemKalenderListener listener : kalenderListeners) {
             listener.eintragEntfernt(kalender, eintrag);
         }
     }
 
     private void fireKalenderGetrennt() {
-        for( SystemKalenderListener listener : kalenderListeners) {
+        for (SystemKalenderListener listener : kalenderListeners) {
             listener.kalenderGetrennt(kalender);
         }
     }
-    
+
 }
