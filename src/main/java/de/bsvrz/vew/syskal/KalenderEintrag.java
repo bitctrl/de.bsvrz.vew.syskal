@@ -94,7 +94,7 @@ public abstract class KalenderEintrag {
         try {
             rest = ermittleZeitBereiche(rest, parsedZeitBereiche);
         } catch (ParseException e) {
-            LOGGER.warning("Fehler beim Einlesen der Zeitbereiche: " + e.getLocalizedMessage());
+            LOGGER.warning("Fehler beim Einlesen der Zeitbereiche des Eintrags '" + name + "': " + e.getLocalizedMessage());
             zeitBereichsfehler = true;
         }
 

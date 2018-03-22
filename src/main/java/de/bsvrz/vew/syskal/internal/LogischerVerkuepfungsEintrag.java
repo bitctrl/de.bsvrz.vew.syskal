@@ -121,7 +121,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
                         startJahr = Integer.parseInt(parts[0]);
                     } catch (final NumberFormatException e) {
                         LOGGER.warning(
-                                "Fehler beim Parsen des Kalendereintrags: " + name + ": " + e.getLocalizedMessage());
+                                "Fehler beim Parsen des Eintrags: " + name + ": " + e.getLocalizedMessage());
                         // Jahr wird als nicht gesetzt angenommen
                     }
                 }
@@ -132,7 +132,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
                         endJahr = Integer.parseInt(parts[1]);
                     } catch (final NumberFormatException e) {
                         LOGGER.warning(
-                                "Fehler beim Parsen des Kalendereintrags: " + name + ": " + e.getLocalizedMessage());
+                                "Fehler beim Parsen des Eintrags: " + name + ": " + e.getLocalizedMessage());
                         // Jahr wird als nicht gesetzt angenommen
                     }
                 }
