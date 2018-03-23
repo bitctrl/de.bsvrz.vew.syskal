@@ -29,7 +29,9 @@ package de.bsvrz.vew.syskal.internal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.Intervall;
 import de.bsvrz.vew.syskal.TestIntervall;
@@ -45,8 +47,8 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
  */
 public class ZeitBereichsEintragTest {
 
-    // @Rule
-    // public Timeout globalTimeout = Timeout.seconds(5);
+     @Rule
+     public Timeout globalTimeout = Timeout.seconds(5);
 
     @Test
     public void testeZustandsWechsel() {

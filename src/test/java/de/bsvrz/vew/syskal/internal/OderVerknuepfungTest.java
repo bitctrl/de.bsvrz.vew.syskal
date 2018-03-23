@@ -41,7 +41,7 @@ import de.bsvrz.vew.syskal.TestWechsel;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
- * Prüffall 8 - UND-Verknüpfung - Gültigkeitsintervalle und Wechsel.
+ * Prüffall 9 - ODER-Verknüpfung - Gültigkeitsintervalle und Wechsel.
  * 
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
