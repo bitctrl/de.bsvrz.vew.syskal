@@ -197,10 +197,10 @@ public abstract class KalenderEintrag {
     /**
      * Basiskonstruktor für einen Kalendereintrag.
      * 
-     * Es ist nicht vorgesehen, Kalendereintraege
-     * 
      * @param name
+     *            Name des Kalendereintrags
      * @param definition
+     *            Definitionsstring des Eintrags
      */
     protected KalenderEintrag(String name, String definition) {
         this.name = name;
