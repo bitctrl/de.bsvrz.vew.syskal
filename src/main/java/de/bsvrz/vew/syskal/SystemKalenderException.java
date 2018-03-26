@@ -26,13 +26,34 @@
 
 package de.bsvrz.vew.syskal;
 
+/**
+ * Allgemeine Exception beim Zugriff auf den Systemkalender.
+ * 
+ * @author BitCtrl Systems GmbH, Uwe Peuker
+ *
+ */
 public class SystemKalenderException extends Exception {
 
+    /**
+     * erzeugt eine neue Exception mit der übergebenen Meldung.
+     * 
+     * @param meldung
+     *            die Meldung
+     */
     public SystemKalenderException(String meldung) {
         super(meldung);
     }
 
-    public SystemKalenderException(String meldung, Exception e) {
-        super(meldung, e);
+    /**
+     * erzeugt eine neue Exception mit der übergebenen Meldung und der
+     * verursachtenen Exception.
+     * 
+     * @param meldung
+     *            die Meldung
+     * @param cause
+     *            die verursachende Exception
+     */
+    public SystemKalenderException(String meldung, Exception cause) {
+        super(meldung, cause);
     }
 }

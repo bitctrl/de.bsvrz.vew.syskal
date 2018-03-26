@@ -31,24 +31,30 @@ import java.time.LocalDateTime;
 
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 
+/**
+ * Vordefinierter Eintragm der immer ungültig ist und als Platzhalter verwendet
+ * wird, wenn keine andere Definition ermittelt wedren kann.
+ * 
+ * @author BitCtrl Systems GmbH, Uwe Peuker
+ */
 public class Undefiniert extends VorDefinierterEintrag {
 
-	Undefiniert() {
-		super("Undefiniert", DayOfWeek.SUNDAY);
-	}
+    Undefiniert() {
+        super("Undefiniert", DayOfWeek.SUNDAY);
+    }
 
-	@Override
-	public boolean bestimmeGueltigkeit(LocalDateTime zeitPunkt) {
-		return false;
-	}
+    @Override
+    public boolean bestimmeGueltigkeit(LocalDateTime zeitPunkt) {
+        return false;
+    }
 
-	@Override
-	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
-		return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-	}
+    @Override
+    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
+        return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+    }
 
-	@Override
-	public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitpunkt) {
-		return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-	}
+    @Override
+    public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitpunkt) {
+        return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+    }
 }

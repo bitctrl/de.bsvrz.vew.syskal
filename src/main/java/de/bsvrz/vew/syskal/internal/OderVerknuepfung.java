@@ -36,10 +36,36 @@ import java.util.List;
  */
 public class OderVerknuepfung extends LogischerVerkuepfungsEintrag {
 
+    /**
+     * erzeugt eine neue {@link OderVerknuepfung} mit dem angebenen Name
+     * innerhalb der übergebenen Eintragsverwaltung.
+     * 
+     * @param provider
+     *            die Eintragsverwaltung zur Verifizierung der Verweiseinträge
+     * @param name
+     *            der Name des neuen Eintrags
+     * @return die neue Instanz
+     */
     public static OderVerknuepfung of(KalenderEintragProvider provider, String name) {
         return new OderVerknuepfung(provider, name);
     }
 
+    /**
+     * erzeugt eine neue {@link OderVerknuepfung} mit den angebenen Daten
+     * innerhalb der übergebenen Eintragsverwaltung.
+     * 
+     * @param provider
+     *            die Eintragsverwaltung zur Verifizierung der Verweiseinträge
+     * @param name
+     *            der Name des neuen Eintrags
+     * @param verweise
+     *            die Liste der zu verknüpfenden Einträge
+     * @param startJahr
+     *            das Jahr ab dem der Eintrag gültig ist
+     * @param endJahr
+     *            das Jahr bis zu dem der Eintrag gültig ist
+     * @return die neue Instanz
+     */
     public static OderVerknuepfung of(KalenderEintragProvider provider, String name, List<Verweis> verweise,
             int startJahr, int endJahr) {
         OderVerknuepfung result = OderVerknuepfung.of(provider, name);

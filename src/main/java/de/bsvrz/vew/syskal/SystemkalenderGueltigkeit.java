@@ -29,8 +29,21 @@ package de.bsvrz.vew.syskal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Die Gültigkeit eines Systemkalendereintrags.
+ * 
+ * Eine Instanz der Gültigkeit enthält zwei Zustandswechsel, die den aktuellen
+ * Zustand mit dem Zeitpunkt zu dem dieser entstanden ist und den
+ * nächstfolgenden Zustandswechsel mit dem Wechselzeitpunkt repräsentieren.
+ * 
+ * @author BitCtrl Systems GmbH. Uwe Peuker
+ */
 public class SystemkalenderGueltigkeit {
 
+    /**
+     * Standardwert für einen ungültigen Zustand über den gesamten zulässigen
+     * Zeitbereich.
+     */
     public static final SystemkalenderGueltigkeit NICHT_GUELTIG = SystemkalenderGueltigkeit.of(
             ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME),
             ZustandsWechsel.aufUngueltig(SystemKalender.MAX_DATETIME));
@@ -41,6 +54,16 @@ public class SystemkalenderGueltigkeit {
     private SystemkalenderGueltigkeit() {
     }
 
+    /**
+     * erzeugt eine Instanz der {@link SystemkalenderGueltigkeit} mit den
+     * übergebenen Zustandswechseln.
+     * 
+     * @param beginn
+     *            der aktuelle Zustandswechsel
+     * @param wechsel
+     *            der folgende Zustandswechsel
+     * @return die neue Instanz
+     */
     public static SystemkalenderGueltigkeit of(ZustandsWechsel beginn, ZustandsWechsel wechsel) {
         SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
         gueltigkeit.ersterWechsel = beginn;
@@ -48,6 +71,16 @@ public class SystemkalenderGueltigkeit {
         return gueltigkeit;
     }
 
+    /**
+     * erzeugt eine Instanz der {@link SystemkalenderGueltigkeit} die Gültig
+     * wird und zukünftig auf den Zustand UNGÜLTIG wechselt.
+     * 
+     * @param beginn
+     *            der Zeitpunkt zu dem die Gültigkeit erreicht wurde
+     * @param wechsel
+     *            der Zeitpunkt zu dem die Gültigkeit endet
+     * @return die neue Instanz
+     */
     public static SystemkalenderGueltigkeit gueltig(LocalDateTime beginn, LocalDateTime wechsel) {
         SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
         gueltigkeit.ersterWechsel = ZustandsWechsel.aufGueltig(beginn);
@@ -55,6 +88,16 @@ public class SystemkalenderGueltigkeit {
         return gueltigkeit;
     }
 
+    /**
+     * erzeugt eine Instanz der {@link SystemkalenderGueltigkeit} die Gültig
+     * wird und zukünftig auf den Zustand UNGÜLTIG wechselt.
+     * 
+     * @param beginn
+     *            das Datum zu dem die Gültigkeit erreicht wurde
+     * @param wechsel
+     *            das Datum zu dem die Gültigkeit endet
+     * @return die neue Instanz
+     */
     public static SystemkalenderGueltigkeit gueltig(LocalDate beginn, LocalDate wechsel) {
         SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
         gueltigkeit.ersterWechsel = ZustandsWechsel.aufGueltig(beginn);
@@ -62,6 +105,16 @@ public class SystemkalenderGueltigkeit {
         return gueltigkeit;
     }
 
+    /**
+     * erzeugt eine Instanz der {@link SystemkalenderGueltigkeit} die Ungültig
+     * ist und zukünftig auf den Zustand GÜLTIG wechselt.
+     * 
+     * @param beginn
+     *            der Zeitpunkt zu dem die Ungültigkeit erreicht wurde
+     * @param wechsel
+     *            der Zeitpunkt zu dem die folgende Gültigkeit beginnt
+     * @return die neue Instanz
+     */
     public static SystemkalenderGueltigkeit ungueltig(LocalDateTime beginn, LocalDateTime wechsel) {
         SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
         gueltigkeit.ersterWechsel = ZustandsWechsel.aufUngueltig(beginn);
@@ -69,6 +122,16 @@ public class SystemkalenderGueltigkeit {
         return gueltigkeit;
     }
 
+    /**
+     * erzeugt eine Instanz der {@link SystemkalenderGueltigkeit} die Ungültig
+     * ist und zukünftig auf den Zustand GÜLTIG wechselt.
+     * 
+     * @param beginn
+     *            das Datum zu dem die Ungültigkeit erreicht wurde
+     * @param wechsel
+     *            das Datum zu dem die folgende Gültigkeit beginnt
+     * @return die neue Instanz
+     */
     public static SystemkalenderGueltigkeit ungueltig(LocalDate beginn, LocalDate wechsel) {
         SystemkalenderGueltigkeit gueltigkeit = new SystemkalenderGueltigkeit();
         gueltigkeit.ersterWechsel = ZustandsWechsel.aufUngueltig(beginn);
@@ -76,14 +139,29 @@ public class SystemkalenderGueltigkeit {
         return gueltigkeit;
     }
 
+    /**
+     * liefert den initialen Zustandswechsel.
+     * 
+     * @return den Wechsel
+     */
     public ZustandsWechsel getErsterWechsel() {
         return ersterWechsel;
     }
 
+    /**
+     * liefert den zukünftigen Zustandswechsel.
+     * 
+     * @return den Wechsel
+     */
     public ZustandsWechsel getNaechsterWechsel() {
         return naechsterWechsel;
     }
 
+    /**
+     * ermittelt, ob aktuell Gültigkeit besteht.
+     * 
+     * @return die Gültigkeit
+     */
     public boolean isZeitlichGueltig() {
         return ersterWechsel.isWirdGueltig();
     }
@@ -93,6 +171,14 @@ public class SystemkalenderGueltigkeit {
         return ersterWechsel + " --> " + naechsterWechsel;
     }
 
+    /**
+     * erzeugt eine neue Instanz der Gültigkeit, bei der die Zeitpunkte um den
+     * übergebenen Tagesoffset angepasst werden.
+     * 
+     * @param tagesOffset
+     *            der Tagesoffset
+     * @return die neue Instanz
+     */
     public SystemkalenderGueltigkeit withTagesOffset(int tagesOffset) {
         SystemkalenderGueltigkeit result = new SystemkalenderGueltigkeit();
         result.ersterWechsel = ersterWechsel.withTagesOffset(tagesOffset);

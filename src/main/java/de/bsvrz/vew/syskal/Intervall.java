@@ -28,8 +28,23 @@ package de.bsvrz.vew.syskal;
 
 import java.time.LocalDateTime;
 
+/**
+ * Repräsentation einen Intervalls mit einem Anfangszeitpunkt und einem
+ * Endzeitpunkt.
+ * 
+ * @author BitCtrl Systems GmbH, Uwe Peuker
+ */
 public class Intervall {
 
+    /**
+     * erzeugt ein neues Intervall mit den übergebenen Zeitpunkten
+     * 
+     * @param von
+     *            der Anfangszeitpunkt des Intervalls
+     * @param bis
+     *            der Endzeitpunkt des Intervalls
+     * @return das Intervall
+     */
     public static Intervall of(LocalDateTime von, LocalDateTime bis) {
         return new Intervall(von, bis);
     }
@@ -43,10 +58,20 @@ public class Intervall {
         this.ende = ende;
     }
 
+    /**
+     * liefert den Anfangszeitpunkt des Intervalls
+     * 
+     * @return den Zeitpunkt
+     */
     public LocalDateTime getStart() {
         return start;
     }
 
+    /**
+     * liefert den Endzeitpunkt des Intervalls
+     * 
+     * @return den Zeitpunkt
+     */
     public LocalDateTime getEnde() {
         return ende;
     }

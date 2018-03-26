@@ -31,30 +31,78 @@ import java.time.LocalDateTime;
 import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 
+/**
+ * Repräsentiert einen Kalendereintrag mit einem zugeordneten Zeitoffset, der
+ * innerhalb eines {@link LogischerVerkuepfungsEintrag} verwendet wird, um die
+ * Gültigkeit zu bestimmen.
+ * 
+ * @author BitCtrl Systems GmbH, Uwe Peuker
+ */
 public class KalenderEintragMitOffset {
 
     private final KalenderEintrag kalenderEintrag;
     private final int tagesOffset;
 
+    /**
+     * erzeugt eine Instanz mit dem übergebenen Kalendereintrag und dem Offset
+     * 0.
+     * 
+     * @param kalenderEintrag
+     *            der KalenderEintrag
+     */
     public KalenderEintragMitOffset(KalenderEintrag kalenderEintrag) {
         this(kalenderEintrag, 0);
     }
-    
+
+    /**
+     * erzeugt eine Instanz aus übergebenen Kalendereintrag und Tagesoffset.
+     * 
+     * @param kalenderEintrag
+     *            der KalenderEintrag
+     * @param tagesOffset
+     *            der Offset in Tagen
+     */
     public KalenderEintragMitOffset(KalenderEintrag kalenderEintrag, int tagesOffset) {
         this.kalenderEintrag = kalenderEintrag;
         this.tagesOffset = tagesOffset;
     }
 
+    /**
+     * berechnet die Gültigkeit des Kalendereintrags gemäß
+     * {@link KalenderEintrag#getZeitlicheGueltigkeit(LocalDateTime)} unter
+     * Berücksichtigung des zugewiesenen Tagesoffsets.
+     * 
+     * @param zeitpunkt
+     *            der Zeitpunkt für den die Gültigkeit bestimmt werden soll.
+     * @return die berechnete Gültigkeit
+     */
     public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
         SystemkalenderGueltigkeit gueltigkeit = kalenderEintrag.berechneZeitlicheGueltigkeit(zeitpunkt);
         return gueltigkeit.withTagesOffset(tagesOffset);
     }
 
+    /**
+     * berechnet die Gültigkeit des Kalendereintrags gemäß
+     * {@link KalenderEintrag#getZeitlicheGueltigkeitVor(LocalDateTime)} unter
+     * Berücksichtigung des zugewiesenen Tagesoffsets.
+     * 
+     * @param zeitPunkt
+     *            der Zeitpunkt für den die Gültigkeit bestimmt werden soll.
+     * @return die berechnete Gültigkeit
+     */
     public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt) {
-        SystemkalenderGueltigkeit gueltigkeit = kalenderEintrag.berechneZeitlicheGueltigkeitVor(zeitPunkt.minusDays(tagesOffset));
+        SystemkalenderGueltigkeit gueltigkeit = kalenderEintrag
+                .berechneZeitlicheGueltigkeitVor(zeitPunkt.minusDays(tagesOffset));
         return gueltigkeit.withTagesOffset(tagesOffset);
     }
 
+    /**
+     * erzeugt eine neue Instanz unter Verwendung des übergebenen Tagesoffsets.
+     * 
+     * @param offset
+     *            der Tagesoffset
+     * @return neue Instanz
+     */
     public KalenderEintragMitOffset withTagesOffset(int offset) {
         return new KalenderEintragMitOffset(kalenderEintrag, tagesOffset + offset);
     }

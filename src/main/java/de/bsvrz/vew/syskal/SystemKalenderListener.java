@@ -26,9 +26,52 @@
 
 package de.bsvrz.vew.syskal;
 
+/**
+ * Schnittstelle für einen Listener, der bei Änderungen im Systemkalender
+ * benachrichtig wird.
+ * 
+ * @author BitCtrl Systems GmbH, Uwe Peuker
+ */
 public interface SystemKalenderListener {
+
+    /**
+     * Im übergebenen {@link SystemKalender} wurde ein neuer
+     * {@link SystemKalenderEintrag} angelegt.
+     * 
+     * @param kalender
+     *            der Kalender
+     * @param eintrag
+     *            der neue Eintrag
+     */
     void eintragAngelegt(SystemKalender kalender, SystemKalenderEintrag eintrag);
+
+    /**
+     * Im übergebenen {@link SystemKalender} wurde ein
+     * {@link SystemKalenderEintrag} entfernt.
+     * 
+     * @param kalender
+     *            der Kalender
+     * @param eintrag
+     *            der entfernte Eintrag
+     */
     void eintragEntfernt(SystemKalender kalender, SystemKalenderEintrag eintrag);
+
+    /**
+     * Im übergebenen {@link SystemKalender} wurde ein
+     * {@link SystemKalenderEintrag} geändert.
+     * 
+     * @param kalender
+     *            der Kalender
+     * @param eintrag
+     *            der geänderte Eintrag
+     */
     void eintragGeandert(SystemKalender kalender, SystemKalenderEintrag eintrag);
+
+    /**
+     * Die Datenverteiler-Verbindung des Kalenders wurde getrennt, die Instanz
+     * des {@link SystemKalender}s ist nicht mehr verwendbar.
+     * 
+     * @param kalender der Systemkalender
+     */
     void kalenderGetrennt(SystemKalender kalender);
 }

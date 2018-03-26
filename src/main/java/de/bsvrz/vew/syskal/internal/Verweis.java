@@ -54,16 +54,30 @@ public class Verweis {
 
     private KalenderEintrag referenzEintrag;
 
+    /**
+     * erzeugt eine neue Instanz eines Verweises mit den übergebenen Daten.
+     * 
+     * @param provider
+     *            das verwaltungsobjekt zur Verifizierung der Referenzen des
+     *            Eintrags
+     * @param name
+     *            der Name des referenzierten Kalendereintrags
+     * @param offset
+     *            der Tagesoffset des Verweises
+     * @param negiert
+     *            definiert, ob die Gültigkeit des Verweises negiert werden soll
+     * @return die neue Instanz
+     */
     public static Verweis of(KalenderEintragProvider provider, String name, int offset, boolean negiert) {
         try {
             return new Verweis(provider, name, offset, negiert);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        
+
         return null;
     }
-    
+
     /**
      * Konstruktor.
      * 
@@ -151,6 +165,11 @@ public class Verweis {
         return offset;
     }
 
+    /**
+     * liefert den referenzierten Kalendereintrag
+     * 
+     * @return den Eintrag oder null, wenn kein gültiger Eintrag gefunden wurde
+     */
     public KalenderEintrag getReferenzEintrag() {
         return referenzEintrag;
     }
@@ -164,6 +183,11 @@ public class Verweis {
         return negiert;
     }
 
+    /**
+     * liefert die Gültigkeit des Verweises.
+     * 
+     * @return die Gültigkeit
+     */
     public boolean isUngueltig() {
         return ungueltig;
     }

@@ -74,26 +74,26 @@ public class ParserTest {
 
     @Test
     public void testParseSystemkalenderEintrag() {
-        assertTrue("Test 1", !ergaenzeEintrag("Ske1", "Montag+1Tag").isFehler());
-        assertTrue("Test 2", !ergaenzeEintrag("Ske2", "Dienstag-1Tag").isFehler());
-        assertTrue("Test 3", !ergaenzeEintrag("Ske3", "Mittwoch+1Tag").isFehler());
-        assertTrue("Test 4", !ergaenzeEintrag("Ske4", "Donnerstag+2Tage").isFehler());
-        assertTrue("Test 5", !ergaenzeEintrag("Ske5", "UND{Bereich1,Bereich2}*,*").isFehler());
-        assertTrue("Test 6", !ergaenzeEintrag("Ske6", "ODER{Bereich1,Bereich2}*,*").isFehler());
-        assertTrue("Test 7", !ergaenzeEintrag("Ske7", "ODER{Bereich1,NICHT Bereich2}*,*").isFehler());
-        assertTrue("Test 8", !ergaenzeEintrag("Ske8", "UND{NICHT Bereich1,Bereich2}*,2008").isFehler());
-        assertTrue("Test 9", !ergaenzeEintrag("Ske9", "ODER{Bereich4,Bereich2}*,*").isFehler());
-        assertTrue("Test 10", !ergaenzeEintrag("Ske10", "UND{Bereich3,Bereich1}*,*").isFehler());
-        assertTrue("Test 11", !ergaenzeEintrag("Ske11", "UND{Ske5,Ske6}*,*").isFehler());
+        assertTrue("Test 1", !ergaenzeEintrag("Ske1", "Montag+1Tag").hasFehler());
+        assertTrue("Test 2", !ergaenzeEintrag("Ske2", "Dienstag-1Tag").hasFehler());
+        assertTrue("Test 3", !ergaenzeEintrag("Ske3", "Mittwoch+1Tag").hasFehler());
+        assertTrue("Test 4", !ergaenzeEintrag("Ske4", "Donnerstag+2Tage").hasFehler());
+        assertTrue("Test 5", !ergaenzeEintrag("Ske5", "UND{Bereich1,Bereich2}*,*").hasFehler());
+        assertTrue("Test 6", !ergaenzeEintrag("Ske6", "ODER{Bereich1,Bereich2}*,*").hasFehler());
+        assertTrue("Test 7", !ergaenzeEintrag("Ske7", "ODER{Bereich1,NICHT Bereich2}*,*").hasFehler());
+        assertTrue("Test 8", !ergaenzeEintrag("Ske8", "UND{NICHT Bereich1,Bereich2}*,2008").hasFehler());
+        assertTrue("Test 9", !ergaenzeEintrag("Ske9", "ODER{Bereich4,Bereich2}*,*").hasFehler());
+        assertTrue("Test 10", !ergaenzeEintrag("Ske10", "UND{Bereich3,Bereich1}*,*").hasFehler());
+        assertTrue("Test 11", !ergaenzeEintrag("Ske11", "UND{Ske5,Ske6}*,*").hasFehler());
 
-        assertFalse("Test 12", !ergaenzeEintrag("Ske12", "Sontag+1Tag").isFehler());
-        assertFalse("Test 13", !ergaenzeEintrag("Ske13", "Dienstag2-1Tag").isFehler());
-        assertFalse("Test 14", !ergaenzeEintrag("Ske14", "aMittwoch+1Tag").isFehler());
-        assertFalse("Test 15", !ergaenzeEintrag("Ske15", "OTER{Bereich1,Bereich2}*,*").isFehler());
-        assertFalse("Test 16", !ergaenzeEintrag("Ske16", "ODER{BereichXyz,Bereich2}*,*").isFehler());
-        assertFalse("Test 17", !ergaenzeEintrag("Ske17", "ODER{Bereich4,Bereich2*,*").isFehler());
-        assertTrue("Test 18", !ergaenzeEintrag("Ske18", "Ske15").isFehler());
-        assertTrue("Test 19", !ergaenzeEintrag("Ske19", "Ske16+1Tag").isFehler());
+        assertFalse("Test 12", !ergaenzeEintrag("Ske12", "Sontag+1Tag").hasFehler());
+        assertFalse("Test 13", !ergaenzeEintrag("Ske13", "Dienstag2-1Tag").hasFehler());
+        assertFalse("Test 14", !ergaenzeEintrag("Ske14", "aMittwoch+1Tag").hasFehler());
+        assertFalse("Test 15", !ergaenzeEintrag("Ske15", "OTER{Bereich1,Bereich2}*,*").hasFehler());
+        assertFalse("Test 16", !ergaenzeEintrag("Ske16", "ODER{BereichXyz,Bereich2}*,*").hasFehler());
+        assertFalse("Test 17", !ergaenzeEintrag("Ske17", "ODER{Bereich4,Bereich2*,*").hasFehler());
+        assertTrue("Test 18", !ergaenzeEintrag("Ske18", "Ske15").hasFehler());
+        assertTrue("Test 19", !ergaenzeEintrag("Ske19", "Ske16+1Tag").hasFehler());
     }
 
 }

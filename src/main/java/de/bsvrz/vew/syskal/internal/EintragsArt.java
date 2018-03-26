@@ -69,7 +69,7 @@ public enum EintragsArt {
      * 
      * @param name
      *            der Name des Typs
-     */
+     */ 
     EintragsArt(final String name) {
         this.name = name;
     }

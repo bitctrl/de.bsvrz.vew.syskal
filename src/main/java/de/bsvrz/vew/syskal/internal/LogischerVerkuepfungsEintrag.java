@@ -181,6 +181,12 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
         return verweise;
     }
 
+    /**
+     * definiert die Liste der Verweise, die der Eintrag verknüpft.
+     * 
+     * @param verweisListe
+     *            die Liste der Verweise
+     */
     protected void setVerweise(List<Verweis> verweisListe) {
         verweise.clear();
         for (Verweis verweis : verweisListe) {
@@ -268,10 +274,31 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
         return result;
     }
 
+    /**
+     * prüft ob der Eintrag zum übergebenen Zeitpunkt die gewüschte Gültogkeit
+     * hat.
+     * 
+     * @param wechselZeit
+     *            der Zeitpunkt für den die Prüfung erfolgen soll
+     * @param zielZustand
+     *            der gewünschte Gültigkeitszustand
+     * @return tre, wenn der gewünschte Zustand besteht
+     */
     protected final boolean pruefeGueltigKeit(LocalDateTime wechselZeit, boolean zielZustand) {
         return zielZustand == isGueltig(wechselZeit);
     }
 
+    /**
+     * berechnet, dem nächsten Gültigkeitswechsel des Eintrags auf den
+     * angegebenen Zielzustand ausgehend von der Liste der übergebenen
+     * Wechselkandidaten.
+     * 
+     * @param zielZustand
+     *            der gewünschte Zustand
+     * @param potentielleEndWechsel
+     *            die Liste der Zustandswechselkandidaten
+     * @return den ermittelten Zustandswechsel
+     */
     protected final ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand,
             Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleEndWechsel) {
 
@@ -303,7 +330,18 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
 
         return ZustandsWechsel.of(SystemKalender.MAX_DATETIME, !zielZustand);
     }
-    
+
+    /**
+     * berechnet, dem vorigen Gültigkeitswechsel des Eintrags der auf den
+     * angegebenen Zielzustand ausgehend von der Liste der übergebenen
+     * Wechselkandidaten.
+     * 
+     * @param zielZustand
+     *            der gewünschte Zustand
+     * @param potentielleStartWechsel
+     *            die Liste der Zustandswechselkandidaten
+     * @return den ermittelten Zustandswechsel
+     */
     protected final ZustandsWechsel berechneVorigenWechselAuf(boolean zielZustand,
             Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleStartWechsel) {
         LocalDateTime wechselZeit = null;
@@ -338,7 +376,6 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
         return ZustandsWechsel.of(SystemKalender.MIN_DATETIME, zielZustand);
     }
 
-
     @Override
     public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitPunkt) {
 
@@ -360,22 +397,29 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
         return SystemkalenderGueltigkeit.of(beginn, wechsel);
     }
 
-    
-    protected  abstract boolean getInitialenBerechnungsZustand();
+    /**
+     * ermittelt den initialen Berechnungszustand für die jeweilige logische
+     * Verknüpfungsart, von dem bei der Bestimmung der Gültigkeit des Eintrags
+     * ausgegangen wird.
+     * 
+     * @return den initalen Zustand
+     */
+    protected abstract boolean getInitialenBerechnungsZustand();
 
     @Override
     public final SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt) {
 
         SystemkalenderGueltigkeit zeitlicheGueltigkeit = berechneZeitlicheGueltigkeit(zeitPunkt);
-        if( !zeitlicheGueltigkeit.getErsterWechsel().getZeitPunkt().isAfter(SystemKalender.MIN_DATETIME)) {
-            return SystemkalenderGueltigkeit.of(zeitlicheGueltigkeit.getErsterWechsel(), zeitlicheGueltigkeit.getErsterWechsel());
+        if (!zeitlicheGueltigkeit.getErsterWechsel().getZeitPunkt().isAfter(SystemKalender.MIN_DATETIME)) {
+            return SystemkalenderGueltigkeit.of(zeitlicheGueltigkeit.getErsterWechsel(),
+                    zeitlicheGueltigkeit.getErsterWechsel());
         }
-        
+
         boolean zustand = zeitlicheGueltigkeit.isZeitlichGueltig();
         Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
 
         for (VerweisEintrag verweis : getVerweise()) {
-            if (verweis.isFehler()) {
+            if (verweis.hasFehler()) {
                 return SystemkalenderGueltigkeit.NICHT_GUELTIG;
             }
         }
@@ -396,14 +440,14 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
 
         boolean zustand = (getStartJahr() == 0 || getStartJahr() <= zeitPunkt.getYear())
                 && (getEndJahr() == 0 || getEndJahr() >= zeitPunkt.getYear());
-        if( !zustand) {
+        if (!zustand) {
             return false;
         }
-        
+
         boolean initialerZustand = getInitialenBerechnungsZustand();
         for (VerweisEintrag verweis : getVerweise()) {
             if (verweis.isGueltig(zeitPunkt) != initialerZustand) {
-                return !initialerZustand; 
+                return !initialerZustand;
             }
         }
         return initialerZustand;

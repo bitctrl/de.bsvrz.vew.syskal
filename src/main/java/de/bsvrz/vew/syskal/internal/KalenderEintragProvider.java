@@ -28,7 +28,20 @@ package de.bsvrz.vew.syskal.internal;
 
 import de.bsvrz.vew.syskal.KalenderEintrag;
 
+/**
+ * Schnittstelle für ein Verwaltungsobjekt, das Kalendereinträge bereitstellt.
+ * 
+ * @author BitCtrl Systems GmbH, Uwe Peuker
+ */
 public interface KalenderEintragProvider {
 
+    /**
+     * liefert einen Kalendereintrag mit dem übergebenen Name.
+     * 
+     * @param name
+     *            der Name des gesuchten Kalendereintrags
+     * @return den Kalendereintrag oder null, wenn kein entsprechender Eintrag
+     *         ermittelt werden konnte
+     */
     KalenderEintrag getKalenderEintrag(String name);
 }

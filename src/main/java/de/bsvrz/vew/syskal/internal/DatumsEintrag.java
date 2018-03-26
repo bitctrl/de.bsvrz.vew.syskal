@@ -63,6 +63,29 @@ public class DatumsEintrag extends KalenderEintrag {
     /** der Tag innerhalb des Monats für das definierte Datum. */
     private int tag;
 
+    /**
+     * erzeugt einen Datumseintrag mit den angegebenen Informationen.
+     * 
+     * <strong>Es wird lediglich ein logischer Kalendereintrag erzeugt, kein
+     * Systemkalendereintrag innerhalb der Datenverteilerkonfiguration!</strong>
+     * 
+     * @param name
+     *            der Name des Eintrags
+     * @param tag
+     *            der Tag für den der Eintrag gilt, Werte kleiner gleich 0
+     *            werden auf 1 gesetzt
+     * @param monat
+     *            der Monat für den der Eintrag gilt, Werte kleiner gleich 0
+     *            werden auf 1 gesetzt
+     * @param jahr
+     *            das Jahr ab dem der Eintrag gilt, wird 0 übergeben, wird der
+     *            Jahreswert aus {link SystemKalender#MIN_DATETIME} verwendet
+     * @param endJahr
+     *            das Jahr bis zu dem der Eintrag gilt, wird 0 übergeben, wird
+     *            der Jahreswert aus {link SystemKalender#MAX_DATETIME}
+     *            verwendet
+     * @return den angelegten Datumseintrag
+     */
     public static DatumsEintrag of(String name, int tag, int monat, int jahr, int endJahr) {
         return new DatumsEintrag(name, tag, monat, jahr, endJahr);
     }
@@ -120,10 +143,21 @@ public class DatumsEintrag extends KalenderEintrag {
 
     private DatumsEintrag(String name, int tag, int monat, int jahr, int endJahr) {
         super(name, null);
-        this.tag = Math.max(0, tag);
-        this.monat = Math.max(0, monat);
-        this.jahr = Math.max(jahr, SystemKalender.MIN_DATETIME.getYear());
-        this.endJahr = Math.min(endJahr, SystemKalender.MAX_DATETIME.getYear());
+        this.tag = Math.max(1, tag);
+        this.monat = Math.max(1, monat);
+        if (jahr == 0) {
+            this.jahr = SystemKalender.MIN_DATETIME.getYear();
+        } else {
+            this.jahr = jahr;
+        }
+        this.jahr = Math.max(this.jahr, SystemKalender.MIN_DATETIME.getYear());
+
+        if (endJahr == 0) {
+            this.endJahr = SystemKalender.MAX_DATETIME.getYear();
+        } else {
+            this.endJahr = endJahr;
+        }
+        this.endJahr = Math.min(this.endJahr, SystemKalender.MAX_DATETIME.getYear());
         setDefinition(toString());
     }
 
@@ -132,18 +166,38 @@ public class DatumsEintrag extends KalenderEintrag {
         return EintragsArt.NURDATUM;
     }
 
+    /**
+     * liefert das Jahr bis zu dem der Eintrag gültig ist.
+     * 
+     * @return das Jahr
+     */
     public int getEndJahr() {
         return endJahr;
     }
 
+    /**
+     * liefert das Jahr ab dem der Eintrag gültig ist.
+     * 
+     * @return das Jahr
+     */
     public int getJahr() {
         return jahr;
     }
 
+    /**
+     * liefert den Monat für den der Eintrag gültig ist im Bereich 1..12.
+     * 
+     * @return den Monat
+     */
     public int getMonat() {
         return monat;
     }
 
+    /**
+     * liefert den Tag des Monats für den der Eintrag gültig ist.
+     * 
+     * @return den Tag
+     */
     public int getTag() {
         return tag;
     }
@@ -180,7 +234,7 @@ public class DatumsEintrag extends KalenderEintrag {
         gueltig &= tag == zeitpunkt.getDayOfMonth();
         return gueltig;
     }
-    
+
     @Override
     public SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
 
@@ -223,7 +277,8 @@ public class DatumsEintrag extends KalenderEintrag {
             return SystemkalenderGueltigkeit.ungueltig(aktivierungsDatum, wechselDatum);
         }
 
-        return SystemkalenderGueltigkeit.of(ZustandsWechsel.aufUngueltig(spaetestesDatum), ZustandsWechsel.aufUngueltig(SystemKalender.MAX_DATETIME));
+        return SystemkalenderGueltigkeit.of(ZustandsWechsel.aufUngueltig(spaetestesDatum),
+                ZustandsWechsel.aufUngueltig(SystemKalender.MAX_DATETIME));
     }
 
     @Override
@@ -233,7 +288,8 @@ public class DatumsEintrag extends KalenderEintrag {
         LocalDate fruehestesDatum = LocalDate.of(jahr, monat, tag);
 
         if (zeitpunkt.toLocalDate().isBefore(fruehestesDatum)) {
-            return SystemkalenderGueltigkeit.of(ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME), ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME));
+            return SystemkalenderGueltigkeit.of(ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME),
+                    ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME));
         }
 
         int aktivierungsJahr = aktuelleGueltigkeit.getErsterWechsel().getZeitPunkt().getYear();
@@ -289,8 +345,8 @@ public class DatumsEintrag extends KalenderEintrag {
         return false;
     }
 
-	@Override
-	public Set<KalenderEintragMitOffset> getAufgeloesteVerweise() {
-		return Collections.singleton(new KalenderEintragMitOffset(this));
-	}
+    @Override
+    public Set<KalenderEintragMitOffset> getAufgeloesteVerweise() {
+        return Collections.singleton(new KalenderEintragMitOffset(this));
+    }
 }

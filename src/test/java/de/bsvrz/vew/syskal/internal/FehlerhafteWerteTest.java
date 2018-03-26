@@ -88,7 +88,7 @@ public class FehlerhafteWerteTest {
     private void pruefeEintrag(String name) {
         
         KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag(name);
-        assertTrue("Eintrag ist fehlerhaft", eintrag.isFehler());
+        assertTrue("Eintrag ist fehlerhaft", eintrag.hasFehler());
         
         List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
         assertEquals("Anzahl der Zustandswechsel",  1, zustandsWechsel.size());
@@ -103,7 +103,7 @@ public class FehlerhafteWerteTest {
     public void testeNieGueltig() {
 
         KalenderEintrag nieGueltig = eintragsProvider.getKalenderEintrag("NieGueltig");
-        assertFalse(nieGueltig.isFehler());
+        assertFalse(nieGueltig.hasFehler());
 
         List<ZustandsWechsel> zustandsWechsel = nieGueltig.getZustandsWechsel(startTime, endTime);
         assertEquals("Anzahl der Zustandswechsel",  1, zustandsWechsel.size());

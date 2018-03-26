@@ -65,6 +65,11 @@ import de.bsvrz.vew.syskal.SystemKalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalenderException;
 import de.bsvrz.vew.syskal.SystemKalenderListener;
 
+/**
+ * Modul zur Verwaltung der Einträge eines {@link SystemKalender}.
+ * 
+ * @author BitCtrl Systems GmbH, Uwe Peuker
+ */
 public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiverInterface, MutableSetChangeListener {
 
     private Map<SystemObject, SystemKalenderEintrag> eintraege = new ConcurrentHashMap<>();
@@ -82,6 +87,14 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
 
     private SystemKalender kalender;
 
+    /**
+     * liefert die Menge der verwalteten Systemkalendereinträge.
+     * 
+     * @return die Menge der Einträge
+     * @throws SystemKalenderException
+     *             die Systemkalendereinträge konnten nicht ermittelt werden,
+     *             weil die Datenverteilerverbindung nicht mehr besteht
+     */
     public Collection<SystemKalenderEintrag> getSystemKalenderEintraege() throws SystemKalenderException {
         if (connectionLost) {
             throw new SystemKalenderException(
@@ -90,6 +103,18 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
         return Collections.unmodifiableCollection(eintraege.values());
     }
 
+    /**
+     * Initialisiert die Verwaltung für den übergebenen Systemkalender, der das
+     * angegebene Kalenderobjekt aus dem Modell der Datenverteilerverbindung
+     * repräsentiert.
+     * 
+     * @param kalender
+     *            der {@link SystemKalender}
+     * @param dav
+     *            die Datenverteilerverbindung
+     * @param kalenderObject
+     *            das Kalenderobjekt innerhalb des Datenverteilermodells
+     */
     public EintragsVerwaltung(SystemKalender kalender, ClientDavInterface dav, ConfigurationObject kalenderObject) {
         if (!kalenderObject.isOfType("typ.kalender")) {
             throw new IllegalStateException("Das Objekt " + kalenderObject + " ist nicht vom Typ \"typ.kalender\"!");
@@ -195,6 +220,18 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
         addEintraege(Arrays.asList(addedObjects));
     }
 
+    /**
+     * liefert den Systemkalendereintrg, der durch das übergebene Systemobjekt
+     * definiert wird.
+     * 
+     * @param object
+     *            das Systemobjekt
+     * @return den Systemkalendereintrag oder null, wenn kein entsprechender
+     *         Eintrag gefunden verwaltet wird.
+     * @throws SystemKalenderException
+     *             der Systemkalendereintrag kann nicht ermittelt werden, weil
+     *             die Datenverteilerverbindung verloren gegangen ist
+     */
     public SystemKalenderEintrag getSystemKalenderEintrag(SystemObject object) throws SystemKalenderException {
         if (connectionLost) {
             throw new SystemKalenderException(
@@ -203,6 +240,20 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
         return eintraege.get(object);
     }
 
+    /**
+     * speichert den übergebenen Systemkalendereintrag.
+     * 
+     * In Datenverteilermodell wird der entsprechende Eintrag aktualisiert oder
+     * ein neuer angelegt.
+     * 
+     * @param eintrag
+     *            der Eintrag, der gesichert werden soll
+     * @throws SystemKalenderException
+     *             der Systemkalendereintrag kann nicht gespeichert werden, weil
+     *             die Datenverteilerverbindung verloren gegangen ist oder ein
+     *             Fehler beim Anlegen oder Aktualisieren des gewünschten
+     *             dynamischen Systemobjekts aufgetreten ist
+     */
     public void sichereEintrag(SystemKalenderEintrag eintrag) throws SystemKalenderException {
         if (connectionLost) {
             throw new SystemKalenderException(
@@ -216,6 +267,19 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
         }
     }
 
+    /**
+     * löscht den übergebenen Systemkalendereintrag.
+     * 
+     * In Datenverteilermodell wird der entsprechende Eintrag entfernt.
+     * 
+     * @param eintrag
+     *            der Eintrag, der gelöscht werden soll
+     * @throws SystemKalenderException
+     *             der Systemkalendereintrag kann nicht gelöscht werden, weil
+     *             die Datenverteilerverbindung verloren gegangen ist oder ein
+     *             Fehler beim Löschen des entsprechenden dynamischen
+     *             Systemobjekts aufgetreten ist
+     */
     public void loescheEintrag(SystemKalenderEintrag eintrag) throws SystemKalenderException {
 
         if (connectionLost) {
@@ -298,8 +362,15 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
         }
     }
 
+    /**
+     * entfernt alle Systemkalendereinträge aus dem verwalteten Kalender.
+     * 
+     * @throws SystemKalenderException
+     *             die Kalender konnte nicht geleert werden, weil die
+     *             Datenverteilerverbindung nicht mehr besteht oder ein Fehler
+     *             beim Löschen eines dynamischen Objekts aufgetreten ist
+     */
     public void leereSystemKalender() throws SystemKalenderException {
-        bereinigeSystemKalender();
 
         final DynamischeObjekte dynamischeVerwaltung = DynamischeObjekte.getInstanz(dav);
         try {
@@ -309,6 +380,16 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
         }
     }
 
+    /**
+     * entfernt alle Systemkalendereinträge, die in der
+     * Datenverteilerkonfigration existieren und nicht im verwalteten Kalender
+     * enthalten sind.
+     * 
+     * @throws SystemKalenderException
+     *             die Kalender konnte nicht geleert werden, weil die
+     *             Datenverteilerverbindung nicht mehr besteht oder ein Fehler
+     *             beim Löschen eines dynamischen Objekts aufgetreten ist
+     */
     public void bereinigeSystemKalender() throws SystemKalenderException {
         if (connectionLost) {
             throw new SystemKalenderException(
@@ -325,10 +406,24 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
         }
     }
 
+    /**
+     * fügt der Verwaltung einen Listener hinzu, der bei Änderungen im
+     * Systemkalender benachrichtigt wird.
+     * 
+     * @param listener
+     *            der Listener
+     */
     public void addSystemKalenderListener(SystemKalenderListener listener) {
         kalenderListeners.add(listener);
     }
 
+    /**
+     * entfernt einen Listener von der Verwaltung, der bei Änderungen im
+     * Systemkalender benachrichtigt wurde.
+     * 
+     * @param listener
+     *            der Listener
+     */
     public void removeSystemKalenderListener(SystemKalenderListener listener) {
         kalenderListeners.remove(listener);
     }

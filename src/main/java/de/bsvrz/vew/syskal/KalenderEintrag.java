@@ -50,6 +50,13 @@ import de.bsvrz.vew.syskal.internal.VorDefinierterEintrag;
 import de.bsvrz.vew.syskal.internal.ZeitBereichsEintrag;
 import de.bsvrz.vew.syskal.internal.ZeitGrenze;
 
+/**
+ * Logische Repräsentation eines Kalendereintrags, dessen Inhalt durch einen
+ * Definitionsstring innerhalb des Datenverteiler-Modells definiert wird.
+ * 
+ * @author BitCtrl Systems GmbH, Uwe Peuker
+ */
+// @SuppressWarnings("javadoc")
 public abstract class KalenderEintrag {
 
     private static final Debug LOGGER = Debug.getLogger();
@@ -62,6 +69,43 @@ public abstract class KalenderEintrag {
 
     /** das Pattern eines Zeitbereiches oder einer Verknüpfungsliste. */
     protected static final Pattern ZEITBEREICH_PATTERN = Pattern.compile("\\{.[^\\{]*\\}");
+
+    private static String entferneNamensPrefix(final String name, final String definition) {
+
+        final String[] parts = definition.split(":=");
+
+        if (parts.length < 2) {
+            return parts[0].trim();
+        }
+
+        final String defName = parts[0].trim();
+        if (!defName.equals(name)) {
+            LOGGER.warning("Für den Systemkalendereintrag " + name + " ist der abweichende Name: \""
+                    + defName + "\" definiert!");
+        }
+        return parts[1].trim();
+    }
+
+    private static String ermittleZeitBereiche(String source, List<ZeitGrenze> parsedZeitBereiche)
+            throws ParseException {
+
+        String definition = source;
+
+        Matcher mat = KalenderEintrag.ZEITBEREICHSLISTE_PATTERN.matcher(definition);
+        while (mat.find()) {
+            final String bereich = mat.group();
+            definition = definition.replace(bereich, "");
+            final String zeitBereich = bereich.substring(1, bereich.length() - 1);
+            final Matcher zeitMat = KalenderEintrag.ZEITBEREICH_PATTERN.matcher(zeitBereich);
+            while (zeitMat.find()) {
+                String zb = zeitMat.group();
+                zb = zb.substring(1, zb.length() - 1);
+                parsedZeitBereiche.add(new ZeitGrenze(zb));
+            }
+        }
+
+        return definition;
+    }
 
     /**
      * zerlegt den übergebenen Definitionsstring und erzeugt einen
@@ -94,7 +138,8 @@ public abstract class KalenderEintrag {
         try {
             rest = ermittleZeitBereiche(rest, parsedZeitBereiche);
         } catch (ParseException e) {
-            LOGGER.warning("Fehler beim Einlesen der Zeitbereiche des Eintrags '" + name + "': " + e.getLocalizedMessage());
+            LOGGER.warning(
+                    "Fehler beim Einlesen der Zeitbereiche des Eintrags '" + name + "': " + e.getLocalizedMessage());
             zeitBereichsfehler = true;
         }
 
@@ -135,70 +180,10 @@ public abstract class KalenderEintrag {
         return result;
     }
 
-    private static String ermittleZeitBereiche(String source, List<ZeitGrenze> parsedZeitBereiche)
-            throws ParseException {
-
-        String definition = source;
-
-        Matcher mat = KalenderEintrag.ZEITBEREICHSLISTE_PATTERN.matcher(definition);
-        while (mat.find()) {
-            final String bereich = mat.group();
-            definition = definition.replace(bereich, "");
-            final String zeitBereich = bereich.substring(1, bereich.length() - 1);
-            final Matcher zeitMat = KalenderEintrag.ZEITBEREICH_PATTERN.matcher(zeitBereich);
-            while (zeitMat.find()) {
-                String zb = zeitMat.group();
-                zb = zb.substring(1, zb.length() - 1);
-                parsedZeitBereiche.add(new ZeitGrenze(zb));
-            }
-        }
-
-        return definition;
-    }
-
-    private void komprimiereZeitBereiche(List<ZeitGrenze> grenzen) {
-
-        ZeitGrenze aktuell = null;
-
-        for (ZeitGrenze grenze : grenzen) {
-            if (aktuell == null) {
-                aktuell = grenze;
-                continue;
-            }
-
-            if (grenze.getStart().isAfter(aktuell.getEnde())) {
-                zeitGrenzen.add(aktuell);
-                aktuell = grenze;
-            } else {
-                if (!grenze.getEnde().isBefore(aktuell.getEnde())) {
-                    aktuell = new ZeitGrenze(aktuell.getStart(), grenze.getEnde());
-                }
-            }
-        }
-
-        if (aktuell != null) {
-            zeitGrenzen.add(aktuell);
-        }
-    }
-
-    private static String entferneNamensPrefix(final String name, final String definition) {
-
-        final String[] parts = definition.split(":=");
-
-        if (parts.length < 2) {
-            return parts[0].trim();
-        }
-
-        final String defName = parts[0].trim();
-        if (!defName.equals(name)) {
-            LOGGER.warning("Für den Systemkalendereintrag " + name + " ist der abweichende Name: \""
-                    + defName + "\" definiert!");
-        }
-        return parts[1].trim();
-    }
-
+    /* der Definitionsstring des Eintrags. */
     private String definition;
 
+    /* der Name des Eintrags. */
     private String name;
 
     /**
@@ -209,9 +194,28 @@ public abstract class KalenderEintrag {
     /** der Definitionseintrag konnte nicht korrekt eingelesen werden. */
     private List<String> fehler = new ArrayList<>();
 
+    /**
+     * Basiskonstruktor für einen Kalendereintrag.
+     * 
+     * Es ist nicht vorgesehen, Kalendereintraege
+     * 
+     * @param name
+     * @param definition
+     */
     protected KalenderEintrag(String name, String definition) {
         this.name = name;
         this.definition = definition;
+    }
+
+    /**
+     * fügt eine Fehlermeldung für den Eintrag hinzu und macht den Eintrag damit
+     * ungültig.
+     * 
+     * @param message
+     *            die Fehlermeldung
+     */
+    protected void addFehler(String message) {
+        fehler.add(message);
     }
 
     /**
@@ -220,13 +224,77 @@ public abstract class KalenderEintrag {
      * @param grenze
      *            die neue Zeitgrenze
      */
-    public void addZeitGrenze(final ZeitGrenze grenze) {
+    protected void addZeitGrenze(final ZeitGrenze grenze) {
         zeitGrenzen.add(grenze);
     }
 
+    /**
+     * die Funktion ermittelt, ob der Kalendereintrag den übergebenen Eintrag
+     * benutzt, womit sich die Gültigkeit des Eintrags ändern könnte, wenn sich
+     * der geprüfte EIntrag geändert hat.
+     * 
+     * @param referenz
+     *            der potentiell verwendete Eintrag
+     * @return true, wenn der übergebene Eintrag zur Definition verwendet wird
+     */
+    protected abstract boolean benutzt(KalenderEintrag referenz);
+
+    /**
+     * berechnet die zeitliche Gültigkeit des Eintrags zum übergebenen
+     * Zeitpunkt.
+     * 
+     * Das Ergebnis enthält zusätzlich den Zeitpunkt, zu dem der aktuelle
+     * Zustand eingetreten ist und den Zeitpunkt und Zustand des nächsten zu
+     * erwartenden Wechsels.
+     * 
+     * Die Funktion wird intern verwendet, ein Client sollte die Funktion
+     * {@link #getZeitlicheGueltigkeit(LocalDateTime)} aufrufen!
+     * 
+     * @param zeitpunkt
+     *            der Zeitpunkt für den für Gültigkeit berechnet werden soll
+     * @return die berechnete Gültigkeit
+     */
     public abstract SystemkalenderGueltigkeit berechneZeitlicheGueltigkeit(LocalDateTime zeitpunkt);
 
+    /**
+     * berechnet die zeitliche Gültigkeit des Eintrags vor dem übergebenen
+     * Zeitpunkt.
+     * 
+     * Das Ergebnis enthält zusätzlich den Zeitpunkt, zu dem der aktuelle
+     * Zustand eingetreten ist und den Zeitpunkt und Zustand des vorigen
+     * Wechsels.
+     * 
+     * Die Funktion wird intern verwendet, ein Client sollte die Funktion
+     * {@link #getZeitlicheGueltigkeitVor(LocalDateTime)} aufrufen!
+     * 
+     * @param zeitpunkt
+     *            der Zeitpunkt für den für Gültigkeit berechnet werden soll
+     * @return die berechnete Gültigkeit
+     */
     public abstract SystemkalenderGueltigkeit berechneZeitlicheGueltigkeitVor(LocalDateTime zeitpunkt);
+
+    /**
+     * die Funktion bestimmt, ob der Eintrag zum aktuellen Zeitpunkt gültig ist.
+     * Daebi wird nur die reine zeitliche Gültigkeit geprüft und keine
+     * Zustandswechsel berechnet.
+     * 
+     * Die Funktion wird intern verwendet, ein Client sollte die Funktion
+     * {@link #isGueltig(LocalDateTime)} aufrufen!
+     * 
+     * @param zeitPunkt
+     *            der Zeitpunkt für den die Gültigkeit geprüft werden soll
+     * @return true, wenn der Eintrag zum übergebenen Zeitpunkt gültig ist
+     */
+    protected abstract boolean bestimmeGueltigkeit(LocalDateTime zeitPunkt);
+
+    /**
+     * ermittelt die Kalendereinträge, die für die Berechnung eines komplexen
+     * Eintrags verwendet werden inklusive der Offsets für die entsprechenden
+     * Verweise.
+     * 
+     * @return die Menge der Verweise, die den Eintrag bildet
+     */
+    public abstract Set<KalenderEintragMitOffset> getAufgeloesteVerweise();
 
     /**
      * liefert die Zeichenkette mit der initialen Definitionszeichenkette des
@@ -245,74 +313,30 @@ public abstract class KalenderEintrag {
      */
     public abstract EintragsArt getEintragsArt();
 
-    public String getName() {
-        return name;
+    /**
+     * liefert die Liste der Fehler, die beim Parsen des Definitionsstrings
+     * eines Eintrags ermittelt wurden.
+     * 
+     * @return die Liste der Fehler als Textstrings
+     */
+    public Collection<String> getFehler() {
+        return Collections.unmodifiableList(fehler);
     }
 
     /**
-     * liefert die Liste der für den Eintrag definierten Zeitgrenzen.
+     * liefert die Liste der Intervalle, in denen der Kalendereintrag innerhalb
+     * der übergebenen Zeitspanne gültig ist. Das erste und letzte Intervall
+     * wird gegebenenfalls auf den Abfragebereich beschnitten.
      * 
-     * @return die Liste der definierten Grenzen
+     * @param startTime
+     *            der Beginn des Abfragebereiches
+     * @param endTime
+     *            das Ende des Abfragebereiches
+     * @return die Liste der Intervalle, in denen der Eintrag gültig ist
      */
-    public List<ZeitGrenze> getZeitGrenzen() {
-        return zeitGrenzen;
-    }
-
-    public final boolean isGueltig(LocalDateTime zeitPunkt) {
-        if( isFehler()) {
-            return false;
-        }
-        
-        return bestimmeGueltigkeit(zeitPunkt);
-    }
-    
-    public abstract boolean bestimmeGueltigkeit(LocalDateTime zeitPunkt);
-
-    public final SystemkalenderGueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
-        if (isFehler()) {
-            return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-        }
-        
-        return berechneZeitlicheGueltigkeit(zeitpunkt);
-    }
-
-    public SystemkalenderGueltigkeit getZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt) {
-        if (isFehler()) {
-            return SystemkalenderGueltigkeit.NICHT_GUELTIG;
-        }
-
-        return berechneZeitlicheGueltigkeitVor(zeitPunkt);
-    }
-
-    public final List<ZustandsWechsel> getZustandsWechsel(LocalDateTime start, LocalDateTime ende) {
-
-        if (isFehler()) {
-            return Collections.singletonList(ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME));
-        }
-
-        List<ZustandsWechsel> result = new ArrayList<>();
-
-        SystemkalenderGueltigkeit gueltigkeit = getZeitlicheGueltigkeit(start);
-        result.add(ZustandsWechsel.of(gueltigkeit.getErsterWechsel().getZeitPunkt(), gueltigkeit.isZeitlichGueltig()));
-
-        LocalDateTime aktuellerZeitPunkt = null;
-        do {
-            ZustandsWechsel wechsel = gueltigkeit.getNaechsterWechsel();
-            aktuellerZeitPunkt = wechsel.getZeitPunkt();
-
-            if (!aktuellerZeitPunkt.isAfter(ende)) {
-                result.add(wechsel);
-                gueltigkeit = getZeitlicheGueltigkeit(wechsel.getZeitPunkt());
-            }
-
-        } while (!aktuellerZeitPunkt.isAfter(ende));
-
-        return result;
-    }
-
     public List<Intervall> getIntervalle(LocalDateTime startTime, LocalDateTime endTime) {
 
-        if (isFehler()) {
+        if (hasFehler()) {
             return Collections.emptyList();
         }
 
@@ -344,39 +368,162 @@ public abstract class KalenderEintrag {
     }
 
     /**
+     * liefert den Name des Eintrags.
+     * 
+     * @return den Name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * liefert die Liste der für den Eintrag definierten Zeitgrenzen.
+     * 
+     * @return die Liste der definierten Grenzen
+     */
+    public List<ZeitGrenze> getZeitGrenzen() {
+        return zeitGrenzen;
+    }
+
+    /**
+     * ermittelt die zeitliche Gültigkeit des Eintrags zum übergebenen
+     * Zeitpunkt.
+     * 
+     * Das Ergebnis enthält zusätzlich den Zeitpunkt, zu dem der aktuelle
+     * Zustand eingetreten ist und den Zeitpunkt und Zustand des nächsten zu
+     * erwartenden Wechsels.
+     * 
+     * @param zeitpunkt
+     *            der Zeitpunkt für den für Gültigkeit ermittelt werden soll
+     * @return die berechnete Gültigkeit
+     */
+    public final SystemkalenderGueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitpunkt) {
+        if (hasFehler()) {
+            return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+        }
+
+        return berechneZeitlicheGueltigkeit(zeitpunkt);
+    }
+
+    /**
+     * ermittelt die zeitliche Gültigkeit des Eintrags vor dem übergebenen
+     * Zeitpunkt.
+     * 
+     * Das Ergebnis enthält zusätzlich den Zeitpunkt, zu dem der aktuelle
+     * Zustand eingetreten ist und den Zeitpunkt und Zustand des vorigen
+     * Wechsels.
+     * 
+     * 
+     * @param zeitPunkt
+     *            der Zeitpunkt für den für Gültigkeit berechnet werden soll
+     * @return die berechnete Gültigkeit
+     */
+    public SystemkalenderGueltigkeit getZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt) {
+        if (hasFehler()) {
+            return SystemkalenderGueltigkeit.NICHT_GUELTIG;
+        }
+
+        return berechneZeitlicheGueltigkeitVor(zeitPunkt);
+    }
+
+    /**
+     * ermittelt die Liste der Zustandswechsel im übergebenen Zeitraum.
+     * 
+     * Wenn der Kalendereintrag zum Startzeitpunkt der Abfrage gültig ist, wird
+     * als erstes der Zustandswechsel geliefert, zu dem der Eintrag ursprünglich
+     * gültig wurde.
+     * 
+     * @param start
+     *            der Anfangszeitpunkt des Abfragezeitraums
+     * @param ende
+     *            der Endzeitpunkt des Abfragezeitraums
+     * @return die Liste der Zustandswechsel
+     */
+    public final List<ZustandsWechsel> getZustandsWechsel(LocalDateTime start, LocalDateTime ende) {
+
+        if (hasFehler()) {
+            return Collections.singletonList(ZustandsWechsel.aufUngueltig(SystemKalender.MIN_DATETIME));
+        }
+
+        List<ZustandsWechsel> result = new ArrayList<>();
+
+        SystemkalenderGueltigkeit gueltigkeit = getZeitlicheGueltigkeit(start);
+        result.add(ZustandsWechsel.of(gueltigkeit.getErsterWechsel().getZeitPunkt(), gueltigkeit.isZeitlichGueltig()));
+
+        LocalDateTime aktuellerZeitPunkt = null;
+        do {
+            ZustandsWechsel wechsel = gueltigkeit.getNaechsterWechsel();
+            aktuellerZeitPunkt = wechsel.getZeitPunkt();
+
+            if (!aktuellerZeitPunkt.isAfter(ende)) {
+                result.add(wechsel);
+                gueltigkeit = getZeitlicheGueltigkeit(wechsel.getZeitPunkt());
+            }
+
+        } while (!aktuellerZeitPunkt.isAfter(ende));
+
+        return result;
+    }
+
+    /**
      * ermittelt, ob der Eintrag fehlerhaft eingelesen wurde.
      * 
      * @return true, wenn der Definitionseintrag nicht korrekt interpretiert
      *         werden konnte
      */
-    public boolean isFehler() {
+    public boolean hasFehler() {
         return !fehler.isEmpty();
     }
 
     /**
-     * fügt eine Fehlermeldung für den Eintrag hinzu und macht den Eintrag damit
-     * ungültig.
+     * die Funktion bestimmt, ob der Eintrag zum aktuellen Zeitpunkt gültig ist.
+     * Dabei wird nur die reine zeitliche Gültigkeit geprüft und keine
+     * Zustandswechsel berechnet.
      * 
-     * @param message
-     *            die Fehlermeldung
+     * @param zeitPunkt
+     *            der Zeitpunkt für den die Gültigkeit geprüft werden soll
+     * @return true, wenn der Eintrag zum übergebenen Zeitpunkt gültig ist
      */
-    protected void addFehler(String message) {
-        fehler.add(message);
+    public final boolean isGueltig(LocalDateTime zeitPunkt) {
+        if (hasFehler()) {
+            return false;
+        }
+
+        return bestimmeGueltigkeit(zeitPunkt);
     }
 
-    public Collection<String> getFehler() {
-        return Collections.unmodifiableList(fehler);
+    private void komprimiereZeitBereiche(List<ZeitGrenze> grenzen) {
+
+        ZeitGrenze aktuell = null;
+
+        for (ZeitGrenze grenze : grenzen) {
+            if (aktuell == null) {
+                aktuell = grenze;
+                continue;
+            }
+
+            if (grenze.getStart().isAfter(aktuell.getEnde())) {
+                zeitGrenzen.add(aktuell);
+                aktuell = grenze;
+            } else {
+                if (!grenze.getEnde().isBefore(aktuell.getEnde())) {
+                    aktuell = new ZeitGrenze(aktuell.getStart(), grenze.getEnde());
+                }
+            }
+        }
+
+        if (aktuell != null) {
+            zeitGrenzen.add(aktuell);
+        }
     }
 
-    public abstract boolean benutzt(KalenderEintrag referenz);
-
-    public boolean isVerwendbar() {
-        return !isFehler();
-    }
-
+    /**
+     * setzt den Definitionstext des Eintrags.
+     * 
+     * @param definition
+     *            der Text
+     */
     protected void setDefinition(String definition) {
         this.definition = definition;
     }
-    
-	public abstract Set<KalenderEintragMitOffset> getAufgeloesteVerweise();
 }

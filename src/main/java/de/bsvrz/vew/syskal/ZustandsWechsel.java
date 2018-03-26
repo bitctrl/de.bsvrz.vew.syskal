@@ -32,8 +32,15 @@ import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.Objects;
 
+/**
+ * Definition eines Zustandswechsels in der Gültigkeit eines
+ * Systemkalendereintrags.
+ * 
+ * @author BitCtrl Systems GmbH, Uwe Peuker
+ */
 public class ZustandsWechsel {
 
+    /** Comparator zur zeitlichen Sortierung von Zustandswechseln. */
     public static final Comparator<ZustandsWechsel> ZEIT_COMPARATOR = new Comparator<ZustandsWechsel>() {
 
         @Override
@@ -45,26 +52,78 @@ public class ZustandsWechsel {
     private LocalDateTime zeitPunkt;
     private boolean wirdGueltig;
 
+    /**
+     * erzeugt eine neue Instanz eines Zustandswechsels, der zum übergebenen
+     * Datum gültig wird.
+     * 
+     * @param datum
+     *            das Datum
+     * @return die neue Instanz
+     */
     public static ZustandsWechsel aufGueltig(LocalDate datum) {
         return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), true);
     }
 
+    /**
+     * erzeugt eine neue Instanz eines Zustandswechsels, der zum übergebenen
+     * Zeitpunkt gültig wird.
+     * 
+     * @param zeitPunkt
+     *            der Zeitpunkt
+     * @return die neue Instanz
+     */
     public static ZustandsWechsel aufGueltig(LocalDateTime zeitPunkt) {
         return new ZustandsWechsel(zeitPunkt, true);
     }
 
+    /**
+     * erzeugt eine neue Instanz eines Zustandswechsels, der zum übergebenen
+     * Datum ungültig wird.
+     * 
+     * @param datum
+     *            das Datum
+     * @return die neue Instanz
+     */
     public static ZustandsWechsel aufUngueltig(LocalDate datum) {
         return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), false);
     }
 
+    /**
+     * erzeugt eine neue Instanz eines Zustandswechsels, der zum übergebenen
+     * Zeitpunkt ungültig wird.
+     * 
+     * @param zeitPunkt
+     *            der Zeitpunkt
+     * @return die neue Instanz
+     */
     public static ZustandsWechsel aufUngueltig(LocalDateTime zeitPunkt) {
         return new ZustandsWechsel(zeitPunkt, false);
     }
 
+    /**
+     * erzeugt eine neue Instanz eines Zustandswechsels, der zum übergebenen
+     * Zeitpunkt die angegebene Gültigkeit hat.
+     * 
+     * @param zeitPunkt
+     *            der Zeitpunkt
+     * @param wirdGueltig
+     *            die Gültigkeit
+     * @return die neue Instanz
+     */
     public static ZustandsWechsel of(LocalDateTime zeitPunkt, boolean wirdGueltig) {
         return new ZustandsWechsel(zeitPunkt, wirdGueltig);
     }
 
+    /**
+     * erzeugt eine neue Instanz eines Zustandswechsels, der zum übergebenen
+     * Datum die angegebene Gültigkeit hat.
+     * 
+     * @param datum
+     *            das Datum
+     * @param wirdGueltig
+     *            die Gültigkeit
+     * @return die neue Instanz
+     */
     public static ZustandsWechsel of(LocalDate datum, boolean wirdGueltig) {
         return new ZustandsWechsel(LocalDateTime.of(datum, LocalTime.MIDNIGHT), wirdGueltig);
     }
@@ -74,10 +133,20 @@ public class ZustandsWechsel {
         this.wirdGueltig = wirdGueltig;
     }
 
+    /**
+     * liefert den Zeitpunkt des Zustandswechsels.
+     * 
+     * @return den Zeitpunkt
+     */
     public LocalDateTime getZeitPunkt() {
         return zeitPunkt;
     }
 
+    /**
+     * liefert den Zielzustand des Wechsels
+     * 
+     * @return der Zustand
+     */
     public boolean isWirdGueltig() {
         return wirdGueltig;
     }
@@ -110,14 +179,22 @@ public class ZustandsWechsel {
         return Objects.equals(zeitPunkt, other.zeitPunkt) && wirdGueltig == other.wirdGueltig;
     }
 
+    /**
+     * liefert eine neue Instanz eines Zustandswechsel mit dem um den
+     * angegebenen Tagesoffset verschobenen Zeitstempel.
+     * 
+     * @param tagesOffset
+     *            der Tagesoffset
+     * @return die neue Instanz
+     */
     public ZustandsWechsel withTagesOffset(int tagesOffset) {
         LocalDateTime neuerZeitPunkt = zeitPunkt.plusDays(tagesOffset);
-        if( neuerZeitPunkt.isBefore(SystemKalender.MIN_DATETIME)) {
+        if (neuerZeitPunkt.isBefore(SystemKalender.MIN_DATETIME)) {
             neuerZeitPunkt = SystemKalender.MIN_DATETIME;
         } else if (neuerZeitPunkt.isAfter(SystemKalender.MAX_DATETIME)) {
             neuerZeitPunkt = SystemKalender.MAX_DATETIME;
         }
-        
+
         return ZustandsWechsel.of(neuerZeitPunkt, wirdGueltig);
     }
 }
