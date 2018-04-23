@@ -1,0 +1,107 @@
+== Definition von Kalendereinträgen
+
+=== Grundsätzliches
+
+Ein Kalendereintrag definiert einen Zeitbereich nach vorgegebenen Regeln oder bildet eine Kombination mehrerer anderer Kalendereinträge.
+
+Ein Kalendereintrag ist zu einem bestimmten Zeitpunkt gültig oder nicht. Über eine entsprechende Funktion bietet die Systemkalender-Bibliothek die Möglichkeit:
+
+- **die Gültigkeit zu einem bestimmten Zeitpunkt abzufragen**. 
+  Dabei werden als Ergebnis geliefert:
+  -- die Aussage, ob der Eintrag zum angefragten Zeitpunkt zeitlich gültig ist
+  -- der Zeitpunkt zu dem der aktuelle Gültigkeitszustand erreicht wurde
+  -- der Zeitpunkt der nächsten Änderung 
+  -- der Gültigkeitszustand, der sich aus der nächsten Änderung ergibt
+- **die Gültigkeit vor dem übergebenen Zeitpunkt abzufragen**. 
+  Das Ergebnis entspricht in der Struktur der ersten Abfrage, die Zeitpunkte und
+  Zustände beziehen sich nur auf den jeweils vorigen Zustandsübergang.
+  
+  
+Mit diesen beiden Zugriffsfunktionen können auch problemlos alle Zustandsübergänge in
+einem Bereich ermittelt werden und das in beiden zeitlichen Richtungen.
+
+Der mögliche Zeitbereich wird aus pragmatischer Sicht eingeschränkt auf den Zeitraum vom 1.1.1000 bis zum 1.1.3000 (exklusive). Zustandsübergänge, die noch nie stattgefunden haben oder  nie mehr stattfinden werden, werden mit diesen beiden Zeitstempeln markiert.
+
+=== Technische Realisierung und Persistenz
+
+Systemkalendereinträge werden als dynamische Objekte vom Typ "typ.systemKalenderEintrag" in der Menge "Systemkalendereinträge" eines Objekts vom Typ "typ.kalender" verwaltet.
+
+Der Name eines Systemkalendereintrags entspricht dem Name des dynamischen Objekts, der Inhalt wird durch einen als Parameter abgelegten Textstring definiert.
+
+Eine Instanz vom Typ "Systemkalender" in der SWE beobachtet die Mange und setzt entsprechende dynamische Objekte in Kalendereinträge um. Potentiell stehen Konvenienz-Funktionen zum Anlegen, Editieren und Entfernen von Systemkalendereinträgen zur Verfügung. Prinzipiell können entsprechende Objekte aber extern über die gängigen Datenverteiler-API-Funktionen bearbeitet werden.
+
+=== Arten von Kalendereinträgen
+
+Für Kalendereinträge werden verschiedene Definitionsformen unterstützt, welche die speziellen Anwendungsfälle unterscheiden. Über die Verknüpfungen können aber prinzipiell beliebig viele Einträge miteinander verknüpft werden. 
+
+**Es wird keine Prüfung auf zirkuläre Definitionen vorgenommen. Des Weiteren muss die Eindeutigkeit der Namen vom Anwender selbst sichergestellt werden!**
+
+==== Vordefinierte Einträge
+
+Eine Basis für die Bildung komplexerer Systemkalendereinträge sind die vordefinierten Einträge:
+
+- Montag
+- Dienstag
+- Mittwoch
+- Donnerstag
+- Freitag
+- Samstag
+- Sonntag und
+- Ostersonntag
+
+Diese sind für den jeweiligen Tag gültig. Ein spezieller Definitions-Text ist nicht erforderlich, es wird lediglich der Name wiederholt.
+
+**Diese Einträge müssen in einem Kalender vorhanden sein und explizit als Systemobjekte mit den angegebenen Namen angelegt werden, da sie auch direkt referenziert werden können (z.B. in Ereignis-Definitionen)!**
+
+==== Datumseintrag
+
+Unabhängig von den vordefinierten Wochentagen beschreibt dieser Systemkalendereintrag ein vorgegebenes Datum in der Form:
+
+    <tag>.<monat>.<jahr>,<endjahr>
+
+Die Angaben für den Tag und den Monat sind erforderlich. Für Angaben des Jahres und des Endjahres kann das Zeichen '*' als Platzhalter angegeben werden. 
+
+Der Kalendereintrag ist genau an diesem Tag im Bereich der angegebenen Jahre gültig.
+
+==== Zeitbereichseintrag
+
+In Erweiterung des Datumseintrags erlaubt dieser Eintrag, einen Bereich mit Anfangsdatum und Enddatum in folgender Form zu definieren:
+
+    <dd.MM.yyyy HH:mm:ss,SSS-dd.MM.yyyy HH:mm:ss,SSS>({HH:mm:ss,SSS-HH:mm:ss,SSS}{HH:mm:ss,SSS-HH:mm:ss,SSS})
+
+Die Definition setzt sich aus zwei Teilen zusammen. Im ersten Abschnitt in spitzen Klammern wird der Gültigkeitsbereich per Datum angegeben. Platzhalter sind hier nicht erlaubt, das heißt es muss ein konkretes Datum für Anfang und Ende angegeben werden. Die Angabe der Zeit für den Beginn und das Ende des Bereiches ist optional.
+
+Im zweiten Teil kann in runden Klammern eine Liste von Zeitbereichen definiert werden, in denen der Eintrag gültig werden soll. Ein Zeitbereich ist jeweils in geschweifte Klammern eingebettet.
+
+Optional kann der Datumsbereich weggelassen werden, dann gelten die angegebenen Zeitbereiche
+täglich, zum Beispiel:
+
+    Mittags := ({11:30:00,000-13:30:00,000})
+
+==== Verweiseintrag
+
+Ein Verweiseintrag definiert einen Gültigkeitsbereich durch Verweis auf einen anderen
+Systemkalendereintrag.
+
+Die Gültigkeit entspricht dabei der Gültigkeit des referenzierten Eintrags mit folgenden
+Abweichungsvarianten:
+
+- Negation des referenzierten Eintrags
+- Tageweise Verschiebung des referenzierten Eintrags
+
+Beispielsweise ergäbe sich für den Karfreitag eine mögliche Definition mit:
+
+    Karfreitag := Ostersonntag - 2 Tage
+    
+Der Zeitbereich "NichtMittags" könnte mit einem Zeitbereichseintrag wie oben oder mit der einfachen Negation des "Mittags-Eintrags" beschrieben werden:
+
+	NichtMittags := NICHT Mittags
+
+==== Logische Verknüpfung
+
+Ein derartiger Kalendereintrag kombiniert zwei oder mehrere Systemkalendereinträge per UND oder ODER-Verknüpfung in der Form:
+
+    UND/ODER{<eintrag1>,<eintrag2>}anfangsjahr,endjahr
+    
+Die zu verknüpfenden Einträge werden über ihre Namen referenziert. Die Einschränkung des Bereiches durch Anfangs und Endjahr ist optional und kann einseitig erfolgen, indem für das jeweilige Jahr der Platzhalter '*' angegeben wird.
+

@@ -1,137 +1,82 @@
+/*
+ * SWE Systemkalender - Version 2
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Contact Information:
+ * BitCtrl Systems GmbH
+ * Weißenfelser Straße 67
+ * 04229 Leipzig
+ * Phone: +49-341-49067-0
+ * Fax: +49-341-49067-15
+ * mailto: info@bitctrl.de
+ */
+
 package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.SortedMap;
+import java.time.LocalDateTime;
+import java.util.List;
 
-public class TestSyskalOffline6
-{
-  /**
-   * Das Format der Ergebnisausgabe
-   */
-  private static DateFormat _sdf;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.Timeout;
 
-  public static void main(String[] args)
-  {   
-    try
-    {         
-      
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.montag", "Montag", "Montag");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.test", "TestSKE", "TestSKE:=Montag+1Tag");
-      
-      _sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
+import de.bsvrz.vew.syskal.KalenderEintrag;
+import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.TestWechsel;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
-      SystemkalenderEintrag ske1 = SystemkalenderArbeiter.getSkeList().get("ske.test");
+public class TestSyskalOffline6 {
 
-      Date d1 = _sdf.parse("13.01.2014 14:27:17,000");
-      Date d2 = _sdf.parse("14.03.2014 14:28:17,000");
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(5);
 
-      System.out.println("Abfrage1: " + ske1.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
+    @Test
+    public void beispiel6() {
 
-//      erstelleAbfrageUndAusgabeErgebnisTyp1(ske1, d1, d2);
-      erstelleAbfrageUndAusgabeErgebnisTyp2(ske1, d1, d2);
-//      erstelleAbfrageUndAusgabeErgebnisTyp3(ske1, 2010);
+        TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "TestSKE", "TestSKE:=Montag+1Tag"));
+
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("TestSKE");
+        LocalDateTime startTime = LocalDateTime.of(2014, 1, 13, 14, 27, 17);
+        LocalDateTime endTime = LocalDateTime.of(2014, 3, 14, 14, 28, 17);
+
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("8.1.2014 00:00", false),
+                TestWechsel.of("14.1.2014 00:00", true),
+                TestWechsel.of("15.1.2014 00:00", false),
+                TestWechsel.of("21.1.2014 00:00", true),
+                TestWechsel.of("22.1.2014 00:00", false),
+                TestWechsel.of("28.1.2014 00:00", true),
+                TestWechsel.of("29.1.2014 00:00", false),
+                TestWechsel.of("4.2.2014 00:00", true),
+                TestWechsel.of("5.2.2014 00:00", false),
+                TestWechsel.of("11.2.2014 00:00", true),
+                TestWechsel.of("12.2.2014 00:00", false),
+                TestWechsel.of("18.2.2014 00:00", true),
+                TestWechsel.of("19.2.2014 00:00", false),
+                TestWechsel.of("25.2.2014 00:00", true),
+                TestWechsel.of("26.2.2014 00:00", false),
+                TestWechsel.of("4.3.2014 00:00", true),
+                TestWechsel.of("5.3.2014 00:00", false),
+                TestWechsel.of("11.3.2014 00:00", true),
+                TestWechsel.of("12.3.2014 00:00", false)
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
     }
-    catch (Exception e)
-    {
-      // TODO: handle exception
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * Erstellt eine Abfrage der manuellen Zeitbereiche durch Benutzung der <br>
-   * vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berecheneZustandsWechselVonBis(Long, Long)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}> 
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param von
-   *          Anfangsdatum
-   * @param bis
-   *          Enddatum
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp1(SystemkalenderEintrag ske, Date von, Date bis)
-  {
-    SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBis(von.getTime(), bis.getTime());
-
-    if (sm != null)
-    {
-      Date d = new Date();
-      for (Map.Entry<Long, Boolean> me : sm.entrySet())
-      {
-        d.setTime(me.getKey());
-        System.out.println("Ergebnistyp 1: " + _sdf.format(d) + " " + me.getValue());
-
-      }
-    }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
-  
-  /**
-   * Erstellt eine Abfrage der manuellen Zeitbereiche durch Benutzung der <br>
-   * vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berecheneIntervallVonBis(Long, Long)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Long}>
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param von
-   *          Anfangsdatum
-   * @param bis
-   *          Enddatum
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp2(SystemkalenderEintrag ske, Date von, Date bis)
-  {
-    SortedMap<Long, Long> sm = ske.berecheneIntervallVonBis(von.getTime(), bis.getTime());
-    
-    if (sm != null)
-    {
-      Date d1 = new Date();
-      Date d2 = new Date();
-      for (Map.Entry<Long, Long> me : sm.entrySet())
-      {       
-        d1.setTime(me.getKey());
-        d2.setTime(me.getValue());
-        System.out.println("Ergebnistyp 2: " + _sdf.format(d1) + " " + _sdf.format(d2));
-        
-      }
-    }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
-  
-  /**
-   * Erstellt eine Abfrage der Zeitbereiche für das Jahr des Anfangszeitpunktes <br>
-   * durch Benutzung der vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berechneZustandsWechsel(int)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}>
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param jahr
-   *          das Jahr
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp3(SystemkalenderEintrag ske, int jahr)
-  {
-    SortedMap<Long, Boolean> sm = ske.berechneZustandsWechsel(jahr);
-
-    if (sm != null)
-    {
-      Date d = new Date();
-      for (Map.Entry<Long, Boolean> me : sm.entrySet())
-      {
-        d.setTime(me.getKey());
-        System.out.println("Ergebnistyp 3: " + _sdf.format(d) + " " + me.getValue());
-
-      }
-    }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
 }

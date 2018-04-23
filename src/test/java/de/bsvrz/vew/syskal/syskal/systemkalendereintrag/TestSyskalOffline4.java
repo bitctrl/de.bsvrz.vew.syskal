@@ -1,246 +1,302 @@
+/*
+ * SWE Systemkalender - Version 2
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Contact Information:
+ * BitCtrl Systems GmbH
+ * Weißenfelser Straße 67
+ * 04229 Leipzig
+ * Phone: +49-341-49067-0
+ * Fax: +49-341-49067-15
+ * mailto: info@bitctrl.de
+ */
+
 package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.SortedMap;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-public class TestSyskalOffline4
-{
-  /**
-   * Das Format der Ergebnisausgabe
-   */
-  private static DateFormat _sdf;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.Timeout;
 
-  public static void main(String[] args)
-  {   
-    try
-    {               
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.tag", "Tag", "Tag");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ostersonntag", "Ostersonntag", "Ostersonntag");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.test1", "Test1", "Test1:=29.02.2001,2010");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.test2", "Test2", "Test2:=29.02.2004,2010");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.test3", "Test3", "Test3:=({13:00:00,000-15:00:00,000}{14:00:00,000-16:00:00,000})*,*");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.test31", "Test31", "Test31:=({13:00:00,000-14:00:00,000}{14:00:00,000-15:00:00,000})*,*");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.test32", "Test32", "Test32:=({13:00:00,000-14:00:00,000}{15:00:00,000-16:00:00,000})");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.test4", "Test4", "Test4:=Ostersonntag+1Tag");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.test5", "Test5", "Test5:=Ostersonntag-4Tage");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ostermontag", "Ostermontag", "Ostermontag:=Ostersonntag+1Tag");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.karfreitag", "Karfreitag", "Karfreitag:=Ostermontag-3Tage");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.test6", "Test6", "Test6:=UND{Tag,NICHT Ostersonntag}*,*");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.test7", "Test7", "Test7:=UND{Test32,Tag}*,*");
-      
-      _sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
+import de.bsvrz.vew.syskal.KalenderEintrag;
+import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.TestWechsel;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
-      SystemkalenderEintrag ske1 = SystemkalenderArbeiter.getSkeList().get("ske.test1");
+public class TestSyskalOffline4 {
 
-      Date d1 = _sdf.parse("01.01.2000 00:00:00,000");
-      Date d2 = _sdf.parse("31.12.2010 23:59:59,999");
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(5);
 
-      System.out.println();
-      System.out.println("Abfrage1: " + ske1.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
+    private static TestKalenderEintragProvider eintragsProvider;
 
-      erstelleAbfrageUndAusgabeErgebnisTyp1(ske1, d1, d2);
-      erstelleAbfrageUndAusgabeErgebnisTyp2(ske1, d1, d2);
+    @BeforeClass
+    public static void init() {
 
-      SystemkalenderEintrag ske2 = SystemkalenderArbeiter.getSkeList().get("ske.test2");
-      
-      d1 = _sdf.parse("01.01.2004 00:00:00,000");
-      d2 = _sdf.parse("31.12.2010 23:59:59,999");
-      
-      System.out.println();
-      System.out.println("Abfrage2: " + ske2.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
-      
-      erstelleAbfrageUndAusgabeErgebnisTyp1(ske2, d1, d2);
-      erstelleAbfrageUndAusgabeErgebnisTyp2(ske2, d1, d2);
-      
-      SystemkalenderEintrag ske3 = SystemkalenderArbeiter.getSkeList().get("ske.test3");
-      
-      d1 = _sdf.parse("10.03.2004 13:30:00,000");
-      d2 = _sdf.parse("10.03.2004 15:29:59,999");
-      
-      System.out.println();
-      System.out.println("Abfrage3: " + ske3.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
-      
-      erstelleAbfrageUndAusgabeErgebnisTyp1(ske3, d1, d2);
-      erstelleAbfrageUndAusgabeErgebnisTyp2(ske3, d1, d2);
-      
-      SystemkalenderEintrag ske31 = SystemkalenderArbeiter.getSkeList().get("ske.test31");
-      
-      d1 = _sdf.parse("10.03.2004 00:00:00,000");
-      d2 = _sdf.parse("11.03.2004 23:59:59,999");
-      
-      System.out.println();
-      System.out.println("Abfrage31: " + ske3.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
-      
-      erstelleAbfrageUndAusgabeErgebnisTyp1(ske31, d1, d2);
-      erstelleAbfrageUndAusgabeErgebnisTyp2(ske31, d1, d2);
-      
-      SystemkalenderEintrag ske = SystemkalenderArbeiter.getSkeList().get("ske.ostersonntag");
-      
-      d1 = _sdf.parse("01.01.2000 00:00:00,000");
-      d2 = _sdf.parse("31.12.2010 23:59:59,999");
-      
-      System.out.println();
-      System.out.println("Abfrage4: " + ske.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
-      
-      erstelleAbfrageUndAusgabeErgebnisTyp1(ske, d1, d2);
-      erstelleAbfrageUndAusgabeErgebnisTyp2(ske, d1, d2);
-      
-      SystemkalenderEintrag ske4 = SystemkalenderArbeiter.getSkeList().get("ske.test4");
-      
-      d1 = _sdf.parse("01.01.2000 00:00:00,000");
-      d2 = _sdf.parse("31.12.2003 23:59:59,999");
-      
-      System.out.println();
-      System.out.println("Abfrage5: " + ske4.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
-      
-      erstelleAbfrageUndAusgabeErgebnisTyp1(ske4, d1, d2);
-      erstelleAbfrageUndAusgabeErgebnisTyp2(ske4, d1, d2);
-      
-      SystemkalenderEintrag ske5 = SystemkalenderArbeiter.getSkeList().get("ske.test5");
-      
-      d1 = _sdf.parse("01.01.2000 00:00:00,000");
-      d2 = _sdf.parse("31.12.2003 23:59:59,999");
-      
-      System.out.println();
-      System.out.println("Abfrage6: " + ske5.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
-      
-      erstelleAbfrageUndAusgabeErgebnisTyp1(ske5, d1, d2);
-      erstelleAbfrageUndAusgabeErgebnisTyp2(ske5, d1, d2);
-      
-      SystemkalenderEintrag skk = SystemkalenderArbeiter.getSkeList().get("ske.karfreitag");
-      
-      d1 = _sdf.parse("01.01.2000 00:00:00,000");
-      d2 = _sdf.parse("31.12.2003 23:59:59,999");
-      
-      System.out.println();
-      System.out.println("Abfrage7: " + skk.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
-      
-      erstelleAbfrageUndAusgabeErgebnisTyp1(skk, d1, d2);
-      erstelleAbfrageUndAusgabeErgebnisTyp2(skk, d1, d2);
-      
-      SystemkalenderEintrag ske6 = SystemkalenderArbeiter.getSkeList().get("ske.test6");
-      
-      d1 = _sdf.parse("01.04.2001 00:00:00,000");
-      d2 = _sdf.parse("01.05.2001 23:59:59,999");
-      
-      System.out.println();
-      System.out.println("Abfrage8: " + ske6.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
-      
-      erstelleAbfrageUndAusgabeErgebnisTyp1(ske6, d1, d2);
-      erstelleAbfrageUndAusgabeErgebnisTyp2(ske6, d1, d2);
-      
-      SystemkalenderEintrag ske7 = SystemkalenderArbeiter.getSkeList().get("ske.test7");
-      
-      d1 = _sdf.parse("19.09.2011 00:00:00,000");
-      d2 = _sdf.parse("23.09.2011 23:59:59,999");
-      
-      System.out.println();
-      System.out.println("Abfrage7: " + ske7.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
-      
-      erstelleAbfrageUndAusgabeErgebnisTyp1(ske7, d1, d2);
-      erstelleAbfrageUndAusgabeErgebnisTyp2(ske7, d1, d2);
+        eintragsProvider = new TestKalenderEintragProvider();
 
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Ostersonntag", "Ostersonntag"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test1", "Test1:=29.02.2001,2010"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test2", "Test2:=29.02.2004,2010"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test3",
+                "Test3:=({13:00:00,000-15:00:00,000}{14:00:00,000-16:00:00,000})"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test31",
+                "Test31:=({13:00:00,000-14:00:00,000}{14:00:00,000-15:00:00,000})"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test32",
+                "Test32:=({13:00:00,000-14:00:00,000}{15:00:00,000-16:00:00,000})"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test4", "Test4:=Ostersonntag+1Tag"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test5", "Test5:=Ostersonntag-4Tage"));
+        eintragsProvider
+                .addEintrag(
+                        KalenderEintrag.parse(eintragsProvider, "Ostermontag", "Ostermontag:=Ostersonntag+1Tag"));
+        eintragsProvider
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Karfreitag", "Karfreitag:=Ostermontag-3Tage"));
+        eintragsProvider
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Test6", "Test6:=UND{NICHT Ostersonntag}*,*"));
+        eintragsProvider.addEintrag(KalenderEintrag.parse(eintragsProvider, "Test7", "Test7:=UND{Test32}*,*"));
     }
-    catch (Exception e)
-    {
-      // TODO: handle exception
-      e.printStackTrace();
+
+    @Test
+    public void test1() {
+
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test1");
+        LocalDateTime startTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2010, 12, 31, 23, 59, 59);
+        endTime = endTime.plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
+
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("1.1.1000 00:00", false),
+                TestWechsel.of("29.2.2004 00:00", true),
+                TestWechsel.of("1.3.2004 00:00", false),
+                TestWechsel.of("29.2.2008 00:00", true),
+                TestWechsel.of("1.3.2008 00:00", false)
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
     }
-  }
 
-  /**
-   * Erstellt eine Abfrage der manuellen Zeitbereiche durch Benutzung der <br>
-   * vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berecheneZustandsWechselVonBis(Long, Long)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}> 
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param von
-   *          Anfangsdatum
-   * @param bis
-   *          Enddatum
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp1(SystemkalenderEintrag ske, Date von, Date bis)
-  {
-    SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBis(von.getTime(), bis.getTime());
+    @Test
+    public void test2() {
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test2");
+        LocalDateTime startTime = LocalDateTime.of(2004, 1, 1, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2010, 12, 31, 23, 59, 59)
+                .plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 
-    if (sm != null)
-    {
-      Date d = new Date();
-      for (Map.Entry<Long, Boolean> me : sm.entrySet())
-      {
-        d.setTime(me.getKey());
-        System.out.println("Ergebnistyp 1: " + _sdf.format(d) + " " + me.getValue());
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("1.1.1000 00:00", false),
+                TestWechsel.of("29.2.2004 00:00", true),
+                TestWechsel.of("1.3.2004 00:00", false),
+                TestWechsel.of("29.2.2008 00:00", true),
+                TestWechsel.of("1.3.2008 00:00", false)
+        };
 
-      }
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
     }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
-  
-  /**
-   * Erstellt eine Abfrage der manuellen Zeitbereiche durch Benutzung der <br>
-   * vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berecheneIntervallVonBis(Long, Long)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Long}>
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param von
-   *          Anfangsdatum
-   * @param bis
-   *          Enddatum
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp2(SystemkalenderEintrag ske, Date von, Date bis)
-  {
-    SortedMap<Long, Long> sm = ske.berecheneIntervallVonBis(von.getTime(), bis.getTime());
-    
-    if (sm != null)
-    {
-      Date d1 = new Date();
-      Date d2 = new Date();
-      for (Map.Entry<Long, Long> me : sm.entrySet())
-      {       
-        d1.setTime(me.getKey());
-        d2.setTime(me.getValue());
-        System.out.println("Ergebnistyp 2: " + _sdf.format(d1) + " " + _sdf.format(d2));
-        
-      }
-    }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
-  
-  /**
-   * Erstellt eine Abfrage der Zeitbereiche für das Jahr des Anfangszeitpunktes <br>
-   * durch Benutzung der vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berechneZustandsWechsel(int)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}>
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param jahr
-   *          das Jahr
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp3(SystemkalenderEintrag ske, int jahr)
-  {
-    SortedMap<Long, Boolean> sm = ske.berechneZustandsWechsel(jahr);
 
-    if (sm != null)
-    {
-      Date d = new Date();
-      for (Map.Entry<Long, Boolean> me : sm.entrySet())
-      {
-        d.setTime(me.getKey());
-        System.out.println("Ergebnistyp 3: " + _sdf.format(d) + " " + me.getValue());
+    @Test
+    public void test3() {
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test3");
+        LocalDateTime startTime = LocalDateTime.of(2004, 3, 10, 13, 30, 0);
+        LocalDateTime endTime = LocalDateTime.of(2004, 3, 10, 15, 29, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
 
-      }
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("10.3.2004 13:00", true)
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
     }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
+
+    @Test
+    public void test31() {
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test31");
+        LocalDateTime startTime = LocalDateTime.of(2004, 3, 10, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2004, 3, 11, 15, 29, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
+
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("09.3.2004 15:00", false),
+                TestWechsel.of("10.3.2004 13:00", true),
+                TestWechsel.of("10.3.2004 15:00", false),
+                TestWechsel.of("11.3.2004 13:00", true),
+                TestWechsel.of("11.3.2004 15:00", false)
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
+
+    @Test
+    public void osterSonntag() {
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Ostersonntag");
+        LocalDateTime startTime = LocalDateTime.of(2000, 1, 11, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2010, 12, 31, 23, 59, 59)
+                .plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
+
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("5.4.1999 00:00", false),
+                TestWechsel.of("23.4.2000 00:00", true),
+                TestWechsel.of("24.4.2000 00:00", false),
+                TestWechsel.of("15.4.2001 00:00", true),
+                TestWechsel.of("16.4.2001 00:00", false),
+                TestWechsel.of("31.3.2002 00:00", true),
+                TestWechsel.of("1.4.2002 00:00", false),
+                TestWechsel.of("20.4.2003 00:00", true),
+                TestWechsel.of("21.4.2003 00:00", false),
+                TestWechsel.of("11.4.2004 00:00", true),
+                TestWechsel.of("12.4.2004 00:00", false),
+                TestWechsel.of("27.3.2005 00:00", true),
+                TestWechsel.of("28.3.2005 00:00", false),
+                TestWechsel.of("16.4.2006 00:00", true),
+                TestWechsel.of("17.4.2006 00:00", false),
+                TestWechsel.of("8.4.2007 00:00", true),
+                TestWechsel.of("9.4.2007 00:00", false),
+                TestWechsel.of("23.3.2008 00:00", true),
+                TestWechsel.of("24.3.2008 00:00", false),
+                TestWechsel.of("12.4.2009 00:00", true),
+                TestWechsel.of("13.4.2009 00:00", false),
+                TestWechsel.of("4.4.2010 00:00", true),
+                TestWechsel.of("5.4.2010 00:00", false)
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
+
+    @Test
+    public void test4() {
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test4");
+        LocalDateTime startTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2003, 12, 31, 23, 59, 59)
+                .plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
+
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("6.4.1999 00:00", false),
+                TestWechsel.of("24.4.2000 00:00", true),
+                TestWechsel.of("25.4.2000 00:00", false),
+                TestWechsel.of("16.4.2001 00:00", true),
+                TestWechsel.of("17.4.2001 00:00", false),
+                TestWechsel.of("1.4.2002 00:00", true),
+                TestWechsel.of("2.4.2002 00:00", false),
+                TestWechsel.of("21.4.2003 00:00", true),
+                TestWechsel.of("22.4.2003 00:00", false)
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
+
+    @Test
+    public void test5() {
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test5");
+        LocalDateTime startTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2003, 12, 31, 23, 59, 59)
+                .plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
+
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("1.4.1999 00:00", false),
+                TestWechsel.of("19.4.2000 00:00", true),
+                TestWechsel.of("20.4.2000 00:00", false),
+                TestWechsel.of("11.4.2001 00:00", true),
+                TestWechsel.of("12.4.2001 00:00", false),
+                TestWechsel.of("27.3.2002 00:00", true),
+                TestWechsel.of("28.3.2002 00:00", false),
+                TestWechsel.of("16.4.2003 00:00", true),
+                TestWechsel.of("17.4.2003 00:00", false)
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
+
+    @Test
+    public void karfreitag() {
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Karfreitag");
+        LocalDateTime startTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2003, 12, 31, 23, 59, 59)
+                .plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
+
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("3.4.1999 00:00", false),
+                TestWechsel.of("21.4.2000 00:00", true),
+                TestWechsel.of("22.4.2000 00:00", false),
+                TestWechsel.of("13.4.2001 00:00", true),
+                TestWechsel.of("14.4.2001 00:00", false),
+                TestWechsel.of("29.3.2002 00:00", true),
+                TestWechsel.of("30.3.2002 00:00", false),
+                TestWechsel.of("18.4.2003 00:00", true),
+                TestWechsel.of("19.4.2003 00:00", false)
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
+
+    @Test
+    public void test6() {
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test6");
+        LocalDateTime startTime = LocalDateTime.of(2001, 4, 1, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2001, 5, 1, 23, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
+
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("24.4.2000 00:00", true),
+                TestWechsel.of("15.4.2001 00:00", false),
+                TestWechsel.of("16.4.2001 00:00", true),
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
+
+    @Test
+    public void test7() {
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("Test7");
+        LocalDateTime startTime = LocalDateTime.of(2011, 9, 19, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2011, 9, 23, 23, 59, 59).plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
+
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("18.9.2011 16:00", false),
+                TestWechsel.of("19.9.2011 13:00", true),
+                TestWechsel.of("19.9.2011 14:00", false),
+                TestWechsel.of("19.9.2011 15:00", true),
+                TestWechsel.of("19.9.2011 16:00", false),
+                TestWechsel.of("20.9.2011 13:00", true),
+                TestWechsel.of("20.9.2011 14:00", false),
+                TestWechsel.of("20.9.2011 15:00", true),
+                TestWechsel.of("20.9.2011 16:00", false),
+                TestWechsel.of("21.9.2011 13:00", true),
+                TestWechsel.of("21.9.2011 14:00", false),
+                TestWechsel.of("21.9.2011 15:00", true),
+                TestWechsel.of("21.9.2011 16:00", false),
+                TestWechsel.of("22.9.2011 13:00", true),
+                TestWechsel.of("22.9.2011 14:00", false),
+                TestWechsel.of("22.9.2011 15:00", true),
+                TestWechsel.of("22.9.2011 16:00", false),
+                TestWechsel.of("23.9.2011 13:00", true),
+                TestWechsel.of("23.9.2011 14:00", false),
+                TestWechsel.of("23.9.2011 15:00", true),
+                TestWechsel.of("23.9.2011 16:00", false)
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
+    }
 }

@@ -1,160 +1,77 @@
+/*
+ * SWE Systemkalender - Version 2
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Contact Information:
+ * BitCtrl Systems GmbH
+ * Weißenfelser Straße 67
+ * 04229 Leipzig
+ * Phone: +49-341-49067-0
+ * Fax: +49-341-49067-15
+ * mailto: info@bitctrl.de
+ */
+
 package de.bsvrz.vew.syskal.syskal.systemkalendereintrag;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.SortedMap;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-public class TestSyskalOffline8
-{
-  /**
-   * Das Format der Ergebnisausgabe
-   */
-  private static DateFormat _sdf;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.Timeout;
 
-  public static void main(String[] args)
-  {   
-    try
-    {         
-      
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.montag", "Montag", "Montag");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.dienstag", "Dienstag", "Dienstag");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.mittwoch", "Mittwoch", "Mittwoch");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.donnerstag", "Donnerstag", "Donnerstag");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.freitag", "Freitag", "Freitag");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.samstag", "Samstag", "Samstag");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.sonntag", "Sonntag", "Sonntag");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ostersonntag", "Ostersonntag", "Ostersonntag");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.tag", "Tag", "Tag");
-     
-      
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ferien1", "Ferien1", "Ferien1:=<30.07.2015-12.09.2015>");
-//      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ende1", "Ende1", "Ende1:=12.09.2015,2015");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ferien2", "Ferien2", "Ferien2:=<02.11.2015-06.11.2015>");
-//      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ende2", "Ende2", "Ende2:=06.11.2015,2015");
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ferien", "Ferien", "Ferien:=ODER{Ferien1,Ferien2}*,*");
-      
-//      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ferien11", "Ferien11", "Ferien11:=Ferien1+1Tag");
-//      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ferien21", "Ferien21", "Ferien21:=Ferien2+1Tag");
-      
-      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ferienplus", "FerienPlus", "FerienPlus:=Ferien+1Tag");
-//      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ende11", "Ende11", "Ende11:=Ende1+1Tag");
-//      SystemkalenderArbeiter.parseSystemkalenderEintrag("ske.ende21", "Ende21", "Ende21:=Ende2+1Tag");
-      
-      
-      _sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss,SSS");
+import de.bsvrz.vew.syskal.KalenderEintrag;
+import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
+import de.bsvrz.vew.syskal.TestWechsel;
+import de.bsvrz.vew.syskal.ZustandsWechsel;
 
-      SystemkalenderEintrag ske1 = SystemkalenderArbeiter.getSkeList().get("ske.ferienplus");
-//      SystemkalenderEintrag ske1 = SystemkalenderArbeiter.getSkeList().get("ske.ferien");
+public class TestSyskalOffline8 {
 
-      Date d1 = _sdf.parse("01.01.2015 00:00:00,000");
-      Date d2 = _sdf.parse("31.12.2015 23:59:59,999");
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(5);
 
-      System.out.println("Abfrage: " + ske1.getPid() + " " + _sdf.format(d1) + " - " + _sdf.format(d2));
+    @Test
+    public void beispiele8() {
 
-      erstelleAbfrageUndAusgabeErgebnisTyp1(ske1, d1, d2);
-//      erstelleAbfrageUndAusgabeErgebnisTyp2(ske1, d1, d2);
-      //erstelleAbfrageUndAusgabeErgebnisTyp3(ske1, 2015);
+        TestKalenderEintragProvider eintragsProvider = new TestKalenderEintragProvider();
 
+        eintragsProvider
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Ferien1", "Ferien1:=<30.07.2015-12.09.2015>"));
+        eintragsProvider
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Ferien2", "Ferien2:=<02.11.2015-06.11.2015>"));
+        eintragsProvider
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "Ferien", "Ferien:=ODER{Ferien1,Ferien2}*,*"));
+        eintragsProvider
+                .addEintrag(KalenderEintrag.parse(eintragsProvider, "FerienPlus", "FerienPlus:=Ferien+1Tag"));
+
+        KalenderEintrag eintrag = eintragsProvider.getKalenderEintrag("FerienPlus");
+        LocalDateTime startTime = LocalDateTime.of(2015, 1, 1, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(2015, 12, 31, 23, 59, 59)
+                .plusNanos(TimeUnit.MILLISECONDS.toNanos(999));
+
+        TestWechsel[] erwarteteWechsel = {
+                TestWechsel.of("1.1.1000 00:00", false),
+                TestWechsel.of("31.7.2015 00:00", true),
+                TestWechsel.of("14.9.2015 00:00", false),
+                TestWechsel.of("3.11.2015 00:00", true),
+                TestWechsel.of("8.11.2015 00:00", false)
+        };
+
+        List<ZustandsWechsel> zustandsWechsel = eintrag.getZustandsWechsel(startTime, endTime);
+        TestWechsel.pruefeWechsel(erwarteteWechsel, zustandsWechsel);
     }
-    catch (Exception e)
-    {
-      // TODO: handle exception
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * Erstellt eine Abfrage der manuellen Zeitbereiche durch Benutzung der <br>
-   * vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berecheneZustandsWechselVonBis(Long, Long)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}> 
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param von
-   *          Anfangsdatum
-   * @param bis
-   *          Enddatum
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp1(SystemkalenderEintrag ske, Date von, Date bis)
-  {
-    SortedMap<Long, Boolean> sm = ske.berecheneZustandsWechselVonBis(von.getTime(), bis.getTime());
-
-    if (sm != null)
-    {
-      Date d = new Date();
-      for (Map.Entry<Long, Boolean> me : sm.entrySet())
-      {
-        d.setTime(me.getKey());
-        System.out.println("Ergebnistyp 1: " + _sdf.format(d) + " " + me.getValue());
-
-      }
-    }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
-  
-  /**
-   * Erstellt eine Abfrage der manuellen Zeitbereiche durch Benutzung der <br>
-   * vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berecheneIntervallVonBis(Long, Long)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Long}>
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param von
-   *          Anfangsdatum
-   * @param bis
-   *          Enddatum
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp2(SystemkalenderEintrag ske, Date von, Date bis)
-  {
-    SortedMap<Long, Long> sm = ske.berecheneIntervallVonBis(von.getTime(), bis.getTime());
-    
-    if (sm != null)
-    {
-      Date d1 = new Date();
-      Date d2 = new Date();
-      for (Map.Entry<Long, Long> me : sm.entrySet())
-      {       
-        d1.setTime(me.getKey());
-        d2.setTime(me.getValue());
-        System.out.println("Ergebnistyp 2: " + _sdf.format(d1) + " " + _sdf.format(d2));
-        
-      }
-    }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
-  
-  /**
-   * Erstellt eine Abfrage der Zeitbereiche für das Jahr des Anfangszeitpunktes <br>
-   * durch Benutzung der vom Systemkalender bereitgestellten Methode <br>
-   * {@link SystemkalenderEintrag#berechneZustandsWechsel(int)} <br> 
-   * Diese Methode liefert das Ergebnis in der Form: <br>
-   * {@link SortedMap} mit dem Wertepaar <{@link Long}, {@link Boolean}>
-   * @param ske
-   *            der Systemkalendereintrag
-   * @param jahr
-   *          das Jahr
-   */
-  private static void erstelleAbfrageUndAusgabeErgebnisTyp3(SystemkalenderEintrag ske, int jahr)
-  {
-    SortedMap<Long, Boolean> sm = ske.berechneZustandsWechsel(jahr);
-
-    if (sm != null)
-    {
-      Date d = new Date();
-      for (Map.Entry<Long, Boolean> me : sm.entrySet())
-      {
-        d.setTime(me.getKey());
-        System.out.println("Ergebnistyp 3: " + _sdf.format(d) + " " + me.getValue());
-
-      }
-    }
-    else
-      System.out.println("Abfrage liefert kein Ergebnis!");
-  }
 }

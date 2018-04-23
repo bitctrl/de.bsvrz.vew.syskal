@@ -1,7 +1,8 @@
 vew-syskal-build:
     image:
-        openjdk:8-jdk-alpine
+        falkoschumann/oracle-java:8
         
     script:
-      - ./gradlew build  -x test
+      - ./gradlew build
+ #     - ./gradlew publishMavenJavaPublicationToNerzSnapshotRepository
 
