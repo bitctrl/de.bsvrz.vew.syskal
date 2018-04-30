@@ -1,1 +1,10 @@
 /target/
+.checkstyle
+.gradle/
+.settings/
+bin/
+build/
+documentation/SwEnt/.project
+documentation/.project
+documentation/SwEnt/src/main/asciidoc/images/systemkalender_module.png
+documentation/SwEnt/src/main/asciidoc/images/init_systemkalender.png
