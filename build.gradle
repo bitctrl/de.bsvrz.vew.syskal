@@ -15,8 +15,8 @@ description = 'SWE Verwaltung Systemkalender'
 
 // Properties des NERZ-SWE-Plugins:
 nerzswe {
-   	sweStatus = 'BETA'
-	sweDatum = ''
+   	sweStatus = 'FREI'
+	sweDatum = '2018-01-20'
 }
 
 //--------------------------------------------------------------------
