@@ -19,16 +19,10 @@ nerzswe {
 	sweDatum = ''
 }
 
-repositories {
-    maven {
-        url "https://dl.bintray.com/bitctrl/maven"
-    }
-}
-
 //--------------------------------------------------------------------
 // Abhängigkeiten
 //--------------------------------------------------------------------
-String kernsoftware_version = '3.9.2'
+String kernsoftware_version = '3.10.0'
 dependencies {
     compile group: 'de.bsvrz.dav', name: 'de.bsvrz.dav.daf', version: kernsoftware_version
     compile group: 'de.bsvrz.dav', name: 'de.bsvrz.dav.dav', version: kernsoftware_version
