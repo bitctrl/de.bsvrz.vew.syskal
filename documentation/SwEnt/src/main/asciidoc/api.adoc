@@ -1,0 +1,91 @@
+== Zugriff auf die API
+
+=== Grundsätzliches
+
+Im folgenden Abschnitt sind die wesentlichen Klassen für den Zugriff auf die Elemente des
+Systemkalender beschrieben. Die komplette Beschreibung ergibt sich aus dem JavaDoc der SWE.
+
+Die "öffentlichen" Klassen der SWE befinden sich im Paket "de.bsvrz.vew.syskal". Der Zugriff auf die internen Pakete ist für den Anwender nicht erforderlich.
+
+=== Systemkalender
+
+Einstiegspunkt für den Systemkalender ist die Klasse "SystemKalender".
+Eine Instanz eines SystemKalenders wird über eine bestehende Datenverteiler-Verbindung und ein zugeordnetes Kalenderobjekt gebildet:
+
+[source,java]
+----
+SystemKalender(ClientDavInterface dav, ConfigurationObject object);
+----
+
+Die Bibliothek kann beliebig viele Systemkalender-Instanzen anlegen, d.h. es können potentiell auch mehrere Kalender parallel bedient werden.
+
+Die übergebenen Datenverteiler-Verbindung sollte aktiv sein. Wenn die Datenverteilerverbindung nicht mehr besteht, kann der "Systemkalender" nicht mehr verwendet bzw. wiederverwendet werden. Es muss eine neue Instanz angelegt werden.
+
+[source,java]
+----
+SystemKalenderEintrag getEintrag(SystemObject object) throws SystemKalenderException;
+Collection<SystemKalenderEintrag> getEintraege() throws SystemKalenderException;
+----
+
+Über den Systemkalender kann die Liste der verfügbaren SystemKalenderEinträge oder ein über ein bestimmtes Systemobjekt definierter SystemKalenderEintrag abgerufen werden.
+
+
+=== SystemkalenderEintrag
+
+Ein SystemKalenderEintrag verbindet einen logischen Kalendereintrag mit einem im Datenverteiler repräsentierten dynamischen Systemobjekt.
+
+Objekte dieses Typs können vom Client nicht angelegt werden, sie werden über das oben beschriebene SystemKalender-Objekt bereitgestellt.
+
+[source,java]
+----
+String getName();
+SystemObject getSystemObject();
+ObjectProperty<KalenderEintrag> getKalenderEintragProperty();
+KalenderEintrag getKalenderEintrag();
+----
+
+Über die verfügbaren Funktionen können der Name, das verwendete Datenverteiler-Systemobjekt oder der aktuelle logische KalenderEintrag ermittelt werden.
+
+Name und SystemObject sind unveränderlich. Der Kalendereintrag kann potentiell über die Definition geändert werden. Die Klasse stellt diesen daher als Property zu Verfügung, an die ein ChangeListener angebunden werden kann, um über Änderungen informiert zu werden.
+
+=== Kalendereintrag
+
+Der KalenderEintrag repräsentiert die Logik eines SystemKalenderEintrags und wird über diesen bereitgestellt.
+
+[source,java]
+----
+SystemkalenderGueltigkeit getZeitlicheGueltigkeit(LocalDateTime zeitPunkt);
+SystemkalenderGueltigkeit getZeitlicheGueltigkeitVor(LocalDateTime zeitPunkt);
+List<ZustandsWechsel> getZustandsWechsel(LocalDateTime startTime, LocalDateTime endTime);
+List<Intervall> getIntervalle(LocalDateTime startTime, LocalDateTime endTime);
+----
+
+Über den KalenderEintrag kann die Gültigkeit zu einem Zeitpunkt oder die Gültigkeit, die vor dem übergebenen Zeitpunkt ermittelt wurde bestimmt. Da die gelieferte Gültigkeit jeweils den nächsten Zustandsübergang einschließt, kann der Client sich mit diesen beiden Funktionen in beiden Zeitrichtungen
+bewegen und die Zustandsübergänge bestimmen.
+
+Die Funktion "getZustandsWechsel" implementiert das in der Bibliothek.
+
+Die Funktion "getIntervalle" liefert eine Liste gültiger Intervalle für den Kalendereintrag im angefragten Zeitraum. Die Intervalle werden dabei potentiell auf den Anfangs- bzw. Endzeitpunkt der Abfrage beschnitten.
+
+=== SystemkalenderGueltigkeit
+
+Die Klasse SystemkalenderGueltigkeit liefert zwei ZustandsWechsel.
+
+[source,java]
+----
+ZustandsWechsel getErsterWechsel();
+ZustandsWechsel getNaechsterWechsel();
+----
+
+Der erste Wechsel ist der Wechsel, der zum aktuellen Zustand hingeführt hat, der zweite Wechsel beschreibt die nächste zu erwartende Änderung.
+
+=== Zustandswechsel
+
+Ein Zustandswechsel liefert einen Gültigkeitszustand und den Zeitpunkt zu dem dieser Zustand erreicht wurde.
+
+[source,java]
+----
+LocalDateTime getZeitPunkt();
+boolean isWirdGueltig();
+----
+
