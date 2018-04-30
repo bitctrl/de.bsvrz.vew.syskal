@@ -1,7 +1,7 @@
 /bin/
 /.gradle/
-/.settings/
-/build/
+.settings/
+build/
 
 .project
 .pmd

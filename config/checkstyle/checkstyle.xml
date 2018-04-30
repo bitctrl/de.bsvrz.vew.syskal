@@ -51,7 +51,9 @@
     <module name="AnonInnerLength"/>
     <module name="ExecutableStatementCount"/>
     <module name="LineLength">
+      <property name="severity" value="ignore"/>
       <property name="max" value="120"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="MethodCount"/>
     <module name="MethodLength"/>
@@ -59,10 +61,8 @@
     <module name="ParameterNumber"/>
   </module>
   <module name="Header">
-    <property name="severity" value="ignore"/>
-    <property name="headerFile" value="${checkstyle.header.file}"/>
+    <property name="headerFile" value="${config_loc}/java.header"/>
     <property name="fileExtensions" value="java"/>
-    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
   <module name="FileLength"/>
   <module name="UniqueProperties"/>
