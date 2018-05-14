@@ -180,7 +180,7 @@ public class VerweisEintrag extends KalenderEintrag {
 
         KalenderEintrag referenzEintrag = verweis.getReferenzEintrag();
         int tagesOffset = verweis.getOffset();
-        boolean gueltig = referenzEintrag.isGueltig(zeitPunkt.plusDays(tagesOffset));
+        boolean gueltig = referenzEintrag.isGueltig(zeitPunkt.minusDays(tagesOffset));
 
         if (verweis.isNegiert()) {
             return !gueltig;
