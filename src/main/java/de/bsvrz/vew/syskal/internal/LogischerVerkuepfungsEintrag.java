@@ -33,8 +33,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 import de.bsvrz.sys.funclib.debug.Debug;
@@ -302,6 +302,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
     protected final ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand,
             Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleEndWechsel) {
 
+        LocalDateTime letzteWechselZeit = null;
         LocalDateTime wechselZeit = null;
         Map<KalenderEintragMitOffset, ZustandsWechsel> verweisWechsel = new LinkedHashMap<>(potentielleEndWechsel);
 
@@ -310,8 +311,13 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
             if (wechsel == null) {
                 return ZustandsWechsel.of(SystemKalender.MAX_DATETIME, !zielZustand);
             }
-
             wechselZeit = wechsel.getZeitPunkt();
+            if (letzteWechselZeit != null && !wechselZeit.isAfter(letzteWechselZeit)) {
+                wechselZeit = SystemKalender.MAX_DATETIME;
+                continue;
+            }
+            letzteWechselZeit = wechselZeit;
+            
             if (isErlaubteWechselZeit(wechselZeit)) {
                 if (pruefeGueltigKeit(wechselZeit, zielZustand)) {
                     return ZustandsWechsel.of(wechselZeit, zielZustand);
@@ -344,7 +350,10 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
      */
     protected final ZustandsWechsel berechneVorigenWechselAuf(boolean zielZustand,
             Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleStartWechsel) {
+
+        LocalDateTime letzteWechselZeit = null;
         LocalDateTime wechselZeit = null;
+        
         Map<KalenderEintragMitOffset, ZustandsWechsel> verweisWechsel = new LinkedHashMap<>(potentielleStartWechsel);
         ZustandsWechsel potentiellerWechsel = null;
 
@@ -355,6 +364,13 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
             }
 
             wechselZeit = wechsel.getZeitPunkt();
+            
+            if (letzteWechselZeit != null && !wechselZeit.isBefore(letzteWechselZeit)) {
+                wechselZeit = SystemKalender.MIN_DATETIME;
+                continue;
+            }
+            letzteWechselZeit = wechselZeit;
+            
             if (isErlaubteWechselZeit(wechselZeit)) {
                 if (pruefeGueltigKeit(wechselZeit, zielZustand)) {
                     potentiellerWechsel = ZustandsWechsel.of(wechselZeit, zielZustand);
