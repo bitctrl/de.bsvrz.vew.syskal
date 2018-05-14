@@ -3,6 +3,9 @@ Versionsverlauf
 
 ## [Noch nicht veröffentlicht]
 
+- Systemkalendereinträge mit Zeitverschiebungen in logischen Verknüpfungen
+  konnten zu Endlosschleifen oder falschen Ergebnissen führen
+
 ## [Version 2.0.0]
 
 - Neuimplementierung unter Verwendung des bestehenden Datenverteiler-Modells zut Wahrung der Kompatibilität 
