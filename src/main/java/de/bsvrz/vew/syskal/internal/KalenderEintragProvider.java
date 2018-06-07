@@ -26,6 +26,8 @@
 
 package de.bsvrz.vew.syskal.internal;
 
+import java.util.Set;
+
 import de.bsvrz.vew.syskal.KalenderEintrag;
 
 /**
@@ -44,4 +46,6 @@ public interface KalenderEintragProvider {
      *         ermittelt werden konnte
      */
     KalenderEintrag getKalenderEintrag(String name);
+    
+    Set<KalenderEintrag> getKalenderEintraege();
 }

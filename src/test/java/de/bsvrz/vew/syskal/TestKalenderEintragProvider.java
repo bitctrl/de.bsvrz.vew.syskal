@@ -26,9 +26,10 @@
 
 package de.bsvrz.vew.syskal;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 
@@ -61,7 +62,7 @@ public final class TestKalenderEintragProvider implements KalenderEintragProvide
         return eintrag;
     }
 
-    public Collection<KalenderEintrag> getKalenderEintraege() {
-        return eintraege.values();
+    public Set<KalenderEintrag> getKalenderEintraege() {
+        return new LinkedHashSet<>(eintraege.values());
     }
 }

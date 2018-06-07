@@ -206,4 +206,10 @@ public class VorDefinierterEintrag extends KalenderEintrag {
 	public Set<KalenderEintragMitOffset> getAufgeloesteVerweise() {
 		return Collections.singleton(new KalenderEintragMitOffset(this));
 	}
+
+    @Override
+    public boolean recalculateVerweise(KalenderEintragProvider provider) {
+        // Gültigkeit kann nicht geändert werden
+        return false;
+    }
 }

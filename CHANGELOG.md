@@ -3,6 +3,8 @@ Versionsverlauf
 
 ## [Noch nicht veröffentlicht]
 
+- beimn Einfügen neuer Systemkalendereinträge wird die Gültigkeit von 
+  referenzierenden Einträgen neu berechnet
 - Systemkalendereinträge mit Zeitverschiebungen in logischen Verknüpfungen
   konnten zu Endlosschleifen oder falschen Ergebnissen führen
 
