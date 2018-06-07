@@ -26,9 +26,6 @@
 
 package de.bsvrz.vew.syskal.lifetests;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -37,8 +34,6 @@ import org.junit.rules.Timeout;
 
 import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.TestKalenderEintragProvider;
-import de.bsvrz.vew.syskal.TestWechsel;
-import de.bsvrz.vew.syskal.ZustandsWechsel;
 
 /**
  * Test für eine konkrete Konfiguration aus VRZ3 - BaWue.
@@ -208,6 +203,7 @@ public class BaWueRuntimeSampleTest {
     @Test
     public void testeAufloesung() {
         for (KalenderEintrag eintrag : eintragsProvider.getKalenderEintraege()) {
+            System.err.println(eintrag);
             Assert.assertFalse(eintrag.getName() + " ist nicht gültig: " + eintrag.getFehler(), eintrag.hasFehler());
         }
     }
