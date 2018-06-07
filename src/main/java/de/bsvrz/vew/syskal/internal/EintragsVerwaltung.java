@@ -222,6 +222,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
                 if (systemKalenderEintrag != null) {
                     systemKalenderEintrag.setDefinition(result.getData().getTextValue("Definition").getText());
                     berechneAbhaengigeKalenderEintraegeNeu(Collections.singleton(systemKalenderEintrag));
+                    eintraege.forEach((so,ske)->ske.getKalenderEintrag().recalculateVerweise(this));
                 }
             }
         }
