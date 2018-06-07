@@ -38,10 +38,12 @@ import java.util.Set;
 import java.util.regex.Matcher;
 
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.Fehler;
 import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
 import de.bsvrz.vew.syskal.ZustandsWechsel;
+import de.bsvrz.vew.syskal.Fehler.FehlerType;
 
 /**
  * Repräsentation der Daten eines {@link KalenderEintrag}, der durch die
@@ -92,20 +94,20 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
                     try {
                         Verweis verweis = new Verweis(provider, def);
                         if (verweis.isUngueltig()) {
-                            addFehler(verweis.getName() + " ist ungültig");
+                            addFehler(Fehler.verweis(verweis.getName() + " ist ungültig"));
                         }
                         verweise.add(new VerweisEintrag(verweis));
                     } catch (final ParseException e) {
                         String message = "Fehler beim Parsen des Kalendereintrags: " + name + ": "
                                 + e.getLocalizedMessage();
                         LOGGER.warning(message);
-                        addFehler(message);
+                        addFehler(Fehler.common(message));
                     }
                 }
             }
 
             if (verweise.size() <= 0) {
-                addFehler("Verknüpfung enthält keine Verweise");
+                addFehler(Fehler.common("Verknüpfung enthält keine Verweise"));
             }
 
             scanJahresBereich(name, rest);
@@ -317,7 +319,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
                 continue;
             }
             letzteWechselZeit = wechselZeit;
-            
+
             if (isErlaubteWechselZeit(wechselZeit)) {
                 if (pruefeGueltigKeit(wechselZeit, zielZustand)) {
                     return ZustandsWechsel.of(wechselZeit, zielZustand);
@@ -353,7 +355,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
 
         LocalDateTime letzteWechselZeit = null;
         LocalDateTime wechselZeit = null;
-        
+
         Map<KalenderEintragMitOffset, ZustandsWechsel> verweisWechsel = new LinkedHashMap<>(potentielleStartWechsel);
         ZustandsWechsel potentiellerWechsel = null;
 
@@ -364,13 +366,13 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
             }
 
             wechselZeit = wechsel.getZeitPunkt();
-            
+
             if (letzteWechselZeit != null && !wechselZeit.isBefore(letzteWechselZeit)) {
                 wechselZeit = SystemKalender.MIN_DATETIME;
                 continue;
             }
             letzteWechselZeit = wechselZeit;
-            
+
             if (isErlaubteWechselZeit(wechselZeit)) {
                 if (pruefeGueltigKeit(wechselZeit, zielZustand)) {
                     potentiellerWechsel = ZustandsWechsel.of(wechselZeit, zielZustand);
@@ -467,6 +469,21 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
             }
         }
         return initialerZustand;
+    }
+
+    @Override
+    public boolean recalculateVerweise(KalenderEintragProvider provider) {
+        boolean hadFehler = hasFehler();
+        clearFehler(FehlerType.VERWEIS);
+
+        for (final VerweisEintrag verweis : verweise) {
+            verweis.recalculateVerweise(provider);
+            if (verweis.hasFehler()) {
+                addFehler(Fehler.verweis(verweis.getName() + " ist ungültig"));
+            }
+        }
+
+        return hadFehler != hasFehler();
     }
 
 }

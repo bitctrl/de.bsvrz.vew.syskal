@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -39,8 +40,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.Fehler.FehlerType;
 import de.bsvrz.vew.syskal.internal.DatumsEintrag;
 import de.bsvrz.vew.syskal.internal.EintragsArt;
+import de.bsvrz.vew.syskal.internal.EintragsVerwaltung;
 import de.bsvrz.vew.syskal.internal.KalenderEintragMitOffset;
 import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 import de.bsvrz.vew.syskal.internal.OderVerknuepfung;
@@ -166,7 +169,7 @@ public abstract class KalenderEintrag {
         }
 
         if (zeitBereichsfehler) {
-            result.addFehler("Zeitbereich konnte nicht geparst werden");
+            result.addFehler(Fehler.common("Zeitbereich konnte nicht geparst werden"));
         } else {
             result.komprimiereZeitBereiche(parsedZeitBereiche.stream().sorted().collect(Collectors.toList()));
         }
@@ -174,7 +177,7 @@ public abstract class KalenderEintrag {
         result.definition = definition;
 
         if (result.benutzt(result)) {
-            result.addFehler("Rekursive Verwendung");
+            result.addFehler(Fehler.common("Rekursive Verwendung"));
         }
 
         return result;
@@ -192,7 +195,7 @@ public abstract class KalenderEintrag {
     private final List<ZeitGrenze> zeitGrenzen = new ArrayList<>();
 
     /** der Definitionseintrag konnte nicht korrekt eingelesen werden. */
-    private List<String> fehler = new ArrayList<>();
+    private List<Fehler> fehler = new ArrayList<>();
 
     /**
      * Basiskonstruktor für einen Kalendereintrag.
@@ -214,7 +217,7 @@ public abstract class KalenderEintrag {
      * @param message
      *            die Fehlermeldung
      */
-    protected void addFehler(String message) {
+    protected void addFehler(Fehler message) {
         fehler.add(message);
     }
 
@@ -320,7 +323,11 @@ public abstract class KalenderEintrag {
      * @return die Liste der Fehler als Textstrings
      */
     public Collection<String> getFehler() {
-        return Collections.unmodifiableList(fehler);
+        List<String> result = new ArrayList<>();
+        for( Fehler item : fehler) {
+            result.add(item.getMessage());
+        }
+        return result;
     }
 
     /**
@@ -526,4 +533,24 @@ public abstract class KalenderEintrag {
     protected void setDefinition(String definition) {
         this.definition = definition;
     }
+
+    protected void clearFehler(FehlerType type) {
+        Iterator<Fehler> iterator = fehler.iterator();
+        while (iterator.hasNext()) {
+            Fehler next = iterator.next();
+            if( next.getType() == type) {
+                iterator.remove();
+            }
+        }
+    }
+    
+    /**
+     * Berechnet die Gültigkeit eines Kalendereintrags neu, wenn potentiell neue
+     * oder andere Referenzeinträge zur Verfügung stehen.
+     * 
+     * @param provider
+     *            der Provider mit den zur Verfügung stehenden Einträgen
+     * @return true, wenn die Gültigkeit geändert wurde
+     */
+    public abstract boolean recalculateVerweise(KalenderEintragProvider provider);
 }

@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.Fehler;
 import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
@@ -113,11 +114,11 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
                 } catch (final ParseException e) {
                     String message = "Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage();
                     LOGGER.warning(message);
-                    addFehler(message);
+                    addFehler(Fehler.common(message));
                 }
             } else {
                 if (definition.length() > 0) {
-                    addFehler("Trenner '-' nicht im Definitionsstring enthalten");
+                    addFehler(Fehler.common("Trenner '-' nicht im Definitionsstring enthalten"));
                 }
                 start = SystemKalender.MIN_DATETIME;
                 ende = SystemKalender.MAX_DATETIME;
@@ -555,5 +556,11 @@ public class ZeitBereichsEintrag extends KalenderEintrag {
     @Override
     public Set<KalenderEintragMitOffset> getAufgeloesteVerweise() {
         return Collections.singleton(new KalenderEintragMitOffset(this));
+    }
+
+    @Override
+    public boolean recalculateVerweise(KalenderEintragProvider provider) {
+        // Die Gültigkeit hängt nicht von anderen Einträgen ab.
+        return false;
     }
 }

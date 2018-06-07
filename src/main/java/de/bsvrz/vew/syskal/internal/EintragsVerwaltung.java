@@ -31,9 +31,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -146,7 +148,16 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
         }
         return null;
     }
-
+    
+    @Override
+    public Set<KalenderEintrag> getKalenderEintraege() {
+        Set<KalenderEintrag> result = new LinkedHashSet<>();
+        for (SystemKalenderEintrag ske : eintraege.values()) {
+            result.add(ske.getKalenderEintrag());
+        }
+        return result;
+    }
+    
     private void addEintraege(Collection<SystemObject> list) {
 
         for (SystemObject obj : list) {
@@ -162,6 +173,8 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
             dav.subscribeReceiver(this, obj, parameterSollDescription, ReceiveOptions.normal(),
                     ReceiverRole.receiver());
         }
+        
+        eintraege.forEach((so,ske)->ske.getKalenderEintrag().recalculateVerweise(this));
     }
 
     private void berechneAbhaengigeKalenderEintraegeNeu(Collection<SystemKalenderEintrag> referenzen) {

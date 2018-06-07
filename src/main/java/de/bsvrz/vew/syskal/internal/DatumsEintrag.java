@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.Fehler;
 import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
@@ -117,7 +118,7 @@ public class DatumsEintrag extends KalenderEintrag {
                         }
                     }
                 } else {
-                    addFehler("Datum kann nicht geparst werden");
+                    addFehler(Fehler.common("Datum kann nicht geparst werden"));
                 }
 
                 if (parts.length > 1) {
@@ -132,11 +133,11 @@ public class DatumsEintrag extends KalenderEintrag {
             } catch (NumberFormatException e) {
                 String message = "Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage();
                 LOGGER.warning(message);
-                addFehler(message);
+                addFehler(Fehler.common(message));
             }
 
             if (endJahr < jahr) {
-                addFehler("Endjahr ist größer als das Anfangsjahr");
+                addFehler(Fehler.common("Endjahr ist größer als das Anfangsjahr"));
             }
         }
     }
@@ -348,5 +349,11 @@ public class DatumsEintrag extends KalenderEintrag {
     @Override
     public Set<KalenderEintragMitOffset> getAufgeloesteVerweise() {
         return Collections.singleton(new KalenderEintragMitOffset(this));
+    }
+
+    @Override
+    public boolean recalculateVerweise(KalenderEintragProvider provider) {
+        // Gültigkeit hängt nicht von anderen Einträgen ab
+        return false;
     }
 }
