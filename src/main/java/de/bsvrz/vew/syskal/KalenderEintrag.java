@@ -135,6 +135,7 @@ public abstract class KalenderEintrag {
         }
 
         String rest = entferneNamensPrefix(name, definition);
+        String benutzteDefinition = rest;
 
         boolean zeitBereichsfehler = false;
         final List<ZeitGrenze> parsedZeitBereiche = new ArrayList<>();
@@ -174,7 +175,7 @@ public abstract class KalenderEintrag {
             result.komprimiereZeitBereiche(parsedZeitBereiche.stream().sorted().collect(Collectors.toList()));
         }
 
-        result.definition = definition;
+        result.definition = benutzteDefinition;
 
         if (result.benutzt(result)) {
             result.addFehler(Fehler.common("Rekursive Verwendung"));
