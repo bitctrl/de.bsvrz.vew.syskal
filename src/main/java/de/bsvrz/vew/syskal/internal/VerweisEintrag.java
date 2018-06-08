@@ -32,6 +32,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import de.bsvrz.sys.funclib.debug.Debug;
+import de.bsvrz.vew.syskal.Fehler;
+import de.bsvrz.vew.syskal.Fehler.FehlerType;
 import de.bsvrz.vew.syskal.KalenderEintrag;
 import de.bsvrz.vew.syskal.SystemKalender;
 import de.bsvrz.vew.syskal.SystemkalenderGueltigkeit;
@@ -78,14 +80,15 @@ public class VerweisEintrag extends KalenderEintrag {
         try {
             verweis = new Verweis(provider, definition);
             if (verweis.isUngueltig()) {
-                addFehler(verweis.getName() + " ist ungültig");
+                addFehler(Fehler.verweis(verweis.getName() + " ist ungültig"));
             }
         } catch (final ParseException | NumberFormatException e) {
             String message = "Fehler beim Parsen des Eintrags: " + definition + ": " + e.getLocalizedMessage();
             LOGGER.warning(message);
             verweis = null;
-            addFehler(message);
+            addFehler(Fehler.common(message));
         }
+
     }
 
     VerweisEintrag(Verweis verweis) {
@@ -180,7 +183,7 @@ public class VerweisEintrag extends KalenderEintrag {
 
         KalenderEintrag referenzEintrag = verweis.getReferenzEintrag();
         int tagesOffset = verweis.getOffset();
-        boolean gueltig = referenzEintrag.isGueltig(zeitPunkt.plusDays(tagesOffset));
+        boolean gueltig = referenzEintrag.isGueltig(zeitPunkt.minusDays(tagesOffset));
 
         if (verweis.isNegiert()) {
             return !gueltig;
@@ -284,5 +287,22 @@ public class VerweisEintrag extends KalenderEintrag {
         }
 
         return result;
+    }
+
+    @Override
+    public boolean recalculateVerweise(KalenderEintragProvider provider) {
+        boolean hadFehler = hasFehler();
+        clearFehler(FehlerType.VERWEIS);
+
+        try {
+            verweis = new Verweis(provider, getDefinition());
+            if( verweis.isUngueltig()) {
+                addFehler(Fehler.verweis(verweis.getName() + " ist ungültig"));
+            }
+        } catch (final ParseException | NumberFormatException e) {
+            verweis = null;
+        }
+        
+        return hadFehler != hasFehler();
     }
 }
