@@ -3,10 +3,12 @@ Versionsverlauf
 
 ## [Noch nicht veröffentlicht]
 
-- beimn Einfügen neuer Systemkalendereinträge wird die Gültigkeit von 
-  referenzierenden Einträgen neu berechnet
 - Systemkalendereinträge mit Zeitverschiebungen in logischen Verknüpfungen
   konnten zu Endlosschleifen oder falschen Ergebnissen führen
+- beim Einfügen neuer Systemkalendereinträge wird die Gültigkeit von 
+  referenzierenden Einträgen neu berechnet
+- beim Neuberechnen der Systemkalenderreferenzen konnte es zu Problemen kommen, 
+  wenn im Definitionsstring der obsolete Präfix "{name}:=" enthalten war
 
 ## [Version 2.0.0]
 
