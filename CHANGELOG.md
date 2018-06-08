@@ -3,6 +3,8 @@ Versionsverlauf
 
 ## [Noch nicht veröffentlicht]
 
+## [Version 2.0.1]
+
 - Systemkalendereinträge mit Zeitverschiebungen in logischen Verknüpfungen
   konnten zu Endlosschleifen oder falschen Ergebnissen führen
 - beim Einfügen neuer Systemkalendereinträge wird die Gültigkeit von 
@@ -25,6 +27,7 @@ Versionsverlauf
 - Übernahme vor Umstellung auf Gradle
 
 
-[Noch nicht veröffentlicht]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v2.0.0...HEAD
+[Noch nicht veröffentlicht]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v2.0.1...HEAD
+[Version 2.0.1]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v2.0.0...v2.0.1
 [Version 2.0.0]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v1.2.8...v2.0.0
 [Version 1.2.8]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v1.2.7...v1.2.8
