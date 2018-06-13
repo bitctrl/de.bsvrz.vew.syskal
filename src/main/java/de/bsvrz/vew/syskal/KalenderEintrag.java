@@ -199,7 +199,7 @@ public abstract class KalenderEintrag {
     /** der Definitionseintrag konnte nicht korrekt eingelesen werden. */
     private List<Fehler> fehler = new ArrayList<>();
 
-    private SortedMap<LocalDateTime, SystemkalenderGueltigkeit> cache = new TreeMap<>();
+    private final KalenderEintragCache cache;
     
     /**
      * Basiskonstruktor für einen Kalendereintrag.
@@ -212,6 +212,7 @@ public abstract class KalenderEintrag {
     protected KalenderEintrag(String name, String definition) {
         this.name = name;
         this.definition = definition;
+        this.cache = new KalenderEintragCache(this);
     }
 
     /**
@@ -413,16 +414,7 @@ public abstract class KalenderEintrag {
             return SystemkalenderGueltigkeit.NICHT_GUELTIG;
         }
         
-        SystemkalenderGueltigkeit gueltigkeit = cache.get(zeitpunkt);
-        if (gueltigkeit != null) {
-            return gueltigkeit;
-        }
-
-        // TODO Cacheaufbau korrigieren
-//        System.err.println("Not in Cache");
-        gueltigkeit = berechneZeitlicheGueltigkeit(zeitpunkt);
-     //   cache.put(zeitpunkt, gueltigkeit);
-        return gueltigkeit;
+        return cache.getGueltigkeitFuer(zeitpunkt);
     }
 
     /**
