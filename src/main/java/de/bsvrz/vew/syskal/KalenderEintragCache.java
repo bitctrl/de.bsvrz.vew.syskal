@@ -39,7 +39,7 @@ import java.util.TreeMap;
 public class KalenderEintragCache {
 
 	private static final int MAX_CACHE_SIZE = 200;
-	
+
 	private KalenderEintrag eintrag;
 	private SortedMap<LocalDateTime, SystemkalenderGueltigkeit> daten = new TreeMap<>();
 
@@ -49,43 +49,51 @@ public class KalenderEintragCache {
 
 	public SystemkalenderGueltigkeit getGueltigkeitFuer(LocalDateTime zeitpunkt) {
 
-		SystemkalenderGueltigkeit result = daten.get(zeitpunkt);
-		if (result != null) {
+		synchronized (daten) {
+			SystemkalenderGueltigkeit result = daten.get(zeitpunkt);
+			if (result != null) {
+				return result;
+			}
+
+			SortedMap<LocalDateTime, SystemkalenderGueltigkeit> headMap = daten.headMap(zeitpunkt);
+			if (!headMap.isEmpty()) {
+				SystemkalenderGueltigkeit gueltigkeit = headMap.get(headMap.lastKey());
+				if (!Duration.between(gueltigkeit.ersterWechsel.getZeitPunkt(), zeitpunkt).isNegative()) {
+					if (Duration.between(gueltigkeit.naechsterWechsel.getZeitPunkt(), zeitpunkt).isNegative()) {
+						return gueltigkeit;
+					}
+				}
+			}
+
+			SortedMap<LocalDateTime, SystemkalenderGueltigkeit> tailMap = daten.tailMap(zeitpunkt);
+			if (!tailMap.isEmpty()) {
+				SystemkalenderGueltigkeit gueltigkeit = tailMap.get(tailMap.firstKey());
+				if (!Duration.between(gueltigkeit.ersterWechsel.getZeitPunkt(), zeitpunkt).isNegative()) {
+					if (Duration.between(gueltigkeit.naechsterWechsel.getZeitPunkt(), zeitpunkt).isNegative()) {
+						return gueltigkeit;
+					}
+				}
+			}
+
+			result = eintrag.berechneZeitlicheGueltigkeit(zeitpunkt);
+			daten.put(result.ersterWechsel.getZeitPunkt(), result);
+
+			bereinigeCache();
 			return result;
-		}
 
-		SortedMap<LocalDateTime, SystemkalenderGueltigkeit> headMap = daten.headMap(zeitpunkt);
-		if( !headMap.isEmpty()) {
-			SystemkalenderGueltigkeit gueltigkeit = headMap.get(headMap.lastKey());
-			if (!Duration.between(gueltigkeit.ersterWechsel.getZeitPunkt(), zeitpunkt).isNegative()) {
-				if (Duration.between(gueltigkeit.naechsterWechsel.getZeitPunkt(), zeitpunkt).isNegative()) {
-					return gueltigkeit;
-				}
-			}
 		}
-
-		SortedMap<LocalDateTime, SystemkalenderGueltigkeit> tailMap = daten.tailMap(zeitpunkt);
-		if( !tailMap.isEmpty()) {
-			SystemkalenderGueltigkeit gueltigkeit = tailMap.get(tailMap.firstKey());
-			if (!Duration.between(gueltigkeit.ersterWechsel.getZeitPunkt(), zeitpunkt).isNegative()) {
-				if (Duration.between(gueltigkeit.naechsterWechsel.getZeitPunkt(), zeitpunkt).isNegative()) {
-					return gueltigkeit;
-				}
-			}
-		}
-		
-		result = eintrag.berechneZeitlicheGueltigkeit(zeitpunkt);
-		daten.put(result.ersterWechsel.getZeitPunkt(), result);
-
-		bereinigeCache();
-		
-		return result;
 	}
 
 	private void bereinigeCache() {
-		
-		while( daten.size() > MAX_CACHE_SIZE) {
+
+		while (daten.size() > MAX_CACHE_SIZE) {
 			daten.remove(daten.firstKey());
+		}
+	}
+
+	public void leeren() {
+		synchronized (daten) {
+			daten.clear();
 		}
 	}
 

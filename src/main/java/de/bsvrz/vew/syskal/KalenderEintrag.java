@@ -558,4 +558,8 @@ public abstract class KalenderEintrag {
      * @return true, wenn die Gültigkeit geändert wurde
      */
     public abstract boolean recalculateVerweise(KalenderEintragProvider provider);
+    
+	protected final void leereCache() {
+		cache.leeren();
+	}
 }

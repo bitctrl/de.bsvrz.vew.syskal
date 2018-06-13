@@ -475,7 +475,8 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
     public boolean recalculateVerweise(KalenderEintragProvider provider) {
         boolean hadFehler = hasFehler();
         clearFehler(FehlerType.VERWEIS);
-
+        leereCache();
+        
         for (final VerweisEintrag verweis : verweise) {
             verweis.recalculateVerweise(provider);
             if (verweis.hasFehler()) {

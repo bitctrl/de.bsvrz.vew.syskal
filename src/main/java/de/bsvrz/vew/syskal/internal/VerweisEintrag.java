@@ -294,6 +294,8 @@ public class VerweisEintrag extends KalenderEintrag {
         boolean hadFehler = hasFehler();
         clearFehler(FehlerType.VERWEIS);
 
+        leereCache();
+        
         try {
             verweis = new Verweis(provider, getDefinition());
             if( verweis.isUngueltig()) {
@@ -305,4 +307,6 @@ public class VerweisEintrag extends KalenderEintrag {
         
         return hadFehler != hasFehler();
     }
+
+
 }
