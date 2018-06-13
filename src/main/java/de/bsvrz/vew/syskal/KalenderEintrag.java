@@ -35,6 +35,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -43,7 +45,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.Fehler.FehlerType;
 import de.bsvrz.vew.syskal.internal.DatumsEintrag;
 import de.bsvrz.vew.syskal.internal.EintragsArt;
-import de.bsvrz.vew.syskal.internal.EintragsVerwaltung;
 import de.bsvrz.vew.syskal.internal.KalenderEintragMitOffset;
 import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 import de.bsvrz.vew.syskal.internal.OderVerknuepfung;
@@ -198,6 +199,8 @@ public abstract class KalenderEintrag {
     /** der Definitionseintrag konnte nicht korrekt eingelesen werden. */
     private List<Fehler> fehler = new ArrayList<>();
 
+    private SortedMap<LocalDateTime, SystemkalenderGueltigkeit> cache = new TreeMap<>();
+    
     /**
      * Basiskonstruktor für einen Kalendereintrag.
      * 
@@ -409,8 +412,17 @@ public abstract class KalenderEintrag {
         if (hasFehler()) {
             return SystemkalenderGueltigkeit.NICHT_GUELTIG;
         }
+        
+        SystemkalenderGueltigkeit gueltigkeit = cache.get(zeitpunkt);
+        if (gueltigkeit != null) {
+            return gueltigkeit;
+        }
 
-        return berechneZeitlicheGueltigkeit(zeitpunkt);
+        // TODO Cacheaufbau korrigieren
+//        System.err.println("Not in Cache");
+        gueltigkeit = berechneZeitlicheGueltigkeit(zeitpunkt);
+     //   cache.put(zeitpunkt, gueltigkeit);
+        return gueltigkeit;
     }
 
     /**
