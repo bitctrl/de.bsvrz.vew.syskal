@@ -3,7 +3,7 @@ Versionsverlauf
 
 ## [Noch nicht veröffentlicht]
 
-## [Version 2.0.1]
+## [Version 2.0.2]
 
 - die ermittelten Gültigkeiten für Systemkalendereinträge werden gecached, um die
   Ermittlung von Zustandsübergängen bei vielen Anfragen zu beschleunigen.
@@ -33,7 +33,7 @@ Versionsverlauf
 
 
 [Noch nicht veröffentlicht]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v2.0.2...HEAD
-[Version 2.0.1]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v2.0.1...v2.0.2
+[Version 2.0.2]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v2.0.1...v2.0.2
 [Version 2.0.1]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v2.0.0...v2.0.1
 [Version 2.0.0]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v1.2.8...v2.0.0
 [Version 1.2.8]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v1.2.7...v1.2.8
