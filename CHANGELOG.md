@@ -3,7 +3,7 @@ Versionsverlauf
 
 ## [Noch nicht veröffentlicht]
 
-## [Version 2.0.1]
+## [Version 2.0.2]
 
 - die ermittelten Gültigkeiten für Systemkalendereinträge werden gecached, um die
   Ermittlung von Zustandsübergängen bei vielen Anfragen zu beschleunigen.
