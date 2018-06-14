@@ -47,7 +47,7 @@ import de.bsvrz.vew.syskal.ZustandsWechsel;
 public class BaWueSampleTest {
 
     @Rule
-    public Timeout globalTimeout = Timeout.seconds(3600);
+    public Timeout globalTimeout = Timeout.seconds(20);
 
     private static TestKalenderEintragProvider eintragsProvider;
 
