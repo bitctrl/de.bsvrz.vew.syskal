@@ -10,13 +10,13 @@ plugins {
 // SWE-Eigenschaften
 //--------------------------------------------------------------------
 group = 'de.bsvrz.vew'
-version = '2.0.2'
+version = '2.0.3-SNAPSHOT'
 description = 'SWE Verwaltung Systemkalender'
 
 // Properties des NERZ-SWE-Plugins:
 nerzswe {
-   	sweStatus = 'FREI'
-	sweDatum = '2018-06-14'
+   	sweStatus = 'BETA'
+	sweDatum = ''
 }
 
 //--------------------------------------------------------------------
