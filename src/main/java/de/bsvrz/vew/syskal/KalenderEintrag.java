@@ -35,6 +35,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -43,7 +45,6 @@ import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.vew.syskal.Fehler.FehlerType;
 import de.bsvrz.vew.syskal.internal.DatumsEintrag;
 import de.bsvrz.vew.syskal.internal.EintragsArt;
-import de.bsvrz.vew.syskal.internal.EintragsVerwaltung;
 import de.bsvrz.vew.syskal.internal.KalenderEintragMitOffset;
 import de.bsvrz.vew.syskal.internal.KalenderEintragProvider;
 import de.bsvrz.vew.syskal.internal.OderVerknuepfung;
@@ -198,6 +199,8 @@ public abstract class KalenderEintrag {
     /** der Definitionseintrag konnte nicht korrekt eingelesen werden. */
     private List<Fehler> fehler = new ArrayList<>();
 
+    private final KalenderEintragCache cache;
+    
     /**
      * Basiskonstruktor für einen Kalendereintrag.
      * 
@@ -209,6 +212,7 @@ public abstract class KalenderEintrag {
     protected KalenderEintrag(String name, String definition) {
         this.name = name;
         this.definition = definition;
+        this.cache = new KalenderEintragCache(this);
     }
 
     /**
@@ -409,8 +413,8 @@ public abstract class KalenderEintrag {
         if (hasFehler()) {
             return SystemkalenderGueltigkeit.NICHT_GUELTIG;
         }
-
-        return berechneZeitlicheGueltigkeit(zeitpunkt);
+        
+        return cache.getGueltigkeitFuer(zeitpunkt);
     }
 
     /**
@@ -554,4 +558,8 @@ public abstract class KalenderEintrag {
      * @return true, wenn die Gültigkeit geändert wurde
      */
     public abstract boolean recalculateVerweise(KalenderEintragProvider provider);
+    
+	protected final void leereCache() {
+		cache.leeren();
+	}
 }

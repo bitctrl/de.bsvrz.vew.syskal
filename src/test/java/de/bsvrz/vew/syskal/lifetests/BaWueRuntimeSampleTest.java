@@ -203,7 +203,6 @@ public class BaWueRuntimeSampleTest {
     @Test
     public void testeAufloesung() {
         for (KalenderEintrag eintrag : eintragsProvider.getKalenderEintraege()) {
-            System.err.println(eintrag);
             Assert.assertFalse(eintrag.getName() + " ist nicht gültig: " + eintrag.getFehler(), eintrag.hasFehler());
         }
     }

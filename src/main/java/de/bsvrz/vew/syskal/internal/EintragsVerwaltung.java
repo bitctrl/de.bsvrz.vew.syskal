@@ -59,6 +59,7 @@ import de.bsvrz.dav.daf.main.config.DynamicObjectType;
 import de.bsvrz.dav.daf.main.config.MutableSet;
 import de.bsvrz.dav.daf.main.config.MutableSetChangeListener;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.dynobj.DynObjektException;
 import de.bsvrz.sys.funclib.dynobj.DynamischeObjekte;
 import de.bsvrz.vew.syskal.KalenderEintrag;
@@ -73,6 +74,8 @@ import de.bsvrz.vew.syskal.SystemKalenderListener;
  * @author BitCtrl Systems GmbH, Uwe Peuker
  */
 public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiverInterface, MutableSetChangeListener {
+
+    protected static final Debug LOGGER = Debug.getLogger();
 
     private Map<SystemObject, SystemKalenderEintrag> eintraege = new ConcurrentHashMap<>();
 
@@ -336,16 +339,14 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
                         try {
                             dav.sendData(resultData);
                         } catch (DataNotSubscribedException | SendSubscriptionNotConfirmed e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            LOGGER.warning(e.getLocalizedMessage());
                         }
                         dav.unsubscribeSender(this, object, dataDescription);
                     }
                 }
             }, systemObject, parameterVorgabeDescription, SenderRole.sender());
         } catch (OneSubscriptionPerSendData e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.warning(e.getLocalizedMessage());
         }
 
     }
