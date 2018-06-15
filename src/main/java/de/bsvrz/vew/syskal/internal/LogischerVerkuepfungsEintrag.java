@@ -301,8 +301,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
      *            die Liste der Zustandswechselkandidaten
      * @return den ermittelten Zustandswechsel
      */
-    protected final ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand,
-            Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleEndWechsel) {
+    protected final ZustandsWechsel berechneNaechstenWechselAuf(boolean zielZustand, Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleEndWechsel) {
 
         LocalDateTime letzteWechselZeit = null;
         LocalDateTime wechselZeit = null;
@@ -351,7 +350,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
      * @return den ermittelten Zustandswechsel
      */
     protected final ZustandsWechsel berechneVorigenWechselAuf(boolean zielZustand,
-            Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleStartWechsel) {
+            LocalDateTime zeitPunkt, Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleStartWechsel) {
 
         LocalDateTime letzteWechselZeit = null;
         LocalDateTime wechselZeit = null;
@@ -373,7 +372,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
             }
             letzteWechselZeit = wechselZeit;
 
-            if (isErlaubteWechselZeit(wechselZeit)) {
+            if (isErlaubteWechselZeit(wechselZeit) && !wechselZeit.isAfter(zeitPunkt)) {
                 if (pruefeGueltigKeit(wechselZeit, zielZustand)) {
                     potentiellerWechsel = ZustandsWechsel.of(wechselZeit, zielZustand);
                 } else if (potentiellerWechsel != null) {
@@ -402,14 +401,21 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
         Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleEndWechsel = new LinkedHashMap<>();
         Map<KalenderEintragMitOffset, ZustandsWechsel> potentielleStartWechsel = new LinkedHashMap<>();
 
-        for (KalenderEintragMitOffset eintrag : getAufgeloesteVerweise()) {
-            SystemkalenderGueltigkeit gueltigKeit = eintrag.berechneZeitlicheGueltigkeit(zeitPunkt);
+        Set<KalenderEintragMitOffset> aufgeloesteVerweise = getAufgeloesteVerweise();
+        for (KalenderEintragMitOffset eintrag : aufgeloesteVerweise) {
+             SystemkalenderGueltigkeit gueltigKeit = eintrag.berechneZeitlicheGueltigkeit(zeitPunkt);
+//             while(zeitPunkt.isBefore(gueltigKeit.getErsterWechsel().getZeitPunkt())) {
+//                 gueltigKeit = berechneZeitlicheGueltigkeitVor(gueltigKeit.getErsterWechsel().getZeitPunkt());
+//                 if( !gueltigKeit.getErsterWechsel().getZeitPunkt().isAfter(SystemKalender.MIN_DATETIME)) {
+//                     break;
+//                 }
+//             }
+
             potentielleStartWechsel.put(eintrag, gueltigKeit.getErsterWechsel());
             potentielleEndWechsel.put(eintrag, gueltigKeit.getNaechsterWechsel());
-
         }
 
-        ZustandsWechsel beginn = berechneVorigenWechselAuf(zustand, potentielleStartWechsel);
+        ZustandsWechsel beginn = berechneVorigenWechselAuf(zustand, zeitPunkt, potentielleStartWechsel);
         ZustandsWechsel wechsel = berechneNaechstenWechselAuf(!zustand, potentielleEndWechsel);
 
         return SystemkalenderGueltigkeit.of(beginn, wechsel);
@@ -448,7 +454,7 @@ public abstract class LogischerVerkuepfungsEintrag extends KalenderEintrag {
             potentielleStartWechsel.put(eintrag, gueltigKeit.getNaechsterWechsel());
         }
 
-        ZustandsWechsel beginn = berechneVorigenWechselAuf(!zustand, potentielleStartWechsel);
+        ZustandsWechsel beginn = berechneVorigenWechselAuf(!zustand, zeitPunkt, potentielleStartWechsel);
 
         return SystemkalenderGueltigkeit.of(beginn, zeitlicheGueltigkeit.getErsterWechsel());
     }

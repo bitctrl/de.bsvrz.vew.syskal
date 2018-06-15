@@ -106,4 +106,9 @@ public class KalenderEintragMitOffset {
     public KalenderEintragMitOffset withTagesOffset(int offset) {
         return new KalenderEintragMitOffset(kalenderEintrag, tagesOffset + offset);
     }
+    
+    @Override
+    public String toString() {
+        return kalenderEintrag + " " + tagesOffset + " Tage";
+    }
 }
