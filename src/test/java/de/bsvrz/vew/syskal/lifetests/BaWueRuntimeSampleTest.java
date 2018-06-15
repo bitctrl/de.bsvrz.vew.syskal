@@ -194,7 +194,6 @@ public class BaWueRuntimeSampleTest {
         eintragsProvider.parseAndAdd(eintragsProvider, "Winter_Drittel",
                 "Winter_Drittel:=ODER{2012_Winter_Drittel,2013_Winter_Drittel,2014_Winter_Drittel,2015_Winter_Drittel,2016_Winter_Drittel,2017_Winter_Drittel,2018_Winter_Drittel}*,*");
 
-//        eintragsProvider.getKalenderEintraege().forEach(ke->ke.recalculateVerweise(eintragsProvider));
         for( KalenderEintrag eintrag : eintragsProvider.getKalenderEintraege()) {
             eintrag.recalculateVerweise(eintragsProvider);
         }
