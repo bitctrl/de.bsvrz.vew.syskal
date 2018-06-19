@@ -59,6 +59,8 @@ import de.bsvrz.dav.daf.main.config.DynamicObjectType;
 import de.bsvrz.dav.daf.main.config.MutableSet;
 import de.bsvrz.dav.daf.main.config.MutableSetChangeListener;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.puk.param.lib.MethodenBibliothek;
+import de.bsvrz.puk.param.lib.daten.UrlasserInfo;
 import de.bsvrz.sys.funclib.debug.Debug;
 import de.bsvrz.sys.funclib.dynobj.DynObjektException;
 import de.bsvrz.sys.funclib.dynobj.DynamischeObjekte;
@@ -151,7 +153,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
         }
         return null;
     }
-    
+
     @Override
     public Set<KalenderEintrag> getKalenderEintraege() {
         Set<KalenderEintrag> result = new LinkedHashSet<>();
@@ -160,7 +162,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
         }
         return result;
     }
-    
+
     private void addEintraege(Collection<SystemObject> list) {
 
         for (SystemObject obj : list) {
@@ -176,8 +178,8 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
             dav.subscribeReceiver(this, obj, parameterSollDescription, ReceiveOptions.normal(),
                     ReceiverRole.receiver());
         }
-        
-        eintraege.forEach((so,ske)->ske.getKalenderEintrag().recalculateVerweise(this));
+
+        eintraege.forEach((so, ske) -> ske.getKalenderEintrag().recalculateVerweise(this));
     }
 
     private void berechneAbhaengigeKalenderEintraegeNeu(Collection<SystemKalenderEintrag> referenzen) {
@@ -225,7 +227,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
                 if (systemKalenderEintrag != null) {
                     systemKalenderEintrag.setDefinition(result.getData().getTextValue("Definition").getText());
                     berechneAbhaengigeKalenderEintraegeNeu(Collections.singleton(systemKalenderEintrag));
-                    eintraege.forEach((so,ske)->ske.getKalenderEintrag().recalculateVerweise(this));
+                    eintraege.forEach((so, ske) -> ske.getKalenderEintrag().recalculateVerweise(this));
                 }
             }
         }
@@ -272,15 +274,36 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
      *             dynamischen Systemobjekts aufgetreten ist
      */
     public void sichereEintrag(SystemKalenderEintrag eintrag) throws SystemKalenderException {
+        sichereEintrag(eintrag, null);
+    }
+
+    /**
+     * speichert den übergebenen Systemkalendereintrag.
+     * 
+     * In Datenverteilermodell wird der entsprechende Eintrag aktualisiert oder
+     * ein neuer angelegt.
+     * 
+     * @param eintrag
+     *            der Eintrag, der gesichert werden soll
+     * @param urlasser
+     *            die optionalen Urlasserinformationen mit denen der Eintrag
+     *            gespeichert werden soll
+     * @throws SystemKalenderException
+     *             der Systemkalendereintrag kann nicht gespeichert werden, weil
+     *             die Datenverteilerverbindung verloren gegangen ist oder ein
+     *             Fehler beim Anlegen oder Aktualisieren des gewünschten
+     *             dynamischen Systemobjekts aufgetreten ist
+     */
+    public void sichereEintrag(SystemKalenderEintrag eintrag, UrlasserInfo urlasser) throws SystemKalenderException {
         if (connectionLost) {
             throw new SystemKalenderException(
                     "Die für den Systemkalender verwendete Datenverteilerverbindung wurde geschlossen");
         }
 
         if (eintrag.getSystemObject() == null) {
-            erzeugeSystemkalenderEintrag(eintrag);
+            erzeugeSystemkalenderEintrag(eintrag, urlasser);
         } else {
-            aktualisiereEintrag(eintrag.getSystemObject(), eintrag);
+            aktualisiereEintrag(eintrag.getSystemObject(), eintrag, urlasser);
         }
     }
 
@@ -319,10 +342,15 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
         }
     }
 
-    private void aktualisiereEintrag(SystemObject systemObject, SystemKalenderEintrag eintrag) {
+    private void aktualisiereEintrag(SystemObject systemObject, SystemKalenderEintrag eintrag, UrlasserInfo urlasser) {
 
         final Data daten = dav.createData(parameterVorgabeDescription.getAttributeGroup());
         daten.getTextValue("Definition").setText(eintrag.getKalenderEintrag().toString());
+        
+        if( urlasser != null) {
+            urlasser.updateData(daten);
+        }
+        
         final ResultData resultData = new ResultData(systemObject,
                 parameterVorgabeDescription, System.currentTimeMillis(), daten);
         try {
@@ -351,7 +379,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
 
     }
 
-    private void erzeugeSystemkalenderEintrag(SystemKalenderEintrag eintrag) throws SystemKalenderException {
+    private void erzeugeSystemkalenderEintrag(SystemKalenderEintrag eintrag, UrlasserInfo urlasser) throws SystemKalenderException {
 
         final DynamischeObjekte dynamischeVerwaltung = DynamischeObjekte.getInstanz(dav);
         SystemObject systemObject = dav.getDataModel().getObject(eintrag.getPid());
@@ -365,7 +393,7 @@ public class EintragsVerwaltung implements KalenderEintragProvider, ClientReceiv
             }
         }
 
-        aktualisiereEintrag(systemObject, eintrag);
+        aktualisiereEintrag(systemObject, eintrag, urlasser);
 
         if (!eintragsSet.getElements().contains(systemObject)) {
             try {

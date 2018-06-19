@@ -32,6 +32,7 @@ import java.util.Collection;
 import de.bsvrz.dav.daf.main.ClientDavInterface;
 import de.bsvrz.dav.daf.main.config.ConfigurationObject;
 import de.bsvrz.dav.daf.main.config.SystemObject;
+import de.bsvrz.puk.param.lib.daten.UrlasserInfo;
 import de.bsvrz.vew.syskal.internal.EintragsVerwaltung;
 
 /**
@@ -114,6 +115,25 @@ public class SystemKalender {
         verwaltung.sichereEintrag(eintrag);
     }
 
+    /**
+     * speichert den übergebenen Systemkalendereintrag.
+     * 
+     * In Datenverteilermodell wird der entsprechende Eintrag aktualisiert oder
+     * ein neuer angelegt.
+     * 
+     * @param eintrag
+     *            der Eintrag, der gesichert werden soll
+     * @throws SystemKalenderException
+     *             der Systemkalendereintrag kann nicht gespeichert werden, weil
+     *             die Datenverteilerverbindung verloren gegangen ist oder ein
+     *             Fehler beim Anlegen oder Aktualisieren des gewünschten
+     *             dynamischen Systemobjekts aufgetreten ist
+     */
+    public void sichereEintragMitUrlasser(SystemKalenderEintrag eintrag, UrlasserInfo urlasser) throws SystemKalenderException {
+        verwaltung.sichereEintrag(eintrag, urlasser);
+    }
+
+    
     /**
      * löscht den übergebenen Systemkalendereintrag.
      * 
