@@ -3,6 +3,11 @@ Versionsverlauf
 
 ## [Noch nicht veröffentlicht]
 
+- bei ungünstigen Anfragen für Zustandswechsel in logischen Verknüpfungen
+  konnte es zu einer Endlosschleife kommen
+- bei Anfrage zu Kalendereinträgen mit Verweisen wurde die Gültigkeit der referenzierten
+  Einträge nicht in jedem Fall korrekt geprüft
+
 ## [Version 2.0.2]
 
 - die ermittelten Gültigkeiten für Systemkalendereinträge werden gecached, um die

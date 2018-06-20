@@ -469,7 +469,7 @@ public abstract class KalenderEintrag {
 
             if (!aktuellerZeitPunkt.isAfter(ende)) {
                 result.add(wechsel);
-                gueltigkeit = getZeitlicheGueltigkeit(wechsel.getZeitPunkt());
+                gueltigkeit = getZeitlicheGueltigkeit(aktuellerZeitPunkt);
             }
 
         } while (!aktuellerZeitPunkt.isAfter(ende));

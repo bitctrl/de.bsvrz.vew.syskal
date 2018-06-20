@@ -275,6 +275,10 @@ public class VerweisEintrag extends KalenderEintrag {
     public Set<KalenderEintragMitOffset> getAufgeloesteVerweise() {
 
         KalenderEintrag referenz = getVerweis().getReferenzEintrag();
+        if( referenz == null) {
+            return new LinkedHashSet<>();
+        }
+
         Set<KalenderEintragMitOffset> aufgeloesteVerweise = referenz.getAufgeloesteVerweise();
 
         if (getOffset() == 0) {
