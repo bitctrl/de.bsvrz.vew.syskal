@@ -3,6 +3,8 @@ Versionsverlauf
 
 ## [Noch nicht veröffentlicht]
 
+## [Version 2.1.0]
+
 - bei ungünstigen Anfragen für Zustandswechsel in logischen Verknüpfungen
   konnte es zu einer Endlosschleife kommen
 - bei Anfrage zu Kalendereinträgen mit Verweisen wurde die Gültigkeit der referenzierten
@@ -37,7 +39,8 @@ Versionsverlauf
 - Übernahme vor Umstellung auf Gradle
 
 
-[Noch nicht veröffentlicht]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v2.0.2...HEAD
+[Noch nicht veröffentlicht]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v2.1.0...HEAD
+[Version 2.1.0]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v2.0.2...v2.1.0
 [Version 2.0.2]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v2.0.1...v2.0.2
 [Version 2.0.1]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v2.0.0...v2.0.1
 [Version 2.0.0]: https://gitlab.nerz-ev.de/ERZ/SWE_de.bsvrz.vew.syskal/compare/v1.2.8...v2.0.0
